@@ -606,6 +606,25 @@ function pickOpt(val) {
 function send() {
   const inp = document.getElementById('cinput');
   const val = inp.value.trim(); if (!val) return;
+
+  // Validate minimum meaningful answer
+  if (val.length < 3) {
+    inp.style.borderColor = 'var(--purple)';
+    inp.placeholder = 'Please write a bit more! Even a few words help.';
+    setTimeout(() => { inp.style.borderColor=''; inp.placeholder = QS[qidx].placeholder; }, 2000);
+    return;
+  }
+
+  // Check if answer looks too random/gibberish (all special chars or numbers only)
+  const hasWords = /[a-zA-Z\u0900-\u097F]{2,}/.test(val);
+  if (!hasWords) {
+    inp.style.borderColor = '#ef4444';
+    inp.placeholder = 'Please describe in words — e.g. Canva, coding, writing...';
+    inp.value = '';
+    setTimeout(() => { inp.style.borderColor=''; inp.placeholder = QS[qidx].placeholder; }, 2500);
+    return;
+  }
+
   inp.value = ''; document.getElementById('csend').disabled = true;
   addMsg('user', val);
   answers[QS[qidx].id] = val; qidx++;
@@ -617,33 +636,53 @@ async function generateKit() {
   showPage('loading');
   animLoad();
 
-  const prompt = `You are Lancify AI — an expert freelance coach for Indian students aged 18–25.
-A student answered these questions:
-- Skills & tools: ${answers.skills}
-- Past experience: ${answers.experience}
-- Hours/day available: ${answers.hours}
-- First month income goal: ${answers.goal}
-- Preferred platform: ${answers.platform}
+  const prompt = `You are Lancify AI — a world-class freelance coach for Indian students aged 18–25.
 
-Generate their complete personalised Freelance Launch Kit.
-Respond with ONLY a valid JSON object. No markdown, no backticks, no extra text. Exactly this structure:
+A student has answered 5 onboarding questions. Read their answers VERY carefully and generate a 100% personalised kit based on exactly what they said.
+
+Their answers:
+- Skills & tools they use: "${answers.skills}"
+- Past experience (even unpaid): "${answers.experience}"
+- Hours available per day: "${answers.hours}"
+- Income goal for first month: "${answers.goal}"
+- Preferred platform: "${answers.platform}"
+
+CRITICAL RULES — you MUST follow these:
+1. Base the niche STRICTLY on their actual skills. If they say coding/programming/Python/JavaScript/HTML/CSS/React → assign a tech/development niche like "Web Development", "Landing Page Development", "WordPress Development", "Python Automation Scripts", "Chrome Extensions", etc. NEVER assign design or writing to a coder.
+2. If they say Canva/design/Photoshop → assign a design niche.
+3. If they say writing/content/blogs → assign a writing niche.
+4. If they say video editing/CapCut/Premiere → assign a video editing niche.
+5. If they say Excel/data/spreadsheets → assign a data/Excel niche.
+6. If they say social media/Instagram → assign a social media management niche.
+7. Match the gig title and description to their actual niche — NEVER use a generic template.
+8. The 7-day action plan must include platform-specific steps for ${answers.platform}.
+9. Pricing must be realistic for Indian beginners in THEIR specific niche (dev niches pay more than design niches).
+10. If their skill answers seem unclear or random, make a reasonable best guess at the most marketable niche.
+
+Respond with ONLY a valid JSON object. No markdown, no backticks, no preamble. Exactly this structure:
 
 {
-  "niche": "Specific niche (e.g. Social Media Design for Small Businesses)",
-  "niche_reason": "2-sentence explanation of why this niche suits them perfectly",
-  "portfolio_blurb": "A confident 3-sentence first-person professional bio specific to their niche and platform. Make it compelling.",
+  "niche": "Precise niche title matching their actual skill (e.g. 'Frontend Web Development for Startups' NOT 'Social Media Design')",
+  "niche_reason": "2 specific sentences explaining why THIS niche matches THEIR stated skills and will earn well on their chosen platform.",
+  "portfolio_blurb": "3-sentence first-person bio written specifically for their niche. Mention their actual skill (coding/design/writing/etc). Sound confident and professional.",
   "pricing": {
-    "basic": { "name": "Starter", "price": "₹X,XXX", "deliverables": "line1\\nline2\\nline3", "timeline": "X days" },
-    "standard": { "name": "Standard", "price": "₹X,XXX", "deliverables": "line1\\nline2\\nline3\\nline4", "timeline": "X days" },
-    "premium": { "name": "Premium", "price": "₹X,XXX", "deliverables": "line1\\nline2\\nline3\\nline4\\nline5", "timeline": "X days" }
+    "basic": { "name": "Starter", "price": "₹X,XXX", "deliverables": "specific deliverable 1\\nspecific deliverable 2\\nspecific deliverable 3", "timeline": "X days" },
+    "standard": { "name": "Standard", "price": "₹X,XXX", "deliverables": "specific deliverable 1\\nspecific deliverable 2\\nspecific deliverable 3\\nspecific deliverable 4", "timeline": "X days" },
+    "premium": { "name": "Premium", "price": "₹X,XXX", "deliverables": "specific deliverable 1\\nspecific deliverable 2\\nspecific deliverable 3\\nspecific deliverable 4\\nspecific deliverable 5", "timeline": "X days" }
   },
-  "gig_title": "SEO-optimized gig title under 80 chars for their platform",
-  "gig_description": "150-word gig description with emojis, optimized for their niche and platform. Professional but warm.",
-  "pitch_script": "100-word personalized cold DM pitch they can send today. Human tone, not salesy. Ends with a soft call to action.",
-  "action_plan": "Day 1: [specific task]\\nDay 2: [specific task]\\nDay 3: [specific task]\\nDay 4: [specific task]\\nDay 5: [specific task]\\nDay 6: [specific task]\\nDay 7: [specific task]"
+  "gig_title": "SEO-optimized gig title under 80 chars — MUST match their actual skill/niche",
+  "gig_description": "150-word gig description with relevant emojis. Must mention their actual skill. Optimized for their chosen platform.",
+  "pitch_script": "100-word cold DM pitch specific to their niche. Human and natural tone. Ends with a soft call to action like offering a free sample.",
+  "action_plan": "Day 1: [platform-specific setup task for ${answers.platform}]\\nDay 2: [specific outreach task]\\nDay 3: [specific content/portfolio task]\\nDay 4: [specific application/proposal task]\\nDay 5: [specific follow-up or social task]\\nDay 6: [specific growth task]\\nDay 7: [review + next steps task]"
 }
 
-Pricing must reflect real Indian freelance market rates for a beginner. Be specific, practical, encouraging.`;
+Pricing benchmarks for Indian freelance beginners:
+- Web/App Development: Basic ₹3,000–₹5,000 | Standard ₹7,000–₹12,000 | Premium ₹15,000–₹25,000
+- Graphic/UI Design: Basic ₹1,500–₹2,500 | Standard ₹3,500–₹6,000 | Premium ₹7,000–₹12,000
+- Content Writing: Basic ₹800–₹1,500 | Standard ₹2,000–₹4,000 | Premium ₹5,000–₹8,000
+- Video Editing: Basic ₹1,500–₹2,500 | Standard ₹3,500–₹5,000 | Premium ₹6,000–₹10,000
+- Social Media: Basic ₹2,000–₹3,000 | Standard ₹4,000–₹6,000 | Premium ₹8,000–₹12,000
+- Data/Excel: Basic ₹1,000–₹2,000 | Standard ₹3,000–₹5,000 | Premium ₹6,000–₹10,000`;
 
   try {
     const res = await fetch(
@@ -665,18 +704,18 @@ Pricing must reflect real Indian freelance market rates for a beginner. Be speci
   } catch(e) {
     console.error(e);
     kit = {
-      niche:"Social Media Design for Small Businesses",
-      niche_reason:"Your Canva and social media skills map perfectly onto one of the most in-demand freelance niches right now. Small businesses pay consistently for quality, on-brand social content.",
-      portfolio_blurb:"I help small businesses and local brands stand out on Instagram and Facebook with clean, professional designs built in Canva. My work is fast, on-brand, and ready to post — no lengthy back-and-forths. Clients get 30 days of content that actually looks like it came from a design agency.",
+      niche:"Landing Page Development for Small Businesses",
+      niche_reason:"Your coding skills are directly monetizable — businesses constantly need fast, clean landing pages. This is one of the highest-paying beginner niches on Fiverr with consistent demand.",
+      portfolio_blurb:"I build fast, clean, mobile-friendly landing pages for small businesses and startups using HTML, CSS and JavaScript. My pages are built from scratch — no bloated templates — so they load fast and convert visitors into customers. Clients get a fully delivered, ready-to-publish page with clean code they own forever.",
       pricing:{
-        basic:{name:"Starter",price:"₹1,500",deliverables:"5 social media posts\nCanva editable files\n2 revisions",timeline:"3 days"},
-        standard:{name:"Standard",price:"₹3,500",deliverables:"15 posts + Stories\nReels covers\nEditable Canva files\n3 revisions",timeline:"5 days"},
-        premium:{name:"Premium",price:"₹7,000",deliverables:"30 posts (full month)\nStories + Reels + Highlights\nBrand color kit\nUnlimited revisions\nPriority delivery",timeline:"7 days"}
+        basic:{name:"Starter",price:"₹3,500",deliverables:"1-page responsive landing page\nHTML + CSS + JS source files\nMobile optimised\n2 revisions",timeline:"4 days"},
+        standard:{name:"Standard",price:"₹7,500",deliverables:"3-section landing page\nContact form integration\nBasic animations\nGoogle Analytics setup\n3 revisions",timeline:"6 days"},
+        premium:{name:"Premium",price:"₹15,000",deliverables:"Full 5-section landing page\nCMS integration (if needed)\nSEO optimised code\nSpeed optimised\nUnlimited revisions\nPriority delivery",timeline:"8 days"}
       },
-      gig_title:"I will design professional Instagram & Facebook posts for your brand using Canva",
-      gig_description:"🚀 Want your brand to stop the scroll on Instagram?\n\nI design professional, eye-catching social media content that makes small businesses look big. Every post is custom, on-brand and Canva-editable so you can make future tweaks yourself.\n\n✅ Instagram & Facebook posts\n✅ Stories and Reels covers\n✅ 100% editable Canva files\n✅ Fast delivery & friendly revisions\n✅ No boring templates — everything custom\n\nI work with coaches, boutiques, cafes and local brands who want a consistent, professional presence without agency prices.\n\n📩 Message me first — let's make sure we're the right fit!\n\nLet's build your brand's social media today. 🎨",
-      pitch_script:"Hey [Name]! I came across your page and I love what you're building. I noticed your social media could use more consistent, on-brand content — I help businesses like yours create 30 days of posts in one session, all editable and ready to schedule.\n\nI'm a social media designer and I'd love to create a FREE sample post for your brand — no commitment, just so you can see the quality. Would that be okay?",
-      action_plan:"Day 1: Set up your Fiverr account, use your portfolio blurb as bio, upload 3 sample Canva designs\nDay 2: Post on your Instagram story — 'I'm now taking clients for social media design, DM for a free sample'\nDay 3: Message 10 local business pages on Instagram offering a free sample post\nDay 4: Apply to 5 Fiverr gigs using your gig description — personalise each slightly\nDay 5: Create a 60-second Reel showing your design process (speed up in CapCut)\nDay 6: Follow up with all businesses you messaged on Day 3\nDay 7: Apply to 5 more Fiverr gigs and post your work on LinkedIn with #freelance #CanvaDesigner"
+      gig_title:"I will build a professional responsive landing page using HTML CSS JavaScript",
+      gig_description:"🚀 Need a fast, professional landing page that actually converts?\n\nI build clean, mobile-first landing pages from scratch using HTML, CSS and JavaScript — no bloated page builders, no templates. Just lean, fast code that loads instantly.\n\n✅ Fully responsive (mobile, tablet, desktop)\n✅ Clean hand-written code you own\n✅ Fast loading & SEO-ready structure\n✅ Contact form integration\n✅ Delivered with source files\n\nPerfect for coaches, consultants, local businesses and startups who need a professional online presence without agency prices.\n\n📩 Message me before ordering — tell me about your project and I'll give you an honest timeline and quote!\n\nLet's build something great. 💻",
+      pitch_script:"Hey [Name]! I came across your business and noticed you don't have a dedicated landing page yet — I'm a web developer and I specialize in building fast, clean landing pages for businesses like yours.\n\nI'd love to build you a FREE mockup of what your landing page could look like — no strings attached, just so you can see what's possible. Would that be useful to you?",
+      action_plan:"Day 1: Set up Fiverr profile, use your portfolio blurb as bio, upload 2–3 screenshot mockups of past work or self-made samples as portfolio\nDay 2: Go live with your gig — use the exact title and description provided\nDay 3: Build one free landing page sample for a local business type (café, salon, tutor) and add it to your portfolio\nDay 4: Apply to 5 Fiverr buyer requests using your pitch — customise for each\nDay 5: Post on LinkedIn: 'I just launched my freelance web dev service — here's a landing page I built' with screenshot\nDay 6: DM 10 small businesses on Instagram or LinkedIn offering a free mockup\nDay 7: Follow up with everyone you messaged, apply to 5 more Fiverr buyer requests"
     };
     setTimeout(() => showResults(), 1200);
   }
