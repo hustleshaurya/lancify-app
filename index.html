@@ -135,7 +135,6 @@
 </div>
 
 <script>
-  // CORRECTED Supabase URL
   const SUPABASE_URL = 'https://qkpyqtynwbvjssrqanmk.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
 
@@ -148,7 +147,6 @@
     setTimeout(() => errDiv.style.display = 'none', 5000);
   }
 
-  // Google Sign In
   document.getElementById('googleBtn').onclick = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -161,7 +159,6 @@
     }
   };
 
-  // Email Sign In / Sign Up
   document.getElementById('emailBtn').onclick = async () => {
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
@@ -185,7 +182,6 @@
     }
   };
 
-  // Auto redirect if already logged in
   if (localStorage.getItem('lancify_session')) {
     window.location.href = '/app';
   }
