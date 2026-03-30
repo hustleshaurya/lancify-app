@@ -40,7 +40,8 @@ Return ONLY a raw JSON object. No markdown. No backticks. No extra text. Just JS
 {"niche":"niche name here","niche_reason":"2 sentences why this fits them","portfolio_blurb":"3 sentence first-person professional bio","pricing":{"basic":{"name":"Starter","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3","timeline":"3 days"},"standard":{"name":"Standard","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3\ndeliverable 4","timeline":"5 days"},"premium":{"name":"Premium","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3\ndeliverable 4\ndeliverable 5","timeline":"7 days"}},"gig_title":"SEO gig title under 80 chars","gig_description":"150 word description with emojis","pitch_script":"100 word cold DM","action_plan":"Day 1: action\nDay 2: action\nDay 3: action\nDay 4: action\nDay 5: action\nDay 6: action\nDay 7: action"}`;
 
   try {
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // ✅ FIXED: Updated to gemini-2.0-flash (1.5-flash is deprecated)
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     const payload = JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
