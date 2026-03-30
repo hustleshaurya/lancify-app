@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lancify — Your AI Freelance Coach</title>
+  <!-- Supabase for auth protection -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000000;
+      font-family: 'Inter', sans-serif;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    /* navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.4rem;
+      font-family: 'Playfair Display', serif;
+      color: white;
+    }
+
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .logout-btn {
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      color: #a855f7;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(168, 85, 247, 0.2);
+    }
+
+    /* main container */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* chat messages */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .message {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.bot .bubble {
+      background: #0a0a0a;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 1.5rem;
+      border-top-left-radius: 0.5rem;
+    }
+
+    .message.user .bubble {
+      background: #a855f7;
+      border-radius: 1.5rem;
+      border-top-right-radius: 0.5rem;
+    }
+
+    .bubble {
+      padding: 0.9rem 1.3rem;
+      max-width: 80%;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    /* options buttons */
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .option-btn {
+      background: #0a0a0a;
+      border: 1px solid #27272a;
+      border-radius: 40px;
+      padding: 0.6rem 1.2rem;
+      color: #e4e4e7;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover {
+      border-color: #a855f7;
+      color: #a855f7;
+    }
+
+    /* input area */
+    .input-area {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .input-area input {
+      flex: 1;
+      background: #0a0a0a;
+      border: 1px solid #27272a;
+      border-radius: 60px;
+      padding: 0.9rem 1.2rem;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .input-area input:focus {
+      outline: none;
+      border-color: #a855f7;
+    }
+
+    .input-area button {
+      background: #a855f7;
+      border: none;
+      border-radius: 60px;
+      padding: 0.9rem 1.8rem;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* progress bar */
+    .progress-bar {
+      background: #1a1a1a;
+      border-radius: 60px;
+      height: 6px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: #a855f7;
+      width: 0%;
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    /* results page */
+    .results-container {
+      display: none;
+    }
+
+    .result-card {
+      background: #0a0a0a;
+      border: 1px solid rgba(168, 85, 247, 0.15);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .result-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+      color: #a855f7;
+    }
+
+    .result-card p {
+      color: #d4d4d8;
+      line-height: 1.6;
+    }
+
+    .locked {
+      filter: blur(4px);
+      pointer-events: none;
+      user-select: none;
+      position: relative;
+    }
+
+    .locked-overlay {
+      background: rgba(0,0,0,0.7);
+      border-radius: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .upgrade-btn {
+      background: #a855f7;
+      border: none;
+      border-radius: 40px;
+      padding: 0.7rem 1.5rem;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid #3f3f46;
+      border-radius: 30px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.7rem;
+      color: #a1a1aa;
+      cursor: pointer;
+      margin-left: 0.75rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #27272a;
+      border-top: 3px solid #a855f7;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="logo">
+    <div class="logo-icon">L</div>
+    <div class="logo-text">Lancify</div>
+  </div>
+  <button class="logout-btn" id="logoutBtn">Sign out →</button>
+</div>
+
+<div class="container">
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Chat Interface -->
+  <div id="chatInterface">
+    <div class="chat-container" id="chatMessages">
+      <div class="message bot">
+        <div class="bubble">Hey! 👋 I'm your AI Freelance Coach. Let's build your freelance kit in 5 minutes. Ready to start?</div>
+      </div>
+    </div>
+    <div class="options" id="optionsContainer">
+      <button class="option-btn" onclick="startInterview()">Yes, let's go →</button>
+    </div>
+  </div>
+
+  <!-- Results Interface (hidden initially) -->
+  <div id="resultsInterface" class="results-container">
+    <div id="resultsContent"></div>
+  </div>
+</div>
+
+<script>
+  // ---------- AUTH PROTECTION ----------
+  // Check if user is logged in
+  const sessionToken = localStorage.getItem('lancify_session');
+  if (!sessionToken) {
+    window.location.href = '/';
+  }
+
+  // Logout function
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('lancify_session');
+    window.location.href = '/';
+  });
+
+  // ---------- YOUR EXISTING AI CHAT LOGIC (GROQ API) ----------
+  let step = 0;
+  let answers = {
+    skills: '',
+    experience: '',
+    hours: '',
+    goal: '',
+    platform: ''
+  };
+
+  const questions = [
+    { q: "What skills do you have? (Even basic ones — Canva, writing, Excel, coding, video editing, social media, anything)", key: "skills" },
+    { q: "Have you ever helped someone with anything? Even unpaid — a friend, family, college project.", key: "experience" },
+    { q: "How many hours can you give to freelancing daily?", key: "hours" },
+    { q: "What's your income goal for the first month? (Be honest)", key: "goal" },
+    { q: "Which platform do you prefer? (Fiverr, Upwork, LinkedIn, Instagram, or all)", key: "platform" }
+  ];
+
+  function startInterview() {
+    step = 0;
+    answers = { skills: '', experience: '', hours: '', goal: '', platform: '' };
+    document.getElementById('optionsContainer').innerHTML = '';
+    askQuestion();
+  }
+
+  function askQuestion() {
+    if (step >= questions.length) {
+      generateKit();
+      return;
+    }
+
+    const chatDiv = document.getElementById('chatMessages');
+    const question = questions[step];
+    
+    // Add bot question
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'message bot';
+    msgDiv.innerHTML = `<div class="bubble">${question.q}</div>`;
+    chatDiv.appendChild(msgDiv);
+    
+    // Add input for answer
+    const inputDiv = document.createElement('div');
+    inputDiv.className = 'input-area';
+    inputDiv.innerHTML = `
+      <input type="text" id="answerInput" placeholder="Type your answer...">
+      <button onclick="submitAnswer()">Send →</button>
+    `;
+    chatDiv.appendChild(inputDiv);
+    
+    document.getElementById('answerInput').focus();
+    
+    // Update progress
+    const progress = ((step) / questions.length) * 100;
+    document.getElementById('progressFill').style.width = `${progress}%`;
+  }
+
+  function submitAnswer() {
+    const input = document.getElementById('answerInput');
+    const answer = input.value.trim();
+    
+    if (answer.length < 2) {
+      alert('Please provide a proper answer');
+      return;
+    }
+    
+    // Store answer
+    answers[questions[step].key] = answer;
+    
+    // Add user message
+    const chatDiv = document.getElementById('chatMessages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'message user';
+    msgDiv.innerHTML = `<div class="bubble">${answer}</div>`;
+    chatDiv.appendChild(msgDiv);
+    
+    // Remove input
+    const inputArea = document.querySelector('.input-area');
+    if (inputArea) inputArea.remove();
+    
+    step++;
+    askQuestion();
+  }
+
+  async function generateKit() {
+    // Show loading
+    const chatDiv = document.getElementById('chatMessages');
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'message bot';
+    loadingDiv.id = 'loadingMsg';
+    loadingDiv.innerHTML = `<div class="bubble"><div class="spinner"></div>AI is building your freelance kit...</div>`;
+    chatDiv.appendChild(loadingDiv);
+    
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(answers)
+      });
+      
+      const data = await response.json();
+      document.getElementById('loadingMsg')?.remove();
+      displayResults(data);
+    } catch (error) {
+      document.getElementById('loadingMsg')?.remove();
+      // Fallback kit
+      displayResults({
+        niche: "Web Development",
+        portfolio: "I help small businesses build modern websites that actually convert visitors into customers.",
+        pricing: "Basic: ₹3,500 | Standard: ₹7,000 | Premium: ₹12,000",
+        gigDescription: "I will build you a professional responsive website in 3 days",
+        pitchScript: "🔒 Upgrade to Pro to unlock your personalized pitch script",
+        actionPlan: "🔒 Upgrade to Pro to unlock your 7-day action plan"
+      });
+    }
+  }
+
+  function displayResults(data) {
+    document.getElementById('chatInterface').style.display = 'none';
+    document.getElementById('resultsInterface').style.display = 'block';
+    document.getElementById('progressFill').style.width = '100%';
+    
+    const isPro = false; // Will connect payment later
+    
+    const html = `
+      <div class="result-card">
+        <h3>🎯 Your Niche: ${data.niche || 'Freelance Specialist'}</h3>
+      </div>
+      <div class="result-card">
+        <h3>📁 Portfolio Blurb <button class="copy-btn" onclick="copyText('${(data.portfolio || '').replace(/'/g, "\\'")}')">Copy</button></h3>
+        <p>${data.portfolio || 'No portfolio generated'}</p>
+      </div>
+      <div class="result-card">
+        <h3>💰 Pricing Packages <button class="copy-btn" onclick="copyText('${(data.pricing || '').replace(/'/g, "\\'")}')">Copy</button></h3>
+        <p>${data.pricing || 'No pricing generated'}</p>
+      </div>
+      <div class="result-card">
+        <h3>✍️ Gig Description <button class="copy-btn" onclick="copyText('${(data.gigDescription || '').replace(/'/g, "\\'")}')">Copy</button></h3>
+        <p>${data.gigDescription || 'No gig description generated'}</p>
+      </div>
+      <div class="result-card ${!isPro ? 'locked' : ''}" style="position: relative;">
+        ${!isPro ? '<div class="locked-overlay"><span>🔒 Pro Feature</span><button class="upgrade-btn" onclick="upgradeToPro()">Upgrade to Pro — ₹399/mo</button></div>' : ''}
+        <h3>💬 Pitch Script</h3>
+        <p>${data.pitchScript || 'Upgrade to unlock your personalized pitch script'}</p>
+      </div>
+      <div class="result-card ${!isPro ? 'locked' : ''}" style="position: relative;">
+        ${!isPro ? '<div class="locked-overlay"><span>🔒 Pro Feature</span><button class="upgrade-btn" onclick="upgradeToPro()">Upgrade to Pro — ₹399/mo</button></div>' : ''}
+        <h3>📆 7-Day Action Plan</h3>
+        <p>${data.actionPlan || 'Upgrade to unlock your step-by-step action plan'}</p>
+      </div>
+    `;
+    
+    document.getElementById('resultsContent').innerHTML = html;
+  }
+
+  function copyText(text) {
+    navigator.clipboard.writeText(text);
+    alert('Copied to clipboard! ✅');
+  }
+
+  function upgradeToPro() {
+    alert('Payment integration coming soon! 🚀\nFor now, this is a Pro feature.');
+  }
+</script>
+</body>
+</html>
