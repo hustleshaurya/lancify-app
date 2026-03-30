@@ -9,9 +9,9 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    console.error('GEMINI_API_KEY not set in environment');
+    console.error('GROQ_API_KEY not set in environment');
     return res.status(500).json({ error: 'API key not configured on server' });
   }
 
@@ -29,7 +29,7 @@ Platform: "${answers.platform}"
 
 IMPORTANT RULES:
 - If skills mention coding/JavaScript/Python/HTML/CSS/React/Node/programming -> assign WEB DEVELOPMENT niche
-- If skills mention Canva/design/Photoshop/Figma -> assign DESIGN niche  
+- If skills mention Canva/design/Photoshop/Figma -> assign DESIGN niche
 - If skills mention writing/content/blogs -> assign WRITING niche
 - If skills mention video/editing/CapCut/Premiere -> assign VIDEO EDITING niche
 - If skills mention Excel/data/spreadsheets -> assign DATA niche
@@ -39,21 +39,24 @@ Return ONLY a raw JSON object. No markdown. No backticks. No extra text. Just JS
 
 {"niche":"niche name here","niche_reason":"2 sentences why this fits them","portfolio_blurb":"3 sentence first-person professional bio","pricing":{"basic":{"name":"Starter","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3","timeline":"3 days"},"standard":{"name":"Standard","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3\ndeliverable 4","timeline":"5 days"},"premium":{"name":"Premium","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3\ndeliverable 4\ndeliverable 5","timeline":"7 days"}},"gig_title":"SEO gig title under 80 chars","gig_description":"150 word description with emojis","pitch_script":"100 word cold DM","action_plan":"Day 1: action\nDay 2: action\nDay 3: action\nDay 4: action\nDay 5: action\nDay 6: action\nDay 7: action"}`;
 
-  try {
-    // ✅ FIXED: Updated to gemini-2.0-flash (1.5-flash is deprecated)
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    const payload = JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
-    });
+  const payload = JSON.stringify({
+    model: "llama3-70b-8192",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.7,
+    max_tokens: 2048
+  });
 
+  try {
     const result = await new Promise((resolve, reject) => {
-      const url = new URL(geminiUrl);
       const req2 = https.request({
-        hostname: url.hostname,
-        path: url.pathname + url.search,
+        hostname: 'api.groq.com',
+        path: '/openai/v1/chat/completions',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) }
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Length': Buffer.byteLength(payload)
+        }
       }, (r) => {
         let d = '';
         r.on('data', c => d += c);
@@ -64,19 +67,19 @@ Return ONLY a raw JSON object. No markdown. No backticks. No extra text. Just JS
       req2.end();
     });
 
-    console.log('Gemini HTTP status:', result.status);
+    console.log('Groq HTTP status:', result.status);
     const data = JSON.parse(result.body);
 
     if (result.status !== 200) {
-      console.error('Gemini error:', JSON.stringify(data?.error));
-      return res.status(500).json({ error: data?.error?.message || 'Gemini returned error ' + result.status });
+      console.error('Groq error:', JSON.stringify(data?.error));
+      return res.status(500).json({ error: data?.error?.message || 'Groq returned error ' + result.status });
     }
 
-    let raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
+    let raw = data?.choices?.[0]?.message?.content || '';
+    raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) {
-      console.error('No JSON in response:', raw.substring(0,300));
+      console.error('No JSON in response:', raw.substring(0, 300));
       return res.status(500).json({ error: 'AI returned unexpected format' });
     }
 
@@ -84,7 +87,7 @@ Return ONLY a raw JSON object. No markdown. No backticks. No extra text. Just JS
     console.log('Success - niche:', kit.niche);
     return res.status(200).json(kit);
 
-  } catch(err) {
+  } catch (err) {
     console.error('Error:', err.message);
     return res.status(500).json({ error: err.message });
   }
