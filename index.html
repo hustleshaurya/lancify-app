@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lancify — Sign in</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .login-card {
+      background: #0a0a0a;
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: 2rem;
+      padding: 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-weight: 800;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+    .logo-text span { color: #a855f7; }
+    h1 { font-size: 1.9rem; margin-bottom: 0.5rem; }
+    .subhead { color: #a1a1aa; margin-bottom: 2rem; display: block; }
+    .google-btn {
+      width: 100%;
+      background: #111;
+      border: 1px solid #27272a;
+      border-radius: 60px;
+      padding: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+    }
+    .google-btn:hover { border-color: #a855f7; }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.8rem 0;
+      color: #3f3f46;
+    }
+    .divider-line { flex: 1; height: 1px; background: #27272a; }
+    .input-group { margin-bottom: 1.2rem; text-align: left; }
+    .input-group label { display: block; font-size: 0.8rem; margin-bottom: 0.4rem; color: #d4d4d8; }
+    .input-group input {
+      width: 100%;
+      background: #0f0f0f;
+      border: 1px solid #27272a;
+      border-radius: 60px;
+      padding: 0.8rem 1.2rem;
+      color: white;
+    }
+    .email-btn {
+      width: 100%;
+      background: #a855f7;
+      border: none;
+      border-radius: 60px;
+      padding: 0.85rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+    }
+    .footer-note { font-size: 0.75rem; color: #52525b; margin-top: 2rem; }
+    .error-message {
+      background: rgba(220,38,38,0.1);
+      border: 1px solid #ef4444;
+      border-radius: 60px;
+      padding: 0.6rem;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+      color: #f87171;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<div class="login-card">
+  <div class="logo-text">Lanc<span>ify</span></div>
+  <h1>Start your freelance journey</h1>
+  <span class="subhead">Sign in to access your AI launch kit</span>
+
+  <button id="googleBtn" class="google-btn">Sign in with Google</button>
+
+  <div class="divider"><div class="divider-line"></div><span>or</span><div class="divider-line"></div></div>
+
+  <div class="input-group"><label>Email</label><input type="email" id="emailInput" placeholder="you@college.com"></div>
+  <div class="input-group"><label>Password</label><input type="password" id="passwordInput" placeholder="••••••••"></div>
+  <button id="emailBtn" class="email-btn">Sign in with email</button>
+
+  <div id="errorMsg" class="error-message"></div>
+  <div class="footer-note">By continuing you agree to Lancify's Terms</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const MY_URL = 'https://qkpyqtynwbvjssrqanmk.supabase.co';
+  const MY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
+
+  const lancifyAuth = window.supabase.createClient(MY_URL, MY_KEY);
+
+  function showError(msg) {
+    const errDiv = document.getElementById('errorMsg');
+    errDiv.textContent = msg;
+    errDiv.style.display = 'block';
+    setTimeout(() => errDiv.style.display = 'none', 5000);
+  }
+
+  document.getElementById('googleBtn').onclick = async () => {
+    try {
+      const { error } = await lancifyAuth.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: 'https://lancify-app.vercel.app/app' }
+      });
+      if (error) throw error;
+    } catch (err) {
+      showError(err.message);
+    }
+  };
+
+  document.getElementById('emailBtn').onclick = async () => {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
+    if (!email || !password) {
+      showError('Enter email and password');
+      return;
+    }
+    try {
+      const { data, error } = await lancifyAuth.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      localStorage.setItem('lancify_session', data.session.access_token);
+      window.location.href = '/app';
+    } catch (err) {
+      if (err.message.includes('Invalid login')) {
+        const { error: signUpError } = await lancifyAuth.auth.signUp({ email, password });
+        if (signUpError) showError(signUpError.message);
+        else showError('Account created! Check your email to confirm.');
+      } else {
+        showError(err.message);
+      }
+    }
+  };
+
+  if (localStorage.getItem('lancify_session')) {
+    window.location.href = '/app';
+  }
+</script>
+</body>
+</html>
