@@ -2,28 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Lancify Login</title>
+  <title>Lancify - Email Login Test</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { background: black; color: white; text-align: center; padding: 50px; font-family: Arial; }
+    input, button { padding: 10px; margin: 10px; border-radius: 8px; border: none; }
+    input { width: 250px; }
+    button { background: #a855f7; color: white; cursor: pointer; }
+    #status { color: #00ff88; margin-top: 20px; }
+    #error { color: #ff4444; margin-top: 20px; }
+  </style>
 </head>
-<body style="background:black; color:white; text-align:center; padding:50px;">
-  <h1>Lancify</h1>
-  <button id="googleBtn" style="background:#a855f7; color:white; padding:12px 24px; border:none; border-radius:40px; cursor:pointer;">Sign in with Google</button>
-  <p id="error" style="color:red;"></p>
+<body>
+  <h1>🔐 Lancify</h1>
+  <h3>Test Email Login</h3>
+  
+  <input type="email" id="email" placeholder="your@email.com">
+  <button id="magicLinkBtn">Send Magic Link</button>
+  
+  <div id="status"></div>
+  <div id="error"></div>
 
   <script>
     const SUPABASE_URL = 'https://qkpyqtynwbvjssrqanmk.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
 
-    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    document.getElementById('googleBtn').onclick = function() {
-      _supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: 'https://lancify-app.vercel.app/app' }
+    document.getElementById('magicLinkBtn').onclick = async () => {
+      const email = document.getElementById('email').value;
+      if (!email) {
+        showError('Enter your email');
+        return;
+      }
+      
+      showStatus('Sending magic link to ' + email + '...');
+      
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          emailRedirectTo: 'https://lancify-app.vercel.app/app'
+        }
       });
+      
+      if (error) {
+        showError(error.message);
+      } else {
+        showStatus('✅ Magic link sent! Check your email inbox (or spam folder).');
+      }
     };
+    
+    function showStatus(msg) {
+      document.getElementById('status').innerHTML = msg;
+      document.getElementById('error').innerHTML = '';
+    }
+    
+    function showError(msg) {
+      document.getElementById('error').innerHTML = '❌ ' + msg;
+      document.getElementById('status').innerHTML = '';
+    }
 
-    if (localStorage.getItem('lancify_session')) {
+    // Check if user came from magic link
+    const hash = window.location.hash;
+    if (hash.includes('access_token')) {
+      localStorage.setItem('lancify_session', 'token_received');
       window.location.href = '/app';
     }
   </script>
