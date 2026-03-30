@@ -11,8 +11,8 @@ module.exports = async function handler(req, res) {
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    console.error('GROQ_API_KEY not set in environment');
-    return res.status(500).json({ error: 'API key not configured on server' });
+    console.error('GROQ_API_KEY not set');
+    return res.status(500).json({ error: 'API key not configured' });
   }
 
   const answers = req.body?.answers;
@@ -20,28 +20,38 @@ module.exports = async function handler(req, res) {
 
   const prompt = `You are Lancify AI, a freelance coach for Indian students aged 18-25.
 
-Student answers:
+Student profile:
 Skills: "${answers.skills}"
 Experience: "${answers.experience}"
-Hours/day: "${answers.hours}"
+Hours per day: "${answers.hours}"
 Income goal: "${answers.goal}"
 Platform: "${answers.platform}"
 
-IMPORTANT RULES:
-- If skills mention coding/JavaScript/Python/HTML/CSS/React/Node/programming -> assign WEB DEVELOPMENT niche
-- If skills mention Canva/design/Photoshop/Figma -> assign DESIGN niche
-- If skills mention writing/content/blogs -> assign WRITING niche
-- If skills mention video/editing/CapCut/Premiere -> assign VIDEO EDITING niche
-- If skills mention Excel/data/spreadsheets -> assign DATA niche
-- If skills mention social media/Instagram/reels -> assign SOCIAL MEDIA niche
+Rules for niche assignment:
+- coding/JavaScript/Python/HTML/CSS/React/Node -> WEB DEVELOPMENT
+- Canva/design/Photoshop/Figma -> GRAPHIC DESIGN
+- writing/content/blogs/copywriting -> CONTENT WRITING
+- video/editing/CapCut/Premiere/YouTube -> VIDEO EDITING
+- Excel/data/spreadsheets/analytics -> DATA ENTRY
+- social media/Instagram/reels/marketing -> SOCIAL MEDIA MANAGEMENT
 
-Return ONLY a raw JSON object. No markdown. No backticks. No extra text. Just JSON.
+CRITICAL: Return ONLY valid JSON. No markdown. No backticks. No newlines inside string values. Use spaces instead of newlines inside strings.
 
-{"niche":"niche name here","niche_reason":"2 sentences why this fits them","portfolio_blurb":"3 sentence first-person professional bio","pricing":{"basic":{"name":"Starter","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3","timeline":"3 days"},"standard":{"name":"Standard","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3\ndeliverable 4","timeline":"5 days"},"premium":{"name":"Premium","price":"Rs X,XXX","deliverables":"deliverable 1\ndeliverable 2\ndeliverable 3\ndeliverable 4\ndeliverable 5","timeline":"7 days"}},"gig_title":"SEO gig title under 80 chars","gig_description":"150 word description with emojis","pitch_script":"100 word cold DM","action_plan":"Day 1: action\nDay 2: action\nDay 3: action\nDay 4: action\nDay 5: action\nDay 6: action\nDay 7: action"}`;
+Return exactly this structure:
+{"niche":"NICHE NAME","niche_reason":"Reason sentence one. Reason sentence two.","portfolio_blurb":"Bio sentence one. Bio sentence two. Bio sentence three.","pricing":{"basic":{"name":"Starter","price":"Rs 2,500","deliverables":"Item one. Item two. Item three.","timeline":"3 days"},"standard":{"name":"Standard","price":"Rs 5,000","deliverables":"Item one. Item two. Item three. Item four.","timeline":"5 days"},"premium":{"name":"Premium","price":"Rs 10,000","deliverables":"Item one. Item two. Item three. Item four. Item five.","timeline":"7 days"}},"gig_title":"Your gig title here under 80 characters","gig_description":"Your 150 word gig description here without any line breaks just one paragraph","pitch_script":"Your 100 word cold DM script here without any line breaks just one paragraph","action_plan":{"day1":"Specific action for day 1","day2":"Specific action for day 2","day3":"Specific action for day 3","day4":"Specific action for day 4","day5":"Specific action for day 5","day6":"Specific action for day 6","day7":"Specific action for day 7"}}`;
 
   const payload = JSON.stringify({
     model: "llama-3.3-70b-versatile",
-    messages: [{ role: "user", content: prompt }],
+    messages: [
+      {
+        role: "system",
+        content: "You are a JSON API. You only output valid JSON objects. Never use newlines or control characters inside JSON string values. Never use markdown. Never add explanation text."
+      },
+      {
+        role: "user",
+        content: prompt
+      }
+    ],
     temperature: 0.7,
     max_tokens: 2048
   });
@@ -72,18 +82,34 @@ Return ONLY a raw JSON object. No markdown. No backticks. No extra text. Just JS
 
     if (result.status !== 200) {
       console.error('Groq error:', JSON.stringify(data?.error));
-      return res.status(500).json({ error: data?.error?.message || 'Groq returned error ' + result.status });
+      return res.status(500).json({ error: data?.error?.message || 'Groq error ' + result.status });
     }
 
     let raw = data?.choices?.[0]?.message?.content || '';
-    raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+    console.log('Raw response preview:', raw.substring(0, 200));
+
+    // Clean the response thoroughly
+    raw = raw
+      .replace(/```json/gi, '')
+      .replace(/```/g, '')
+      .trim();
+
+    // Extract JSON object
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) {
-      console.error('No JSON in response:', raw.substring(0, 300));
+      console.error('No JSON found in:', raw.substring(0, 300));
       return res.status(500).json({ error: 'AI returned unexpected format' });
     }
 
-    const kit = JSON.parse(match[0]);
+    let jsonStr = match[0];
+
+    // Fix bad control characters — replace actual newlines inside strings with space
+    jsonStr = jsonStr.replace(/[\n\r\t]/g, ' ');
+
+    // Fix multiple spaces
+    jsonStr = jsonStr.replace(/  +/g, ' ');
+
+    const kit = JSON.parse(jsonStr);
     console.log('Success - niche:', kit.niche);
     return res.status(200).json(kit);
 
