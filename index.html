@@ -4,17 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Lancify — Sign in to continue</title>
-  <!-- Google Fonts: Playfair Display + modern sans for UI -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Supabase JS library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background-color: #000000;
       font-family: 'Inter', sans-serif;
@@ -24,97 +17,49 @@
       align-items: center;
       justify-content: center;
       padding: 2rem;
-      position: relative;
-      isolation: isolate;
     }
-
-    /* subtle noise texture */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 32px 32px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .container {
-      max-width: 480px;
-      width: 100%;
-      z-index: 2;
-    }
-
-    /* card */
+    .container { max-width: 480px; width: 100%; }
     .login-card {
       background: #0a0a0a;
       border: 1px solid rgba(168, 85, 247, 0.2);
       border-radius: 2rem;
       padding: 2.5rem;
-      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(168, 85, 247, 0.05);
-      backdrop-filter: blur(2px);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
     }
-
-    /* logo area */
     .logo {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
       justify-content: center;
+      gap: 0.75rem;
       margin-bottom: 1.5rem;
-    }
-    .logo-icon {
-      background: linear-gradient(135deg, #a855f7, #7c3aed);
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.4rem;
-      font-family: 'Playfair Display', serif;
-      color: white;
     }
     .logo-text {
       font-family: 'Playfair Display', serif;
       font-weight: 800;
       font-size: 1.8rem;
       letter-spacing: -0.02em;
-      background: linear-gradient(to right, #ffffff, #a855f7);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #ffffff;
     }
-
     h1 {
       font-family: 'Playfair Display', serif;
       font-size: 1.9rem;
       font-weight: 700;
       text-align: center;
       margin-bottom: 0.5rem;
-      letter-spacing: -0.02em;
     }
-
     .subhead {
       text-align: center;
       color: #a1a1aa;
       font-size: 0.95rem;
       margin-bottom: 2rem;
-      border-bottom: 1px solid rgba(168,85,247,0.2);
-      display: inline-block;
-      width: auto;
-      margin-left: auto;
-      margin-right: auto;
-      padding-bottom: 0.75rem;
+      display: block;
     }
-
     .google-btn {
       width: 100%;
       background: #111111;
       border: 1px solid #27272a;
       border-radius: 60px;
-      padding: 0.85rem 1rem;
+      padding: 0.85rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -123,13 +68,9 @@
       font-weight: 500;
       color: white;
       cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: 'Inter', sans-serif;
     }
     .google-btn:hover {
-      background: #1a1a1a;
       border-color: #a855f7;
-      transform: scale(0.98);
     }
     .divider {
       display: flex;
@@ -137,20 +78,12 @@
       gap: 1rem;
       margin: 1.8rem 0;
       color: #3f3f46;
-      font-size: 0.8rem;
     }
-    .divider-line {
-      flex: 1;
-      height: 1px;
-      background: #27272a;
-    }
-    .input-group {
-      margin-bottom: 1.2rem;
-    }
+    .divider-line { flex: 1; height: 1px; background: #27272a; }
+    .input-group { margin-bottom: 1.2rem; }
     .input-group label {
       display: block;
       font-size: 0.8rem;
-      font-weight: 500;
       margin-bottom: 0.4rem;
       color: #d4d4d8;
     }
@@ -161,13 +94,10 @@
       border-radius: 60px;
       padding: 0.8rem 1.2rem;
       color: white;
-      font-family: 'Inter', sans-serif;
-      transition: 0.2s;
     }
     .input-group input:focus {
       outline: none;
       border-color: #a855f7;
-      box-shadow: 0 0 0 2px rgba(168,85,247,0.2);
     }
     .email-btn {
       width: 100%;
@@ -177,15 +107,9 @@
       padding: 0.85rem;
       font-weight: 600;
       color: white;
-      font-family: 'Inter', sans-serif;
       cursor: pointer;
-      transition: 0.2s;
-      margin-top: 0.5rem;
     }
-    .email-btn:hover {
-      background: #9333ea;
-      transform: scale(0.98);
-    }
+    .email-btn:hover { background: #9333ea; }
     .footer-note {
       text-align: center;
       font-size: 0.75rem;
@@ -201,6 +125,7 @@
       text-align: center;
       margin-top: 1rem;
       color: #f87171;
+      display: none;
     }
   </style>
 </head>
@@ -208,15 +133,21 @@
 <div class="container">
   <div class="login-card">
     <div class="logo">
-      <div class="logo-icon">L</div>
-      <div class="logo-text">Lancify</div>
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 0L24.5 15.5L40 20L24.5 24.5L20 40L15.5 24.5L0 20L15.5 15.5L20 0Z" fill="url(#gradient)" />
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a855f7" />
+            <stop offset="50%" stop-color="#7c3aed" />
+            <stop offset="100%" stop-color="#6d28d9" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="logo-text">Lanc<span style="color: #a855f7;">ify</span></span>
     </div>
     <h1>Start your freelance journey</h1>
-    <div style="text-align: center; margin-bottom: 1.5rem;">
-      <span class="subhead">Sign in to access your AI launch kit</span>
-    </div>
+    <span class="subhead">Sign in to access your AI launch kit</span>
 
-    <!-- Google Sign In -->
     <button id="googleSignInBtn" class="google-btn">
       <svg width="20" height="20" viewBox="0 0 24 24">
         <path fill="#ffffff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -227,39 +158,23 @@
       Sign in with Google
     </button>
 
-    <div class="divider">
-      <div class="divider-line"></div>
-      <span>or continue with email</span>
-      <div class="divider-line"></div>
-    </div>
+    <div class="divider"><div class="divider-line"></div><span>or continue with email</span><div class="divider-line"></div></div>
 
-    <!-- Email sign in -->
-    <div class="input-group">
-      <label>Email address</label>
-      <input type="email" id="emailInput" placeholder="you@college.com">
-    </div>
-    <div class="input-group">
-      <label>Password</label>
-      <input type="password" id="passwordInput" placeholder="••••••••">
-    </div>
+    <div class="input-group"><label>Email address</label><input type="email" id="emailInput" placeholder="you@college.com"></div>
+    <div class="input-group"><label>Password</label><input type="password" id="passwordInput" placeholder="••••••••"></div>
     <button id="emailSignInBtn" class="email-btn">Sign in with email</button>
 
-    <div id="errorMsg" class="error-message" style="display: none;"></div>
-    <div class="footer-note">
-      By continuing you agree to Lancify's Terms of Service.
-    </div>
+    <div id="errorMsg" class="error-message"></div>
+    <div class="footer-note">By continuing you agree to Lancify's Terms of Service.</div>
   </div>
 </div>
 
 <script>
-  // ---------- SUPABASE CONFIG ----------
   const SUPABASE_URL = 'https://qkpyqtynwbvjsrsqanmk.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
 
-  // Initialize Supabase client
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // Helper to show error
   function showError(message) {
     const errDiv = document.getElementById('errorMsg');
     errDiv.textContent = message;
@@ -267,22 +182,21 @@
     setTimeout(() => { errDiv.style.display = 'none'; }, 4000);
   }
 
-  // After login success: store session & redirect to AI app
   async function onAuthSuccess(session) {
     if (session?.access_token) {
       localStorage.setItem('lancify_session', session.access_token);
       window.location.href = '/app';
-    } else {
-      showError('Login succeeded but missing token. Please try again.');
     }
   }
 
-  // Google Sign-In
+  // Fixed Google Sign-In
   document.getElementById('googleSignInBtn').addEventListener('click', async () => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.origin }
+        options: {
+          redirectTo: `${window.location.origin}/app`
+        }
       });
       if (error) throw error;
     } catch (err) {
@@ -290,42 +204,28 @@
     }
   });
 
-  // Email sign in
   document.getElementById('emailSignInBtn').addEventListener('click', async () => {
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
-    if (!email || !password) {
-      showError('Please enter email and password');
-      return;
-    }
+    if (!email || !password) { showError('Please enter email and password'); return; }
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       await onAuthSuccess(data.session);
     } catch (err) {
-      // If user doesn't exist, sign them up automatically
       if (err.message.includes('Invalid login credentials')) {
         try {
           const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
           if (signUpError) throw signUpError;
-          showError('Account created! Please check your email to confirm (or sign in again).');
-        } catch (signUpErr) {
-          showError(signUpErr.message);
-        }
-      } else {
-        showError(err.message);
-      }
+          showError('Account created! Please check your email to confirm.');
+        } catch (signUpErr) { showError(signUpErr.message); }
+      } else { showError(err.message); }
     }
   });
 
-  // On page load: if already have session, redirect to app
-  async function checkExistingSession() {
-    const storedToken = localStorage.getItem('lancify_session');
-    if (storedToken) {
-      window.location.href = '/app';
-    }
+  if (localStorage.getItem('lancify_session')) {
+    window.location.href = '/app';
   }
-  checkExistingSession();
 </script>
 </body>
 </html>
