@@ -400,16 +400,32 @@ function pickOpt(val) {
 function send() {
   const inp = document.getElementById('cinput');
   const val = inp.value.trim(); if (!val) return;
-  if (val.length < 3) {
-    inp.style.borderColor = 'var(--purple)';
-    inp.placeholder = 'Please write a bit more!';
-    setTimeout(() => { inp.style.borderColor=''; inp.placeholder=QS[qidx].placeholder; }, 2000);
+
+  // Must be at least 5 characters
+  if (val.length < 5) {
+    inp.style.borderColor = '#ef4444';
+    inp.placeholder = 'Too short! Please describe your skill properly.';
+    inp.value = '';
+    setTimeout(() => { inp.style.borderColor=''; inp.placeholder=QS[qidx].placeholder; }, 2500);
     return;
   }
-  const hasWords = /[a-zA-Z\u0900-\u097F]{2,}/.test(val);
-  if (!hasWords) {
+
+  // Must contain at least one real word (3+ letters)
+  const hasRealWord = /[a-zA-Z]{3,}/.test(val);
+  if (!hasRealWord) {
     inp.style.borderColor = '#ef4444';
-    inp.placeholder = 'Please describe in words — e.g. coding, Canva, writing...';
+    inp.placeholder = 'Please use words like: coding, Canva, writing...';
+    inp.value = '';
+    setTimeout(() => { inp.style.borderColor=''; inp.placeholder=QS[qidx].placeholder; }, 2500);
+    return;
+  }
+
+  // Block gibberish - strings with no vowels (keyboard mashing)
+  const wordParts = val.match(/[a-zA-Z]{4,}/g) || [];
+  const allGibberish = wordParts.length > 0 && wordParts.every(w => !/[aeiouAEIOU]/.test(w));
+  if (allGibberish) {
+    inp.style.borderColor = '#ef4444';
+    inp.placeholder = 'Please give a real answer - what skills do you have?';
     inp.value = '';
     setTimeout(() => { inp.style.borderColor=''; inp.placeholder=QS[qidx].placeholder; }, 2500);
     return;
