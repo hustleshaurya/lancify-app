@@ -202,28 +202,6 @@
       margin-top: 1rem;
       color: #f87171;
     }
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      font-family: 'Playfair Display', serif;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #27272a;
-      border-top: 3px solid #a855f7;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -275,9 +253,8 @@
 
 <script>
   // ---------- SUPABASE CONFIG ----------
-  // Use YOUR actual Supabase URL and anon key
-  const SUPABASE_URL = 'https://qkpyqtynwbvjsrsqanmk.supabase.co';  // ✅ Replace if different
-  const SUPABASE_ANON_KEY = 'sb_pub1ishable_0100V1HvN3mrfZgTpCJfg_4yFEC...'; // ❌ REPLACE with your actual anon key from Supabase (Settings → API)
+  const SUPABASE_URL = 'https://qkpyqtynwbvjsrsqanmk.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
 
   // Initialize Supabase client
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -308,7 +285,6 @@
         options: { redirectTo: window.location.origin }
       });
       if (error) throw error;
-      // After redirect, we'll be back on same page. We'll check session on load.
     } catch (err) {
       showError(err.message);
     }
@@ -346,7 +322,6 @@
   async function checkExistingSession() {
     const storedToken = localStorage.getItem('lancify_session');
     if (storedToken) {
-      // Optional: verify token with backend
       window.location.href = '/app';
     }
   }
