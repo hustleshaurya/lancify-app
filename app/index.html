@@ -231,19 +231,20 @@ footer{border-top:1px solid var(--border);padding:56px 40px 32px;margin-top:0;}
 </footer>
 
 <script>
-// ---------- SESSION CHECK & LOGOUT ----------
-const SUPABASE_URL = 'https://qkpyqtynwbvjssrqanmk.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
+// ---------- ONLY ONE SUPABASE DECLARATION ----------
+const supabaseUrl = 'https://qkpyqtynwbvjssrqanmk.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+// ---------- SESSION CHECK ----------
 async function checkSession() {
   const storedToken = localStorage.getItem('lancify_session');
   if (!storedToken) {
     window.location.href = '/';
     return;
   }
-  const { data: { user }, error } = await supabase.auth.getUser(storedToken);
+  const { data: { user }, error } = await sb.auth.getUser(storedToken);
   if (error || !user) {
     localStorage.removeItem('lancify_session');
     window.location.href = '/';
@@ -253,6 +254,7 @@ async function checkSession() {
   if (userEmailSpan) userEmailSpan.textContent = user.email || 'User';
 }
 
+// ---------- LOGOUT ----------
 document.getElementById('logoutBtn').addEventListener('click', () => {
   localStorage.removeItem('lancify_session');
   window.location.href = '/';
@@ -260,7 +262,7 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
 
 checkSession();
 
-// ---------- AI CHAT CODE ----------
+// ---------- AI CHAT CODE (startChat is GLOBAL) ----------
 const STEPS = [
   { id:'skills', type:'text', ph:'e.g. coding in Python, Canva designs, writing blogs...',
     q:"Hey! Welcome to Lancify.\n\nLet's find out what you're good at. What tools, apps or skills do you use regularly, even casually?\n\nThis could be coding, Canva, writing, video editing, Excel, social media — anything at all." },
