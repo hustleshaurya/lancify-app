@@ -12,7 +12,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
-
 header{position:sticky;top:0;z-index:200;height:64px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .h-logo{cursor:pointer;height:32px;}
 .h-logo img{height:100%;width:auto;}
@@ -23,10 +22,8 @@ header{position:sticky;top:0;z-index:200;height:64px;padding:0 40px;display:flex
 .user-email{font-size:.75rem;color:var(--gray);background:var(--s2);padding:4px 12px;border-radius:40px;border:1px solid var(--border);}
 .logout-btn{background:transparent;border:1px solid var(--border);color:var(--gray);font-size:.72rem;padding:5px 12px;border-radius:40px;cursor:pointer;transition:all .2s;}
 .logout-btn:hover{border-color:var(--purple);color:var(--purple);}
-
 .pg{display:none;}
 .pg.on{display:block;}
-
 .hero{padding:90px 24px 60px;text-align:center;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:380px;background:radial-gradient(ellipse,rgba(168,85,247,.13) 0%,transparent 68%);pointer-events:none;}
 .h-tag{display:inline-flex;align-items:center;gap:8px;background:var(--pdim);border:1px solid var(--pborder);color:var(--purple);font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:5px 16px;border-radius:20px;margin-bottom:28px;}
@@ -42,7 +39,6 @@ header{position:sticky;top:0;z-index:200;height:64px;padding:0 40px;display:flex
 .stats{display:flex;justify-content:center;gap:48px;margin-top:56px;padding-top:40px;border-top:1px solid var(--border);}
 .stat-n{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;}
 .stat-l{font-size:.78rem;color:var(--gray);margin-top:3px;}
-
 .how{padding:70px 40px;max-width:920px;margin:0 auto;}
 .sec-lbl{text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:.8rem;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;}
 .how h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:700;text-align:center;margin-bottom:48px;line-height:1.2;}
@@ -56,7 +52,6 @@ header{position:sticky;top:0;z-index:200;height:64px;padding:0 40px;display:flex
 .trust p{font-size:.78rem;color:var(--gray);margin-bottom:18px;letter-spacing:.04em;text-transform:uppercase;}
 .trust-logos{display:flex;justify-content:center;align-items:center;gap:32px;flex-wrap:wrap;}
 .trust-logo{font-size:.8rem;color:var(--gray2);font-weight:700;letter-spacing:.06em;}
-
 #chat-pg{max-width:660px;margin:0 auto;padding:44px 20px;}
 .chat-hd{text-align:center;margin-bottom:36px;}
 .chat-hd h2{font-family:'Playfair Display',serif;font-weight:700;font-size:1.7rem;margin-bottom:6px;}
@@ -95,7 +90,6 @@ header{position:sticky;top:0;z-index:200;height:64px;padding:0 40px;display:flex
 .gen-spin{width:18px;height:18px;border:2px solid var(--s3);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
 @keyframes spin{to{transform:rotate(360deg)}}
 #gen-text{font-size:.84rem;color:var(--purple);font-family:'Playfair Display',serif;font-style:italic;}
-
 #results-pg{max-width:760px;margin:0 auto;padding:44px 20px 80px;}
 .res-header{text-align:center;margin-bottom:40px;}
 .res-badge{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;}
@@ -145,7 +139,6 @@ header{position:sticky;top:0;z-index:200;height:64px;padding:0 40px;display:flex
 .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 .btn-sec{background:transparent;color:var(--gray);border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:.88rem;padding:10px 22px;border-radius:9px;cursor:pointer;transition:all .2s;}
 .btn-sec:hover{border-color:var(--purple);color:var(--purple);}
-
 footer{border-top:1px solid var(--border);padding:56px 40px 32px;margin-top:0;}
 .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
 .footer-logo{height:26px;margin-bottom:14px;}
@@ -161,22 +154,7 @@ footer{border-top:1px solid var(--border);padding:56px 40px 32px;margin-top:0;}
 .footer-legal{display:flex;gap:20px;}
 .footer-legal a{color:var(--gray2);text-decoration:none;transition:color .2s;}
 .footer-legal a:hover{color:var(--gray);}
-
-@media(max-width:700px){
-  header{padding:0 16px;}
-  .h-nav{display:none;}
-  .hero{padding:60px 16px 50px;}
-  .hero h1{font-size:2.1rem;}
-  .stats{gap:28px;flex-wrap:wrap;}
-  .how{padding:50px 16px;}
-  .steps{grid-template-columns:1fr;}
-  #chat-pg,#results-pg{padding:32px 16px;}
-  .footer-top{grid-template-columns:1fr 1fr;gap:28px;}
-  .footer-bottom{flex-direction:column;gap:12px;text-align:center;}
-  .footer-legal{flex-wrap:wrap;justify-content:center;}
-  .user-section{gap:8px;}
-  .user-email{display:none;}
-}
+@media(max-width:700px){header{padding:0 16px;}.h-nav{display:none;}.hero{padding:60px 16px 50px;}.hero h1{font-size:2.1rem;}.stats{gap:28px;flex-wrap:wrap;}.how{padding:50px 16px;}.steps{grid-template-columns:1fr;}#chat-pg,#results-pg{padding:32px 16px;}.footer-top{grid-template-columns:1fr 1fr;gap:28px;}.footer-bottom{flex-direction:column;gap:12px;text-align:center;}.footer-legal{flex-wrap:wrap;justify-content:center;}.user-section{gap:8px;}.user-email{display:none;}}
 </style>
 </head>
 <body>
@@ -203,7 +181,7 @@ footer{border-top:1px solid var(--border);padding:56px 40px 32px;margin-top:0;}
     <h1>Your complete freelance kit,<br>built by <i>AI in 20 minutes.</i></h1>
     <p class="hero-sub">Answer 5 questions about your skills. Get a portfolio blurb, pricing packages, gig description and niche — all copy-paste ready to use today.</p>
     <div class="hero-btns">
-      <button class="btn-p" id="buildKitBtn">⚡ Build My Free Kit</button>
+      <button class="btn-p" onclick="startChat()">⚡ Build My Free Kit</button>
       <button class="btn-g" onclick="document.getElementById('how-sec').scrollIntoView({behavior:'smooth'})">See How It Works →</button>
     </div>
     <div class="stats">
@@ -454,12 +432,6 @@ function copyText(e,id){
     setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
   });
 }
-
-// Fix the button - ensure it calls startChat
-document.getElementById('buildKitBtn').addEventListener('click', function(e) {
-  e.preventDefault();
-  startChat();
-});
 </script>
 </body>
 </html>
