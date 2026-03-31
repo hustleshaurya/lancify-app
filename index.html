@@ -313,6 +313,7 @@ footer{border-top:1px solid var(--border);padding:56px 40px 32px;}
           </div>
           <button class="pd-item upgrade" onclick="goToPlans()">⚡ Upgrade to Pro</button>
           <button class="pd-item" onclick="goHome()">🏠 Home</button>
+           <button class="pd-item" id="pd-view-kit" onclick="viewSavedKit()" style="display:none;">📂 View Saved Kit</button>
           <button class="pd-item" onclick="launchKit()">✦ Build My Kit</button>
           <button class="pd-item danger" onclick="signOut()">→ Sign Out</button>
         </div>
@@ -370,6 +371,7 @@ footer{border-top:1px solid var(--border);padding:56px 40px 32px;}
     <p class="hero-sub">Answer 5 questions about your skills. Get a portfolio blurb, pricing packages, gig description and niche — all copy-paste ready to use today.</p>
     <div class="hero-btns">
       <button class="btn-p" onclick="launchKit()">⚡ Build My Free Kit</button>
+       <button class="btn-g" id="view-saved-kit-btn" onclick="viewSavedKit()" style="display:none; color: var(--purple); border-color: var(--pborder); background: var(--s2);">📂 View My Saved Kit</button>
       <button class="btn-g" onclick="document.getElementById("how-sec").scrollIntoView({behavior:"smooth"})">See How It Works →</button>
     </div>
     <div class="stats">
@@ -534,7 +536,8 @@ const sb = createClient(
 );
 
 let currentUser = null;
-let authMode = 'signin'; // 'signin' | 'signup'
+let authMode = 'signin'; 
+let savedKitData = null; // Holds the user's kit if they already generated one
 
 // ══════════════════════════════
 // APP INIT — check auth on load
@@ -544,6 +547,7 @@ async function initApp() {
   if (session?.user) {
     currentUser = session.user;
     setLoggedIn(currentUser);
+    checkExistingKit(currentUser.id); // Fetch saved kit on load
     showPage('land-pg');
   } else {
     setLoggedOut();
@@ -551,19 +555,83 @@ async function initApp() {
   }
   document.getElementById('app-loading').classList.add('hidden');
 
-  // Listen for auth state changes (e.g. Google OAuth callback)
   sb.auth.onAuthStateChange((_event, session) => {
     if (session?.user) {
       currentUser = session.user;
       setLoggedIn(currentUser);
+      checkExistingKit(currentUser.id); // Fetch saved kit on auth change
       if (document.getElementById('login-pg').classList.contains('on')) {
         showPage('land-pg');
       }
     } else {
       currentUser = null;
+      savedKitData = null;
+      document.getElementById('view-saved-kit-btn').style.display = 'none';
+      document.getElementById('pd-view-kit').style.display = 'none';
       setLoggedOut();
     }
   });
+}
+
+// ══════════════════════════════
+// KIT SAVING & LOADING (NEW)
+// ══════════════════════════════
+async function checkExistingKit(userId) {
+  try {
+    const { data, error } = await sb
+      .from('kits')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+      savedKitData = data[0].kit_data;
+      // Reveal the "View My Saved Kit" buttons
+      document.getElementById('view-saved-kit-btn').style.display = 'inline-flex';
+      document.getElementById('pd-view-kit').style.display = 'flex';
+    } else {
+      savedKitData = null;
+      document.getElementById('view-saved-kit-btn').style.display = 'none';
+      document.getElementById('pd-view-kit').style.display = 'none';
+    }
+  } catch (err) {
+    console.error("Error loading kit:", err.message);
+  }
+}
+
+async function saveKitToSupabase(kitJson) {
+  if (!currentUser) return;
+  try {
+    const { error } = await sb
+      .from('kits')
+      .insert([
+        {
+          user_id: currentUser.id,
+          niche: kitJson.niche,
+          kit_data: kitJson,
+          is_pro: false // Default free tier
+        }
+      ]);
+
+    if (error) throw error;
+    console.log("Kit saved to Supabase successfully.");
+    
+    savedKitData = kitJson;
+    document.getElementById('view-saved-kit-btn').style.display = 'inline-flex';
+    document.getElementById('pd-view-kit').style.display = 'flex';
+  } catch (err) {
+    console.error("Error saving kit:", err.message);
+  }
+}
+
+function viewSavedKit() {
+  if (savedKitData) {
+    document.getElementById('profile-dropdown').classList.remove('open');
+    showResults(savedKitData);
+  }
 }
 
 // ══════════════════════════════
@@ -576,7 +644,6 @@ function setLoggedIn(user) {
   const email = user.email || '';
   document.getElementById('pd-name').textContent = name;
   document.getElementById('pd-email').textContent = email;
-  // Avatar initials
   const initials = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
   document.getElementById('avatar-initials').textContent = initials;
 }
@@ -589,7 +656,6 @@ function setLoggedOut() {
 function toggleDropdown() {
   document.getElementById('profile-dropdown').classList.toggle('open');
 }
-// Close dropdown on outside click
 document.addEventListener('click', e => {
   const pb = document.querySelector('.profile-btn');
   if (pb && !pb.contains(e.target)) {
@@ -646,12 +712,14 @@ async function authSubmit() {
   btn.textContent = authMode === 'signup' ? 'Create Account' : 'Sign In';
 
   if (result.error) { showError(result.error.message); return; }
-  // Success handled by onAuthStateChange
 }
 
 async function signOut() {
   await sb.auth.signOut();
   currentUser = null;
+  savedKitData = null;
+  document.getElementById('view-saved-kit-btn').style.display = 'none';
+  document.getElementById('pd-view-kit').style.display = 'none';
   setLoggedOut();
   showPage('login-pg');
   document.getElementById('profile-dropdown').classList.remove('open');
@@ -679,7 +747,6 @@ function showPage(id) {
     document.getElementById(p).classList.remove('on');
   });
   document.getElementById(id).classList.add('on');
-  // Show footer only on landing page
   document.getElementById('main-footer').style.display = id === 'land-pg' ? 'block' : 'none';
   window.scrollTo(0,0);
 }
@@ -821,6 +888,10 @@ async function callAPI() {
     const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answers})});
     const kit=await r.json();
     if(kit.error)throw new Error(kit.error);
+    
+    // 🔥 INJECTED: Save kit to Supabase right after it generates
+    saveKitToSupabase(kit);
+    
     showResults(kit);
   } catch(e) {
     console.error(e);
@@ -860,7 +931,7 @@ function showResults(kit) {
     <div class="kit-cards">
       <div class="kit-card open" onclick="toggleCard(this)">
         <div class="kit-head"><div class="kit-head-l"><div class="kit-ico">📁</div><div><div class="kit-ttl">Portfolio Blurb</div><div class="kit-sub">Copy-paste ready bio</div></div></div>
-        <div class="kit-right"><button class="copy-btn" onclick="copyText(event,\'port-txt\')">Copy</button><div class="kit-chev">▼</div></div></div>
+        <div class="kit-right"><button class="copy-btn" onclick="copyText(event,'port-txt')">Copy</button><div class="kit-chev">▼</div></div></div>
         <div class="kit-body"><p id="port-txt">${kit.portfolio_blurb||''}</p></div>
       </div>
       <div class="kit-card" onclick="toggleCard(this)">
@@ -877,7 +948,7 @@ function showResults(kit) {
       </div>
       <div class="kit-card" onclick="toggleCard(this)">
         <div class="kit-head"><div class="kit-head-l"><div class="kit-ico">✍️</div><div><div class="kit-ttl">Gig Description</div><div class="kit-sub">SEO-optimised, ready to post</div></div></div>
-        <div class="kit-right"><button class="copy-btn" onclick="copyText(event,\'gig-txt\')">Copy</button><div class="kit-chev">▼</div></div></div>
+        <div class="kit-right"><button class="copy-btn" onclick="copyText(event,'gig-txt')">Copy</button><div class="kit-chev">▼</div></div></div>
         <div class="kit-body">
           <p style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--purple);margin-bottom:6px;">Gig Title</p>
           <p style="font-weight:600;margin-bottom:18px;">${kit.gig_title||''}</p>
