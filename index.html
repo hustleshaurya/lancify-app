@@ -21,7 +21,7 @@ body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-ser
 
 #login-pg { display:none; min-height:100vh; align-items:center; justify-content:center; padding:20px; }
 #app-layout { display:none; height:100vh; width:100vw; }
-  #app-layout.on { display:flex; }
+#app-layout.on { display:flex; }
 
 /* ── SIDEBAR ── */
 .sidebar { width:240px; background:var(--bg); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:24px 16px; flex-shrink:0; height:100vh; overflow-y:auto; }
@@ -76,6 +76,7 @@ body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-ser
 .modal-card p { color:var(--gray); font-size:.9rem; margin-bottom:24px; line-height:1.6; }
 .modal-price { font-family:"Playfair Display", serif; font-size:2.5rem; font-weight:700; color:var(--purple); margin-bottom:24px; }
 .modal-price span { font-size:1rem; color:var(--gray); font-family:"DM Sans", sans-serif; font-weight:400; }
+
 /* ── DASHBOARD KIT CARDS ── */
 .kit-dash-card { background:var(--s2); border:1px solid var(--border); padding:20px; border-radius:12px; transition:all .2s; display:flex; flex-direction:column; }
 .kit-dash-card:hover { border-color:var(--pborder); transform:translateY(-2px); }
@@ -86,6 +87,7 @@ body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-ser
 .k-btn:hover { color:var(--white); }
 .k-btn.star:hover, .k-btn.star.active { color:#fbbf24; }
 .k-btn.del:hover { color:var(--red); }
+
 /* ── CHAT & RESULTS CSS ── */
 .prog-wrap { margin-bottom:32px; }
 .prog-labels { display:flex; justify-content:space-between; font-size:.72rem; color:var(--gray2); margin-bottom:7px; }
@@ -217,12 +219,6 @@ body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-ser
           </div>
         </div>
       </div>
-          <div id="home-kit-card" style="background:var(--s2); border:1px solid var(--border); padding:30px; border-radius:16px; opacity:0.5; cursor:not-allowed;">
-             <h3 style="font-family:'Playfair Display'; font-size:1.4rem; margin-bottom:8px;">📁 My Kits</h3>
-             <p style="color:var(--gray); font-size:0.85rem;" id="home-kit-desc">You haven't generated a kit yet. Run the Launch Coach to get started.</p>
-          </div>
-        </div>
-      </div>
 
       <div id="chat-pg" class="pg">
         <div style="text-align:center; margin-bottom:36px;">
@@ -286,6 +282,7 @@ async function initApp() {
   if (session?.user) {
     handleLoginSuccess(session.user);
   } else {
+    document.getElementById('app-layout').classList.remove('on');
     document.getElementById('login-pg').style.display = 'flex';
   }
 
@@ -295,6 +292,7 @@ async function initApp() {
     } else {
       currentUser = null;
       savedKitData = null;
+      // Instantly hide dashboard and show login
       document.getElementById('app-layout').classList.remove('on');
       document.getElementById('login-pg').style.display = 'flex';
     }
@@ -303,6 +301,7 @@ async function initApp() {
 
 function handleLoginSuccess(user) {
   currentUser = user;
+  // Instantly hide login and show dashboard
   document.getElementById('login-pg').style.display = 'none';
   document.getElementById('app-layout').classList.add('on');
   
@@ -340,17 +339,13 @@ async function signOut() {
 // NAVIGATION & UI UTILS
 // ══════════════════════════════
 function navigate(pageId) {
-  // Hide all pages
   document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
-  // Show target page
   document.getElementById(pageId).classList.add('on');
   
-  // Update sidebar active state
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const activeLink = document.querySelector(`[data-page="${pageId}"]`);
   if (activeLink) activeLink.classList.add('active');
 
-  // Scroll to top
   document.getElementById('main-scroll').scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -363,13 +358,9 @@ function toast(message, type = 'success') {
   setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3000);
 }
 
-// ── PRO GATE ──
 function checkPro(action) {
-  if (userProfile.is_pro) {
-    action(); 
-  } else {
-    showUpgradeModal(); 
-  }
+  if (userProfile.is_pro) action(); 
+  else showUpgradeModal(); 
 }
 
 function showUpgradeModal() { document.getElementById('upgrade-modal').classList.add('on'); }
@@ -378,7 +369,7 @@ function closeUpgradeModal() { document.getElementById('upgrade-modal').classLis
 // ══════════════════════════════
 // KIT SAVING, LOADING & DASHBOARD
 // ══════════════════════════════
-let userKits = []; // Array to store all user kits
+let userKits = []; 
 
 async function loadUserKits(userId) {
   try {
@@ -417,7 +408,6 @@ function renderKits() {
   let html = '';
   
   userKits.forEach(kit => {
-    // Format Date securely
     const date = new Date(kit.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     const isStarred = kit.is_starred ? 'active' : '';
     const starIcon = kit.is_starred ? '⭐' : '☆';
@@ -442,13 +432,12 @@ function renderKits() {
 function viewSpecificKit(id) {
   const kit = userKits.find(k => k.id === id);
   if (kit) {
-    savedKitData = kit.kit_data; // Set global fallback
+    savedKitData = kit.kit_data; 
     showResults(kit.kit_data);
   }
 }
 
 function viewSavedKit() {
-  // If clicked from sidebar, show the most recent kit
   if (userKits.length > 0) viewSpecificKit(userKits[0].id);
 }
 
@@ -458,7 +447,6 @@ async function toggleStar(id, currentStatus) {
     const { error } = await sb.from('kits').update({ is_starred: newStatus }).eq('id', id);
     if (error) throw error;
     
-    // Update local array and re-render
     const kitIndex = userKits.findIndex(k => k.id === id);
     if (kitIndex > -1) userKits[kitIndex].is_starred = newStatus;
     renderKits();
@@ -472,7 +460,6 @@ async function deleteKit(id) {
     const { error } = await sb.from('kits').delete().eq('id', id);
     if (error) throw error;
     
-    // Remove from local array and re-render
     userKits = userKits.filter(k => k.id !== id);
     renderKits();
     toast('Kit deleted successfully', 'success');
@@ -486,15 +473,13 @@ async function saveKitToSupabase(kitJson) {
       user_id: currentUser.id, 
       niche: kitJson.niche, 
       kit_data: kitJson, 
-      is_pro: userProfile.is_pro // Pulls from user's current status
+      is_pro: userProfile.is_pro
     }]);
     if (error) throw error;
     
     toast('Kit saved to Supabase! 📁', 'success');
-    loadUserKits(currentUser.id); // Re-fetch the grid
+    loadUserKits(currentUser.id); 
   } catch (err) { console.error("Error saving kit:", err.message); }
-}
-  if (savedKitData) { showResults(savedKitData); }
 }
 
 // ══════════════════════════════
@@ -621,13 +606,13 @@ function showResults(kit) {
   navigate('results-pg-wrap');
   let planHTML='';
   if(kit.action_plan&&typeof kit.action_plan==='object'){
-    Object.values(kit.action_plan).forEach((v,i)=>{planHTML+=`<div class="day-row"><div class="day-n">${i+1}</div><div class="day-t">${v}</div></div>`;});
+    Object.values(kit.action_plan).forEach((v,i)=>{planHTML+=`<div class="day-row"><div class="day-n" style="width:24px;height:24px;background:var(--pdim);border:1px solid var(--pborder);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--purple);flex-shrink:0;">${i+1}</div><div class="day-t" style="font-size:.85rem;line-height:1.6;color:#ccc;">${v}</div></div>`;});
   } else if(typeof kit.action_plan==='string'){
-    kit.action_plan.split('\n').filter(Boolean).forEach((line,i)=>{planHTML+=`<div class="day-row"><div class="day-n">${i+1}</div><div class="day-t">${line.replace(/^Day \d+[:.] */,'')}</div></div>`;});
+    kit.action_plan.split('\n').filter(Boolean).forEach((line,i)=>{planHTML+=`<div class="day-row" style="display:flex;gap:14px;align-items:flex-start;margin-bottom:10px;"><div class="day-n" style="width:24px;height:24px;background:var(--pdim);border:1px solid var(--pborder);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--purple);flex-shrink:0;">${i+1}</div><div class="day-t" style="font-size:.85rem;line-height:1.6;color:#ccc;">${line.replace(/^Day \d+[:.] */,'')}</div></div>`;});
   }
   const dRow=d=>(d||'').split('\n').filter(Boolean).map(x=>`<span style="display:block;padding:1px 0">${x}</span>`).join('');
   document.getElementById('results-pg').innerHTML=`
-    <div class="res-header">
+    <div class="res-header" style="text-align:center;margin-bottom:40px;">
       <div class="res-badge" style="font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;">Your kit is ready</div>
       <h2 style="font-family:'Playfair Display';font-size:2.4rem;font-weight:700;margin-bottom:8px;">Your Freelance<br>Launch Kit</h2>
       <p style="color:var(--gray);">Built specifically for your skills and goals</p>
@@ -665,20 +650,16 @@ function showResults(kit) {
         </div>
       </div>
       <div class="kit-card" onclick="toggleCard(this)">
-        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">💬</div><div><div class="kit-ttl">Cold Pitch Script</div><div class="kit-sub">Locked — Pro feature</div></div></div></div>
-        <div class="kit-body"><div class="locked-wrap">
-          <p class="locked-blur">${kit.pitch_script||'Your personalised cold pitch script — a proven DM template that gets replies from clients on Instagram, LinkedIn and WhatsApp.'}</p>
-          <div class="locked-over"><div style="font-size:.84rem;font-weight:600;text-align:center;">Unlock pitch script and proposal template</div>
-          <button class="auth-submit" style="width:auto;padding:9px 22px;" onclick="event.stopPropagation();showUpgradeModal()">Upgrade to Pro — Rs 399/mo</button></div>
-        </div></div>
+        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">💬</div><div><div class="kit-ttl">Cold Pitch Script</div><div class="kit-sub">Unlocked via Pro</div></div></div></div>
+        <div class="kit-body">
+          <p>${kit.pitch_script||'Your personalised cold pitch script.'}</p>
+        </div>
       </div>
       <div class="kit-card" onclick="toggleCard(this)">
-        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">📆</div><div><div class="kit-ttl">7-Day Launch Plan</div><div class="kit-sub">Locked — Pro feature</div></div></div></div>
-        <div class="kit-body"><div class="locked-wrap">
-          <div class="day-list locked-blur">${planHTML}</div>
-          <div class="locked-over"><div style="font-size:.84rem;font-weight:600;text-align:center;">Unlock your full 7-day launch plan</div>
-          <button class="auth-submit" style="width:auto;padding:9px 22px;" onclick="event.stopPropagation();showUpgradeModal()">Upgrade to Pro — Rs 399/mo</button></div>
-        </div></div>
+        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">📆</div><div><div class="kit-ttl">7-Day Launch Plan</div><div class="kit-sub">Unlocked via Pro</div></div></div></div>
+        <div class="kit-body">
+          <div>${planHTML}</div>
+        </div>
       </div>
     </div>`;
 }
