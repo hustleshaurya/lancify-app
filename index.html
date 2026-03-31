@@ -76,7 +76,16 @@ body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-ser
 .modal-card p { color:var(--gray); font-size:.9rem; margin-bottom:24px; line-height:1.6; }
 .modal-price { font-family:"Playfair Display", serif; font-size:2.5rem; font-weight:700; color:var(--purple); margin-bottom:24px; }
 .modal-price span { font-size:1rem; color:var(--gray); font-family:"DM Sans", sans-serif; font-weight:400; }
-
+/* ── DASHBOARD KIT CARDS ── */
+.kit-dash-card { background:var(--s2); border:1px solid var(--border); padding:20px; border-radius:12px; transition:all .2s; display:flex; flex-direction:column; }
+.kit-dash-card:hover { border-color:var(--pborder); transform:translateY(-2px); }
+.kit-dash-title { font-family:"Playfair Display", serif; font-size:1.2rem; font-weight:700; margin-bottom:6px; color:var(--white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.kit-dash-date { font-size:0.75rem; color:var(--gray); margin-bottom:20px; }
+.kit-dash-actions { display:flex; gap:12px; border-top:1px solid var(--border); padding-top:16px; margin-top:auto; }
+.k-btn { background:transparent; border:none; color:var(--gray); font-size:0.8rem; cursor:pointer; display:flex; align-items:center; gap:6px; transition:color .2s; font-family:"DM Sans", sans-serif; font-weight:500; }
+.k-btn:hover { color:var(--white); }
+.k-btn.star:hover, .k-btn.star.active { color:#fbbf24; }
+.k-btn.del:hover { color:var(--red); }
 /* ── CHAT & RESULTS CSS ── */
 .prog-wrap { margin-bottom:32px; }
 .prog-labels { display:flex; justify-content:space-between; font-size:.72rem; color:var(--gray2); margin-bottom:7px; }
@@ -189,14 +198,25 @@ body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-ser
     <div class="page-container">
       
       <div id="home-pg" class="pg on">
-        <h1 style="font-family:'Playfair Display'; font-size:2.4rem; margin-bottom:8px;">Welcome back.</h1>
-        <p style="color:var(--gray); margin-bottom:40px;">Select a tool from the sidebar to build your freelance business.</p>
-        
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-          <div style="background:var(--s2); border:1px solid var(--border); padding:30px; border-radius:16px; cursor:pointer; transition:0.2s;" onclick="startChat()" onmouseover="this.style.borderColor='var(--purple)'" onmouseout="this.style.borderColor='var(--border)'">
-            <h3 style="font-family:'Playfair Display'; font-size:1.4rem; margin-bottom:8px;">✦ Launch Coach</h3>
-            <p style="color:var(--gray); font-size:0.85rem;">Answer 5 questions and let AI build your entire freelance portfolio, pricing, and gig.</p>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; flex-wrap:wrap; gap:16px;">
+          <div>
+            <h1 style="font-family:'Playfair Display'; font-size:2.4rem; margin-bottom:8px;">Welcome back.</h1>
+            <p style="color:var(--gray);">Manage your freelance business and generated kits.</p>
           </div>
+          <button class="auth-submit" style="width:auto; padding:10px 24px; font-size:.88rem;" onclick="startChat()">✦ Generate New Kit</button>
+        </div>
+
+        <h3 style="font-family:'Playfair Display'; font-size:1.2rem; margin-bottom:16px;">📁 My Kits</h3>
+        
+        <div id="kits-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px;">
+          <div id="empty-kits-msg" style="grid-column: 1 / -1; background:var(--s2); border:1px dashed var(--border); padding:40px; border-radius:16px; text-align:center; color:var(--gray);">
+             <div style="font-size:2rem; margin-bottom:12px;">📁</div>
+             <h4 style="color:var(--white); font-size:1.1rem; margin-bottom:8px;">No kits generated yet</h4>
+             <p style="font-size:0.85rem; margin-bottom:20px;">Run the Launch Coach to create your first freelance identity.</p>
+             <button class="auth-submit" style="width:auto; padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
+          </div>
+        </div>
+      </div>
           <div id="home-kit-card" style="background:var(--s2); border:1px solid var(--border); padding:30px; border-radius:16px; opacity:0.5; cursor:not-allowed;">
              <h3 style="font-family:'Playfair Display'; font-size:1.4rem; margin-bottom:8px;">📁 My Kits</h3>
              <p style="color:var(--gray); font-size:0.85rem;" id="home-kit-desc">You haven't generated a kit yet. Run the Launch Coach to get started.</p>
@@ -291,7 +311,7 @@ function handleLoginSuccess(user) {
   document.getElementById('header-user-name').textContent = name;
   document.getElementById('header-user-initial').textContent = name[0].toUpperCase();
   
-  checkExistingKit(user.id);
+  loadUserKits(user.id);
   navigate('home-pg');
 }
 
@@ -356,41 +376,124 @@ function showUpgradeModal() { document.getElementById('upgrade-modal').classList
 function closeUpgradeModal() { document.getElementById('upgrade-modal').classList.remove('on'); }
 
 // ══════════════════════════════
-// KIT SAVING & LOADING
+// KIT SAVING, LOADING & DASHBOARD
 // ══════════════════════════════
-async function checkExistingKit(userId) {
-  try {
-    const { data, error } = await sb.from('kits').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1);
-    if (error) throw error;
+let userKits = []; // Array to store all user kits
 
-    if (data && data.length > 0) {
-      savedKitData = data[0].kit_data;
-      document.getElementById('sb-my-kits').style.display = 'flex';
-      
-      // Update Home Page Card
-      const homeCard = document.getElementById('home-kit-card');
-      homeCard.style.opacity = '1';
-      homeCard.style.cursor = 'pointer';
-      homeCard.onmouseover = () => homeCard.style.borderColor = 'var(--purple)';
-      homeCard.onmouseout = () => homeCard.style.borderColor = 'var(--border)';
-      homeCard.onclick = () => viewSavedKit();
-      document.getElementById('home-kit-desc').innerHTML = `View your saved kit for <strong>${savedKitData.niche}</strong>.`;
-    }
-  } catch (err) { console.error("Error loading kit:", err.message); }
+async function loadUserKits(userId) {
+  try {
+    const { data, error } = await sb
+      .from('kits')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    userKits = data || [];
+    renderKits();
+  } catch (err) { 
+    console.error("Error loading kits:", err.message); 
+    toast("Failed to load your kits.", "error");
+  }
+}
+
+function renderKits() {
+  const grid = document.getElementById('kits-grid');
+  const sbMyKitsBtn = document.getElementById('sb-my-kits');
+  
+  if (userKits.length === 0) {
+    grid.innerHTML = `
+      <div id="empty-kits-msg" style="grid-column: 1 / -1; background:var(--s2); border:1px dashed var(--border); padding:40px; border-radius:16px; text-align:center; color:var(--gray);">
+         <div style="font-size:2rem; margin-bottom:12px;">📁</div>
+         <h4 style="color:var(--white); font-size:1.1rem; margin-bottom:8px;">No kits generated yet</h4>
+         <p style="font-size:0.85rem; margin-bottom:20px;">Run the Launch Coach to create your first freelance identity.</p>
+         <button class="auth-submit" style="width:auto; padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
+      </div>`;
+    sbMyKitsBtn.style.display = 'none';
+    return;
+  }
+
+  sbMyKitsBtn.style.display = 'flex';
+  let html = '';
+  
+  userKits.forEach(kit => {
+    // Format Date securely
+    const date = new Date(kit.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    const isStarred = kit.is_starred ? 'active' : '';
+    const starIcon = kit.is_starred ? '⭐' : '☆';
+    const nicheName = kit.niche || kit.kit_data?.niche || 'Freelance Kit';
+
+    html += `
+      <div class="kit-dash-card" id="kit-card-${kit.id}">
+        <div class="kit-dash-title">✦ ${nicheName}</div>
+        <div class="kit-dash-date">Created: ${date}</div>
+        <div class="kit-dash-actions">
+          <button class="k-btn" onclick="viewSpecificKit('${kit.id}')">📄 View</button>
+          <button class="k-btn star ${isStarred}" onclick="toggleStar('${kit.id}', ${kit.is_starred})">${starIcon} Star</button>
+          <button class="k-btn del" style="margin-left:auto;" onclick="deleteKit('${kit.id}')">🗑 Delete</button>
+        </div>
+      </div>
+    `;
+  });
+  
+  grid.innerHTML = html;
+}
+
+function viewSpecificKit(id) {
+  const kit = userKits.find(k => k.id === id);
+  if (kit) {
+    savedKitData = kit.kit_data; // Set global fallback
+    showResults(kit.kit_data);
+  }
+}
+
+function viewSavedKit() {
+  // If clicked from sidebar, show the most recent kit
+  if (userKits.length > 0) viewSpecificKit(userKits[0].id);
+}
+
+async function toggleStar(id, currentStatus) {
+  try {
+    const newStatus = !currentStatus;
+    const { error } = await sb.from('kits').update({ is_starred: newStatus }).eq('id', id);
+    if (error) throw error;
+    
+    // Update local array and re-render
+    const kitIndex = userKits.findIndex(k => k.id === id);
+    if (kitIndex > -1) userKits[kitIndex].is_starred = newStatus;
+    renderKits();
+    toast(newStatus ? 'Kit starred!' : 'Star removed', 'success');
+  } catch(err) { toast('Could not update kit', 'error'); }
+}
+
+async function deleteKit(id) {
+  if (!confirm('Are you sure you want to delete this kit?')) return;
+  try {
+    const { error } = await sb.from('kits').delete().eq('id', id);
+    if (error) throw error;
+    
+    // Remove from local array and re-render
+    userKits = userKits.filter(k => k.id !== id);
+    renderKits();
+    toast('Kit deleted successfully', 'success');
+  } catch(err) { toast('Failed to delete kit', 'error'); }
 }
 
 async function saveKitToSupabase(kitJson) {
   if (!currentUser) return;
   try {
-    const { error } = await sb.from('kits').insert([{ user_id: currentUser.id, niche: kitJson.niche, kit_data: kitJson, is_pro: false }]);
+    const { error } = await sb.from('kits').insert([{ 
+      user_id: currentUser.id, 
+      niche: kitJson.niche, 
+      kit_data: kitJson, 
+      is_pro: userProfile.is_pro // Pulls from user's current status
+    }]);
     if (error) throw error;
+    
     toast('Kit saved to Supabase! 📁', 'success');
-    savedKitData = kitJson;
-    document.getElementById('sb-my-kits').style.display = 'flex';
+    loadUserKits(currentUser.id); // Re-fetch the grid
   } catch (err) { console.error("Error saving kit:", err.message); }
 }
-
-function viewSavedKit() {
   if (savedKitData) { showResults(savedKitData); }
 }
 
