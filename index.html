@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lancify — Sign in</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #000;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', sans-serif;
       color: #fff;
       min-height: 100vh;
       display: flex;
@@ -68,6 +69,7 @@
       padding: 0.8rem 1.2rem;
       color: white;
     }
+    .input-group input:focus { outline: none; border-color: #a855f7; }
     .email-btn {
       width: 100%;
       background: #a855f7;
@@ -78,6 +80,7 @@
       color: white;
       cursor: pointer;
     }
+    .email-btn:hover { background: #9333ea; }
     .footer-note { font-size: 0.75rem; color: #52525b; margin-top: 2rem; }
     .error-message {
       background: rgba(220,38,38,0.1);
@@ -109,12 +112,11 @@
   <div class="footer-note">By continuing you agree to Lancify's Terms</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const MY_URL = 'https://qkpyqtynwbvjssrqanmk.supabase.co';
-  const MY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
+  const SUPABASE_URL = 'https://qkpyqtynwbvjssrqanmk.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY';
 
-  const lancifyAuth = window.supabase.createClient(MY_URL, MY_KEY);
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   function showError(msg) {
     const errDiv = document.getElementById('errorMsg');
@@ -123,11 +125,36 @@
     setTimeout(() => errDiv.style.display = 'none', 5000);
   }
 
+  // CHECK IF ALREADY LOGGED IN - FIXED
+  async function checkExistingSession() {
+    const storedToken = localStorage.getItem('lancify_session');
+    if (storedToken) {
+      // Verify token is still valid
+      const { data: { user }, error } = await supabase.auth.getUser(storedToken);
+      if (user && !error) {
+        window.location.href = '/app';
+        return;
+      } else {
+        localStorage.removeItem('lancify_session');
+      }
+    }
+    
+    // Check if coming back from Google OAuth
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      localStorage.setItem('lancify_session', session.access_token);
+      window.location.href = '/app';
+    }
+  }
+
+  // Google Sign In
   document.getElementById('googleBtn').onclick = async () => {
     try {
-      const { error } = await lancifyAuth.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: 'https://lancify-app.vercel.app/app' }
+        options: { 
+          redirectTo: window.location.origin
+        }
       });
       if (error) throw error;
     } catch (err) {
@@ -135,6 +162,7 @@
     }
   };
 
+  // Email Sign In
   document.getElementById('emailBtn').onclick = async () => {
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
@@ -143,13 +171,13 @@
       return;
     }
     try {
-      const { data, error } = await lancifyAuth.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       localStorage.setItem('lancify_session', data.session.access_token);
       window.location.href = '/app';
     } catch (err) {
       if (err.message.includes('Invalid login')) {
-        const { error: signUpError } = await lancifyAuth.auth.signUp({ email, password });
+        const { error: signUpError } = await supabase.auth.signUp({ email, password });
         if (signUpError) showError(signUpError.message);
         else showError('Account created! Check your email to confirm.');
       } else {
@@ -158,9 +186,8 @@
     }
   };
 
-  if (localStorage.getItem('lancify_session')) {
-    window.location.href = '/app';
-  }
+  // Run on page load
+  checkExistingSession();
 </script>
 </body>
 </html>
