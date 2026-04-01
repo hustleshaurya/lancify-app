@@ -4,186 +4,199 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lancify — Freelance OS</title>
+<link rel="icon" href="Add_a_heading_-_Copy-removebg-preview.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-/* ── DESIGN SYSTEM (DO NOT CHANGE) ── */
-:root { --bg:#000000; --s1:#0a0a0a; --s2:#111111; --s3:#1a1a1a; --border:rgba(255,255,255,0.07); --purple:#a855f7; --pd:#7c3aed; --pdim:rgba(168,85,247,0.10); --pborder:rgba(168,85,247,0.22); --white:#ffffff; --gray:#888888; --gray2:#444444; --red:#ef4444; }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-serif; min-height:100vh; -webkit-font-smoothing:antialiased; overflow:hidden; }
+:root{--bg:#000000;--s1:#0a0a0a;--s2:#111111;--s3:#1a1a1a;--border:rgba(255,255,255,0.07);--purple:#a855f7;--pd:#7c3aed;--pdim:rgba(168,85,247,0.10);--pborder:rgba(168,85,247,0.22);--white:#ffffff;--gray:#888888;--gray2:#444444;--red:#ef4444;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;overflow:hidden;}
+#app-loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;}
+.app-spin{width:36px;height:36px;border:2px solid var(--s3);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── LOGIN ── */
+#login-pg{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;}
+.login-card{width:100%;max-width:420px;background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;}
+.login-brand{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:32px;}
+.login-brand img{height:38px;width:auto;}
+.login-brand-name{font-family:"Playfair Display",serif;font-weight:700;font-size:1.8rem;color:var(--white);}
+.login-card h1{font-family:"Playfair Display",serif;font-weight:700;font-size:1.7rem;color:var(--white);margin-bottom:10px;}
+.login-sub{color:var(--gray);font-size:.86rem;line-height:1.6;margin-bottom:30px;}
+.google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 16px;background:#fff;color:#111;border:none;border-radius:10px;font-family:"DM Sans",sans-serif;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .2s;margin-bottom:20px;}
+.google-btn:hover{background:#efefef;transform:translateY(-1px);}
+.google-icon{width:18px;height:18px;flex-shrink:0;}
+.divider{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border);}
+.divider span{font-size:.74rem;color:var(--gray2);}
+.auth-field{text-align:left;margin-bottom:14px;}
+.auth-field label{display:block;font-size:.78rem;font-weight:500;color:var(--gray);margin-bottom:6px;}
+.auth-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--white);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;}
+.auth-input:focus{border-color:var(--purple);}
+.auth-input::placeholder{color:var(--gray2);}
+.auth-submit{width:100%;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:13px;font-family:"DM Sans",sans-serif;font-weight:600;font-size:.92rem;cursor:pointer;transition:all .2s;margin-top:6px;}
+.auth-submit:hover{background:var(--pd);transform:translateY(-1px);}
+.auth-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.auth-toggle{margin-top:20px;font-size:.84rem;color:var(--gray);}
+.auth-toggle span{color:var(--purple);cursor:pointer;font-weight:500;}
+.auth-toggle span:hover{text-decoration:underline;}
+.auth-error{color:var(--red);font-size:.8rem;margin-bottom:12px;display:none;}
+.auth-msg{color:var(--purple);font-size:.8rem;margin-bottom:12px;display:none;}
 
 /* ── APP LAYOUT ── */
-#app-loading { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:9999; flex-direction:column; gap:16px; }
-.app-spin { width:36px; height:36px; border:2px solid var(--s3); border-top-color:var(--purple); border-radius:50%; animation:spin .8s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
+#app-layout{display:none;height:100vh;width:100vw;}
+#app-layout.on{display:flex;}
+.sidebar{width:240px;background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;flex-shrink:0;height:100vh;overflow-y:auto;}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:40px;padding:0 8px;cursor:pointer;}
+.sb-logo img{height:28px;width:auto;object-fit:contain;}
+.sb-logo span{font-family:"Playfair Display",serif;font-weight:900;font-size:1.4rem;color:var(--purple);letter-spacing:-0.5px;}
+.sb-group{font-size:0.7rem;font-weight:600;color:var(--gray2);text-transform:uppercase;letter-spacing:0.1em;margin:24px 0 8px 8px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:500;color:var(--gray);transition:all 0.2s;border:1px solid transparent;margin-bottom:2px;}
+.nav-item:hover{background:var(--s2);color:var(--white);}
+.nav-item.active{background:var(--pdim);color:var(--purple);border-color:var(--pborder);}
+.sb-bottom{margin-top:auto;border-top:1px solid var(--border);padding-top:16px;display:flex;flex-direction:column;gap:4px;}
+.pro-badge{background:linear-gradient(135deg,var(--purple),var(--pd));color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:20px;font-weight:700;margin-left:auto;}
+.main-content{flex:1;display:flex;flex-direction:column;background:var(--s1);overflow-y:auto;position:relative;}
+.top-nav{height:64px;display:flex;align-items:center;justify-content:flex-end;padding:0 32px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,10,0.8);backdrop-filter:blur(12px);z-index:100;}
+.page-container{padding:40px 48px;max-width:900px;margin:0 auto;width:100%;}
+.pg{display:none;animation:fadeIn 0.3s ease;}
+.pg.on{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
 
-#login-pg { display:none; min-height:100vh; align-items:center; justify-content:center; padding:20px; }
-#app-layout { display:none; height:100vh; width:100vw; }
-#app-layout.on { display:flex; }
+/* ── TOAST & MODAL ── */
+.toast{position:fixed;bottom:24px;right:24px;background:#111;border:1px solid var(--border);color:#fff;padding:12px 20px;border-radius:10px;font-size:.88rem;font-weight:500;transform:translateY(20px);opacity:0;transition:all .3s;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-success{border-color:rgba(34,197,94,.3);border-left:3px solid #22c55e;}
+.toast-error{border-color:rgba(239,68,68,.3);border-left:3px solid #ef4444;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:5000;opacity:0;transition:opacity .2s;}
+.modal-overlay.on{display:flex;opacity:1;}
+.modal-card{background:var(--s1);border:1px solid var(--pborder);border-radius:20px;padding:40px;width:100%;max-width:440px;text-align:center;position:relative;transform:scale(0.95);transition:transform .2s;box-shadow:0 24px 60px rgba(168,85,247,0.15);}
+.modal-overlay.on .modal-card{transform:scale(1);}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--gray);font-size:1.5rem;cursor:pointer;}
+.modal-close:hover{color:var(--white);}
+.modal-card h3{font-family:"Playfair Display",serif;font-size:1.8rem;margin-bottom:12px;color:var(--white);}
+.modal-card p{color:var(--gray);font-size:.9rem;margin-bottom:24px;line-height:1.6;}
+.modal-price{font-family:"Playfair Display",serif;font-size:2.5rem;font-weight:700;color:var(--purple);margin-bottom:24px;}
+.modal-price span{font-size:1rem;color:var(--gray);font-family:"DM Sans",sans-serif;font-weight:400;}
 
-/* ── SIDEBAR ── */
-.sidebar { width:240px; background:var(--bg); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:24px 16px; flex-shrink:0; height:100vh; overflow-y:auto; }
-.sb-logo { display:flex; align-items:center; gap:10px; margin-bottom:40px; padding:0 8px; cursor:pointer; }
-.sb-logo img { width:28px; height:28px; object-fit:contain; }
-.sb-logo span { font-family:"Playfair Display", serif; font-weight:900; font-size:1.4rem; color:var(--purple); letter-spacing:-0.5px; }
+/* ── DASHBOARD ── */
+.kit-dash-card{background:var(--s2);border:1px solid var(--border);padding:20px;border-radius:12px;transition:all .2s;display:flex;flex-direction:column;}
+.kit-dash-card:hover{border-color:var(--pborder);transform:translateY(-2px);}
+.kit-dash-title{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:700;margin-bottom:6px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.kit-dash-date{font-size:0.75rem;color:var(--gray);margin-bottom:20px;}
+.kit-dash-actions{display:flex;gap:12px;border-top:1px solid var(--border);padding-top:16px;margin-top:auto;}
+.k-btn{background:transparent;border:none;color:var(--gray);font-size:0.8rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .2s;font-family:"DM Sans",sans-serif;font-weight:500;}
+.k-btn:hover{color:var(--white);}
+.k-btn.star:hover,.k-btn.star.active{color:#fbbf24;}
+.k-btn.del:hover{color:var(--red);}
 
-.sb-group { font-size:0.7rem; font-weight:600; color:var(--gray2); text-transform:uppercase; letter-spacing:0.1em; margin:24px 0 8px 8px; }
-.nav-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; font-size:0.88rem; font-weight:500; color:var(--gray); transition:all 0.2s; border:1px solid transparent; margin-bottom:2px; }
-.nav-item:hover { background:var(--s2); color:var(--white); }
-.nav-item.active { background:var(--pdim); color:var(--purple); border-color:var(--pborder); }
+/* ── CHAT ── */
+.prog-wrap{margin-bottom:32px;}
+.prog-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--gray2);margin-bottom:7px;}
+.prog-track{height:2px;background:var(--s3);border-radius:2px;overflow:hidden;}
+.prog-bar{height:100%;background:var(--purple);border-radius:2px;transition:width .5s ease;}
+#chat-msgs{display:flex;flex-direction:column;gap:16px;margin-bottom:20px;min-height:180px;}
+.msg{display:flex;gap:10px;animation:fadeIn .3s ease;}
+.msg.user{flex-direction:row-reverse;}
+.av-ai{width:32px;height:32px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:"Playfair Display",serif;font-style:italic;font-weight:700;color:#fff;font-size:.85rem;}
+.av-user{width:32px;height:32px;background:var(--s3);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gray);font-size:.72rem;}
+.bubble{padding:12px 16px;border-radius:12px;font-size:.88rem;line-height:1.65;max-width:82%;}
+.bubble.ai{background:var(--s2);border:1px solid var(--border);}
+.bubble.usr{background:var(--pdim);border:1px solid var(--pborder);color:var(--purple);}
+.typing-row{display:flex;gap:10px;align-items:center;}
+.typing-dots{display:flex;gap:4px;padding:12px 16px;background:var(--s2);border:1px solid var(--border);border-radius:12px;}
+.typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--purple);animation:td 1.2s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes td{0%,100%{opacity:.3;transform:translateY(0);}50%{opacity:1;transform:translateY(-4px);}}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-left:42px;}
+.opt-btn{background:var(--s3);border:1px solid var(--border);color:var(--white);padding:9px 18px;border-radius:8px;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:.84rem;transition:all .2s;}
+.opt-btn:hover,.opt-btn.sel{border-color:var(--purple);color:var(--purple);background:var(--pdim);}
+.opt-btn:disabled{opacity:.5;cursor:not-allowed;}
+#input-zone{display:flex;gap:10px;margin-top:4px;}
+#txt{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--white);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;resize:none;min-height:46px;max-height:120px;}
+#txt:focus{border-color:var(--purple);}
+#send-btn{background:var(--purple);border:none;color:#fff;width:44px;height:44px;border-radius:10px;cursor:pointer;font-size:1rem;transition:all .2s;flex-shrink:0;align-self:flex-end;}
+#send-btn:hover{background:var(--pd);}
+#send-btn:disabled{opacity:.35;cursor:not-allowed;}
 
-.sb-bottom { margin-top:auto; border-top:1px solid var(--border); padding-top:16px; display:flex; flex-direction:column; gap:4px; }
-.pro-badge { background:linear-gradient(135deg, var(--purple), var(--pd)); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:20px; font-weight:700; margin-left:auto; }
-
-/* ── MAIN CONTENT ── */
-.main-content { flex:1; display:flex; flex-direction:column; background:var(--s1); overflow-y:auto; position:relative; }
-.top-nav { height:64px; display:flex; align-items:center; justify-content:flex-end; padding:0 32px; border-bottom:1px solid var(--border); position:sticky; top:0; background:rgba(10,10,10,0.8); backdrop-filter:blur(12px); z-index:100; }
-.page-container { padding:40px 48px; max-width:900px; margin:0 auto; width:100%; }
-
-.pg { display:none; animation:fadeIn 0.3s ease; }
-.pg.on { display:block; }
-@keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
-
-/* ── LOGIN SPECIFICS ── */
-.login-card { width:100%; max-width:400px; background:var(--s1); border:1px solid var(--border); border-radius:20px; padding:40px; text-align:center; }
-.login-card p { color:var(--gray); font-size:.86rem; margin-bottom:28px; line-height:1.6; }
-.google-btn { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:12px; background:#fff; color:#111; border:none; border-radius:10px; font-weight:600; font-size:.88rem; cursor:pointer; transition:all .2s; }
-.google-btn:hover { background:#e5e5e5; }
-.google-icon { width:18px; height:18px; }
-.divider { display:flex; align-items:center; gap:12px; margin:20px 0; }
-.divider::before, .divider::after { content:""; flex:1; height:1px; background:var(--border); }
-.divider span { font-size:.74rem; color:var(--gray2); }
-.auth-input { width:100%; background:var(--s2); border:1px solid var(--border); border-radius:9px; padding:12px 14px; color:var(--white); font-size:.88rem; outline:none; transition:border-color .2s; margin-bottom:12px; }
-.auth-input:focus { border-color:var(--purple); }
-.auth-submit { width:100%; background:var(--purple); color:#fff; border:none; border-radius:9px; padding:12px; font-weight:600; font-size:.9rem; cursor:pointer; transition:all .2s; }
-.auth-submit:hover { background:var(--pd); }
-
-/* ── UI COMPONENTS (TOAST & MODAL) ── */
-.toast { position:fixed; bottom:24px; right:24px; background:#111; border:1px solid var(--border); color:#fff; padding:12px 20px; border-radius:10px; font-size:.88rem; font-weight:500; transform:translateY(20px); opacity:0; transition:all .3s; z-index:9999; box-shadow:0 10px 40px rgba(0,0,0,.5); }
-.toast.show { transform:translateY(0); opacity:1; }
-.toast-success { border-color:rgba(34,197,94,.3); border-left:3px solid #22c55e; }
-.toast-error { border-color:rgba(239,68,68,.3); border-left:3px solid #ef4444; }
-
-.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:5000; opacity:0; transition:opacity .2s; }
-.modal-overlay.on { display:flex; opacity:1; }
-.modal-card { background:var(--s1); border:1px solid var(--pborder); border-radius:20px; padding:40px; width:100%; max-width:440px; text-align:center; position:relative; transform:scale(0.95); transition:transform .2s; box-shadow:0 24px 60px rgba(168,85,247,0.15); }
-.modal-overlay.on .modal-card { transform:scale(1); }
-.modal-close { position:absolute; top:16px; right:20px; background:none; border:none; color:var(--gray); font-size:1.5rem; cursor:pointer; }
-.modal-close:hover { color:var(--white); }
-.modal-card h3 { font-family:"Playfair Display", serif; font-size:1.8rem; margin-bottom:12px; color:var(--white); }
-.modal-card p { color:var(--gray); font-size:.9rem; margin-bottom:24px; line-height:1.6; }
-.modal-price { font-family:"Playfair Display", serif; font-size:2.5rem; font-weight:700; color:var(--purple); margin-bottom:24px; }
-.modal-price span { font-size:1rem; color:var(--gray); font-family:"DM Sans", sans-serif; font-weight:400; }
-
-/* ── DASHBOARD KIT CARDS ── */
-.kit-dash-card { background:var(--s2); border:1px solid var(--border); padding:20px; border-radius:12px; transition:all .2s; display:flex; flex-direction:column; }
-.kit-dash-card:hover { border-color:var(--pborder); transform:translateY(-2px); }
-.kit-dash-title { font-family:"Playfair Display", serif; font-size:1.2rem; font-weight:700; margin-bottom:6px; color:var(--white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.kit-dash-date { font-size:0.75rem; color:var(--gray); margin-bottom:20px; }
-.kit-dash-actions { display:flex; gap:12px; border-top:1px solid var(--border); padding-top:16px; margin-top:auto; }
-.k-btn { background:transparent; border:none; color:var(--gray); font-size:0.8rem; cursor:pointer; display:flex; align-items:center; gap:6px; transition:color .2s; font-family:"DM Sans", sans-serif; font-weight:500; }
-.k-btn:hover { color:var(--white); }
-.k-btn.star:hover, .k-btn.star.active { color:#fbbf24; }
-.k-btn.del:hover { color:var(--red); }
-
-/* ── CHAT & RESULTS CSS ── */
-.prog-wrap { margin-bottom:32px; }
-.prog-labels { display:flex; justify-content:space-between; font-size:.72rem; color:var(--gray2); margin-bottom:7px; }
-.prog-track { height:2px; background:var(--s3); border-radius:2px; overflow:hidden; }
-.prog-bar { height:100%; background:var(--purple); border-radius:2px; transition:width .5s ease; }
-#chat-msgs { display:flex; flex-direction:column; gap:16px; margin-bottom:20px; min-height:180px; }
-.msg { display:flex; gap:10px; animation:fadeIn .3s ease; }
-.msg.user { flex-direction:row-reverse; }
-.av-ai { width:32px; height:32px; background:var(--purple); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:"Playfair Display", serif; font-style:italic; font-weight:700; color:#fff; font-size:.85rem; }
-.av-user { width:32px; height:32px; background:var(--s3); border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--gray); font-size:.72rem; }
-.bubble { padding:12px 16px; border-radius:12px; font-size:.88rem; line-height:1.65; max-width:82%; }
-.bubble.ai { background:var(--s2); border:1px solid var(--border); }
-.bubble.usr { background:var(--pdim); border:1px solid var(--pborder); color:var(--purple); }
-.typing-row { display:flex; gap:10px; align-items:center; }
-.typing-dots { display:flex; gap:4px; padding:12px 16px; background:var(--s2); border:1px solid var(--border); border-radius:12px; }
-.typing-dots span { width:5px; height:5px; border-radius:50%; background:var(--purple); animation:td 1.2s infinite; }
-.typing-dots span:nth-child(2) { animation-delay:.2s; } .typing-dots span:nth-child(3) { animation-delay:.4s; }
-@keyframes td { 0%,100%{opacity:.3; transform:translateY(0);} 50%{opacity:1; transform:translateY(-4px);} }
-.opts { display:flex; flex-wrap:wrap; gap:8px; margin-left:42px; }
-.opt-btn { background:var(--s3); border:1px solid var(--border); color:var(--white); padding:9px 18px; border-radius:8px; cursor:pointer; font-family:"DM Sans", sans-serif; font-size:.84rem; transition:all .2s; }
-.opt-btn:hover, .opt-btn.sel { border-color:var(--purple); color:var(--purple); background:var(--pdim); }
-.opt-btn:disabled { opacity:.5; cursor:not-allowed; }
-#input-zone { display:flex; gap:10px; margin-top:4px; }
-#txt { flex:1; background:var(--s1); border:1px solid var(--border); border-radius:10px; padding:12px 16px; color:var(--white); font-family:"DM Sans", sans-serif; font-size:.88rem; outline:none; resize:none; min-height:46px; max-height:120px; }
-#txt:focus { border-color:var(--purple); }
-#send-btn { background:var(--purple); border:none; color:#fff; width:44px; height:44px; border-radius:10px; cursor:pointer; font-size:1rem; transition:all .2s; flex-shrink:0; align-self:flex-end; }
-#send-btn:hover { background:var(--pd); }
-#send-btn:disabled { opacity:.35; cursor:not-allowed; }
-
-/* Kit Results Cards */
-.niche-box { background:var(--s1); border:1px solid var(--pborder); border-radius:14px; padding:24px 28px; margin-bottom:20px; }
-.kit-card { background:var(--s1); border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden; transition:border-color .2s; cursor:pointer; }
-.kit-card:hover { border-color:var(--pborder); }
-.kit-head { padding:16px 20px; display:flex; align-items:center; justify-content:space-between; }
-.kit-head-l { display:flex; align-items:center; gap:12px; }
-.kit-ttl { font-family:"Playfair Display", serif; font-weight:600; font-size:.92rem; }
-.kit-sub { font-size:.7rem; color:var(--gray); margin-top:2px; }
-.kit-body { display:none; padding:0 20px 20px; font-size:.85rem; line-height:1.75; color:#ccc; }
-.kit-card.open .kit-body { display:block; }
-.copy-btn { background:transparent; border:1px solid var(--border); color:var(--gray); padding:3px 12px; border-radius:6px; font-size:.68rem; cursor:pointer; font-family:"DM Sans", sans-serif; }
-.copy-btn:hover { border-color:var(--purple); color:var(--purple); }
-.locked-wrap { position:relative; min-height:100px; }
-.locked-blur { filter:blur(4px); pointer-events:none; user-select:none; }
-.locked-over { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:rgba(0,0,0,.65); border-radius:8px; }
-.ptable { width:100%; border-collapse:collapse; font-size:.82rem; }
-.ptable th { text-align:left; color:var(--gray); font-size:.7rem; text-transform:uppercase; padding-bottom:10px; border-bottom:1px solid var(--border); }
-.ptable td { padding:10px 8px 10px 0; border-bottom:1px solid var(--s3); vertical-align:top; }
+/* ── KIT RESULTS ── */
+.niche-box{background:var(--s1);border:1px solid var(--pborder);border-radius:14px;padding:24px 28px;margin-bottom:20px;}
+.kit-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color .2s;cursor:pointer;}
+.kit-card:hover{border-color:var(--pborder);}
+.kit-head{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.kit-head-l{display:flex;align-items:center;gap:12px;}
+.kit-ttl{font-family:"Playfair Display",serif;font-weight:600;font-size:.92rem;}
+.kit-sub{font-size:.7rem;color:var(--gray);margin-top:2px;}
+.kit-body{display:none;padding:0 20px 20px;font-size:.85rem;line-height:1.75;color:#ccc;}
+.kit-card.open .kit-body{display:block;}
+.copy-btn{background:transparent;border:1px solid var(--border);color:var(--gray);padding:3px 12px;border-radius:6px;font-size:.68rem;cursor:pointer;font-family:"DM Sans",sans-serif;}
+.copy-btn:hover{border-color:var(--purple);color:var(--purple);}
+.ptable{width:100%;border-collapse:collapse;font-size:.82rem;}
+.ptable th{text-align:left;color:var(--gray);font-size:.7rem;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.ptable td{padding:10px 8px 10px 0;border-bottom:1px solid var(--s3);vertical-align:top;}
 </style>
 </head>
 <body>
 
 <div id="app-loading">
   <div class="app-spin"></div>
-  <span style="font-size:.84rem;color:var(--gray);">Loading Lancify OS...</span>
+  <span style="font-size:.84rem;color:var(--gray);">Loading Lancify...</span>
 </div>
 
+<!-- LOGIN PAGE -->
 <div id="login-pg">
   <div class="login-card">
-    <div class="login-logo">
-      <img src="logo.png" alt="Lancify">
-      <span>Lancify</span>
+    <div class="login-brand">
+      <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify">
+      <span class="login-brand-name">Lancify</span>
     </div>
-    <p>Sign in to access your freelance workspace and AI tools.</p>
+    <h1>Welcome to Lancify</h1>
+    <p class="login-sub">Sign in to build your free AI freelance kit and start earning.</p>
     <button class="google-btn" onclick="signInGoogle()">
       <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Continue with Google
     </button>
-    <div class="divider"><span>or email</span></div>
-    <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com">
-    <input class="auth-input" id="auth-password" type="password" placeholder="Password">
-    <button class="auth-submit" onclick="authSubmit()">Sign In</button>
-    <div id="auth-error" style="color:var(--red); font-size:.8rem; margin-top:10px; display:none;"></div>
+    <div class="divider"><span>or continue with email</span></div>
+    <div id="auth-error" class="auth-error"></div>
+    <div id="auth-msg" class="auth-msg"></div>
+    <div class="auth-field">
+      <label>Email address</label>
+      <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
+    </div>
+    <div class="auth-field">
+      <label>Password</label>
+      <input class="auth-input" id="auth-password" type="password" placeholder="Your password" onkeydown="if(event.key==='Enter')authSubmit()">
+    </div>
+    <div class="auth-field" id="name-field" style="display:none;">
+      <label>Full name</label>
+      <input class="auth-input" id="auth-name" type="text" placeholder="Your full name">
+    </div>
+    <button class="auth-submit" id="auth-btn" onclick="authSubmit()">Sign In</button>
+    <div class="auth-toggle" id="auth-toggle-txt">
+      Don't have an account? <span onclick="toggleMode()">Sign up free</span>
+    </div>
   </div>
 </div>
 
+<!-- APP LAYOUT -->
 <div id="app-layout">
-  
   <aside class="sidebar">
     <div class="sb-logo" onclick="navigate('home-pg')">
-      <img src="logo.png" alt="Lancify">
+      <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify">
       <span>Lancify</span>
     </div>
-
     <div class="sb-group">Tools</div>
     <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')">🏠 Home Dashboard</a>
     <a class="nav-item" data-page="chat-pg" onclick="startChat()">✦ Launch Coach</a>
-    <a class="nav-item" onclick="checkPro(() => toast('Proposal Writer opening...', 'success'))">📝 Proposal Writer <span class="pro-badge">PRO</span></a>
-    <a class="nav-item" onclick="checkPro(() => toast('Email Writer opening...', 'success'))">✉️ Email Writer <span class="pro-badge">PRO</span></a>
-    
+    <a class="nav-item" onclick="checkPro(() => toast('Proposal Writer coming soon!', 'success'))">📝 Proposal Writer <span class="pro-badge">PRO</span></a>
+    <a class="nav-item" onclick="checkPro(() => toast('Email Writer coming soon!', 'success'))">✉️ Email Writer <span class="pro-badge">PRO</span></a>
     <div class="sb-group">Insights</div>
-    <a class="nav-item" onclick="checkPro(() => toast('Gig Finder opening...', 'success'))">🔍 Gig Finder <span class="pro-badge">PRO</span></a>
-    <a class="nav-item" onclick="checkPro(() => toast('Roadmap opening...', 'success'))">🗺️ Income Roadmap <span class="pro-badge">PRO</span></a>
-
+    <a class="nav-item" onclick="checkPro(() => toast('Gig Finder coming soon!', 'success'))">🔍 Gig Finder <span class="pro-badge">PRO</span></a>
+    <a class="nav-item" onclick="checkPro(() => toast('Income Roadmap coming soon!', 'success'))">🗺️ Income Roadmap <span class="pro-badge">PRO</span></a>
     <div class="sb-bottom">
       <div class="sb-group">Account</div>
-      <a class="nav-item" data-page="results-pg-wrap" id="sb-my-kits" style="display:none;" onclick="viewSavedKit()">📁 My Kits</a>
+      <a class="nav-item" id="sb-my-kits" style="display:none;" onclick="viewSavedKit()">📁 My Kits</a>
       <a class="nav-item" style="color:var(--purple);" onclick="showUpgradeModal()">💎 Upgrade to Pro</a>
       <a class="nav-item" onclick="signOut()">→ Sign Out</a>
     </div>
@@ -191,50 +204,47 @@ body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-ser
 
   <main class="main-content" id="main-scroll">
     <header class="top-nav">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <span id="header-user-name" style="font-size:0.88rem; font-weight:600;">Student</span>
-        <div id="header-user-initial" style="width:32px; height:32px; border-radius:50%; background:var(--purple); display:flex; align-items:center; justify-content:center; font-weight:bold; color:#fff;">U</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span id="header-user-name" style="font-size:0.88rem;font-weight:600;">Student</span>
+        <div id="header-user-initial" style="width:32px;height:32px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;">U</div>
       </div>
     </header>
-
     <div class="page-container">
-      
+
       <div id="home-pg" class="pg on">
-        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; flex-wrap:wrap; gap:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;flex-wrap:wrap;gap:16px;">
           <div>
-            <h1 style="font-family:'Playfair Display'; font-size:2.4rem; margin-bottom:8px;">Welcome back.</h1>
+            <h1 style="font-family:'Playfair Display';font-size:2.4rem;margin-bottom:8px;">Welcome back.</h1>
             <p style="color:var(--gray);">Manage your freelance business and generated kits.</p>
           </div>
-          <button class="auth-submit" style="width:auto; padding:10px 24px; font-size:.88rem;" onclick="startChat()">✦ Generate New Kit</button>
+          <button class="auth-submit" style="width:auto;padding:10px 24px;font-size:.88rem;" onclick="startChat()">✦ Generate New Kit</button>
         </div>
-
-        <h3 style="font-family:'Playfair Display'; font-size:1.2rem; margin-bottom:16px;">📁 My Kits</h3>
-        
-        <div id="kits-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px;">
-          <div id="empty-kits-msg" style="grid-column: 1 / -1; background:var(--s2); border:1px dashed var(--border); padding:40px; border-radius:16px; text-align:center; color:var(--gray);">
-             <div style="font-size:2rem; margin-bottom:12px;">📁</div>
-             <h4 style="color:var(--white); font-size:1.1rem; margin-bottom:8px;">No kits generated yet</h4>
-             <p style="font-size:0.85rem; margin-bottom:20px;">Run the Launch Coach to create your first freelance identity.</p>
-             <button class="auth-submit" style="width:auto; padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
+        <h3 style="font-family:'Playfair Display';font-size:1.2rem;margin-bottom:16px;">📁 My Kits</h3>
+        <div id="kits-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;">
+          <div id="empty-kits-msg" style="grid-column:1/-1;background:var(--s2);border:1px dashed var(--border);padding:40px;border-radius:16px;text-align:center;color:var(--gray);">
+            <div style="font-size:2rem;margin-bottom:12px;">📁</div>
+            <h4 style="color:var(--white);font-size:1.1rem;margin-bottom:8px;">No kits generated yet</h4>
+            <p style="font-size:0.85rem;margin-bottom:20px;">Run the Launch Coach to create your first freelance identity.</p>
+            <button class="auth-submit" style="width:auto;padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
           </div>
         </div>
       </div>
 
       <div id="chat-pg" class="pg">
-        <div style="text-align:center; margin-bottom:36px;">
-          <h2 style="font-family:'Playfair Display'; font-size:1.8rem; margin-bottom:6px;">Let's build your kit</h2>
-          <p style="color:var(--gray); font-size:.88rem;">5 quick questions — your complete freelance kit in 20 minutes.</p>
+        <div style="text-align:center;margin-bottom:36px;">
+          <h2 style="font-family:'Playfair Display';font-size:1.8rem;margin-bottom:6px;">Let's build your kit</h2>
+          <p style="color:var(--gray);font-size:.88rem;">5 quick questions — your complete freelance kit in 20 minutes.</p>
         </div>
         <div class="prog-wrap">
           <div class="prog-labels"><span id="prog-lbl">Step 1 of 5</span><span id="prog-pct">0%</span></div>
           <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
         </div>
         <div id="chat-msgs"></div>
-        <div id="gen-bar" style="display:none; align-items:center; gap:12px; padding:14px 18px; background:var(--s2); border:1px solid var(--pborder); border-radius:12px; margin-top:8px;">
-          <div class="app-spin" style="width:18px; height:18px;"></div>
-          <span id="gen-text" style="font-size:.84rem; color:var(--purple); font-family:'Playfair Display', serif; font-style:italic;">Analysing your skills...</span>
+        <div id="gen-bar" style="display:none;align-items:center;gap:12px;padding:14px 18px;background:var(--s2);border:1px solid var(--pborder);border-radius:12px;margin-top:8px;">
+          <div class="app-spin" style="width:18px;height:18px;"></div>
+          <span id="gen-text" style="font-size:.84rem;color:var(--purple);font-family:'Playfair Display',serif;font-style:italic;">Analysing your skills...</span>
         </div>
-        <div id="input-zone" style="display:flex; gap:10px; margin-top:4px;">
+        <div id="input-zone" style="display:flex;gap:10px;margin-top:4px;">
           <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1"></textarea>
           <button id="send-btn" onclick="sendMsg()">→</button>
         </div>
@@ -254,249 +264,182 @@ body { background:var(--bg); color:var(--white); font-family:"DM Sans", sans-ser
     <h3>Unlock Freelance Pro</h3>
     <p>Get access to the AI Proposal Writer, Client Emails, Gig Finder, and your 6-Month Income Roadmap.</p>
     <div class="modal-price">₹399<span>/month</span></div>
-    <button class="auth-submit" style="font-size:1rem; padding:14px;" onclick="toast('Redirecting to Instamojo...', 'success'); closeUpgradeModal();">Upgrade Now</button>
+    <button class="auth-submit" style="font-size:1rem;padding:14px;" onclick="window.location.href='https://lancify.framer.website/#pricing';closeUpgradeModal();">Upgrade Now</button>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════
-// SUPABASE INIT
-// ══════════════════════════════
 const { createClient } = supabase;
 const sb = createClient(
   'https://qkpyqtynwbvjssrqanmk.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY'
 );
 
-let currentUser = null;
-let userProfile = { is_pro: true }; // TEMPORARY UNLOCK: Set to true so you can test all features!
-let savedKitData = null;
+let currentUser=null, userProfile={is_pro:false}, savedKitData=null, authMode='signin';
 
-// ══════════════════════════════
-// APP INIT & AUTH
-// ══════════════════════════════
 async function initApp() {
-  const { data: { session } } = await sb.auth.getSession();
-  document.getElementById('app-loading').style.display = 'none';
-  
-  if (session?.user) {
-    handleLoginSuccess(session.user);
-  } else {
-    document.getElementById('app-layout').classList.remove('on');
-    document.getElementById('login-pg').style.display = 'flex';
-  }
-
-  sb.auth.onAuthStateChange((_event, session) => {
-    if (session?.user) {
-      handleLoginSuccess(session.user);
-    } else {
-      currentUser = null;
-      savedKitData = null;
-      // Instantly hide dashboard and show login
-      document.getElementById('app-layout').classList.remove('on');
-      document.getElementById('login-pg').style.display = 'flex';
-    }
+  const { data:{session} } = await sb.auth.getSession();
+  document.getElementById('app-loading').style.display='none';
+  if(session?.user){ handleLoginSuccess(session.user); }
+  else { document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex'; }
+  sb.auth.onAuthStateChange((_,session)=>{
+    if(session?.user){ handleLoginSuccess(session.user); }
+    else { currentUser=null; document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex'; }
   });
 }
 
 function handleLoginSuccess(user) {
-  currentUser = user;
-  // Instantly hide login and show dashboard
-  document.getElementById('login-pg').style.display = 'none';
+  currentUser=user;
+  document.getElementById('login-pg').style.display='none';
   document.getElementById('app-layout').classList.add('on');
-  
-  // Set header info
-  const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
-  document.getElementById('header-user-name').textContent = name;
-  document.getElementById('header-user-initial').textContent = name[0].toUpperCase();
-  
+  const name=user.user_metadata?.full_name||user.email?.split('@')[0]||'User';
+  document.getElementById('header-user-name').textContent=name;
+  document.getElementById('header-user-initial').textContent=name[0].toUpperCase();
   loadUserKits(user.id);
   navigate('home-pg');
 }
 
 async function signInGoogle() {
-  const { error } = await sb.auth.signInWithOAuth({ provider: 'google' });
-  if (error) toast(error.message, 'error');
+  const {error}=await sb.auth.signInWithOAuth({provider:'google'});
+  if(error) showAuthError(error.message);
+}
+
+function toggleMode() {
+  authMode=authMode==='signin'?'signup':'signin';
+  const isSU=authMode==='signup';
+  document.getElementById('name-field').style.display=isSU?'block':'none';
+  document.getElementById('auth-btn').textContent=isSU?'Create Account':'Sign In';
+  document.getElementById('auth-toggle-txt').innerHTML=isSU
+    ?'Already have an account? <span onclick="toggleMode()">Sign in</span>'
+    :"Don't have an account? <span onclick=\"toggleMode()\">Sign up free</span>";
+  clearAuthMessages();
 }
 
 async function authSubmit() {
-  const email = document.getElementById('auth-email').value.trim();
-  const password = document.getElementById('auth-password').value;
-  const errEl = document.getElementById('auth-error');
-  errEl.style.display = 'none';
-
-  if (!email || !password) { errEl.textContent = 'Please enter email and password'; errEl.style.display = 'block'; return; }
-  
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; }
+  const email=document.getElementById('auth-email').value.trim();
+  const password=document.getElementById('auth-password').value;
+  const name=document.getElementById('auth-name').value.trim();
+  clearAuthMessages();
+  if(!email||!password){showAuthError('Please enter your email and password.');return;}
+  if(authMode==='signup'&&password.length<6){showAuthError('Password must be at least 6 characters.');return;}
+  const btn=document.getElementById('auth-btn');
+  btn.disabled=true; btn.textContent='Please wait...';
+  let result;
+  if(authMode==='signup'){
+    result=await sb.auth.signUp({email,password,options:{data:{full_name:name||email.split('@')[0]}}});
+    if(!result.error&&result.data?.user&&!result.data.session){
+      showAuthMsg('Check your email to confirm your account, then sign in.');
+      btn.disabled=false; btn.textContent='Create Account'; return;
+    }
+  } else { result=await sb.auth.signInWithPassword({email,password}); }
+  btn.disabled=false; btn.textContent=authMode==='signup'?'Create Account':'Sign In';
+  if(result.error) showAuthError(result.error.message);
 }
 
-async function signOut() {
-  await sb.auth.signOut();
+async function signOut(){await sb.auth.signOut();}
+function showAuthError(m){const e=document.getElementById('auth-error');e.textContent=m;e.style.display='block';}
+function showAuthMsg(m){const e=document.getElementById('auth-msg');e.textContent=m;e.style.display='block';}
+function clearAuthMessages(){document.getElementById('auth-error').style.display='none';document.getElementById('auth-msg').style.display='none';}
+
+function navigate(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const a=document.querySelector(`[data-page="${id}"]`); if(a) a.classList.add('active');
+  document.getElementById('main-scroll').scrollTo({top:0,behavior:'smooth'});
 }
 
-// ══════════════════════════════
-// NAVIGATION & UI UTILS
-// ══════════════════════════════
-function navigate(pageId) {
-  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
-  document.getElementById(pageId).classList.add('on');
-  
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const activeLink = document.querySelector(`[data-page="${pageId}"]`);
-  if (activeLink) activeLink.classList.add('active');
-
-  document.getElementById('main-scroll').scrollTo({top:0, behavior:'smooth'});
-}
-
-function toast(message, type = 'success') {
-  const t = document.createElement('div');
-  t.className = `toast toast-${type}`;
-  t.innerHTML = message;
+function toast(msg,type='success'){
+  const t=document.createElement('div'); t.className=`toast toast-${type}`; t.innerHTML=msg;
   document.body.appendChild(t);
-  setTimeout(() => t.classList.add('show'), 10);
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3000);
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3000);
 }
 
-function checkPro(action) {
-  if (userProfile.is_pro) action(); 
-  else showUpgradeModal(); 
+function checkPro(action){if(userProfile.is_pro)action();else showUpgradeModal();}
+function showUpgradeModal(){document.getElementById('upgrade-modal').classList.add('on');}
+function closeUpgradeModal(){document.getElementById('upgrade-modal').classList.remove('on');}
+
+let userKits=[];
+async function loadUserKits(userId){
+  try{
+    const {data,error}=await sb.from('kits').select('*').eq('user_id',userId).order('created_at',{ascending:false});
+    if(error)throw error; userKits=data||[]; renderKits();
+  }catch(err){console.error('Load error:',err.message);toast('Failed to load kits.','error');}
 }
 
-function showUpgradeModal() { document.getElementById('upgrade-modal').classList.add('on'); }
-function closeUpgradeModal() { document.getElementById('upgrade-modal').classList.remove('on'); }
-
-// ══════════════════════════════
-// KIT SAVING, LOADING & DASHBOARD
-// ══════════════════════════════
-let userKits = []; 
-
-async function loadUserKits(userId) {
-  try {
-    const { data, error } = await sb
-      .from('kits')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    userKits = data || [];
-    renderKits();
-  } catch (err) { 
-    console.error("Error loading kits:", err.message); 
-    toast("Failed to load your kits.", "error");
+function renderKits(){
+  const grid=document.getElementById('kits-grid');
+  const sbBtn=document.getElementById('sb-my-kits');
+  if(userKits.length===0){
+    grid.innerHTML=`<div style="grid-column:1/-1;background:var(--s2);border:1px dashed var(--border);padding:40px;border-radius:16px;text-align:center;color:var(--gray);">
+      <div style="font-size:2rem;margin-bottom:12px;">📁</div>
+      <h4 style="color:var(--white);font-size:1.1rem;margin-bottom:8px;">No kits generated yet</h4>
+      <p style="font-size:0.85rem;margin-bottom:20px;">Run the Launch Coach to create your first freelance identity.</p>
+      <button class="auth-submit" style="width:auto;padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
+    </div>`;
+    sbBtn.style.display='none'; return;
   }
-}
-
-function renderKits() {
-  const grid = document.getElementById('kits-grid');
-  const sbMyKitsBtn = document.getElementById('sb-my-kits');
-  
-  if (userKits.length === 0) {
-    grid.innerHTML = `
-      <div id="empty-kits-msg" style="grid-column: 1 / -1; background:var(--s2); border:1px dashed var(--border); padding:40px; border-radius:16px; text-align:center; color:var(--gray);">
-         <div style="font-size:2rem; margin-bottom:12px;">📁</div>
-         <h4 style="color:var(--white); font-size:1.1rem; margin-bottom:8px;">No kits generated yet</h4>
-         <p style="font-size:0.85rem; margin-bottom:20px;">Run the Launch Coach to create your first freelance identity.</p>
-         <button class="auth-submit" style="width:auto; padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
-      </div>`;
-    sbMyKitsBtn.style.display = 'none';
-    return;
-  }
-
-  sbMyKitsBtn.style.display = 'flex';
-  let html = '';
-  
-  userKits.forEach(kit => {
-    const date = new Date(kit.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-    const isStarred = kit.is_starred ? 'active' : '';
-    const starIcon = kit.is_starred ? '⭐' : '☆';
-    const nicheName = kit.niche || kit.kit_data?.niche || 'Freelance Kit';
-
-    html += `
-      <div class="kit-dash-card" id="kit-card-${kit.id}">
-        <div class="kit-dash-title">✦ ${nicheName}</div>
-        <div class="kit-dash-date">Created: ${date}</div>
-        <div class="kit-dash-actions">
-          <button class="k-btn" onclick="viewSpecificKit('${kit.id}')">📄 View</button>
-          <button class="k-btn star ${isStarred}" onclick="toggleStar('${kit.id}', ${kit.is_starred})">${starIcon} Star</button>
-          <button class="k-btn del" style="margin-left:auto;" onclick="deleteKit('${kit.id}')">🗑 Delete</button>
-        </div>
+  sbBtn.style.display='flex'; let html='';
+  userKits.forEach(kit=>{
+    const date=new Date(kit.created_at).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+    const sc=kit.is_starred?'active':''; const si=kit.is_starred?'⭐':'☆';
+    const niche=kit.niche||kit.kit_data?.niche||'Freelance Kit';
+    html+=`<div class="kit-dash-card" id="kit-card-${kit.id}">
+      <div class="kit-dash-title">✦ ${niche}</div>
+      <div class="kit-dash-date">Created: ${date}</div>
+      <div class="kit-dash-actions">
+        <button class="k-btn" onclick="viewSpecificKit('${kit.id}')">📄 View</button>
+        <button class="k-btn star ${sc}" onclick="toggleStar('${kit.id}',${kit.is_starred})">${si} Star</button>
+        <button class="k-btn del" style="margin-left:auto;" onclick="deleteKit('${kit.id}')">🗑 Delete</button>
       </div>
-    `;
+    </div>`;
   });
-  
-  grid.innerHTML = html;
+  grid.innerHTML=html;
 }
 
-function viewSpecificKit(id) {
-  const kit = userKits.find(k => k.id === id);
-  if (kit) {
-    savedKitData = kit.kit_data; 
-    showResults(kit.kit_data);
-  }
+function viewSpecificKit(id){const k=userKits.find(k=>k.id===id);if(k){savedKitData=k.kit_data;showResults(k.kit_data);}}
+function viewSavedKit(){if(userKits.length>0)viewSpecificKit(userKits[0].id);}
+
+async function toggleStar(id,cur){
+  try{
+    const nv=!cur;
+    const {error}=await sb.from('kits').update({is_starred:nv}).eq('id',id);
+    if(error)throw error;
+    const i=userKits.findIndex(k=>k.id===id); if(i>-1)userKits[i].is_starred=nv;
+    renderKits(); toast(nv?'Kit starred!':'Star removed','success');
+  }catch(err){toast('Could not update kit','error');}
 }
 
-function viewSavedKit() {
-  if (userKits.length > 0) viewSpecificKit(userKits[0].id);
+async function deleteKit(id){
+  if(!confirm('Delete this kit?'))return;
+  try{
+    const {error}=await sb.from('kits').delete().eq('id',id);
+    if(error)throw error;
+    userKits=userKits.filter(k=>k.id!==id); renderKits(); toast('Kit deleted','success');
+  }catch(err){toast('Failed to delete','error');}
 }
 
-async function toggleStar(id, currentStatus) {
-  try {
-    const newStatus = !currentStatus;
-    const { error } = await sb.from('kits').update({ is_starred: newStatus }).eq('id', id);
-    if (error) throw error;
-    
-    const kitIndex = userKits.findIndex(k => k.id === id);
-    if (kitIndex > -1) userKits[kitIndex].is_starred = newStatus;
-    renderKits();
-    toast(newStatus ? 'Kit starred!' : 'Star removed', 'success');
-  } catch(err) { toast('Could not update kit', 'error'); }
+async function saveKitToSupabase(kit){
+  if(!currentUser)return;
+  try{
+    const {error}=await sb.from('kits').insert([{user_id:currentUser.id,niche:kit.niche,kit_data:kit,is_pro:userProfile.is_pro}]);
+    if(error)throw error; toast('Kit saved! 📁','success'); loadUserKits(currentUser.id);
+  }catch(err){console.error('Save error:',err.message);}
 }
 
-async function deleteKit(id) {
-  if (!confirm('Are you sure you want to delete this kit?')) return;
-  try {
-    const { error } = await sb.from('kits').delete().eq('id', id);
-    if (error) throw error;
-    
-    userKits = userKits.filter(k => k.id !== id);
-    renderKits();
-    toast('Kit deleted successfully', 'success');
-  } catch(err) { toast('Failed to delete kit', 'error'); }
-}
-
-async function saveKitToSupabase(kitJson) {
-  if (!currentUser) return;
-  try {
-    const { error } = await sb.from('kits').insert([{ 
-      user_id: currentUser.id, 
-      niche: kitJson.niche, 
-      kit_data: kitJson, 
-      is_pro: userProfile.is_pro
-    }]);
-    if (error) throw error;
-    
-    toast('Kit saved to Supabase! 📁', 'success');
-    loadUserKits(currentUser.id); 
-  } catch (err) { console.error("Error saving kit:", err.message); }
-}
-
-// ══════════════════════════════
-// CHAT ENGINE
-// ══════════════════════════════
-const STEPS = [
-  { id:'skills', type:'text', ph:'e.g. coding, Canva, writing...', q:"Hey! Welcome to Lancify.\n\nWhat tools, apps or skills do you use regularly, even casually?" },
-  { id:'experience', type:'text', ph:'e.g. Built a website, wrote a blog...', q:"Have you ever done anything for someone, even unpaid? A logo, a spreadsheet, etc." },
-  { id:'hours', type:'opts', opts:['1-2 hrs/day','2-4 hrs/day','4-6 hrs/day','6+ hrs/day'], q:"How many hours a day can you give to freelancing?" },
-  { id:'goal', type:'opts', opts:['Rs 3,000-5,000','Rs 5,000-10,000','Rs 10,000-20,000','Rs 20,000+'], q:"What is your income goal for your first month?" },
-  { id:'platform', type:'opts', opts:['Fiverr','Upwork','Indian clients (LinkedIn)','All'], q:"Where do you want to find clients?" }
+const STEPS=[
+  {id:'skills',type:'text',ph:'e.g. coding, Canva, writing...',q:"Hey! Welcome to Lancify.\n\nWhat tools, apps or skills do you use regularly, even casually?"},
+  {id:'experience',type:'text',ph:'e.g. Built a website, wrote a blog...',q:"Have you ever done anything for someone, even unpaid? A logo, a spreadsheet, etc."},
+  {id:'hours',type:'opts',opts:['1-2 hrs/day','2-4 hrs/day','4-6 hrs/day','6+ hrs/day'],q:"How many hours a day can you give to freelancing?"},
+  {id:'goal',type:'opts',opts:['Rs 3,000-5,000','Rs 5,000-10,000','Rs 10,000-20,000','Rs 20,000+'],q:"What is your income goal for your first month?"},
+  {id:'platform',type:'opts',opts:['Fiverr','Upwork','Indian clients (LinkedIn)','All'],q:"Where do you want to find clients?"}
 ];
-const GEN_MSGS = ['Analysing skills...','Researching market...','Assigning niche...','Writing bio...','Building packages...','Crafting gig...','Almost ready...'];
-let step=0, answers={}, waiting=false;
+const GEN_MSGS=['Analysing skills...','Researching market...','Assigning niche...','Writing bio...','Building packages...','Crafting gig...','Almost ready...'];
+let step=0,answers={},waiting=false;
 
-function startChat() {
-  step=0; answers={};
+function startChat(){
+  step=0;answers={};
   document.getElementById('chat-msgs').innerHTML='';
   document.getElementById('input-zone').style.display='flex';
   document.getElementById('gen-bar').style.display='none';
@@ -505,115 +448,103 @@ function startChat() {
   setTimeout(()=>showStep(0),400);
 }
 
-function updateProg() {
+function updateProg(){
   const p=Math.round((step/STEPS.length)*100);
   document.getElementById('prog-bar').style.width=p+'%';
   document.getElementById('prog-lbl').textContent='Step '+Math.min(step+1,5)+' of 5';
   document.getElementById('prog-pct').textContent=p+'%';
 }
 
-function showStep(i) {
+function showStep(i){
   updateProg();
   typing(()=>{
     addAI(STEPS[i].q);
-    if(STEPS[i].type==='opts'){
-      addOpts(STEPS[i].opts,i);
-      document.getElementById('input-zone').style.display='none';
-    } else {
-      document.getElementById('input-zone').style.display='flex';
-      lockInput(false); waiting=true;
-      setTimeout(()=>document.getElementById('txt').focus(),100);
-    }
+    if(STEPS[i].type==='opts'){addOpts(STEPS[i].opts,i);document.getElementById('input-zone').style.display='none';}
+    else{document.getElementById('input-zone').style.display='flex';lockInput(false);waiting=true;setTimeout(()=>document.getElementById('txt').focus(),100);}
   });
 }
 
-function typing(cb) {
+function typing(cb){
   const c=document.getElementById('chat-msgs');
-  const el=document.createElement('div'); el.className='typing-row'; el.id='typing';
+  const el=document.createElement('div');el.className='typing-row';el.id='typing';
   el.innerHTML='<div class="av-ai">L</div><div class="typing-dots"><span></span><span></span><span></span></div>';
-  c.appendChild(el); scrollBot();
+  c.appendChild(el);scrollBot();
   setTimeout(()=>{el.remove();cb();},900+Math.random()*400);
 }
-function addAI(text) {
+function addAI(text){
   const c=document.getElementById('chat-msgs');
-  const d=document.createElement('div'); d.className='msg';
+  const d=document.createElement('div');d.className='msg';
   d.innerHTML='<div class="av-ai">L</div><div class="bubble ai">'+text.replace(/\n/g,'<br>')+'</div>';
-  c.appendChild(d); scrollBot();
+  c.appendChild(d);scrollBot();
 }
-function addUser(text) {
+function addUser(text){
   const c=document.getElementById('chat-msgs');
-  const d=document.createElement('div'); d.className='msg user';
+  const d=document.createElement('div');d.className='msg user';
   d.innerHTML='<div class="av-user">You</div><div class="bubble usr">'+text+'</div>';
-  c.appendChild(d); scrollBot();
+  c.appendChild(d);scrollBot();
 }
-function addOpts(opts,si) {
+function addOpts(opts,si){
   const c=document.getElementById('chat-msgs');
-  const row=document.createElement('div'); row.className='opts';
-  opts.forEach(o=>{
-    const b=document.createElement('button'); b.className='opt-btn'; b.textContent=o;
-    b.onclick=()=>pickOpt(o,si,row); row.appendChild(b);
-  });
-  c.appendChild(row); scrollBot();
+  const row=document.createElement('div');row.className='opts';
+  opts.forEach(o=>{const b=document.createElement('button');b.className='opt-btn';b.textContent=o;b.onclick=()=>pickOpt(o,si,row);row.appendChild(b);});
+  c.appendChild(row);scrollBot();
 }
-function pickOpt(val,si,row) {
+function pickOpt(val,si,row){
   row.querySelectorAll('.opt-btn').forEach(b=>{b.disabled=true;if(b.textContent===val)b.classList.add('sel');});
-  answers[STEPS[si].id]=val; addUser(val); advance();
+  answers[STEPS[si].id]=val;addUser(val);advance();
 }
-function sendMsg() {
+function sendMsg(){
   if(!waiting)return;
-  const t=document.getElementById('txt'); const v=t.value.trim();
+  const t=document.getElementById('txt');const v=t.value.trim();
   if(!v||v.length<4){t.style.borderColor='#ef4444';setTimeout(()=>t.style.borderColor='',1500);return;}
-  t.value=''; autoResize(t);
-  answers[STEPS[step].id]=v; addUser(v); lockInput(true); waiting=false; advance();
+  t.value='';autoResize(t);
+  answers[STEPS[step].id]=v;addUser(v);lockInput(true);waiting=false;advance();
 }
 function advance(){step++;if(step<STEPS.length)setTimeout(()=>showStep(step),500);else setTimeout(kickoff,700);}
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 function lockInput(v){document.getElementById('txt').disabled=v;document.getElementById('send-btn').disabled=v;}
-function scrollBot(){const c=document.getElementById('main-scroll'); setTimeout(()=>c.scrollTo({top:c.scrollHeight,behavior:'smooth'}),60);}
+function scrollBot(){const c=document.getElementById('main-scroll');setTimeout(()=>c.scrollTo({top:c.scrollHeight,behavior:'smooth'}),60);}
 
-function kickoff() {
+function kickoff(){
   typing(()=>{
     addAI("Perfect! I have everything I need.\n\n<strong>Building your personalised launch kit now.</strong> Give me about 20 seconds.");
     document.getElementById('input-zone').style.display='none';
-    const gb=document.getElementById('gen-bar'); gb.style.display='flex';
+    const gb=document.getElementById('gen-bar');gb.style.display='flex';
     let mi=0;
     const iv=setInterval(()=>{mi=(mi+1)%GEN_MSGS.length;document.getElementById('gen-text').textContent=GEN_MSGS[mi];},1800);
     setTimeout(()=>{clearInterval(iv);callAPI();},1500);
   });
 }
 
-async function callAPI() {
-  try {
+async function callAPI(){
+  try{
     const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answers})});
     const kit=await r.json();
     if(kit.error)throw new Error(kit.error);
-    saveKitToSupabase(kit);
-    showResults(kit);
-  } catch(e) {
+    saveKitToSupabase(kit);showResults(kit);
+  }catch(e){
     console.error(e);
     document.getElementById('gen-bar').style.display='none';
     addAI('Something went wrong. Please try again.');
-    const btn=document.createElement('button'); btn.className='auth-submit'; btn.style.width='auto'; btn.style.marginLeft='42px'; btn.textContent='Retry'; btn.onclick=()=>{callAPI();btn.remove();};
-    document.getElementById('chat-msgs').appendChild(btn); scrollBot();
+    const btn=document.createElement('button');btn.className='auth-submit';btn.style.cssText='width:auto;margin-left:42px;margin-top:8px;';
+    btn.textContent='Retry';btn.onclick=()=>{callAPI();btn.remove();};
+    document.getElementById('chat-msgs').appendChild(btn);scrollBot();
   }
 }
 
-// ══════════════════════════════
-// RESULTS
-// ══════════════════════════════
-function showResults(kit) {
+function showResults(kit){
   navigate('results-pg-wrap');
   let planHTML='';
   if(kit.action_plan&&typeof kit.action_plan==='object'){
-    Object.values(kit.action_plan).forEach((v,i)=>{planHTML+=`<div class="day-row"><div class="day-n" style="width:24px;height:24px;background:var(--pdim);border:1px solid var(--pborder);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--purple);flex-shrink:0;">${i+1}</div><div class="day-t" style="font-size:.85rem;line-height:1.6;color:#ccc;">${v}</div></div>`;});
-  } else if(typeof kit.action_plan==='string'){
-    kit.action_plan.split('\n').filter(Boolean).forEach((line,i)=>{planHTML+=`<div class="day-row" style="display:flex;gap:14px;align-items:flex-start;margin-bottom:10px;"><div class="day-n" style="width:24px;height:24px;background:var(--pdim);border:1px solid var(--pborder);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--purple);flex-shrink:0;">${i+1}</div><div class="day-t" style="font-size:.85rem;line-height:1.6;color:#ccc;">${line.replace(/^Day \d+[:.] */,'')}</div></div>`;});
+    Object.values(kit.action_plan).forEach((v,i)=>{planHTML+=`<div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:10px;"><div style="width:24px;height:24px;background:var(--pdim);border:1px solid var(--pborder);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--purple);flex-shrink:0;">${i+1}</div><div style="font-size:.85rem;line-height:1.6;color:#ccc;">${v}</div></div>`;});
+  }else if(typeof kit.action_plan==='string'){
+    kit.action_plan.split('\n').filter(Boolean).forEach((line,i)=>{planHTML+=`<div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:10px;"><div style="width:24px;height:24px;background:var(--pdim);border:1px solid var(--pborder);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--purple);flex-shrink:0;">${i+1}</div><div style="font-size:.85rem;line-height:1.6;color:#ccc;">${line.replace(/^Day \d+[:.] */,'')}</div></div>`;});
   }
   const dRow=d=>(d||'').split('\n').filter(Boolean).map(x=>`<span style="display:block;padding:1px 0">${x}</span>`).join('');
   document.getElementById('results-pg').innerHTML=`
-    <div class="res-header" style="text-align:center;margin-bottom:40px;">
-      <div class="res-badge" style="font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;">Your kit is ready</div>
+    <div style="text-align:center;margin-bottom:40px;">
+      <div style="font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;">Your kit is ready</div>
       <h2 style="font-family:'Playfair Display';font-size:2.4rem;font-weight:700;margin-bottom:8px;">Your Freelance<br>Launch Kit</h2>
       <p style="color:var(--gray);">Built specifically for your skills and goals</p>
     </div>
@@ -622,10 +553,10 @@ function showResults(kit) {
       <div style="font-family:'Playfair Display';font-size:1.5rem;font-weight:700;margin-bottom:8px;">${kit.niche||''}</div>
       <div style="font-size:.86rem;color:var(--gray);line-height:1.65;">${kit.niche_reason||''}</div>
     </div>
-    <div class="kit-cards">
+    <div>
       <div class="kit-card open" onclick="toggleCard(this)">
         <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">📁</div><div><div class="kit-ttl">Portfolio Blurb</div><div class="kit-sub">Copy-paste ready bio</div></div></div>
-        <div style="display:flex;align-items:center;gap:10px;"><button class="copy-btn" onclick="copyText(event,'port-txt')">Copy</button></div></div>
+        <button class="copy-btn" onclick="copyText(event,'port-txt')">Copy</button></div>
         <div class="kit-body"><p id="port-txt">${kit.portfolio_blurb||''}</p></div>
       </div>
       <div class="kit-card" onclick="toggleCard(this)">
@@ -633,15 +564,15 @@ function showResults(kit) {
         <div class="kit-body">
           <table class="ptable"><thead><tr><th>Package</th><th>Price</th><th>Includes</th><th>Time</th></tr></thead>
           <tbody>
-            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(99,102,241,.15);color:#818cf8;">${kit.pricing?.basic?.name||'Starter'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;font-size:1rem;">${kit.pricing?.basic?.price||''}</span></td><td>${dRow(kit.pricing?.basic?.deliverables)}</td><td>${kit.pricing?.basic?.timeline||''}</td></tr>
-            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(168,85,247,.15);color:#a855f7;">${kit.pricing?.standard?.name||'Standard'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;font-size:1rem;">${kit.pricing?.standard?.price||''}</span></td><td>${dRow(kit.pricing?.standard?.deliverables)}</td><td>${kit.pricing?.standard?.timeline||''}</td></tr>
-            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(234,179,8,.12);color:#ca8a04;">${kit.pricing?.premium?.name||'Premium'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;font-size:1rem;">${kit.pricing?.premium?.price||''}</span></td><td>${dRow(kit.pricing?.premium?.deliverables)}</td><td>${kit.pricing?.premium?.timeline||''}</td></tr>
+            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(99,102,241,.15);color:#818cf8;">${kit.pricing?.basic?.name||'Starter'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.basic?.price||''}</span></td><td>${dRow(kit.pricing?.basic?.deliverables)}</td><td>${kit.pricing?.basic?.timeline||''}</td></tr>
+            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(168,85,247,.15);color:#a855f7;">${kit.pricing?.standard?.name||'Standard'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.standard?.price||''}</span></td><td>${dRow(kit.pricing?.standard?.deliverables)}</td><td>${kit.pricing?.standard?.timeline||''}</td></tr>
+            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(234,179,8,.12);color:#ca8a04;">${kit.pricing?.premium?.name||'Premium'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.premium?.price||''}</span></td><td>${dRow(kit.pricing?.premium?.deliverables)}</td><td>${kit.pricing?.premium?.timeline||''}</td></tr>
           </tbody></table>
         </div>
       </div>
       <div class="kit-card" onclick="toggleCard(this)">
         <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">✍️</div><div><div class="kit-ttl">Gig Description</div><div class="kit-sub">SEO-optimised, ready to post</div></div></div>
-        <div style="display:flex;align-items:center;gap:10px;"><button class="copy-btn" onclick="copyText(event,'gig-txt')">Copy</button></div></div>
+        <button class="copy-btn" onclick="copyText(event,'gig-txt')">Copy</button></div>
         <div class="kit-body">
           <p style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--purple);margin-bottom:6px;">Gig Title</p>
           <p style="font-weight:600;margin-bottom:18px;">${kit.gig_title||''}</p>
@@ -651,30 +582,29 @@ function showResults(kit) {
       </div>
       <div class="kit-card" onclick="toggleCard(this)">
         <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">💬</div><div><div class="kit-ttl">Cold Pitch Script</div><div class="kit-sub">Unlocked via Pro</div></div></div></div>
-        <div class="kit-body">
-          <p>${kit.pitch_script||'Your personalised cold pitch script.'}</p>
-        </div>
+        <div class="kit-body"><p>${kit.pitch_script||'Your personalised cold pitch script.'}</p></div>
       </div>
       <div class="kit-card" onclick="toggleCard(this)">
         <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">📆</div><div><div class="kit-ttl">7-Day Launch Plan</div><div class="kit-sub">Unlocked via Pro</div></div></div></div>
-        <div class="kit-body">
-          <div>${planHTML}</div>
-        </div>
+        <div class="kit-body"><div>${planHTML}</div></div>
       </div>
+    </div>
+    <div style="margin-top:32px;text-align:center;padding-bottom:40px;">
+      <button class="auth-submit" style="width:auto;padding:11px 28px;margin-right:12px;" onclick="showUpgradeModal()">💎 Upgrade to Pro</button>
+      <button onclick="startChat()" style="background:transparent;border:1px solid var(--border);color:var(--gray);padding:11px 24px;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.88rem;">↺ Rebuild Kit</button>
     </div>`;
 }
 
 function toggleCard(el){el.classList.toggle('open');}
 function copyText(e,id){
   e.stopPropagation();
-  const el=document.getElementById(id); if(!el)return;
+  const el=document.getElementById(id);if(!el)return;
   navigator.clipboard.writeText(el.innerText).then(()=>{
-    const btn=e.target; btn.textContent='Copied!';
-    setTimeout(()=>{btn.textContent='Copy';},2000);
+    const btn=e.target;btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',2000);
   });
 }
 
-// START
 initApp();
 </script>
 </body>
