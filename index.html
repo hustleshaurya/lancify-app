@@ -247,7 +247,62 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
           <button id="send-btn" onclick="sendMsg()">→</button>
         </div>
       </div>
+<div id="proposal-pg" class="pg">
+        <div style="margin-bottom:32px;">
+          <h2 style="font-family:'Playfair Display';font-size:2.4rem;margin-bottom:8px;">Proposal Writer</h2>
+          <p style="color:var(--gray);">Turn job descriptions into winning proposals in seconds.</p>
+        </div>
 
+        <div class="niche-box" style="padding:24px;">
+          <div class="auth-field">
+            <label>Target Platform</label>
+            <select id="prop-platform" class="auth-input" style="appearance:none; cursor:pointer;">
+              <option value="Upwork">Upwork</option>
+              <option value="Fiverr">Fiverr</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Direct Email">Direct Email</option>
+            </select>
+          </div>
+          <div class="auth-field">
+            <label>Paste the Job Description</label>
+            <textarea id="prop-job" class="auth-input" rows="5" placeholder="E.g. Looking for a designer to create 5 Instagram posts for my coffee shop..."></textarea>
+          </div>
+          <div class="auth-field">
+            <label>Your Relevant Experience (Optional)</label>
+            <input type="text" id="prop-exp" class="auth-input" placeholder="E.g. I designed social posts for a local cafe last month">
+          </div>
+          <button id="prop-btn" class="auth-submit" onclick="generateProposal()">Write My Proposal →</button>
+
+          <div id="prop-loading" style="display:none;align-items:center;gap:12px;margin-top:20px;">
+            <div class="app-spin" style="width:18px;height:18px;"></div>
+            <span style="font-size:.84rem;color:var(--purple);font-family:'Playfair Display',serif;font-style:italic;">Writing your winning proposal...</span>
+          </div>
+        </div>
+
+        <div id="prop-result" style="display:none;margin-top:24px;">
+          <div class="kit-card open">
+            <div class="kit-head">
+              <div class="kit-head-l">
+                <div style="font-size:1rem;">✉️</div>
+                <div>
+                  <div class="kit-ttl" id="prop-res-subject">Subject Line</div>
+                  <div class="kit-sub">Ready to send</div>
+                </div>
+              </div>
+              <button class="copy-btn" onclick="copyText(event,'prop-res-text')">Copy</button>
+            </div>
+            <div class="kit-body">
+              <p id="prop-res-text" style="white-space:pre-wrap;"></p>
+            </div>
+          </div>
+
+          <div class="niche-box" style="background:var(--pdim);border-color:var(--pborder);margin-top:16px;">
+            <h4 style="font-family:'Playfair Display';color:var(--purple);margin-bottom:12px;font-size:1.1rem;">💡 Why this works</h4>
+            <ul id="prop-res-tips" style="color:#ccc;font-size:.85rem;line-height:1.6;padding-left:20px;">
+            </ul>
+          </div>
+        </div>
+      </div>
       <div id="results-pg-wrap" class="pg">
         <div id="results-pg"></div>
       </div>
@@ -604,6 +659,80 @@ function copyText(e,id){
 }
 
 initApp();
+  async function generateProposal() {
+  const jobDesc = document.getElementById('prop-job').value.trim();
+  const platform = document.getElementById('prop-platform').value;
+  const exp = document.getElementById('prop-exp').value.trim();
+
+  // Stop them if they try to submit an empty job description
+  if (!jobDesc) {
+    toast('Please paste a job description first', 'error');
+    return;
+  }
+
+  // Grab the UI elements
+  const btn = document.getElementById('prop-btn');
+  const loading = document.getElementById('prop-loading');
+  const resultDiv = document.getElementById('prop-result');
+
+  // Change UI to loading state
+  btn.disabled = true;
+  loading.style.display = 'flex';
+  resultDiv.style.display = 'none';
+
+  // Pull their niche from their saved kit (makes the AI much smarter)
+  const userNiche = savedKitData?.niche || 'Freelancer';
+
+  try {
+    // Talk to the backend file we created in Step 1
+    const res = await fetch('/api/proposal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jobDesc, platform, experience: exp, niche: userNiche
+      })
+    });
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    // Fill the UI with the AI response
+    document.getElementById('prop-res-subject').textContent = data.subject || 'Proposal Draft';
+    document.getElementById('prop-res-text').textContent = data.proposal;
+
+    // Build the "Why this works" list
+    const tipsList = document.getElementById('prop-res-tips');
+    tipsList.innerHTML = '';
+    (data.tips || []).forEach(tip => {
+      const li = document.createElement('li');
+      li.textContent = tip;
+      li.style.marginBottom = '8px';
+      tipsList.appendChild(li);
+    });
+
+    // Save it directly to Supabase so they don't lose it
+    if (currentUser) {
+      await sb.from('proposals').insert([{
+        user_id: currentUser.id,
+        job_description: jobDesc,
+        proposal_text: data.proposal,
+        platform: platform
+      }]);
+    }
+
+    // Show the results and hide the loading spinner
+    loading.style.display = 'none';
+    resultDiv.style.display = 'block';
+    btn.disabled = false;
+    toast('Proposal generated and saved! 📝', 'success');
+
+  } catch (error) {
+    console.error(error);
+    toast('Failed to generate proposal. Try again.', 'error');
+    loading.style.display = 'none';
+    btn.disabled = false;
+  }
+}
 </script>
 </body>
 </html>
