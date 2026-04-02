@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "build": "mkdir -p public && cp index.html public/ || true"
-  },
-  "dependencies": {
-    "groq-sdk": "latest",
-    "@google/genai": "latest"
-  }
-}
