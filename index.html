@@ -8,106 +8,181 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--bg:#000000;--s1:#0a0a0a;--s2:#111111;--s3:#1a1a1a;--border:rgba(255,255,255,0.07);--purple:#a855f7;--pd:#7c3aed;--pdim:rgba(168,85,247,0.10);--pborder:rgba(168,85,247,0.22);--white:#ffffff;--gray:#888888;--gray2:#444444;--red:#ef4444;}
+:root{
+  --bg:#000000;--s1:#0a0a0a;--s2:#111111;--s3:#1a1a1a;
+  --border:rgba(255,255,255,0.07);--border-hover:rgba(168,85,247,0.3);
+  --purple:#a855f7;--pd:#7c3aed;--pdim:rgba(168,85,247,0.10);--pborder:rgba(168,85,247,0.22);
+  --white:#ffffff;--gray:#888888;--gray2:#444444;--red:#ef4444;
+  --text-muted:#a3a3a3;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
 body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ── LOADING ── */
 #app-loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;}
 .app-spin{width:36px;height:36px;border:2px solid var(--s3);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* ── LOGIN ── */
-#login-pg{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;}
-.login-card{width:100%;max-width:420px;background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;}
-.login-brand{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:32px;}
-.login-brand img{height:38px;width:auto;}
-.login-brand-name{font-family:"Playfair Display",serif;font-weight:700;font-size:1.8rem;color:var(--white);}
+#login-pg{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+.login-card{width:100%;max-width:420px;background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.login-brand{display:flex;align-items:center;justify-content:center;margin-bottom:32px;}
+.login-brand img{height:48px;width:auto;}
 .login-card h1{font-family:"Playfair Display",serif;font-weight:700;font-size:1.7rem;color:var(--white);margin-bottom:10px;}
 .login-sub{color:var(--gray);font-size:.86rem;line-height:1.6;margin-bottom:30px;}
 .google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 16px;background:#fff;color:#111;border:none;border-radius:10px;font-family:"DM Sans",sans-serif;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .2s;margin-bottom:20px;}
-.google-btn:hover{background:#efefef;transform:translateY(-1px);}
+.google-btn:hover{background:#efefef;transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,255,255,0.1);}
 .google-icon{width:18px;height:18px;flex-shrink:0;}
 .divider{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border);}
 .divider span{font-size:.74rem;color:var(--gray2);}
 .auth-field{text-align:left;margin-bottom:14px;}
 .auth-field label{display:block;font-size:.78rem;font-weight:500;color:var(--gray);margin-bottom:6px;}
-.auth-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--white);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;}
-.auth-input:focus{border-color:var(--purple);}
+.auth-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--white);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;transition:border-color .2s,box-shadow .2s;}
+.auth-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--pdim);}
 .auth-input::placeholder{color:var(--gray2);}
 .auth-submit{width:100%;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:13px;font-family:"DM Sans",sans-serif;font-weight:600;font-size:.92rem;cursor:pointer;transition:all .2s;margin-top:6px;}
-.auth-submit:hover{background:var(--pd);transform:translateY(-1px);}
-.auth-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.auth-submit:hover{background:var(--pd);transform:translateY(-1px);box-shadow:0 6px 24px rgba(168,85,247,0.35);}
+.auth-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
 .auth-toggle{margin-top:20px;font-size:.84rem;color:var(--gray);}
 .auth-toggle span{color:var(--purple);cursor:pointer;font-weight:500;}
 .auth-toggle span:hover{text-decoration:underline;}
-.auth-error{color:var(--red);font-size:.8rem;margin-bottom:12px;display:none;}
-.auth-msg{color:var(--purple);font-size:.8rem;margin-bottom:12px;display:none;}
+.auth-error{color:var(--red);font-size:.8rem;margin-bottom:12px;display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);padding:10px 12px;border-radius:8px;}
+.auth-msg{color:var(--purple);font-size:.8rem;margin-bottom:12px;display:none;background:var(--pdim);border:1px solid var(--pborder);padding:10px 12px;border-radius:8px;}
 
 /* ── APP LAYOUT ── */
-#app-layout{display:none;height:100vh;width:100vw;}
+#app-layout{display:none;height:100vh;width:100vw;overflow:hidden;}
 #app-layout.on{display:flex;}
+
+/* ── SIDEBAR ── */
 .sidebar{width:240px;background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;flex-shrink:0;height:100vh;overflow-y:auto;}
-.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:40px;padding:0 8px;cursor:pointer;}
-.sb-logo img{height:28px;width:auto;object-fit:contain;}
-.sb-logo span{font-family:"Playfair Display",serif;font-weight:900;font-size:1.4rem;color:var(--purple);letter-spacing:-0.5px;}
+.sb-logo{display:flex;align-items:center;margin-bottom:40px;padding:0 8px;cursor:pointer;}
+.sb-logo img{height:34px;width:auto;object-fit:contain;}
 .sb-group{font-size:0.7rem;font-weight:600;color:var(--gray2);text-transform:uppercase;letter-spacing:0.1em;margin:24px 0 8px 8px;}
-.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:500;color:var(--gray);transition:all 0.2s;border:1px solid transparent;margin-bottom:2px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:500;color:var(--gray);transition:all 0.2s;border:1px solid transparent;margin-bottom:2px;text-decoration:none;}
 .nav-item:hover{background:var(--s2);color:var(--white);}
 .nav-item.active{background:var(--pdim);color:var(--purple);border-color:var(--pborder);}
 .sb-bottom{margin-top:auto;border-top:1px solid var(--border);padding-top:16px;display:flex;flex-direction:column;gap:4px;}
-.pro-badge{background:linear-gradient(135deg,var(--purple),var(--pd));color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:20px;font-weight:700;margin-left:auto;}
-.main-content{flex:1;display:flex;flex-direction:column;background:var(--s1);overflow-y:auto;position:relative;}
-.top-nav{height:64px;display:flex;align-items:center;justify-content:flex-end;padding:0 32px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,10,0.8);backdrop-filter:blur(12px);z-index:100;}
-.page-container{padding:40px 48px;max-width:900px;margin:0 auto;width:100%;}
-.pg{display:none;animation:fadeIn 0.3s ease;}
-.pg.on{display:block;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+.pro-badge{background:linear-gradient(135deg,var(--purple),var(--pd));color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:20px;font-weight:700;margin-left:auto;letter-spacing:.03em;}
 
-/* ── TOAST & MODAL ── */
-.toast{position:fixed;bottom:24px;right:24px;background:#111;border:1px solid var(--border);color:#fff;padding:12px 20px;border-radius:10px;font-size:.88rem;font-weight:500;transform:translateY(20px);opacity:0;transition:all .3s;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+/* ── MAIN CONTENT ── */
+.main-content{flex:1;display:flex;flex-direction:column;background:var(--s1);overflow-y:auto;overflow-x:hidden;position:relative;}
+
+/* FIXED: Header height increased, name no longer cut off */
+.top-nav{height:72px;display:flex;align-items:center;justify-content:flex-end;padding:0 40px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);z-index:100;flex-shrink:0;}
+.user-chip{display:flex;align-items:center;gap:10px;}
+.user-name{font-size:0.9rem;font-weight:600;color:var(--white);white-space:nowrap;}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pd));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.9rem;flex-shrink:0;border:2px solid var(--pborder);}
+
+.page-container{padding:40px 48px;max-width:1100px;margin:0 auto;width:100%;}
+.pg{display:none;animation:pgIn 0.3s ease;}
+.pg.on{display:block;}
+@keyframes pgIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid var(--border);color:#fff;padding:14px 22px;border-radius:12px;font-size:.88rem;font-weight:500;transform:translateY(20px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);z-index:9999;box-shadow:0 12px 40px rgba(0,0,0,.6);}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast-success{border-color:rgba(34,197,94,.3);border-left:3px solid #22c55e;}
 .toast-error{border-color:rgba(239,68,68,.3);border-left:3px solid #ef4444;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:5000;opacity:0;transition:opacity .2s;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:5000;opacity:0;transition:opacity .25s;}
 .modal-overlay.on{display:flex;opacity:1;}
-.modal-card{background:var(--s1);border:1px solid var(--pborder);border-radius:20px;padding:40px;width:100%;max-width:440px;text-align:center;position:relative;transform:scale(0.95);transition:transform .2s;box-shadow:0 24px 60px rgba(168,85,247,0.15);}
+.modal-card{background:var(--s1);border:1px solid var(--pborder);border-radius:24px;padding:44px;width:100%;max-width:440px;text-align:center;position:relative;transform:scale(0.94);transition:transform .25s cubic-bezier(.22,1,.36,1);box-shadow:0 32px 80px rgba(168,85,247,0.2);}
 .modal-overlay.on .modal-card{transform:scale(1);}
-.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--gray);font-size:1.5rem;cursor:pointer;}
+.modal-close{position:absolute;top:18px;right:22px;background:none;border:none;color:var(--gray);font-size:1.5rem;cursor:pointer;line-height:1;transition:color .2s;}
 .modal-close:hover{color:var(--white);}
-.modal-card h3{font-family:"Playfair Display",serif;font-size:1.8rem;margin-bottom:12px;color:var(--white);}
-.modal-card p{color:var(--gray);font-size:.9rem;margin-bottom:24px;line-height:1.6;}
-.modal-price{font-family:"Playfair Display",serif;font-size:2.5rem;font-weight:700;color:var(--purple);margin-bottom:24px;}
+.modal-card h3{font-family:"Playfair Display",serif;font-size:1.9rem;margin-bottom:12px;color:var(--white);}
+.modal-card p{color:var(--gray);font-size:.9rem;margin-bottom:24px;line-height:1.65;}
+.modal-price{font-family:"Playfair Display",serif;font-size:2.6rem;font-weight:700;color:var(--purple);margin-bottom:28px;}
 .modal-price span{font-size:1rem;color:var(--gray);font-family:"DM Sans",sans-serif;font-weight:400;}
 
-/* ── DASHBOARD ── */
-.kit-dash-card{background:var(--s2);border:1px solid var(--border);padding:20px;border-radius:12px;transition:all .2s;display:flex;flex-direction:column;}
-.kit-dash-card:hover{border-color:var(--pborder);transform:translateY(-2px);}
-.kit-dash-title{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:700;margin-bottom:6px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.kit-dash-date{font-size:0.75rem;color:var(--gray);margin-bottom:20px;}
-.kit-dash-actions{display:flex;gap:12px;border-top:1px solid var(--border);padding-top:16px;margin-top:auto;}
-.k-btn{background:transparent;border:none;color:var(--gray);font-size:0.8rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .2s;font-family:"DM Sans",sans-serif;font-weight:500;}
-.k-btn:hover{color:var(--white);}
-.k-btn.star:hover,.k-btn.star.active{color:#fbbf24;}
-.k-btn.del:hover{color:var(--red);}
+/* ══════════════════════════════
+   DASHBOARD HOME
+══════════════════════════════ */
+.dash-hero{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;flex-wrap:wrap;gap:20px;}
+.hero-date{color:var(--text-muted);font-size:0.82rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;font-weight:500;}
+.hero-greeting{font-family:"Playfair Display",serif;font-size:2.6rem;font-weight:700;background:linear-gradient(135deg,#fff 40%,#a3a3a3 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;}
+.btn-gen{background:var(--purple);color:#fff;border:none;padding:13px 26px;border-radius:100px;font-family:"DM Sans",sans-serif;font-weight:600;font-size:.92rem;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;box-shadow:0 4px 20px rgba(168,85,247,0.25);}
+.btn-gen:hover{background:var(--pd);box-shadow:0 8px 32px rgba(168,85,247,0.45);transform:translateY(-2px);}
+.btn-gen svg{transition:transform .2s;}
+.btn-gen:hover svg{transform:rotate(90deg);}
 
-/* ── CHAT ── */
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px;}
+.stat-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px 24px;transition:all .25s;cursor:default;}
+.stat-card:hover{border-color:var(--border-hover);box-shadow:0 8px 32px rgba(168,85,247,0.08);transform:translateY(-2px);}
+.stat-value{font-family:"Playfair Display",serif;font-size:2.2rem;font-weight:700;color:var(--white);margin-bottom:4px;line-height:1;}
+.stat-label{font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;}
+
+/* Section headers */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.sec-title{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:600;color:var(--white);}
+.sec-link{font-size:.8rem;color:var(--purple);cursor:pointer;font-weight:500;background:none;border:none;transition:opacity .2s;}
+.sec-link:hover{opacity:.7;}
+
+/* Quick actions */
+.actions-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:40px;}
+.action-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:flex-start;position:relative;overflow:hidden;}
+.action-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--pdim) 0%,transparent 100%);opacity:0;transition:opacity .25s;}
+.action-card:hover{background:var(--s2);border-color:var(--purple);box-shadow:0 12px 40px rgba(168,85,247,0.12);transform:translateY(-4px);}
+.action-card:hover::after{opacity:1;}
+.action-ico{width:48px;height:48px;background:rgba(168,85,247,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--purple);margin-bottom:20px;position:relative;z-index:1;transition:background .25s;}
+.action-card:hover .action-ico{background:rgba(168,85,247,0.2);}
+.action-hdr{display:flex;align-items:center;gap:10px;margin-bottom:8px;position:relative;z-index:1;}
+.action-title{font-size:1.05rem;font-weight:600;color:var(--white);}
+.badge-pro{background:rgba(168,85,247,0.15);color:var(--purple);font-size:0.62rem;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:.06em;border:1px solid var(--pborder);}
+.action-desc{font-size:.85rem;color:var(--text-muted);line-height:1.5;position:relative;z-index:1;}
+
+/* Kits grid — connected to real Supabase data */
+.kits-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:40px;}
+.kit-prem{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:all .25s;display:flex;flex-direction:column;}
+.kit-prem::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--purple),var(--pd));opacity:.6;transition:opacity .25s;}
+.kit-prem:hover{background:var(--s2);border-color:var(--border-hover);box-shadow:0 8px 32px rgba(168,85,247,0.07);transform:translateY(-2px);}
+.kit-prem:hover::before{opacity:1;}
+.kit-prem-date{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;font-weight:600;}
+.kit-prem-niche{font-family:"Playfair Display",serif;font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:auto;padding-bottom:20px;line-height:1.3;}
+.kit-prem-actions{display:flex;gap:8px;border-top:1px solid var(--border);padding-top:16px;}
+.btn-kit{background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;font-family:"DM Sans",sans-serif;}
+.btn-kit:hover{background:rgba(255,255,255,0.05);color:var(--white);border-color:rgba(255,255,255,0.2);}
+.btn-kit.star:hover,.btn-kit.star.starred{color:#eab308;border-color:#eab308;background:rgba(234,179,8,.1);}
+.btn-kit.del:hover{color:var(--red);border-color:var(--red);background:rgba(239,68,68,.1);}
+.kits-empty{background:var(--s2);border:1px dashed var(--border);padding:48px;border-radius:16px;text-align:center;color:var(--gray);}
+.kits-empty-icon{font-size:2.4rem;margin-bottom:16px;}
+.kits-empty h4{color:var(--white);font-size:1.1rem;margin-bottom:8px;font-family:"Playfair Display",serif;}
+.kits-empty p{font-size:.85rem;margin-bottom:20px;}
+
+/* Upgrade banner */
+.upgrade-banner{background:linear-gradient(135deg,rgba(168,85,247,0.12) 0%,rgba(10,10,10,1) 70%);border:1px solid var(--border-hover);border-radius:20px;padding:40px 44px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden;margin-bottom:20px;}
+.upgrade-banner::after{content:'';position:absolute;right:-80px;top:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(168,85,247,0.18) 0%,transparent 70%);pointer-events:none;}
+.upgrade-text h3{font-family:"Playfair Display",serif;font-size:1.55rem;color:var(--white);margin-bottom:8px;}
+.upgrade-text p{color:var(--text-muted);font-size:.9rem;line-height:1.5;}
+.btn-upgrade{background:var(--white);color:var(--bg);border:none;padding:13px 26px;border-radius:10px;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;z-index:1;}
+.btn-upgrade:hover{background:var(--purple);color:#fff;box-shadow:0 0 24px rgba(168,85,247,0.4);}
+
+/* ══════════════════════════════
+   CHAT PAGE
+══════════════════════════════ */
 .prog-wrap{margin-bottom:32px;}
 .prog-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--gray2);margin-bottom:7px;}
 .prog-track{height:2px;background:var(--s3);border-radius:2px;overflow:hidden;}
-.prog-bar{height:100%;background:var(--purple);border-radius:2px;transition:width .5s ease;}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--purple),var(--pd));border-radius:2px;transition:width .5s cubic-bezier(.22,1,.36,1);}
 #chat-msgs{display:flex;flex-direction:column;gap:16px;margin-bottom:20px;min-height:180px;}
-.msg{display:flex;gap:10px;animation:fadeIn .3s ease;}
+.msg{display:flex;gap:10px;animation:msgIn .3s ease;}
 .msg.user{flex-direction:row-reverse;}
-.av-ai{width:32px;height:32px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:"Playfair Display",serif;font-style:italic;font-weight:700;color:#fff;font-size:.85rem;}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.av-ai{width:32px;height:32px;background:linear-gradient(135deg,var(--purple),var(--pd));border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:"Playfair Display",serif;font-style:italic;font-weight:700;color:#fff;font-size:.85rem;}
 .av-user{width:32px;height:32px;background:var(--s3);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gray);font-size:.72rem;}
-.bubble{padding:12px 16px;border-radius:12px;font-size:.88rem;line-height:1.65;max-width:82%;}
+.bubble{padding:12px 16px;border-radius:14px;font-size:.88rem;line-height:1.65;max-width:82%;}
 .bubble.ai{background:var(--s2);border:1px solid var(--border);}
 .bubble.usr{background:var(--pdim);border:1px solid var(--pborder);color:var(--purple);}
 .typing-row{display:flex;gap:10px;align-items:center;}
-.typing-dots{display:flex;gap:4px;padding:12px 16px;background:var(--s2);border:1px solid var(--border);border-radius:12px;}
+.typing-dots{display:flex;gap:4px;padding:12px 16px;background:var(--s2);border:1px solid var(--border);border-radius:14px;}
 .typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--purple);animation:td 1.2s infinite;}
 .typing-dots span:nth-child(2){animation-delay:.2s;}.typing-dots span:nth-child(3){animation-delay:.4s;}
 @keyframes td{0%,100%{opacity:.3;transform:translateY(0);}50%{opacity:1;transform:translateY(-4px);}}
@@ -116,11 +191,11 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
 .opt-btn:hover,.opt-btn.sel{border-color:var(--purple);color:var(--purple);background:var(--pdim);}
 .opt-btn:disabled{opacity:.5;cursor:not-allowed;}
 #input-zone{display:flex;gap:10px;margin-top:4px;}
-#txt{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--white);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;resize:none;min-height:46px;max-height:120px;}
-#txt:focus{border-color:var(--purple);}
+#txt{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--white);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;resize:none;min-height:46px;max-height:120px;transition:border-color .2s,box-shadow .2s;}
+#txt:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--pdim);}
 #send-btn{background:var(--purple);border:none;color:#fff;width:44px;height:44px;border-radius:10px;cursor:pointer;font-size:1rem;transition:all .2s;flex-shrink:0;align-self:flex-end;}
-#send-btn:hover{background:var(--pd);}
-#send-btn:disabled{opacity:.35;cursor:not-allowed;}
+#send-btn:hover{background:var(--pd);transform:scale(1.05);}
+#send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
 
 /* ── KIT RESULTS ── */
 .niche-box{background:var(--s1);border:1px solid var(--pborder);border-radius:14px;padding:24px 28px;margin-bottom:20px;}
@@ -132,370 +207,104 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
 .kit-sub{font-size:.7rem;color:var(--gray);margin-top:2px;}
 .kit-body{display:none;padding:0 20px 20px;font-size:.85rem;line-height:1.75;color:#ccc;}
 .kit-card.open .kit-body{display:block;}
-.copy-btn{background:transparent;border:1px solid var(--border);color:var(--gray);padding:3px 12px;border-radius:6px;font-size:.68rem;cursor:pointer;font-family:"DM Sans",sans-serif;}
+.copy-btn{background:transparent;border:1px solid var(--border);color:var(--gray);padding:3px 12px;border-radius:6px;font-size:.68rem;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;}
 .copy-btn:hover{border-color:var(--purple);color:var(--purple);}
 .ptable{width:100%;border-collapse:collapse;font-size:.82rem;}
 .ptable th{text-align:left;color:var(--gray);font-size:.7rem;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);}
 .ptable td{padding:10px 8px 10px 0;border-bottom:1px solid var(--s3);vertical-align:top;}
-  /* Dashboard Typography & Spacing Variables (Assuming you have your base colors set) */
-:root {
-  --bg: #000000;
-  --s1: #0a0a0a;
-  --s2: #111111;
-  --purple: #a855f7;
-  --pd: #7c3aed;
-  --border: rgba(255, 255, 255, 0.07);
-  --border-hover: rgba(168, 85, 247, 0.3);
-  --text-main: #ffffff;
-  --text-muted: #a3a3a3;
-}
 
-/* Main Container */
-.premium-dash {
-  font-family: 'DM Sans', sans-serif;
-  color: var(--text-main);
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-}
+/* ══════════════════════════════
+   FEATURE PAGES — SHARED
+══════════════════════════════ */
+.feat-header{margin-bottom:36px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.feat-icon-wrap{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;background:var(--pdim);border:1px solid var(--pborder);border-radius:14px;margin-bottom:16px;}
+.feat-header h2{font-family:"Playfair Display",serif;font-size:2.2rem;font-weight:700;margin-bottom:8px;color:var(--white);}
+.feat-header p{color:var(--gray);font-size:.95rem;line-height:1.6;}
+.feat-body{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;}
+.feat-panel{background:var(--s2);border:1px solid var(--border);border-radius:16px;padding:32px;}
+.feat-panel h3{font-family:"Playfair Display",serif;font-size:1.15rem;margin-bottom:24px;color:var(--white);}
+.field-label{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;font-weight:600;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+.field-label span{font-size:.7rem;color:var(--purple);font-weight:400;text-transform:none;letter-spacing:0;}
+.feat-input{width:100%;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--white);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:16px;}
+.feat-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--pdim);}
+.feat-input::placeholder{color:var(--gray2);}
+.feat-btn{width:100%;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:14px;font-family:"DM Sans",sans-serif;font-weight:600;font-size:.92rem;cursor:pointer;transition:all .25s;display:flex;justify-content:center;align-items:center;gap:8px;}
+.feat-btn:hover{background:var(--pd);box-shadow:0 6px 24px rgba(168,85,247,0.35);transform:translateY(-1px);}
+.feat-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.feat-loading{display:none;align-items:center;justify-content:center;gap:12px;margin-top:20px;padding:16px;background:var(--pdim);border-radius:12px;border:1px solid var(--pborder);animation:fadeUp .3s ease;}
+.feat-loading span{font-size:.85rem;color:var(--purple);font-weight:600;font-family:"Playfair Display",serif;font-style:italic;}
+.feat-result{display:none;animation:fadeUp .4s ease;}
 
-/* Playfair Headings */
-.heading-playfair {
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
+/* Email mock window */
+.email-window{background:var(--s1);border:1px solid var(--pborder);border-radius:16px;overflow:hidden;box-shadow:0 16px 48px rgba(168,85,247,0.1);}
+.email-titlebar{background:var(--s2);padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.email-dots{display:flex;gap:6px;}
+.email-dots span{width:10px;height:10px;border-radius:50%;}
+.email-body-wrap{padding:24px;}
+.email-subject-row{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;border-bottom:1px solid var(--s3);padding-bottom:16px;}
+.email-subject-lbl{font-size:.72rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+.email-subject-val{font-family:"Playfair Display",serif;font-size:1.05rem;font-weight:600;color:var(--white);line-height:1.3;}
+.email-text{color:#d4d4d4;font-size:.9rem;line-height:1.8;white-space:pre-wrap;}
 
-/* Section Titles */
-.section-title {
-  font-size: 1.25rem;
-  color: var(--text-main);
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 12px;
-}
+/* Strategy notes */
+.strategy-box{margin-top:16px;background:var(--s2);border:1px dashed var(--border);border-radius:12px;padding:20px;}
+.strategy-box-title{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);margin-bottom:12px;display:flex;align-items:center;gap:8px;font-weight:600;}
+.strategy-box ul{color:#a3a3a3;font-size:.85rem;line-height:1.65;padding-left:18px;margin:0;}
+.strategy-box li{margin-bottom:6px;}
 
-/* --- Hero Section --- */
-.dash-hero {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
+/* Gig cards */
+.gig-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:28px;}
+.gig-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px;transition:all .25s;animation:fadeUp .4s ease both;}
+.gig-card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 8px 32px rgba(168,85,247,.08);}
+.gig-card-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--purple);line-height:1.4;}
+.gig-metrics{display:flex;justify-content:space-between;border-top:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:12px 0;}
+.gig-metric-label{font-size:.68rem;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.gig-metric-val{font-weight:700;font-size:.88rem;}
+.gig-val-green{color:#22c55e;}
+.gig-val-yellow{color:#eab308;}
+.gig-val-red{color:#ef4444;}
+.gig-price{font-size:.7rem;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.gig-price-val{font-family:"Playfair Display",serif;font-weight:700;font-size:1.1rem;color:var(--white);}
+.gig-why{background:var(--s2);padding:12px;border-radius:8px;font-size:.83rem;color:#ccc;line-height:1.55;}
+.gig-why strong{color:var(--white);}
 
-.hero-greeting {
-  font-size: 2.8rem;
-  margin: 0 0 8px 0;
-  background: linear-gradient(to right, #ffffff, #a3a3a3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+/* Proposal result */
+.prop-result-card{background:var(--s1);border:1px solid var(--pborder);border-radius:16px;overflow:hidden;box-shadow:0 12px 40px rgba(168,85,247,.08);}
+.prop-result-head{background:var(--s2);padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.prop-result-subject{font-family:"Playfair Display",serif;font-size:.95rem;color:var(--white);font-weight:600;}
+.prop-result-body{padding:24px;color:#d4d4d4;font-size:.9rem;line-height:1.8;white-space:pre-wrap;}
 
-.hero-date {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
-}
+/* Utility */
+.full-width-col{grid-column:1/-1;}
+.spin-sm{width:18px;height:18px;border:2px solid var(--s3);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+select.feat-input{appearance:none;cursor:pointer;}
+textarea.feat-input{resize:none;}
 
-.btn-primary-cta {
-  background: var(--purple);
-  color: #fff;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 100px;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
-}
-
-.btn-primary-cta:hover {
-  background: var(--pd);
-  box-shadow: 0 6px 28px rgba(168, 85, 247, 0.4);
-  transform: translateY(-2px);
-}
-
-/* --- Stats Strip --- */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.stat-card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-  border-color: var(--border-hover);
-  box-shadow: 0 8px 30px rgba(168, 85, 247, 0.08);
-  transform: translateY(-2px);
-}
-
-.stat-value {
-  font-size: 2.4rem;
-  color: var(--text-main);
-  margin-bottom: 4px;
-}
-
-.stat-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-/* --- Quick Actions --- */
-.actions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.action-card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px 24px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  position: relative;
-  overflow: hidden;
-}
-
-.action-card:hover {
-  background: var(--s2);
-  border-color: var(--purple);
-  box-shadow: 0 12px 40px rgba(168, 85, 247, 0.12);
-  transform: translateY(-4px);
-}
-
-.action-icon {
-  width: 48px;
-  height: 48px;
-  background: rgba(168, 85, 247, 0.1);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--purple);
-  margin-bottom: 20px;
-}
-
-.action-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  margin-bottom: 8px;
-}
-
-.action-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.badge-pro {
-  background: rgba(168, 85, 247, 0.15);
-  color: var(--purple);
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 100px;
-  letter-spacing: 0.05em;
-}
-
-.action-desc {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-/* --- My Kits Section --- */
-.kits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-.kit-card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  position: relative;
-  transition: all 0.2s ease;
-  overflow: hidden;
-}
-
-/* The subtle purple gradient left border */
-.kit-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: linear-gradient(to bottom, var(--purple), var(--pd));
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.kit-card:hover {
-  background: var(--s2);
-  border-color: var(--border-hover);
-  box-shadow: 0 8px 32px rgba(168, 85, 247, 0.06);
-}
-
-.kit-card:hover::before {
-  opacity: 1;
-}
-
-.kit-date {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
-}
-
-.kit-niche {
-  font-size: 1.4rem;
-  color: var(--text-main);
-  margin-bottom: 24px;
-}
-
-.kit-actions {
-  display: flex;
-  gap: 12px;
-  border-top: 1px solid var(--border);
-  padding-top: 16px;
-}
-
-.btn-icon {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-}
-
-.btn-icon:hover {
-  background: rgba(255,255,255,0.05);
-  color: var(--text-main);
-  border-color: var(--text-muted);
-}
-
-.btn-icon.star:hover {
-  color: #eab308;
-  border-color: #eab308;
-  background: rgba(234, 179, 8, 0.1);
-}
-
-.btn-icon.delete:hover {
-  color: #ef4444;
-  border-color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-/* --- Upgrade Banner --- */
-.upgrade-banner {
-  background: linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(10,10,10,1) 100%);
-  border: 1px solid var(--border-hover);
-  border-radius: 20px;
-  padding: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Soft ambient background glow inside the banner */
-.upgrade-banner::after {
-  content: '';
-  position: absolute;
-  right: -100px;
-  top: -100px;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, rgba(0,0,0,0) 70%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.upgrade-text h3 {
-  font-size: 1.6rem;
-  margin: 0 0 8px 0;
-  color: var(--text-main);
-}
-
-.upgrade-text p {
-  color: var(--text-muted);
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-.btn-upgrade {
-  background: var(--text-main);
-  color: var(--bg);
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 1;
-}
-
-.btn-upgrade:hover {
-  background: var(--purple);
-  color: white;
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .actions-grid{grid-template-columns:1fr;}
+  .feat-body{grid-template-columns:1fr;}
+  .page-container{padding:24px 20px;}
 }
 </style>
 </head>
 <body>
 
+<!-- LOADING -->
 <div id="app-loading">
   <div class="app-spin"></div>
   <span style="font-size:.84rem;color:var(--gray);">Loading Lancify...</span>
 </div>
 
-<!-- LOGIN PAGE -->
+<!-- ═══════ LOGIN ═══════ -->
 <div id="login-pg">
   <div class="login-card">
     <div class="login-brand">
-  <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify">
-</div>
+      <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify">
+    </div>
     <h1>Welcome to Lancify</h1>
-    <p class="login-sub">Sign in to build your free AI freelance kit and start earning.</p>
+    <p class="login-sub">Sign in to build your AI freelance kit and start earning.</p>
     <button class="google-btn" onclick="signInGoogle()">
       <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Continue with Google
@@ -503,16 +312,13 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
     <div class="divider"><span>or continue with email</span></div>
     <div id="auth-error" class="auth-error"></div>
     <div id="auth-msg" class="auth-msg"></div>
-    <div class="auth-field">
-      <label>Email address</label>
+    <div class="auth-field"><label>Email address</label>
       <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
     </div>
-    <div class="auth-field">
-      <label>Password</label>
+    <div class="auth-field"><label>Password</label>
       <input class="auth-input" id="auth-password" type="password" placeholder="Your password" onkeydown="if(event.key==='Enter')authSubmit()">
     </div>
-    <div class="auth-field" id="name-field" style="display:none;">
-      <label>Full name</label>
+    <div class="auth-field" id="name-field" style="display:none;"><label>Full name</label>
       <input class="auth-input" id="auth-name" type="text" placeholder="Your full name">
     </div>
     <button class="auth-submit" id="auth-btn" onclick="authSubmit()">Sign In</button>
@@ -522,385 +328,335 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
   </div>
 </div>
 
-<!-- APP LAYOUT -->
+<!-- ═══════ APP ═══════ -->
 <div id="app-layout">
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sb-logo" onclick="navigate('home-pg')">
-  <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify" style="height:36px;width:auto;">
-</div>
+      <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify" style="height:34px;width:auto;">
+    </div>
     <div class="sb-group">Tools</div>
     <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')">🏠 Home Dashboard</a>
     <a class="nav-item" data-page="chat-pg" onclick="startChat()">✦ Launch Coach</a>
-    <a class="nav-item" <a class="nav-item" data-page="proposal-pg" onclick="navigate('proposal-pg')">📝 Proposal Writer <span class="pro-badge">PRO</span></a>
+    <a class="nav-item" data-page="proposal-pg" onclick="navigate('proposal-pg')">📝 Proposal Writer <span class="pro-badge">PRO</span></a>
     <a class="nav-item" data-page="email-pg" onclick="navigate('email-pg')">✉️ Email Writer <span class="pro-badge">PRO</span></a>
     <div class="sb-group">Insights</div>
     <a class="nav-item" data-page="gig-finder-pg" onclick="navigate('gig-finder-pg')">🔍 Gig Finder <span class="pro-badge">PRO</span></a>
-    <a class="nav-item" onclick="checkPro(() => toast('Income Roadmap coming soon!', 'success'))">🗺️ Income Roadmap <span class="pro-badge">PRO</span></a>
+    <a class="nav-item" onclick="checkPro(() => toast('Income Roadmap coming soon!','success'))">🗺️ Income Roadmap <span class="pro-badge">PRO</span></a>
     <div class="sb-bottom">
       <div class="sb-group">Account</div>
-      <a class="nav-item" id="sb-my-kits" style="display:none;" onclick="viewSavedKit()">📁 My Kits</a>
+      <a class="nav-item" id="sb-my-kits" style="display:none;" onclick="navigate('home-pg')">📁 My Kits</a>
       <a class="nav-item" style="color:var(--purple);" onclick="showUpgradeModal()">💎 Upgrade to Pro</a>
       <a class="nav-item" onclick="signOut()">→ Sign Out</a>
     </div>
   </aside>
 
+  <!-- MAIN -->
   <main class="main-content" id="main-scroll">
     <header class="top-nav">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span id="header-user-name" style="font-size:0.88rem;font-weight:600;">Student</span>
-        <div id="header-user-initial" style="width:32px;height:32px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;">U</div>
+      <div class="user-chip">
+        <span class="user-name" id="header-user-name">Student</span>
+        <div class="user-avatar" id="header-user-initial">U</div>
       </div>
     </header>
+
     <div class="page-container">
 
+      <!-- ══ HOME ══ -->
       <div id="home-pg" class="pg on">
-        <div class="premium-dash">
-
-  <div class="dash-hero">
-    <div>
-      <p class="hero-date">Thursday, April 2, 2026</p>
-      <h1 class="hero-greeting heading-playfair">Good morning, Shaurya.</h1>
-    </div>
-    <button class="btn-primary-cta" onclick="startNewKit()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-      Generate New Kit
-    </button>
-  </div>
-
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-value heading-playfair">12</div>
-      <div class="stat-label">Total Kits</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value heading-playfair">34</div>
-      <div class="stat-label">Proposals Written</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value heading-playfair">18</div>
-      <div class="stat-label">Emails Sent</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value heading-playfair">14</div>
-      <div class="stat-label">Days Active</div>
-    </div>
-  </div>
-
-  <div>
-    <h2 class="section-title heading-playfair">Quick Actions</h2>
-    <div class="actions-grid">
-      
-      <div class="action-card" onclick="navigate('coach')">
-        <div class="action-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
-        <div class="action-header">
-          <span class="action-title">Launch Coach</span>
-        </div>
-        <p class="action-desc">Build your entire freelance business from scratch.</p>
-      </div>
-
-      <div class="action-card" onclick="navigate('proposal')">
-        <div class="action-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        </div>
-        <div class="action-header">
-          <span class="action-title">Proposal Writer</span>
-          <span class="badge-pro">PRO</span>
-        </div>
-        <p class="action-desc">Turn job descriptions into winning pitches instantly.</p>
-      </div>
-
-      <div class="action-card" onclick="navigate('email')">
-        <div class="action-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <div class="action-header">
-          <span class="action-title">Email Writer</span>
-          <span class="badge-pro">PRO</span>
-        </div>
-        <p class="action-desc">Draft professional, high-converting client communications.</p>
-      </div>
-
-      <div class="action-card" onclick="navigate('gig')">
-        <div class="action-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
-        <div class="action-header">
-          <span class="action-title">Gig Finder</span>
-          <span class="badge-pro">PRO</span>
-        </div>
-        <p class="action-desc">Discover high-paying, low-competition niches.</p>
-      </div>
-
-    </div>
-  </div>
-
-  <div>
-    <h2 class="section-title heading-playfair">My Saved Kits</h2>
-    <div class="kits-grid" id="dashboard-kits-container">
-      
-      <div class="kit-card">
-        <div class="kit-date">Created Mar 28, 2026</div>
-        <h3 class="kit-niche heading-playfair">YouTube Thumbnail Designer</h3>
-        <div class="kit-actions">
-          <button class="btn-icon">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            View
-          </button>
-          <button class="btn-icon star">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            Star
-          </button>
-          <button class="btn-icon delete" style="margin-left: auto;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="kit-card">
-        <div class="kit-date">Created Mar 25, 2026</div>
-        <h3 class="kit-niche heading-playfair">Notion Workspace Architect</h3>
-        <div class="kit-actions">
-          <button class="btn-icon">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            View
-          </button>
-          <button class="btn-icon star">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            Star
-          </button>
-          <button class="btn-icon delete" style="margin-left: auto;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="upgrade-banner">
-    <div class="upgrade-text">
-      <h3 class="heading-playfair">Ready to scale to ₹50k/month?</h3>
-      <p>Unlock the Income Roadmap, premium templates, and unlimited AI credits.</p>
-    </div>
-    <button class="btn-upgrade">Upgrade to Pro</button>
-  </div>
-
-</div>
-   </div>
-<div id="proposal-pg" class="pg">
-        <div style="margin-bottom:32px;">
-          <h2 style="font-family:'Playfair Display';font-size:2.4rem;margin-bottom:8px;">Proposal Writer</h2>
-          <p style="color:var(--gray);">Turn job descriptions into winning proposals in seconds.</p>
-        </div>
-
-        <div class="niche-box" style="padding:24px;">
-          <div class="auth-field">
-            <label>Target Platform</label>
-            <select id="prop-platform" class="auth-input" style="appearance:none; cursor:pointer;">
-              <option value="Upwork">Upwork</option>
-              <option value="Fiverr">Fiverr</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="Direct Email">Direct Email</option>
-            </select>
+        <div class="dash-hero">
+          <div>
+            <p class="hero-date" id="hero-date"></p>
+            <h1 class="hero-greeting" id="hero-greeting">Welcome back.</h1>
           </div>
-          <div class="auth-field">
-            <label>Paste the Job Description</label>
-            <textarea id="prop-job" class="auth-input" rows="5" placeholder="E.g. Looking for a designer to create 5 Instagram posts for my coffee shop..."></textarea>
-          </div>
-          <div class="auth-field">
-            <label>Your Relevant Experience (Optional)</label>
-            <input type="text" id="prop-exp" class="auth-input" placeholder="E.g. I designed social posts for a local cafe last month">
-          </div>
-          <button id="prop-btn" class="auth-submit" onclick="generateProposal()">Write My Proposal →</button>
-
-          <div id="prop-loading" style="display:none;align-items:center;gap:12px;margin-top:20px;">
-            <div class="app-spin" style="width:18px;height:18px;"></div>
-            <span style="font-size:.84rem;color:var(--purple);font-family:'Playfair Display',serif;font-style:italic;">Writing your winning proposal...</span>
-          </div>
+          <button class="btn-gen" onclick="startChat()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Generate New Kit
+          </button>
         </div>
 
-        <div id="prop-result" style="display:none;margin-top:24px;">
-          <div class="kit-card open">
-            <div class="kit-head">
-              <div class="kit-head-l">
-                <div style="font-size:1rem;">✉️</div>
-                <div>
-                  <div class="kit-ttl" id="prop-res-subject">Subject Line</div>
-                  <div class="kit-sub">Ready to send</div>
-                </div>
-              </div>
-              <button class="copy-btn" onclick="copyText(event,'prop-res-text')">Copy</button>
+        <!-- REAL stats from Supabase -->
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-value" id="stat-kits">—</div><div class="stat-label">Total Kits</div></div>
+          <div class="stat-card"><div class="stat-value" id="stat-proposals">—</div><div class="stat-label">Proposals Written</div></div>
+          <div class="stat-card"><div class="stat-value" id="stat-emails">—</div><div class="stat-label">Emails Drafted</div></div>
+          <div class="stat-card"><div class="stat-value" id="stat-gigs">—</div><div class="stat-label">Gigs Found</div></div>
+        </div>
+
+        <!-- Quick Actions — all linked to real pages -->
+        <div class="sec-hdr"><span class="sec-title">Quick Actions</span></div>
+        <div class="actions-grid">
+          <div class="action-card" onclick="startChat()">
+            <div class="action-ico">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             </div>
-            <div class="kit-body">
-              <p id="prop-res-text" style="white-space:pre-wrap;"></p>
+            <div class="action-hdr"><span class="action-title">Launch Coach</span></div>
+            <p class="action-desc">Build your complete freelance identity from scratch with AI.</p>
+          </div>
+          <div class="action-card" onclick="navigate('proposal-pg')">
+            <div class="action-ico">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
+            <div class="action-hdr"><span class="action-title">Proposal Writer</span><span class="badge-pro">PRO</span></div>
+            <p class="action-desc">Turn any job description into a winning proposal in seconds.</p>
           </div>
+          <div class="action-card" onclick="navigate('email-pg')">
+            <div class="action-ico">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="action-hdr"><span class="action-title">Email Writer</span><span class="badge-pro">PRO</span></div>
+            <p class="action-desc">Draft professional client communications instantly.</p>
+          </div>
+          <div class="action-card" onclick="navigate('gig-finder-pg')">
+            <div class="action-ico">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div class="action-hdr"><span class="action-title">Gig Finder</span><span class="badge-pro">PRO</span></div>
+            <p class="action-desc">Discover high-paying, low-competition niches in seconds.</p>
+          </div>
+        </div>
 
-          <div class="niche-box" style="background:var(--pdim);border-color:var(--pborder);margin-top:16px;">
-            <h4 style="font-family:'Playfair Display';color:var(--purple);margin-bottom:12px;font-size:1.1rem;">💡 Why this works</h4>
-            <ul id="prop-res-tips" style="color:#ccc;font-size:.85rem;line-height:1.6;padding-left:20px;">
-            </ul>
+        <!-- My Saved Kits — REAL data from Supabase -->
+        <div class="sec-hdr" style="margin-top:40px;">
+          <span class="sec-title">My Saved Kits</span>
+          <button class="sec-link" onclick="startChat()">+ New Kit</button>
+        </div>
+        <div class="kits-grid" id="kits-grid">
+          <div class="kits-empty" style="grid-column:1/-1;">
+            <div class="kits-empty-icon">📁</div>
+            <h4>No kits yet</h4>
+            <p>Generate your first freelance kit with the Launch Coach.</p>
+            <button class="auth-submit" style="width:auto;padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
           </div>
+        </div>
+
+        <!-- Upgrade Banner — links to Framer -->
+        <div class="upgrade-banner">
+          <div class="upgrade-text">
+            <h3>Ready to scale to ₹50k/month?</h3>
+            <p>Unlock Proposal Writer, Email Writer, Gig Finder, and unlimited AI credits.</p>
+          </div>
+          <button class="btn-upgrade" onclick="window.open('https://lancify.framer.website/#pricing','_blank')">Upgrade to Pro →</button>
         </div>
       </div>
-      <div id="email-pg" class="pg">
-        <div style="margin-bottom:40px; border-bottom: 1px solid var(--border); padding-bottom: 24px;">
-          <h2 style="font-family:'Playfair Display';font-size:2.4rem;margin-bottom:8px; display:flex; align-items:center; gap:12px;">
-            <span style="background:var(--pdim); color:var(--purple); padding:8px 12px; border-radius:12px; font-size:1.5rem;">✉️</span> 
-            Client Email Writer
-          </h2>
-          <p style="color:var(--gray); font-size:1rem;">Draft high-converting, professional client communications in seconds.</p>
-        </div>
 
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
-          
-          <div style="background:var(--s2); border:1px solid var(--border); border-radius:16px; padding:32px;">
-            <h3 style="font-family:'Playfair Display'; font-size:1.2rem; margin-bottom:24px; color:var(--white);">Message Details</h3>
-            
-            <div class="auth-field">
-              <label style="display:flex; justify-content:space-between;">
-                <span>Email Objective</span>
-              </label>
-              <select id="email-type" class="auth-input" style="appearance:none; cursor:pointer; background-color:var(--s1);">
-                <option value="Follow-up after a proposal">Follow-up on a proposal</option>
-                <option value="Polite payment reminder">Payment reminder (Polite)</option>
-                <option value="Firm payment reminder (Overdue)">Payment reminder (Firm/Overdue)</option>
-                <option value="Delivering final project files">Project Delivery & Handoff</option>
-                <option value="Asking for a review/testimonial">Review / Testimonial Request</option>
-                <option value="Announcing a rate increase">Rate Increase Announcement</option>
+      <!-- ══ CHAT ══ -->
+      <div id="chat-pg" class="pg">
+        <div style="text-align:center;margin-bottom:36px;">
+          <h2 style="font-family:'Playfair Display';font-size:1.9rem;margin-bottom:8px;">Let's build your kit</h2>
+          <p style="color:var(--gray);font-size:.9rem;">5 quick questions — your complete freelance kit in 20 minutes.</p>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-labels"><span id="prog-lbl">Step 1 of 5</span><span id="prog-pct">0%</span></div>
+          <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+        </div>
+        <div id="chat-msgs"></div>
+        <div id="gen-bar" style="display:none;align-items:center;gap:12px;padding:14px 18px;background:var(--s2);border:1px solid var(--pborder);border-radius:12px;margin-top:8px;">
+          <div class="spin-sm"></div>
+          <span id="gen-text" style="font-size:.84rem;color:var(--purple);font-family:'Playfair Display',serif;font-style:italic;">Analysing your skills...</span>
+        </div>
+        <div id="input-zone" style="display:flex;gap:10px;margin-top:4px;">
+          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1"></textarea>
+          <button id="send-btn" onclick="sendMsg()">→</button>
+        </div>
+      </div>
+
+      <!-- ══ RESULTS ══ -->
+      <div id="results-pg-wrap" class="pg">
+        <button onclick="downloadPDF()" style="background:var(--pdim);color:var(--purple);border:1px solid var(--pborder);padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;margin-bottom:20px;font-family:'DM Sans',sans-serif;transition:all .2s;">
+          📥 Download PDF Kit
+        </button>
+        <div id="kit-content"><div id="results-pg"></div></div>
+      </div>
+
+      <!-- ══ PROPOSAL WRITER ══ -->
+      <div id="proposal-pg" class="pg">
+        <div class="feat-header">
+          <div class="feat-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h2>Proposal Writer</h2>
+          <p>Paste a job description and get a tailored, high-converting proposal in seconds. Saved automatically.</p>
+        </div>
+        <div class="feat-body">
+          <div class="feat-panel">
+            <h3>Job Details</h3>
+            <div><div class="field-label">Platform</div>
+              <select id="prop-platform" class="feat-input">
+                <option value="Upwork">Upwork</option>
+                <option value="Fiverr">Fiverr</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Direct Email">Direct Email</option>
               </select>
             </div>
-            
-            <div class="auth-field">
-              <label>Communication Tone</label>
-              <select id="email-tone" class="auth-input" style="appearance:none; cursor:pointer; background-color:var(--s1);">
-                <option value="Professional and polite">👔 Professional & Polite</option>
-                <option value="Friendly and warm">👋 Friendly & Warm</option>
-                <option value="Firm and direct">🛑 Firm & Direct</option>
-              </select>
+            <div><div class="field-label">Job Description <span>paste the full listing</span></div>
+              <textarea id="prop-job" class="feat-input" rows="6" placeholder="E.g. Looking for a designer to create 5 Instagram posts for my coffee shop..."></textarea>
             </div>
-            
-            <div class="auth-field" style="margin-top:24px;">
-              <label style="display:flex; justify-content:space-between;">
-                <span>Key Context</span>
-                <span style="font-size:0.7rem; color:var(--purple); font-weight:normal;">Be specific</span>
-              </label>
-              <textarea id="email-context" class="auth-input" rows="4" style="background-color:var(--s1); resize:none;" placeholder="E.g. Client's name is Rahul. I'm delivering the final 5 YouTube thumbnails attached here. Hoping to work together again..."></textarea>
+            <div><div class="field-label">Your Experience <span>optional</span></div>
+              <input type="text" id="prop-exp" class="feat-input" placeholder="E.g. I designed posts for a local cafe last month">
             </div>
-            
-            <button id="email-btn" class="auth-submit" style="margin-top:16px; padding:14px; font-size:0.95rem; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="generateEmail()">
-              Generate Draft ✨
+            <button id="prop-btn" class="feat-btn" onclick="generateProposal()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Write My Proposal
             </button>
-
-            <div id="email-loading" style="display:none; align-items:center; justify-content:center; gap:12px; margin-top:20px; padding:16px; background:var(--pdim); border-radius:12px; border:1px solid var(--pborder);">
-              <div class="app-spin" style="width:16px; height:16px;"></div>
-              <span style="font-size:.85rem; color:var(--purple); font-weight:600;">Drafting your message...</span>
+            <div id="prop-loading" class="feat-loading">
+              <div class="spin-sm"></div>
+              <span>Writing your winning proposal...</span>
             </div>
           </div>
-
-          <div id="email-result" style="display:none;">
-            
-            <div style="background:var(--s1); border:1px solid var(--pborder); border-radius:16px; overflow:hidden; box-shadow: 0 12px 40px rgba(168,85,247,0.08);">
-              <div style="background:var(--s2); padding:14px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                <div style="display:flex; gap:6px;">
-                  <div style="width:10px; height:10px; border-radius:50%; background:#ef4444;"></div>
-                  <div style="width:10px; height:10px; border-radius:50%; background:#eab308;"></div>
-                  <div style="width:10px; height:10px; border-radius:50%; background:#22c55e;"></div>
+          <div>
+            <div id="prop-result" class="feat-result">
+              <div class="prop-result-card">
+                <div class="prop-result-head">
+                  <span class="prop-result-subject" id="prop-res-subject">Proposal Draft</span>
+                  <button class="copy-btn" onclick="copyEl('prop-res-text')">Copy</button>
                 </div>
-                <button class="copy-btn" style="background:var(--white); color:var(--bg); border:none; padding:6px 16px; font-weight:600;" onclick="copyText(event,'email-res-text')">Copy Full Text</button>
+                <div class="prop-result-body" id="prop-res-text"></div>
               </div>
-              
-              <div style="padding:24px;">
-                <div style="margin-bottom:20px; border-bottom:1px solid var(--s3); padding-bottom:16px; display:flex; align-items:flex-start; gap:12px;">
-                  <span style="color:var(--gray); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px;">Subject</span>
-                  <strong id="email-res-subject" style="color:var(--white); font-size:1.05rem; font-family:'Playfair Display', serif;"></strong>
-                </div>
-                <div id="email-res-text" style="color:#d4d4d4; font-size:0.95rem; line-height:1.8; white-space:pre-wrap; font-family:'DM Sans', sans-serif;"></div>
+              <div class="strategy-box" style="margin-top:16px;">
+                <div class="strategy-box-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Why this works</div>
+                <ul id="prop-res-tips"></ul>
               </div>
             </div>
-
-            <div style="margin-top:20px; background:var(--s2); border:1px dashed var(--border); border-radius:12px; padding:20px;">
-              <h4 style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--gray); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-                <span style="color:var(--purple);">🧠</span> AI Strategy Notes
-              </h4>
-              <ul id="email-res-tips" style="color:#a3a3a3; font-size:0.85rem; line-height:1.6; padding-left:20px; margin:0;">
-              </ul>
+            <div id="prop-empty" style="background:var(--s2);border:1px dashed var(--border);border-radius:16px;padding:48px;text-align:center;color:var(--gray);">
+              <div style="font-size:2.5rem;margin-bottom:16px;">📝</div>
+              <p style="font-size:.88rem;">Your proposal will appear here once generated.</p>
             </div>
-
           </div>
         </div>
       </div>
-      <div id="gig-finder-pg" class="pg">
-        <div style="margin-bottom:40px; border-bottom: 1px solid var(--border); padding-bottom: 24px;">
-          <h2 style="font-family:'Playfair Display';font-size:2.4rem;margin-bottom:8px; display:flex; align-items:center; gap:12px;">
-            <span style="background:var(--pdim); color:var(--purple); padding:8px 12px; border-radius:12px; font-size:1.5rem;">🔍</span> 
-            Gig Opportunity Finder
-          </h2>
-          <p style="color:var(--gray); font-size:1rem;">Discover high-paying, low-competition niches based on your exact skills.</p>
-        </div>
 
-        <div class="niche-box" style="padding:32px;">
-          <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: end;">
-            <div class="auth-field" style="margin-bottom:0;">
-              <label>What skills do you have? (Even casual ones)</label>
-              <input type="text" id="gig-skills" class="auth-input" placeholder="E.g. Canva, basic video editing, good at writing English..." style="background-color:var(--s1);">
+      <!-- ══ EMAIL WRITER ══ -->
+      <div id="email-pg" class="pg">
+        <div class="feat-header">
+          <div class="feat-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <h2>Client Email Writer</h2>
+          <p>Draft professional, high-converting client emails in seconds. Every email saved to your account.</p>
+        </div>
+        <div class="feat-body">
+          <div class="feat-panel">
+            <h3>Message Settings</h3>
+            <div><div class="field-label">Email Objective</div>
+              <select id="email-type" class="feat-input">
+                <option value="Follow-up after a proposal">Follow-up on Proposal</option>
+                <option value="Polite payment reminder">Payment Reminder (Polite)</option>
+                <option value="Firm payment reminder (Overdue)">Payment Reminder (Firm)</option>
+                <option value="Delivering final project files">Project Delivery &amp; Handoff</option>
+                <option value="Asking for a review/testimonial">Request Review / Testimonial</option>
+                <option value="Announcing a rate increase">Rate Increase Notice</option>
+              </select>
             </div>
-            <div class="auth-field" style="margin-bottom:0;">
-              <label>Target Platform</label>
-              <select id="gig-platform" class="auth-input" style="appearance:none; cursor:pointer; background-color:var(--s1);">
-                <option value="Both">Upwork & Fiverr</option>
+            <div><div class="field-label">Tone</div>
+              <select id="email-tone" class="feat-input">
+                <option value="Professional and polite">Professional &amp; Polite</option>
+                <option value="Friendly and warm">Friendly &amp; Warm</option>
+                <option value="Firm and direct">Firm &amp; Direct</option>
+              </select>
+            </div>
+            <div><div class="field-label">Key Context <span>be specific</span></div>
+              <textarea id="email-context" class="feat-input" rows="5" placeholder="E.g. Client's name is Rahul. Delivering 5 YouTube thumbnails. Invoice #42 for Rs 8,000 is 5 days overdue..."></textarea>
+            </div>
+            <button id="email-btn" class="feat-btn" onclick="generateEmail()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Generate Draft
+            </button>
+            <div id="email-loading" class="feat-loading">
+              <div class="spin-sm"></div>
+              <span>Drafting your email...</span>
+            </div>
+          </div>
+          <div>
+            <div id="email-result" class="feat-result">
+              <div class="email-window">
+                <div class="email-titlebar">
+                  <div class="email-dots">
+                    <span style="background:#ef4444;"></span>
+                    <span style="background:#eab308;"></span>
+                    <span style="background:#22c55e;"></span>
+                  </div>
+                  <button class="copy-btn" style="background:var(--white);color:var(--bg);border:none;padding:5px 14px;font-weight:600;" onclick="copyEl('email-res-text')">Copy</button>
+                </div>
+                <div class="email-body-wrap">
+                  <div class="email-subject-row">
+                    <span class="email-subject-lbl">Subject</span>
+                    <strong class="email-subject-val" id="email-res-subject"></strong>
+                  </div>
+                  <div class="email-text" id="email-res-text"></div>
+                </div>
+              </div>
+              <div class="strategy-box">
+                <div class="strategy-box-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg> AI Strategy Notes</div>
+                <ul id="email-res-tips"></ul>
+              </div>
+            </div>
+            <div id="email-empty" style="background:var(--s2);border:1px dashed var(--border);border-radius:16px;padding:48px;text-align:center;color:var(--gray);">
+              <div style="font-size:2.5rem;margin-bottom:16px;">✉️</div>
+              <p style="font-size:.88rem;">Your drafted email will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ GIG FINDER ══ -->
+      <div id="gig-finder-pg" class="pg">
+        <div class="feat-header">
+          <div class="feat-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h2>Gig Opportunity Finder</h2>
+          <p>Enter your skills and get data-driven niche recommendations with demand, competition, and pricing insights.</p>
+        </div>
+        <div class="feat-panel" style="max-width:680px;margin-bottom:32px;">
+          <h3>Your Details</h3>
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:end;">
+            <div><div class="field-label">Your Skills <span>be specific</span></div>
+              <input type="text" id="gig-skills" class="feat-input" placeholder="E.g. Canva, basic video editing, writing English..." style="margin-bottom:0;">
+            </div>
+            <div><div class="field-label">Target Platform</div>
+              <select id="gig-platform" class="feat-input" style="margin-bottom:0;">
+                <option value="Both">Upwork &amp; Fiverr</option>
                 <option value="Fiverr">Fiverr Only</option>
                 <option value="Upwork">Upwork Only</option>
-                <option value="Indian Clients (LinkedIn)">LinkedIn (Indian Clients)</option>
+                <option value="Indian Clients (LinkedIn)">LinkedIn (India)</option>
               </select>
             </div>
           </div>
-          
-          <button id="gig-btn" class="auth-submit" style="margin-top:24px; padding:14px; font-size:0.95rem; width: 100%;" onclick="findGigs()">
-            Scan the Market 🚀
+          <button id="gig-btn" class="feat-btn" style="margin-top:24px;" onclick="findGigs()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Scan the Market
           </button>
-
-          <div id="gig-loading" style="display:none; align-items:center; justify-content:center; gap:12px; margin-top:20px; padding:16px; background:var(--pdim); border-radius:12px; border:1px solid var(--pborder);">
-            <div class="app-spin" style="width:16px; height:16px;"></div>
-            <span style="font-size:.85rem; color:var(--purple); font-weight:600;">Analyzing market demand and competition...</span>
+          <div id="gig-loading" class="feat-loading">
+            <div class="spin-sm"></div>
+            <span>Analysing market demand and competition...</span>
           </div>
         </div>
-
-        <div id="gig-result" style="display:none; margin-top:32px;">
-          <h3 style="font-family:'Playfair Display'; font-size:1.4rem; margin-bottom:20px; color:var(--white);">🔥 Top Recommended Opportunities</h3>
-          <div id="gig-cards-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-            </div>
+        <div id="gig-result" style="display:none;">
+          <div class="sec-hdr"><span class="sec-title">Top Recommended Opportunities</span></div>
+          <div class="gig-cards" id="gig-cards-container"></div>
         </div>
       </div>
-      <div id="results-pg-wrap" class="pg">
-  
-  <button onclick="downloadPDF()" style="background:var(--pdim); color:var(--purple); border:1px solid var(--pborder); padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; margin-bottom: 20px;">
-    📥 Download PDF Kit
-  </button>
 
-  <div id="kit-content">
-    <div id="results-pg"></div>
-  </div>
-  
-</div>
-
-    </div>
+    </div><!-- /page-container -->
   </main>
 </div>
 
+<!-- UPGRADE MODAL -->
 <div id="upgrade-modal" class="modal-overlay">
   <div class="modal-card">
     <button class="modal-close" onclick="closeUpgradeModal()">×</button>
     <h3>Unlock Freelance Pro</h3>
-    <p>Get access to the AI Proposal Writer, Client Emails, Gig Finder, and your 6-Month Income Roadmap.</p>
+    <p>Get access to the Proposal Writer, Email Writer, Gig Finder, and unlimited AI credits.</p>
     <div class="modal-price">₹399<span>/month</span></div>
-    <button class="auth-submit" style="font-size:1rem;padding:14px;" onclick="window.location.href='https://lancify.framer.website/#pricing';closeUpgradeModal();">Upgrade Now</button>
+    <button class="auth-submit" style="font-size:1rem;padding:14px;" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now →</button>
   </div>
 </div>
 
 <script>
+// ═══════════════════════════
+// SUPABASE
+// ═══════════════════════════
 const { createClient } = supabase;
 const sb = createClient(
   'https://qkpyqtynwbvjssrqanmk.supabase.co',
@@ -908,84 +664,14 @@ const sb = createClient(
 );
 
 let currentUser=null, userProfile={is_pro:false}, savedKitData=null, authMode='signin';
-async function findGigs() {
-  const skills = document.getElementById('gig-skills').value.trim();
-  const platform = document.getElementById('gig-platform').value;
+// FIX: Track current page so tab switching doesn't reset it
+let currentPage='home-pg';
 
-  if (!skills) {
-    toast('Please enter some skills first!', 'error');
-    return;
-  }
-
-  const btn = document.getElementById('gig-btn');
-  const loading = document.getElementById('gig-loading');
-  const resultDiv = document.getElementById('gig-result');
-  const container = document.getElementById('gig-cards-container');
-
-  btn.disabled = true;
-  loading.style.display = 'flex';
-  resultDiv.style.display = 'none';
-  container.innerHTML = ''; // Clear previous results
-
-  try {
-    const res = await fetch('/api/gigfinder', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ skills, platform })
-    });
-
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-
-    // Build the UI cards for each niche
-    (data.niches || []).forEach(niche => {
-      const demandColor = niche.demand.toLowerCase() === 'high' ? '#22c55e' : (niche.demand.toLowerCase() === 'medium' ? '#eab308' : '#ef4444');
-      const compColor = niche.competition.toLowerCase() === 'low' ? '#22c55e' : (niche.competition.toLowerCase() === 'medium' ? '#eab308' : '#ef4444');
-
-      const card = document.createElement('div');
-      card.style.cssText = 'background:var(--s1); border:1px solid var(--border); border-radius:16px; padding:24px; display:flex; flex-direction:column; gap:16px; transition:all 0.2s;';
-      
-      card.innerHTML = `
-        <h4 style="font-family:'Playfair Display'; font-size:1.1rem; color:var(--purple); line-height:1.4;">${niche.title}</h4>
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--s3); border-bottom:1px solid var(--s3); padding:12px 0;">
-          <div>
-            <div style="font-size:0.7rem; color:var(--gray); text-transform:uppercase; margin-bottom:4px;">Demand</div>
-            <div style="font-weight:700; color:${demandColor}; font-size:0.85rem;">${niche.demand}</div>
-          </div>
-          <div style="width:1px; height:24px; background:var(--s3);"></div>
-          <div>
-            <div style="font-size:0.7rem; color:var(--gray); text-transform:uppercase; margin-bottom:4px;">Competition</div>
-            <div style="font-weight:700; color:${compColor}; font-size:0.85rem;">${niche.competition}</div>
-          </div>
-        </div>
-
-        <div>
-          <div style="font-size:0.7rem; color:var(--gray); text-transform:uppercase; margin-bottom:4px;">Avg. Pricing</div>
-          <div style="font-family:'Playfair Display'; font-weight:700; font-size:1.1rem; color:var(--white);">${niche.priceRange}</div>
-        </div>
-
-        <div style="background:var(--s2); padding:12px; border-radius:8px; font-size:0.85rem; color:#ccc; line-height:1.5; margin-top:auto;">
-          <span style="font-weight:600; color:var(--white);">Why now:</span> ${niche.whyNow}
-        </div>
-      `;
-      container.appendChild(card);
-    });
-
-    loading.style.display = 'none';
-    resultDiv.style.display = 'block';
-    btn.disabled = false;
-    toast('Market scan complete! 🚀', 'success');
-
-  } catch (error) {
-    console.error(error);
-    toast('Failed to scan market. Try again.', 'error');
-    loading.style.display = 'none';
-    btn.disabled = false;
-  }
-}
-async function initApp() {
-  const { data:{session} } = await sb.auth.getSession();
+// ═══════════════════════════
+// INIT
+// ═══════════════════════════
+async function initApp(){
+  const {data:{session}} = await sb.auth.getSession();
   document.getElementById('app-loading').style.display='none';
   if(session?.user){ handleLoginSuccess(session.user); }
   else { document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex'; }
@@ -993,25 +679,38 @@ async function initApp() {
     if(session?.user){ handleLoginSuccess(session.user); }
     else { currentUser=null; document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex'; }
   });
+  // Set hero date
+  const now = new Date();
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const hour=now.getHours();
+  const greeting=hour<12?'Good morning':hour<18?'Good afternoon':'Good evening';
+  document.getElementById('hero-date').textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 }
 
-function handleLoginSuccess(user) {
+function handleLoginSuccess(user){
   currentUser=user;
   document.getElementById('login-pg').style.display='none';
   document.getElementById('app-layout').classList.add('on');
   const name=user.user_metadata?.full_name||user.email?.split('@')[0]||'User';
   document.getElementById('header-user-name').textContent=name;
   document.getElementById('header-user-initial').textContent=name[0].toUpperCase();
-  loadUserKits(user.id);
-  navigate('home-pg');
+  // Update greeting with real name
+  const hour=new Date().getHours();
+  const g=hour<12?'Good morning':hour<18?'Good afternoon':'Good evening';
+  document.getElementById('hero-greeting').textContent=`${g}, ${name.split(' ')[0]}.`;
+  loadAllStats(user.id);
+  navigate(currentPage); // FIX: Restore page on return
 }
 
-async function signInGoogle() {
+// ═══════════════════════════
+// AUTH
+// ═══════════════════════════
+async function signInGoogle(){
   const {error}=await sb.auth.signInWithOAuth({provider:'google'});
   if(error) showAuthError(error.message);
 }
-
-function toggleMode() {
+function toggleMode(){
   authMode=authMode==='signin'?'signup':'signin';
   const isSU=authMode==='signup';
   document.getElementById('name-field').style.display=isSU?'block':'none';
@@ -1021,8 +720,7 @@ function toggleMode() {
     :"Don't have an account? <span onclick=\"toggleMode()\">Sign up free</span>";
   clearAuthMessages();
 }
-
-async function authSubmit() {
+async function authSubmit(){
   const email=document.getElementById('auth-email').value.trim();
   const password=document.getElementById('auth-password').value;
   const name=document.getElementById('auth-name').value.trim();
@@ -1042,99 +740,137 @@ async function authSubmit() {
   btn.disabled=false; btn.textContent=authMode==='signup'?'Create Account':'Sign In';
   if(result.error) showAuthError(result.error.message);
 }
-
-async function signOut(){await sb.auth.signOut();}
+async function signOut(){ await sb.auth.signOut(); currentPage='home-pg'; }
 function showAuthError(m){const e=document.getElementById('auth-error');e.textContent=m;e.style.display='block';}
 function showAuthMsg(m){const e=document.getElementById('auth-msg');e.textContent=m;e.style.display='block';}
 function clearAuthMessages(){document.getElementById('auth-error').style.display='none';document.getElementById('auth-msg').style.display='none';}
 
+// ═══════════════════════════
+// NAVIGATION — FIX: saves page so tab switch doesn't reset
+// ═══════════════════════════
 function navigate(id){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
+  const pg=document.getElementById(id);
+  if(!pg){console.warn('Page not found:',id);return;}
+  pg.classList.add('on');
+  currentPage=id; // Save current page
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const a=document.querySelector(`[data-page="${id}"]`); if(a) a.classList.add('active');
+  const a=document.querySelector(`[data-page="${id}"]`);if(a)a.classList.add('active');
   document.getElementById('main-scroll').scrollTo({top:0,behavior:'smooth'});
 }
-
 function toast(msg,type='success'){
-  const t=document.createElement('div'); t.className=`toast toast-${type}`; t.innerHTML=msg;
+  const t=document.createElement('div');t.className=`toast toast-${type}`;t.innerHTML=msg;
   document.body.appendChild(t);
   setTimeout(()=>t.classList.add('show'),10);
-  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3000);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3500);
 }
-
 function checkPro(action){if(userProfile.is_pro)action();else showUpgradeModal();}
 function showUpgradeModal(){document.getElementById('upgrade-modal').classList.add('on');}
 function closeUpgradeModal(){document.getElementById('upgrade-modal').classList.remove('on');}
 
-let userKits=[];
-async function loadUserKits(userId){
+// ═══════════════════════════
+// REAL STATS from Supabase
+// ═══════════════════════════
+async function loadAllStats(userId){
   try{
-    const {data,error}=await sb.from('kits').select('*').eq('user_id',userId).order('created_at',{ascending:false});
-    if(error)throw error; userKits=data||[]; renderKits();
-  }catch(err){console.error('Load error:',err.message);toast('Failed to load kits.','error');}
+    // Load all in parallel
+    const [kitsRes,propsRes,emailsRes,gigsRes] = await Promise.all([
+      sb.from('kits').select('id,niche,kit_data,is_starred,created_at').eq('user_id',userId).order('created_at',{ascending:false}),
+      sb.from('proposals').select('id',{count:'exact'}).eq('user_id',userId),
+      sb.from('emails').select('id',{count:'exact'}).eq('user_id',userId),
+      sb.from('gig_searches').select('id',{count:'exact'}).eq('user_id',userId)
+    ]);
+    const kits=kitsRes.data||[];
+    // Set real stats
+    document.getElementById('stat-kits').textContent=kits.length;
+    document.getElementById('stat-proposals').textContent=propsRes.count??0;
+    document.getElementById('stat-emails').textContent=emailsRes.count??0;
+    document.getElementById('stat-gigs').textContent=gigsRes.count??0;
+    // Render real kits
+    renderKits(kits);
+    if(kits.length>0) document.getElementById('sb-my-kits').style.display='flex';
+  }catch(err){
+    console.error('Stats error:',err.message);
+    document.getElementById('stat-kits').textContent='0';
+    document.getElementById('stat-proposals').textContent='0';
+    document.getElementById('stat-emails').textContent='0';
+    document.getElementById('stat-gigs').textContent='0';
+  }
 }
 
-function renderKits(){
+// ═══════════════════════════
+// KITS RENDER — premium style
+// ═══════════════════════════
+let userKits=[];
+function renderKits(kits){
+  userKits=kits;
   const grid=document.getElementById('kits-grid');
-  const sbBtn=document.getElementById('sb-my-kits');
-  if(userKits.length===0){
-    grid.innerHTML=`<div style="grid-column:1/-1;background:var(--s2);border:1px dashed var(--border);padding:40px;border-radius:16px;text-align:center;color:var(--gray);">
-      <div style="font-size:2rem;margin-bottom:12px;">📁</div>
-      <h4 style="color:var(--white);font-size:1.1rem;margin-bottom:8px;">No kits generated yet</h4>
-      <p style="font-size:0.85rem;margin-bottom:20px;">Run the Launch Coach to create your first freelance identity.</p>
+  if(!kits||kits.length===0){
+    grid.innerHTML=`<div class="kits-empty" style="grid-column:1/-1;">
+      <div class="kits-empty-icon">📁</div>
+      <h4>No kits yet</h4>
+      <p>Generate your first freelance kit with the Launch Coach.</p>
       <button class="auth-submit" style="width:auto;padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
     </div>`;
-    sbBtn.style.display='none'; return;
+    return;
   }
-  sbBtn.style.display='flex'; let html='';
-  userKits.forEach(kit=>{
-    const date=new Date(kit.created_at).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
-    const sc=kit.is_starred?'active':''; const si=kit.is_starred?'⭐':'☆';
+  let html='';
+  kits.forEach(kit=>{
+    const date=new Date(kit.created_at).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}).toUpperCase();
+    const starred=kit.is_starred;
     const niche=kit.niche||kit.kit_data?.niche||'Freelance Kit';
-    html+=`<div class="kit-dash-card" id="kit-card-${kit.id}">
-      <div class="kit-dash-title">✦ ${niche}</div>
-      <div class="kit-dash-date">Created: ${date}</div>
-      <div class="kit-dash-actions">
-        <button class="k-btn" onclick="viewSpecificKit('${kit.id}')">📄 View</button>
-        <button class="k-btn star ${sc}" onclick="toggleStar('${kit.id}',${kit.is_starred})">${si} Star</button>
-        <button class="k-btn del" style="margin-left:auto;" onclick="deleteKit('${kit.id}')">🗑 Delete</button>
+    html+=`<div class="kit-prem" id="kp-${kit.id}">
+      <div class="kit-prem-date">${date}</div>
+      <div class="kit-prem-niche">${niche}</div>
+      <div class="kit-prem-actions">
+        <button class="btn-kit" onclick="viewKit('${kit.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View
+        </button>
+        <button class="btn-kit star ${starred?'starred':''}" onclick="toggleStar('${kit.id}',${starred})">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="${starred?'#eab308':'none'}" stroke="${starred?'#eab308':'currentColor'}" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${starred?'Starred':'Star'}
+        </button>
+        <button class="btn-kit del" style="margin-left:auto;" onclick="deleteKit('${kit.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+        </button>
       </div>
     </div>`;
   });
   grid.innerHTML=html;
 }
 
-function viewSpecificKit(id){const k=userKits.find(k=>k.id===id);if(k){savedKitData=k.kit_data;showResults(k.kit_data);}}
-function viewSavedKit(){if(userKits.length>0)viewSpecificKit(userKits[0].id);}
-
+function viewKit(id){const k=userKits.find(k=>k.id===id);if(k){savedKitData=k.kit_data;showResults(k.kit_data);}}
 async function toggleStar(id,cur){
   try{
     const nv=!cur;
     const {error}=await sb.from('kits').update({is_starred:nv}).eq('id',id);
     if(error)throw error;
-    const i=userKits.findIndex(k=>k.id===id); if(i>-1)userKits[i].is_starred=nv;
-    renderKits(); toast(nv?'Kit starred!':'Star removed','success');
-  }catch(err){toast('Could not update kit','error');}
+    const i=userKits.findIndex(k=>k.id===id);if(i>-1)userKits[i].is_starred=nv;
+    renderKits(userKits);toast(nv?'Starred!':'Removed','success');
+  }catch(err){toast('Could not update','error');}
 }
-
 async function deleteKit(id){
   if(!confirm('Delete this kit?'))return;
   try{
     const {error}=await sb.from('kits').delete().eq('id',id);
     if(error)throw error;
-    userKits=userKits.filter(k=>k.id!==id); renderKits(); toast('Kit deleted','success');
+    userKits=userKits.filter(k=>k.id!==id);renderKits(userKits);
+    document.getElementById('stat-kits').textContent=userKits.length;
+    toast('Kit deleted','success');
   }catch(err){toast('Failed to delete','error');}
 }
-
-async function saveKitToSupabase(kit){
+async function saveKit(kit){
   if(!currentUser)return;
   try{
     const {error}=await sb.from('kits').insert([{user_id:currentUser.id,niche:kit.niche,kit_data:kit,is_pro:userProfile.is_pro}]);
-    if(error)throw error; toast('Kit saved! 📁','success'); loadUserKits(currentUser.id);
+    if(error)throw error;
+    toast('Kit saved! 📁','success');
+    loadAllStats(currentUser.id);
   }catch(err){console.error('Save error:',err.message);}
 }
 
+// ═══════════════════════════
+// CHAT ENGINE
+// ═══════════════════════════
 const STEPS=[
   {id:'skills',type:'text',ph:'e.g. coding, Canva, writing...',q:"Hey! Welcome to Lancify.\n\nWhat tools, apps or skills do you use regularly, even casually?"},
   {id:'experience',type:'text',ph:'e.g. Built a website, wrote a blog...',q:"Have you ever done anything for someone, even unpaid? A logo, a spreadsheet, etc."},
@@ -1142,7 +878,7 @@ const STEPS=[
   {id:'goal',type:'opts',opts:['Rs 3,000-5,000','Rs 5,000-10,000','Rs 10,000-20,000','Rs 20,000+'],q:"What is your income goal for your first month?"},
   {id:'platform',type:'opts',opts:['Fiverr','Upwork','Indian clients (LinkedIn)','All'],q:"Where do you want to find clients?"}
 ];
-const GEN_MSGS=['Analysing skills...','Researching market...','Assigning niche...','Writing bio...','Building packages...','Crafting gig...','Almost ready...'];
+const GEN_MSGS=['Analysing your skills...','Researching market demand...','Assigning your niche...','Writing your portfolio bio...','Building pricing packages...','Crafting your gig description...','Almost ready...'];
 let step=0,answers={},waiting=false;
 
 function startChat(){
@@ -1154,14 +890,12 @@ function startChat(){
   navigate('chat-pg');
   setTimeout(()=>showStep(0),400);
 }
-
 function updateProg(){
   const p=Math.round((step/STEPS.length)*100);
   document.getElementById('prog-bar').style.width=p+'%';
   document.getElementById('prog-lbl').textContent='Step '+Math.min(step+1,5)+' of 5';
   document.getElementById('prog-pct').textContent=p+'%';
 }
-
 function showStep(i){
   updateProg();
   typing(()=>{
@@ -1170,7 +904,6 @@ function showStep(i){
     else{document.getElementById('input-zone').style.display='flex';lockInput(false);waiting=true;setTimeout(()=>document.getElementById('txt').focus(),100);}
   });
 }
-
 function typing(cb){
   const c=document.getElementById('chat-msgs');
   const el=document.createElement('div');el.className='typing-row';el.id='typing';
@@ -1223,23 +956,25 @@ function kickoff(){
     setTimeout(()=>{clearInterval(iv);callAPI();},1500);
   });
 }
-
 async function callAPI(){
   try{
     const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answers})});
     const kit=await r.json();
     if(kit.error)throw new Error(kit.error);
-    saveKitToSupabase(kit);showResults(kit);
+    saveKit(kit);showResults(kit);
   }catch(e){
     console.error(e);
     document.getElementById('gen-bar').style.display='none';
     addAI('Something went wrong. Please try again.');
-    const btn=document.createElement('button');btn.className='auth-submit';btn.style.cssText='width:auto;margin-left:42px;margin-top:8px;';
+    const btn=document.createElement('button');btn.className='auth-submit';btn.style.cssText='width:auto;margin-left:42px;margin-top:8px;padding:10px 20px;';
     btn.textContent='Retry';btn.onclick=()=>{callAPI();btn.remove();};
     document.getElementById('chat-msgs').appendChild(btn);scrollBot();
   }
 }
 
+// ═══════════════════════════
+// RESULTS
+// ═══════════════════════════
 function showResults(kit){
   navigate('results-pg-wrap');
   let planHTML='';
@@ -1251,249 +986,165 @@ function showResults(kit){
   const dRow=d=>(d||'').split('\n').filter(Boolean).map(x=>`<span style="display:block;padding:1px 0">${x}</span>`).join('');
   document.getElementById('results-pg').innerHTML=`
     <div style="text-align:center;margin-bottom:40px;">
-      <div style="font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;">Your kit is ready</div>
+      <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;">✦ Your kit is ready</div>
       <h2 style="font-family:'Playfair Display';font-size:2.4rem;font-weight:700;margin-bottom:8px;">Your Freelance<br>Launch Kit</h2>
       <p style="color:var(--gray);">Built specifically for your skills and goals</p>
     </div>
     <div class="niche-box">
-      <div style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;">Your AI-Assigned Niche</div>
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;">Your AI-Assigned Niche</div>
       <div style="font-family:'Playfair Display';font-size:1.5rem;font-weight:700;margin-bottom:8px;">${kit.niche||''}</div>
       <div style="font-size:.86rem;color:var(--gray);line-height:1.65;">${kit.niche_reason||''}</div>
     </div>
     <div>
-      <div class="kit-card open" onclick="toggleCard(this)">
-        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">📁</div><div><div class="kit-ttl">Portfolio Blurb</div><div class="kit-sub">Copy-paste ready bio</div></div></div>
-        <button class="copy-btn" onclick="copyText(event,'port-txt')">Copy</button></div>
-        <div class="kit-body"><p id="port-txt">${kit.portfolio_blurb||''}</p></div>
-      </div>
-      <div class="kit-card" onclick="toggleCard(this)">
-        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">💰</div><div><div class="kit-ttl">Pricing Packages</div><div class="kit-sub">3 tiers with INR pricing</div></div></div></div>
-        <div class="kit-body">
-          <table class="ptable"><thead><tr><th>Package</th><th>Price</th><th>Includes</th><th>Time</th></tr></thead>
-          <tbody>
-            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(99,102,241,.15);color:#818cf8;">${kit.pricing?.basic?.name||'Starter'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.basic?.price||''}</span></td><td>${dRow(kit.pricing?.basic?.deliverables)}</td><td>${kit.pricing?.basic?.timeline||''}</td></tr>
-            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(168,85,247,.15);color:#a855f7;">${kit.pricing?.standard?.name||'Standard'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.standard?.price||''}</span></td><td>${dRow(kit.pricing?.standard?.deliverables)}</td><td>${kit.pricing?.standard?.timeline||''}</td></tr>
-            <tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(234,179,8,.12);color:#ca8a04;">${kit.pricing?.premium?.name||'Premium'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.premium?.price||''}</span></td><td>${dRow(kit.pricing?.premium?.deliverables)}</td><td>${kit.pricing?.premium?.timeline||''}</td></tr>
-          </tbody></table>
-        </div>
-      </div>
-      <div class="kit-card" onclick="toggleCard(this)">
-        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">✍️</div><div><div class="kit-ttl">Gig Description</div><div class="kit-sub">SEO-optimised, ready to post</div></div></div>
-        <button class="copy-btn" onclick="copyText(event,'gig-txt')">Copy</button></div>
-        <div class="kit-body">
-          <p style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--purple);margin-bottom:6px;">Gig Title</p>
-          <p style="font-weight:600;margin-bottom:18px;">${kit.gig_title||''}</p>
-          <p style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--purple);margin-bottom:6px;">Gig Description</p>
-          <p id="gig-txt">${kit.gig_description||''}</p>
-        </div>
-      </div>
-      <div class="kit-card" onclick="toggleCard(this)">
-        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">💬</div><div><div class="kit-ttl">Cold Pitch Script</div><div class="kit-sub">Unlocked via Pro</div></div></div></div>
-        <div class="kit-body"><p>${kit.pitch_script||'Your personalised cold pitch script.'}</p></div>
-      </div>
-      <div class="kit-card" onclick="toggleCard(this)">
-        <div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">📆</div><div><div class="kit-ttl">7-Day Launch Plan</div><div class="kit-sub">Unlocked via Pro</div></div></div></div>
-        <div class="kit-body"><div>${planHTML}</div></div>
-      </div>
+      <div class="kit-card open" onclick="toggleCard(this)"><div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">📁</div><div><div class="kit-ttl">Portfolio Blurb</div><div class="kit-sub">Copy-paste ready bio</div></div></div><button class="copy-btn" onclick="copyEl('port-txt')">Copy</button></div><div class="kit-body"><p id="port-txt">${kit.portfolio_blurb||''}</p></div></div>
+      <div class="kit-card" onclick="toggleCard(this)"><div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">💰</div><div><div class="kit-ttl">Pricing Packages</div><div class="kit-sub">3 tiers with INR pricing</div></div></div></div><div class="kit-body"><table class="ptable"><thead><tr><th>Package</th><th>Price</th><th>Includes</th><th>Time</th></tr></thead><tbody><tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(99,102,241,.15);color:#818cf8;">${kit.pricing?.basic?.name||'Starter'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.basic?.price||''}</span></td><td>${dRow(kit.pricing?.basic?.deliverables)}</td><td>${kit.pricing?.basic?.timeline||''}</td></tr><tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(168,85,247,.15);color:#a855f7;">${kit.pricing?.standard?.name||'Standard'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.standard?.price||''}</span></td><td>${dRow(kit.pricing?.standard?.deliverables)}</td><td>${kit.pricing?.standard?.timeline||''}</td></tr><tr><td><span style="font-size:.7rem;font-weight:600;padding:2px 10px;border-radius:6px;background:rgba(234,179,8,.12);color:#ca8a04;">${kit.pricing?.premium?.name||'Premium'}</span></td><td><span style="font-family:'Playfair Display';font-weight:700;">${kit.pricing?.premium?.price||''}</span></td><td>${dRow(kit.pricing?.premium?.deliverables)}</td><td>${kit.pricing?.premium?.timeline||''}</td></tr></tbody></table></div></div>
+      <div class="kit-card" onclick="toggleCard(this)"><div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">✍️</div><div><div class="kit-ttl">Gig Description</div><div class="kit-sub">SEO-optimised, ready to post</div></div></div><button class="copy-btn" onclick="copyEl('gig-txt')">Copy</button></div><div class="kit-body"><p style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--purple);margin-bottom:6px;">Gig Title</p><p style="font-weight:600;margin-bottom:18px;">${kit.gig_title||''}</p><p style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--purple);margin-bottom:6px;">Gig Description</p><p id="gig-txt">${kit.gig_description||''}</p></div></div>
+      <div class="kit-card" onclick="toggleCard(this)"><div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">💬</div><div><div class="kit-ttl">Cold Pitch Script</div><div class="kit-sub">Unlocked via Pro</div></div></div></div><div class="kit-body"><p>${kit.pitch_script||'Your personalised cold pitch script.'}</p></div></div>
+      <div class="kit-card" onclick="toggleCard(this)"><div class="kit-head"><div class="kit-head-l"><div style="font-size:1rem;">📆</div><div><div class="kit-ttl">7-Day Launch Plan</div><div class="kit-sub">Unlocked via Pro</div></div></div></div><div class="kit-body"><div style="display:flex;flex-direction:column;gap:4px;">${planHTML}</div></div></div>
     </div>
-    <div style="margin-top:32px;text-align:center;padding-bottom:40px;">
-      <button class="auth-submit" style="width:auto;padding:11px 28px;margin-right:12px;" onclick="showUpgradeModal()">💎 Upgrade to Pro</button>
-      <button onclick="startChat()" style="background:transparent;border:1px solid var(--border);color:var(--gray);padding:11px 24px;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.88rem;">↺ Rebuild Kit</button>
+    <div style="margin-top:32px;text-align:center;padding-bottom:40px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="auth-submit" style="width:auto;padding:11px 28px;" onclick="showUpgradeModal()">💎 Upgrade to Pro</button>
+      <button onclick="startChat()" style="background:transparent;border:1px solid var(--border);color:var(--gray);padding:11px 24px;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.88rem;transition:all .2s;">↺ Rebuild Kit</button>
+      <button onclick="navigate('home-pg')" style="background:transparent;border:1px solid var(--border);color:var(--gray);padding:11px 24px;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.88rem;transition:all .2s;">← Dashboard</button>
     </div>`;
 }
-
 function toggleCard(el){el.classList.toggle('open');}
-function copyText(e,id){
-  e.stopPropagation();
+function copyEl(id){
   const el=document.getElementById(id);if(!el)return;
-  navigator.clipboard.writeText(el.innerText).then(()=>{
-    const btn=e.target;btn.textContent='Copied!';
-    setTimeout(()=>btn.textContent='Copy',2000);
-  });
+  navigator.clipboard.writeText(el.innerText).then(()=>toast('Copied!','success'));
 }
-async function generateEmail() {
-  const emailType = document.getElementById('email-type').value;
-  const tone = document.getElementById('email-tone').value;
-  const context = document.getElementById('email-context').value.trim();
 
-  if (!context) {
-    toast('Please provide some context/details first!', 'error');
-    return;
-  }
+// ═══════════════════════════
+// PDF DOWNLOAD
+// ═══════════════════════════
+async function downloadPDF(){
+  const btn=event.currentTarget;const orig=btn.innerHTML;
+  btn.innerHTML='⏳ Generating...';btn.disabled=true;
+  try{
+    const {jsPDF}=window.jspdf;const doc=new jsPDF('p','mm','a4');
+    const el=document.getElementById('kit-content');
+    if(!el){toast('No kit to download','error');return;}
+    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#000000',useCORS:true});
+    const imgData=canvas.toDataURL('image/png');
+    const w=210,h=(canvas.height*w)/canvas.width;
+    doc.addImage(imgData,'PNG',0,0,w,h);
+    doc.save('Lancify-Kit.pdf');
+    toast('PDF downloaded! 🎉','success');
+  }catch(e){toast('PDF error: '+e.message,'error');}
+  finally{btn.innerHTML=orig;btn.disabled=false;}
+}
 
-  const btn = document.getElementById('email-btn');
-  const loading = document.getElementById('email-loading');
-  const resultDiv = document.getElementById('email-result');
-
-  btn.disabled = true;
-  loading.style.display = 'flex';
-  resultDiv.style.display = 'none';
-
-  const userNiche = savedKitData?.niche || 'Freelancer';
-
-  try {
-    const res = await fetch('/api/email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        emailType, context, tone, niche: userNiche
-      })
-    });
-
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-
-    document.getElementById('email-res-subject').textContent = data.subject || 'Email Draft';
-    document.getElementById('email-res-text').textContent = data.body;
-
-    const tipsList = document.getElementById('email-res-tips');
-    tipsList.innerHTML = '';
-    (data.tips || []).forEach(tip => {
-      const li = document.createElement('li');
-      li.textContent = tip;
-      li.style.marginBottom = '8px';
-      tipsList.appendChild(li);
-    });
-
-    if (currentUser) {
-      await sb.from('emails').insert([{
-        user_id: currentUser.id,
-        email_type: emailType,
-        context: context,
-        email_text: data.body
-      }]);
+// ═══════════════════════════
+// PROPOSAL WRITER
+// ═══════════════════════════
+async function generateProposal(){
+  const jobDesc=document.getElementById('prop-job').value.trim();
+  const platform=document.getElementById('prop-platform').value;
+  const exp=document.getElementById('prop-exp').value.trim();
+  if(!jobDesc){toast('Please paste a job description first','error');return;}
+  const btn=document.getElementById('prop-btn');
+  const loading=document.getElementById('prop-loading');
+  const resultDiv=document.getElementById('prop-result');
+  const emptyDiv=document.getElementById('prop-empty');
+  btn.disabled=true;loading.style.display='flex';resultDiv.style.display='none';emptyDiv&&(emptyDiv.style.display='none');
+  const userNiche=savedKitData?.niche||'Freelancer';
+  try{
+    const res=await fetch('/api/proposal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jobDesc,platform,experience:exp,niche:userNiche})});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    document.getElementById('prop-res-subject').textContent=data.subject||'Proposal Draft';
+    document.getElementById('prop-res-text').textContent=data.proposal;
+    const ul=document.getElementById('prop-res-tips');ul.innerHTML='';
+    (data.tips||[]).forEach(tip=>{const li=document.createElement('li');li.textContent=tip;li.style.marginBottom='8px';ul.appendChild(li);});
+    if(currentUser){
+      await sb.from('proposals').insert([{user_id:currentUser.id,job_description:jobDesc,proposal_text:data.proposal,platform}]);
+      loadAllStats(currentUser.id);
     }
-
-    loading.style.display = 'none';
-    resultDiv.style.display = 'block';
-    btn.disabled = false;
-    toast('Email drafted and saved! ✉️', 'success');
-
-  } catch (error) {
-    console.error(error);
-    toast('Failed to draft email. Try again.', 'error');
-    loading.style.display = 'none';
-    btn.disabled = false;
+    loading.style.display='none';resultDiv.style.display='block';btn.disabled=false;
+    toast('Proposal generated and saved! 📝','success');
+  }catch(error){
+    console.error(error);toast('Failed to generate. Try again.','error');
+    loading.style.display='none';btn.disabled=false;emptyDiv&&(emptyDiv.style.display='block');
   }
 }
-  async function downloadPDF() {
-  const btn = event.currentTarget;
-  const originalText = btn.innerHTML;
-  btn.innerHTML = '⏳ Generating PDF...';
-  btn.disabled = true;
 
-  try {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
-    
-    // This finds the exact box we just wrapped in the HTML step
-    const element = document.getElementById('kit-content'); 
-    
-    if (!element) {
-      toast('Could not find kit content to download.', 'error');
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-      return;
+// ═══════════════════════════
+// EMAIL WRITER
+// ═══════════════════════════
+async function generateEmail(){
+  const emailType=document.getElementById('email-type').value;
+  const tone=document.getElementById('email-tone').value;
+  const context=document.getElementById('email-context').value.trim();
+  if(!context){toast('Please provide some context first!','error');return;}
+  const btn=document.getElementById('email-btn');
+  const loading=document.getElementById('email-loading');
+  const resultDiv=document.getElementById('email-result');
+  const emptyDiv=document.getElementById('email-empty');
+  btn.disabled=true;loading.style.display='flex';resultDiv.style.display='none';emptyDiv&&(emptyDiv.style.display='none');
+  const userNiche=savedKitData?.niche||'Freelancer';
+  try{
+    const res=await fetch('/api/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({emailType,context,tone,niche:userNiche})});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    document.getElementById('email-res-subject').textContent=data.subject||'Email Draft';
+    document.getElementById('email-res-text').textContent=data.body;
+    const ul=document.getElementById('email-res-tips');ul.innerHTML='';
+    (data.tips||[]).forEach(tip=>{const li=document.createElement('li');li.textContent=tip;li.style.marginBottom='8px';ul.appendChild(li);});
+    if(currentUser){
+      await sb.from('emails').insert([{user_id:currentUser.id,email_type:emailType,context,email_text:data.body}]);
+      loadAllStats(currentUser.id);
     }
-
-    // Takes a high-res, dark-mode screenshot of the kit
-    const canvas = await html2canvas(element, { 
-      scale: 2, 
-      backgroundColor: '#000000',
-      useCORS: true 
-    });
-    
-    const imgData = canvas.toDataURL('image/png');
-    const imgWidth = 210; // A4 paper width
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
-    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-    doc.save('My-Lancify-Kit.pdf');
-    
-    toast('PDF Downloaded successfully! 🎉', 'success');
-  } catch (error) {
-    console.error(error);
-    toast('PDF Error: ' + error.message, 'error');
-  } finally {
-    btn.innerHTML = originalText;
-    btn.disabled = false;
+    loading.style.display='none';resultDiv.style.display='block';btn.disabled=false;
+    toast('Email drafted and saved! ✉️','success');
+  }catch(error){
+    console.error(error);toast('Failed to draft email. Try again.','error');
+    loading.style.display='none';btn.disabled=false;emptyDiv&&(emptyDiv.style.display='block');
   }
 }
+
+// ═══════════════════════════
+// GIG FINDER
+// ═══════════════════════════
+async function findGigs(){
+  const skills=document.getElementById('gig-skills').value.trim();
+  const platform=document.getElementById('gig-platform').value;
+  if(!skills){toast('Please enter some skills first!','error');return;}
+  const btn=document.getElementById('gig-btn');
+  const loading=document.getElementById('gig-loading');
+  const resultDiv=document.getElementById('gig-result');
+  const container=document.getElementById('gig-cards-container');
+  btn.disabled=true;loading.style.display='flex';resultDiv.style.display='none';container.innerHTML='';
+  try{
+    const res=await fetch('/api/gigfinder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skills,platform})});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    (data.niches||[]).forEach((niche,idx)=>{
+      const dC=niche.demand?.toLowerCase()==='high'?'gig-val-green':niche.demand?.toLowerCase()==='medium'?'gig-val-yellow':'gig-val-red';
+      const cC=niche.competition?.toLowerCase()==='low'?'gig-val-green':niche.competition?.toLowerCase()==='medium'?'gig-val-yellow':'gig-val-red';
+      const card=document.createElement('div');
+      card.className='gig-card';card.style.animationDelay=`${idx*0.08}s`;
+      card.innerHTML=`<div class="gig-card-title">${niche.title}</div>
+        <div class="gig-metrics">
+          <div><div class="gig-metric-label">Demand</div><div class="gig-metric-val ${dC}">${niche.demand}</div></div>
+          <div style="width:1px;background:var(--s3);"></div>
+          <div><div class="gig-metric-label">Competition</div><div class="gig-metric-val ${cC}">${niche.competition}</div></div>
+        </div>
+        <div><div class="gig-price">Avg. Pricing</div><div class="gig-price-val">${niche.priceRange}</div></div>
+        <div class="gig-why"><strong>Why now:</strong> ${niche.whyNow}</div>`;
+      container.appendChild(card);
+    });
+    if(currentUser){
+      await sb.from('gig_searches').insert([{user_id:currentUser.id,skills,platform,results_count:(data.niches||[]).length}]).then(()=>loadAllStats(currentUser.id)).catch(()=>{});
+    }
+    loading.style.display='none';resultDiv.style.display='block';btn.disabled=false;
+    toast('Market scan complete! 🚀','success');
+  }catch(error){
+    console.error(error);toast('Failed to scan market. Try again.','error');
+    loading.style.display='none';btn.disabled=false;
+  }
+}
+
 initApp();
-  async function generateProposal() {
-  const jobDesc = document.getElementById('prop-job').value.trim();
-  const platform = document.getElementById('prop-platform').value;
-  const exp = document.getElementById('prop-exp').value.trim();
-
-  // Stop them if they try to submit an empty job description
-  if (!jobDesc) {
-    toast('Please paste a job description first', 'error');
-    return;
-  }
-
-  // Grab the UI elements
-  const btn = document.getElementById('prop-btn');
-  const loading = document.getElementById('prop-loading');
-  const resultDiv = document.getElementById('prop-result');
-
-  // Change UI to loading state
-  btn.disabled = true;
-  loading.style.display = 'flex';
-  resultDiv.style.display = 'none';
-
-  // Pull their niche from their saved kit (makes the AI much smarter)
-  const userNiche = savedKitData?.niche || 'Freelancer';
-
-  try {
-    // Talk to the backend file we created in Step 1
-    const res = await fetch('/api/proposal', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jobDesc, platform, experience: exp, niche: userNiche
-      })
-    });
-
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-
-    // Fill the UI with the AI response
-    document.getElementById('prop-res-subject').textContent = data.subject || 'Proposal Draft';
-    document.getElementById('prop-res-text').textContent = data.proposal;
-
-    // Build the "Why this works" list
-    const tipsList = document.getElementById('prop-res-tips');
-    tipsList.innerHTML = '';
-    (data.tips || []).forEach(tip => {
-      const li = document.createElement('li');
-      li.textContent = tip;
-      li.style.marginBottom = '8px';
-      tipsList.appendChild(li);
-    });
-
-    // Save it directly to Supabase so they don't lose it
-    if (currentUser) {
-      await sb.from('proposals').insert([{
-        user_id: currentUser.id,
-        job_description: jobDesc,
-        proposal_text: data.proposal,
-        platform: platform
-      }]);
-    }
-
-    // Show the results and hide the loading spinner
-    loading.style.display = 'none';
-    resultDiv.style.display = 'block';
-    btn.disabled = false;
-    toast('Proposal generated and saved! 📝', 'success');
-
-  } catch (error) {
-    console.error(error);
-    toast('Failed to generate proposal. Try again.', 'error');
-    loading.style.display = 'none';
-    btn.disabled = false;
-  }
-}
 </script>
 </body>
 </html>
