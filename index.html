@@ -137,6 +137,348 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
 .ptable{width:100%;border-collapse:collapse;font-size:.82rem;}
 .ptable th{text-align:left;color:var(--gray);font-size:.7rem;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);}
 .ptable td{padding:10px 8px 10px 0;border-bottom:1px solid var(--s3);vertical-align:top;}
+  /* Dashboard Typography & Spacing Variables (Assuming you have your base colors set) */
+:root {
+  --bg: #000000;
+  --s1: #0a0a0a;
+  --s2: #111111;
+  --purple: #a855f7;
+  --pd: #7c3aed;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(168, 85, 247, 0.3);
+  --text-main: #ffffff;
+  --text-muted: #a3a3a3;
+}
+
+/* Main Container */
+.premium-dash {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-main);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* Playfair Headings */
+.heading-playfair {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.25rem;
+  color: var(--text-main);
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+/* --- Hero Section --- */
+.dash-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.hero-greeting {
+  font-size: 2.8rem;
+  margin: 0 0 8px 0;
+  background: linear-gradient(to right, #ffffff, #a3a3a3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-date {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.btn-primary-cta {
+  background: var(--purple);
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
+}
+
+.btn-primary-cta:hover {
+  background: var(--pd);
+  box-shadow: 0 6px 28px rgba(168, 85, 247, 0.4);
+  transform: translateY(-2px);
+}
+
+/* --- Stats Strip --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 30px rgba(168, 85, 247, 0.08);
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-size: 2.4rem;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* --- Quick Actions --- */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.action-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card:hover {
+  background: var(--s2);
+  border-color: var(--purple);
+  box-shadow: 0 12px 40px rgba(168, 85, 247, 0.12);
+  transform: translateY(-4px);
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(168, 85, 247, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--purple);
+  margin-bottom: 20px;
+}
+
+.action-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.action-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.badge-pro {
+  background: rgba(168, 85, 247, 0.15);
+  color: var(--purple);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+}
+
+.action-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* --- My Kits Section --- */
+.kits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.kit-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+/* The subtle purple gradient left border */
+.kit-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--purple), var(--pd));
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.kit-card:hover {
+  background: var(--s2);
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 32px rgba(168, 85, 247, 0.06);
+}
+
+.kit-card:hover::before {
+  opacity: 1;
+}
+
+.kit-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.kit-niche {
+  font-size: 1.4rem;
+  color: var(--text-main);
+  margin-bottom: 24px;
+}
+
+.kit-actions {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-main);
+  border-color: var(--text-muted);
+}
+
+.btn-icon.star:hover {
+  color: #eab308;
+  border-color: #eab308;
+  background: rgba(234, 179, 8, 0.1);
+}
+
+.btn-icon.delete:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* --- Upgrade Banner --- */
+.upgrade-banner {
+  background: linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(10,10,10,1) 100%);
+  border: 1px solid var(--border-hover);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Soft ambient background glow inside the banner */
+.upgrade-banner::after {
+  content: '';
+  position: absolute;
+  right: -100px;
+  top: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, rgba(0,0,0,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.upgrade-text h3 {
+  font-size: 1.6rem;
+  margin: 0 0 8px 0;
+  color: var(--text-main);
+}
+
+.upgrade-text p {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.btn-upgrade {
+  background: var(--text-main);
+  color: var(--bg);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.btn-upgrade:hover {
+  background: var(--purple);
+  color: white;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
 </style>
 </head>
 <body>
@@ -212,43 +554,141 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
     <div class="page-container">
 
       <div id="home-pg" class="pg on">
-        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;flex-wrap:wrap;gap:16px;">
-          <div>
-            <h1 style="font-family:'Playfair Display';font-size:2.4rem;margin-bottom:8px;">Welcome back.</h1>
-            <p style="color:var(--gray);">Manage your freelance business and generated kits.</p>
-          </div>
-          <button class="auth-submit" style="width:auto;padding:10px 24px;font-size:.88rem;" onclick="startChat()">✦ Generate New Kit</button>
+        <div class="premium-dash">
+
+  <div class="dash-hero">
+    <div>
+      <p class="hero-date">Thursday, April 2, 2026</p>
+      <h1 class="hero-greeting heading-playfair">Good morning, Shaurya.</h1>
+    </div>
+    <button class="btn-primary-cta" onclick="startNewKit()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      Generate New Kit
+    </button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value heading-playfair">12</div>
+      <div class="stat-label">Total Kits</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value heading-playfair">34</div>
+      <div class="stat-label">Proposals Written</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value heading-playfair">18</div>
+      <div class="stat-label">Emails Sent</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value heading-playfair">14</div>
+      <div class="stat-label">Days Active</div>
+    </div>
+  </div>
+
+  <div>
+    <h2 class="section-title heading-playfair">Quick Actions</h2>
+    <div class="actions-grid">
+      
+      <div class="action-card" onclick="navigate('coach')">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         </div>
-        <h3 style="font-family:'Playfair Display';font-size:1.2rem;margin-bottom:16px;">📁 My Kits</h3>
-        <div id="kits-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;">
-          <div id="empty-kits-msg" style="grid-column:1/-1;background:var(--s2);border:1px dashed var(--border);padding:40px;border-radius:16px;text-align:center;color:var(--gray);">
-            <div style="font-size:2rem;margin-bottom:12px;">📁</div>
-            <h4 style="color:var(--white);font-size:1.1rem;margin-bottom:8px;">No kits generated yet</h4>
-            <p style="font-size:0.85rem;margin-bottom:20px;">Run the Launch Coach to create your first freelance identity.</p>
-            <button class="auth-submit" style="width:auto;padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
-          </div>
+        <div class="action-header">
+          <span class="action-title">Launch Coach</span>
+        </div>
+        <p class="action-desc">Build your entire freelance business from scratch.</p>
+      </div>
+
+      <div class="action-card" onclick="navigate('proposal')">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="action-header">
+          <span class="action-title">Proposal Writer</span>
+          <span class="badge-pro">PRO</span>
+        </div>
+        <p class="action-desc">Turn job descriptions into winning pitches instantly.</p>
+      </div>
+
+      <div class="action-card" onclick="navigate('email')">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="action-header">
+          <span class="action-title">Email Writer</span>
+          <span class="badge-pro">PRO</span>
+        </div>
+        <p class="action-desc">Draft professional, high-converting client communications.</p>
+      </div>
+
+      <div class="action-card" onclick="navigate('gig')">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="action-header">
+          <span class="action-title">Gig Finder</span>
+          <span class="badge-pro">PRO</span>
+        </div>
+        <p class="action-desc">Discover high-paying, low-competition niches.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div>
+    <h2 class="section-title heading-playfair">My Saved Kits</h2>
+    <div class="kits-grid" id="dashboard-kits-container">
+      
+      <div class="kit-card">
+        <div class="kit-date">Created Mar 28, 2026</div>
+        <h3 class="kit-niche heading-playfair">YouTube Thumbnail Designer</h3>
+        <div class="kit-actions">
+          <button class="btn-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            View
+          </button>
+          <button class="btn-icon star">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Star
+          </button>
+          <button class="btn-icon delete" style="margin-left: auto;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
         </div>
       </div>
 
-      <div id="chat-pg" class="pg">
-        <div style="text-align:center;margin-bottom:36px;">
-          <h2 style="font-family:'Playfair Display';font-size:1.8rem;margin-bottom:6px;">Let's build your kit</h2>
-          <p style="color:var(--gray);font-size:.88rem;">5 quick questions — your complete freelance kit in 20 minutes.</p>
-        </div>
-        <div class="prog-wrap">
-          <div class="prog-labels"><span id="prog-lbl">Step 1 of 5</span><span id="prog-pct">0%</span></div>
-          <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
-        </div>
-        <div id="chat-msgs"></div>
-        <div id="gen-bar" style="display:none;align-items:center;gap:12px;padding:14px 18px;background:var(--s2);border:1px solid var(--pborder);border-radius:12px;margin-top:8px;">
-          <div class="app-spin" style="width:18px;height:18px;"></div>
-          <span id="gen-text" style="font-size:.84rem;color:var(--purple);font-family:'Playfair Display',serif;font-style:italic;">Analysing your skills...</span>
-        </div>
-        <div id="input-zone" style="display:flex;gap:10px;margin-top:4px;">
-          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1"></textarea>
-          <button id="send-btn" onclick="sendMsg()">→</button>
+      <div class="kit-card">
+        <div class="kit-date">Created Mar 25, 2026</div>
+        <h3 class="kit-niche heading-playfair">Notion Workspace Architect</h3>
+        <div class="kit-actions">
+          <button class="btn-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            View
+          </button>
+          <button class="btn-icon star">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Star
+          </button>
+          <button class="btn-icon delete" style="margin-left: auto;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
         </div>
       </div>
+
+    </div>
+  </div>
+
+  <div class="upgrade-banner">
+    <div class="upgrade-text">
+      <h3 class="heading-playfair">Ready to scale to ₹50k/month?</h3>
+      <p>Unlock the Income Roadmap, premium templates, and unlimited AI credits.</p>
+    </div>
+    <button class="btn-upgrade">Upgrade to Pro</button>
+  </div>
+
+</div>
+   </div>
 <div id="proposal-pg" class="pg">
         <div style="margin-bottom:32px;">
           <h2 style="font-family:'Playfair Display';font-size:2.4rem;margin-bottom:8px;">Proposal Writer</h2>
