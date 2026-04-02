@@ -1397,13 +1397,140 @@ initApp();
 // ═══════════════════════════
 let currentLogoBase64 = null;
 
-// ... (all the new audit JS code you just pasted) ...
+// Handle logo file upload conversion
+document.getElementById('audit-logo').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = function(readerEvent) {
+      currentLogoBase64 = readerEvent.target.result;
+    }
+    reader.readAsDataURL(file);
+  } else {
+    currentLogoBase64 = null;
+  }
+});
 
+async function generateAudit() {
+  const target = document.getElementById('audit-target').value.trim();
+  const platform = document.getElementById('audit-platform').value;
+  const weakness = document.getElementById('audit-weakness').value;
+  const service = document.getElementById('audit-service').value;
+  const price = document.getElementById('audit-price').value.trim();
+  const observation = document.getElementById('audit-obs').value.trim();
+
+  if(!target || !price || !observation) {
+    toast('Please fill in the Target, Price, and Specific Observation!', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('audit-btn');
+  const loading = document.getElementById('audit-loading');
+  const resultDiv = document.getElementById('audit-result');
+  const emptyDiv = document.getElementById('audit-empty');
+
+  btn.disabled = true;
+  loading.style.display = 'flex';
+  resultDiv.style.display = 'none';
+  if(emptyDiv) emptyDiv.style.display = 'none';
+
+  try {
+    // Call your backend. (You will need to create the /api/audit endpoint to talk to Llama)
+    const res = await fetch('/api/audit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target, platform, weakness, service, price, observation })
+    });
+    
+    const data = await res.json();
+    if(data.error) throw new Error(data.error);
+
+    // 1. Fill the Email Script
+    document.getElementById('audit-email-text').innerHTML = (data.email_script || '').replace(/\n/g, '<br>');
+
+    // 2. Fill the invisible PDF Canvas
+    // Date & Header details
+    document.getElementById('pdf-target').textContent = target;
+    document.getElementById('pdf-platform').textContent = platform;
+    document.getElementById('pdf-date').textContent = new Date().toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'});
+    document.getElementById('pdf-price').textContent = price;
+
+    // Logo Logic
+    const logoImg = document.getElementById('pdf-logo-img');
+    const avatar = document.getElementById('pdf-avatar');
+    if (currentLogoBase64) {
+      logoImg.src = currentLogoBase64;
+      logoImg.style.display = 'block';
+      avatar.style.display = 'none';
+    } else {
+      logoImg.style.display = 'none';
+      avatar.style.display = 'flex';
+      avatar.textContent = target.charAt(0).toUpperCase();
+    }
+
+    // PDF Sections
+    document.getElementById('pdf-sec1').textContent = data.sec1_assessment || 'Assessment goes here.';
+    document.getElementById('pdf-sec2').textContent = data.sec2_bottleneck || 'Bottleneck goes here.';
+    document.getElementById('pdf-sec3').textContent = data.sec3_impact || 'Impact calculation goes here.';
+    document.getElementById('pdf-sec5').textContent = data.sec5_pitch || 'Pitch goes here.';
+    
+    // Formatting Section 4 bullets
+    const fixes = data.sec4_fixes || [];
+    let fixHtml = '<ul style="padding-left: 20px; margin: 0;">';
+    fixes.forEach(fix => { fixHtml += `<li style="margin-bottom: 8px;">${fix}</li>`; });
+    fixHtml += '</ul>';
+    document.getElementById('pdf-sec4').innerHTML = fixHtml;
+
+    loading.style.display = 'none';
+    resultDiv.style.display = 'block';
+    btn.disabled = false;
+    toast('Audit compiled successfully! 🎯', 'success');
+
+  } catch(error) {
+    console.error(error);
+    toast('Failed to generate audit. Check console.', 'error');
+    loading.style.display = 'none';
+    btn.disabled = false;
+    if(emptyDiv) emptyDiv.style.display = 'block';
+  }
+}
+
+// Fire html2canvas specifically on the light-mode wrapper
+async function downloadAuditPDF() {
+  const btn = event.currentTarget;
+  const origText = btn.innerText;
+  btn.innerText = '⏳ Generating PDF...';
+  btn.disabled = true;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    
+    // Temporarily make the hidden wrapper visible for html2canvas to read it
+    const pdfContent = document.getElementById('audit-pdf-canvas');
+    pdfContent.parentElement.style.position = 'absolute';
+    pdfContent.parentElement.style.left = '-9999px';
+    pdfContent.parentElement.style.width = '800px';
+    pdfContent.parentElement.style.height = 'auto';
+
+    const canvas = await html2canvas(pdfContent, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+    const imgData = canvas.toDataURL('image/png');
+    
+    const w = 210; 
+    const h = (canvas.height * w) / canvas.width;
+    doc.addImage(imgData, 'PNG', 0, 0, w, h);
+    
+    const targetName = document.getElementById('audit-target').value.replace(/\s+/g, '-');
+    doc.save(`Audit-Report-${targetName}.pdf`);
+    toast('PDF Downloaded! Time to close the client. 💸', 'success');
+  } catch(e) {
+    console.error(e);
+    toast('PDF Error: ' + e.message, 'error');
+  } finally {
     btn.innerText = origText;
     btn.disabled = false;
   }
 }
-
 </script>
 </body>
 </html>
