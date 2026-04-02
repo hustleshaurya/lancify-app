@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--bg:#000000;--s1:#0a0a0a;--s2:#111111;--s3:#1a1a1a;--border:rgba(255,255,255,0.07);--purple:#a855f7;--pd:#7c3aed;--pdim:rgba(168,85,247,0.10);--pborder:rgba(168,85,247,0.22);--white:#ffffff;--gray:#888888;--gray2:#444444;--red:#ef4444;}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -971,7 +973,7 @@ async function generateEmail() {
     toast('PDF Downloaded successfully! 🎉', 'success');
   } catch (error) {
     console.error(error);
-    toast('Failed to create PDF. Make sure you generated a kit first!', 'error');
+    toast('PDF Error: ' + error.message, 'error');
   } finally {
     btn.innerHTML = originalText;
     btn.disabled = false;
