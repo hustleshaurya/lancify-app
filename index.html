@@ -429,7 +429,23 @@ textarea.feat-input{resize:none;}
             <button class="auth-submit" style="width:auto;padding:10px 24px;" onclick="startChat()">Start Launch Coach</button>
           </div>
         </div>
+<div class="sec-hdr" style="margin-top:40px;">
+          <span class="sec-title">My Saved Proposals</span>
+        </div>
+        <div class="kits-grid" id="props-grid" style="margin-bottom:40px;">
+          <div class="kits-empty" style="grid-column:1/-1; padding:32px;">
+            <p>No proposals yet. Generate your first pitch in the Proposal Writer.</p>
+          </div>
+        </div>
 
+        <div class="sec-hdr">
+          <span class="sec-title">My Saved Emails</span>
+        </div>
+        <div class="kits-grid" id="emails-grid" style="margin-bottom:40px;">
+          <div class="kits-empty" style="grid-column:1/-1; padding:32px;">
+            <p>No emails yet. Draft your first client message in the Email Writer.</p>
+          </div>
+        </div>
         <!-- Upgrade Banner — links to Framer -->
         <div class="upgrade-banner">
           <div class="upgrade-text">
@@ -641,7 +657,16 @@ textarea.feat-input{resize:none;}
     </div><!-- /page-container -->
   </main>
 </div>
-
+<div id="view-doc-modal" class="modal-overlay">
+  <div class="modal-card" style="max-width:600px; text-align:left; padding:36px;">
+    <button class="modal-close" onclick="document.getElementById('view-doc-modal').classList.remove('on')">×</button>
+    <h3 id="doc-modal-title" style="font-size:1.4rem; margin-bottom:16px;">Document</h3>
+    <div id="doc-modal-content" style="color:#d4d4d4; font-size:0.95rem; line-height:1.7; white-space:pre-wrap; max-height:450px; overflow-y:auto; padding-right:12px; font-family:'DM Sans', sans-serif;"></div>
+    <div style="margin-top:24px; display:flex; justify-content:flex-end;">
+      <button class="auth-submit" style="width:auto; padding:10px 24px; font-size:0.85rem;" onclick="copyEl('doc-modal-content')">Copy Text</button>
+    </div>
+  </div>
+</div>
 <!-- UPGRADE MODAL -->
 <div id="upgrade-modal" class="modal-overlay">
   <div class="modal-card">
@@ -771,30 +796,107 @@ function closeUpgradeModal(){document.getElementById('upgrade-modal').classList.
 // ═══════════════════════════
 // REAL STATS from Supabase
 // ═══════════════════════════
+// Global arrays to hold our fetched data so the modal can read them later
+let userProposals = [];
+let userEmails = [];
+
 async function loadAllStats(userId){
   try{
-    // Load all in parallel
-    const [kitsRes,propsRes,emailsRes,gigsRes] = await Promise.all([
+    // We upgraded propsRes and emailsRes to select '*' (everything) instead of just the count!
+    const [kitsRes, propsRes, emailsRes, gigsRes] = await Promise.all([
       sb.from('kits').select('id,niche,kit_data,is_starred,created_at').eq('user_id',userId).order('created_at',{ascending:false}),
-      sb.from('proposals').select('id',{count:'exact'}).eq('user_id',userId),
-      sb.from('emails').select('id',{count:'exact'}).eq('user_id',userId),
+      sb.from('proposals').select('*').eq('user_id',userId).order('created_at',{ascending:false}),
+      sb.from('emails').select('*').eq('user_id',userId).order('created_at',{ascending:false}),
       sb.from('gig_searches').select('id',{count:'exact'}).eq('user_id',userId)
     ]);
-    const kits=kitsRes.data||[];
-    // Set real stats
-    document.getElementById('stat-kits').textContent=kits.length;
-    document.getElementById('stat-proposals').textContent=propsRes.count??0;
-    document.getElementById('stat-emails').textContent=emailsRes.count??0;
-    document.getElementById('stat-gigs').textContent=gigsRes.count??0;
-    // Render real kits
+    
+    const kits = kitsRes.data || [];
+    userProposals = propsRes.data || [];
+    userEmails = emailsRes.data || [];
+
+    // Set real stats numbers at the top of the dashboard
+    document.getElementById('stat-kits').textContent = kits.length;
+    document.getElementById('stat-proposals').textContent = userProposals.length;
+    document.getElementById('stat-emails').textContent = userEmails.length;
+    document.getElementById('stat-gigs').textContent = gigsRes.count ?? 0;
+    
+    // Render all three UI grids
     renderKits(kits);
-    if(kits.length>0) document.getElementById('sb-my-kits').style.display='flex';
-  }catch(err){
-    console.error('Stats error:',err.message);
-    document.getElementById('stat-kits').textContent='0';
-    document.getElementById('stat-proposals').textContent='0';
-    document.getElementById('stat-emails').textContent='0';
-    document.getElementById('stat-gigs').textContent='0';
+    renderProposals(userProposals);
+    renderEmails(userEmails);
+    
+    if(kits.length > 0) document.getElementById('sb-my-kits').style.display='flex';
+  } catch(err) {
+    console.error('Stats error:', err.message);
+  }
+}
+
+// ═══════════════════════════
+// NEW RENDER FUNCTIONS
+// ═══════════════════════════
+
+function renderProposals(props) {
+  const grid = document.getElementById('props-grid');
+  if(!props || props.length === 0) return; // Keeps the empty state if none exist
+  
+  let html = '';
+  props.forEach(p => {
+    const date = new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
+    // We grab the first 45 characters of the job description as the title
+    const shortDesc = p.job_description ? p.job_description.substring(0, 45) + '...' : 'Custom Proposal';
+    
+    html += `<div class="kit-prem">
+      <div class="kit-prem-date">${date} • ${p.platform || 'General'}</div>
+      <div class="kit-prem-niche" style="font-size:1.1rem; padding-bottom:16px;">${shortDesc}</div>
+      <div class="kit-prem-actions" style="margin-top:auto;">
+        <button class="btn-kit" onclick="viewProposal('${p.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Read Proposal
+        </button>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+function renderEmails(emails) {
+  const grid = document.getElementById('emails-grid');
+  if(!emails || emails.length === 0) return;
+  
+  let html = '';
+  emails.forEach(e => {
+    const date = new Date(e.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
+    html += `<div class="kit-prem">
+      <div class="kit-prem-date">${date}</div>
+      <div class="kit-prem-niche" style="font-size:1.1rem; padding-bottom:16px;">${e.email_type || 'Client Email'}</div>
+      <div class="kit-prem-actions" style="margin-top:auto;">
+        <button class="btn-kit" onclick="viewEmail('${e.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Read Email
+        </button>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+// ═══════════════════════════
+// MODAL TRIGGERS
+// ═══════════════════════════
+
+function viewProposal(id) {
+  const p = userProposals.find(x => x.id === id);
+  if(p) {
+    document.getElementById('doc-modal-title').textContent = 'Proposal for ' + (p.platform || 'Client');
+    document.getElementById('doc-modal-content').textContent = p.proposal_text;
+    document.getElementById('view-doc-modal').classList.add('on');
+  }
+}
+
+function viewEmail(id) {
+  const e = userEmails.find(x => x.id === id);
+  if(e) {
+    document.getElementById('doc-modal-title').textContent = e.email_type || 'Email Draft';
+    document.getElementById('doc-modal-content').textContent = e.email_text;
+    document.getElementById('view-doc-modal').classList.add('on');
   }
 }
 
