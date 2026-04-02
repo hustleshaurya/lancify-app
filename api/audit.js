@@ -6,6 +6,9 @@ export default async function handler(req, res) {
   const { target, platform, weakness, service, price, observation } = req.body;
   const apiKey = process.env.GEMINI_API_KEY;
 
+  // We are using Gemini 2.5 Flash - the current industry standard for speed/reliability
+  const modelName = "gemini-2.5-flash"; 
+
   const prompt = {
     contents: [{
       parts: [{
@@ -17,7 +20,10 @@ export default async function handler(req, res) {
   };
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    // Switching to the v1 stable endpoint for maximum reliability
+    const url = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`;
+    
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(prompt)
@@ -29,7 +35,10 @@ export default async function handler(req, res) {
       throw new Error(data.error.message);
     }
 
-    // Extract the text and clean it
+    if (!data.candidates || !data.candidates[0]) {
+      throw new Error("AI returned an empty response. Check your API quota.");
+    }
+
     let rawText = data.candidates[0].content.parts[0].text;
     const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
     
@@ -37,6 +46,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("API ERROR:", error);
-    res.status(500).json({ error: "Gemini connection failed: " + error.message });
+    res.status(500).json({ error: "Lancify Engine Error: " + error.message });
   }
 }
