@@ -338,6 +338,7 @@ textarea.feat-input{resize:none;}
     <div class="sb-group">Tools</div>
     <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')">🏠 Home Dashboard</a>
     <a class="nav-item" data-page="chat-pg" onclick="startChat()">✦ Launch Coach</a>
+    <a class="nav-item" data-page="audit-pg" onclick="navigate('audit-pg')">⚡ Audit Generator <span class="pro-badge">PRO</span></a>
     <a class="nav-item" data-page="proposal-pg" onclick="navigate('proposal-pg')">📝 Proposal Writer <span class="pro-badge">PRO</span></a>
     <a class="nav-item" data-page="email-pg" onclick="navigate('email-pg')">✉️ Email Writer <span class="pro-badge">PRO</span></a>
     <div class="sb-group">Insights</div>
@@ -653,7 +654,149 @@ textarea.feat-input{resize:none;}
           <div class="gig-cards" id="gig-cards-container"></div>
         </div>
       </div>
+<div id="audit-pg" class="pg">
+        <div class="feat-header">
+          <div class="feat-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h2>Trojan Horse Audit</h2>
+          <p>Generate a clinical, 3-point growth audit to send as a cold pitch. Stop begging for jobs—audit their business and offer the fix.</p>
+        </div>
 
+        <div class="feat-body">
+          <div class="feat-panel">
+            <h3>Target Intelligence</h3>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+              <div><div class="field-label">Target Business Name</div>
+                <input type="text" id="audit-target" class="feat-input" placeholder="e.g. The Bombay Roastery">
+              </div>
+              <div><div class="field-label">Platform to Audit</div>
+                <select id="audit-platform" class="feat-input">
+                  <option value="Instagram">Instagram</option>
+                  <option value="Website">Website</option>
+                  <option value="YouTube">YouTube</option>
+                  <option value="LinkedIn">LinkedIn</option>
+                </select>
+              </div>
+            </div>
+
+            <div><div class="field-label">Client Logo <span>(Optional but recommended)</span></div>
+              <input type="file" id="audit-logo" class="feat-input" accept="image/*" style="padding: 9px 14px; background:var(--s2);">
+            </div>
+
+            <div><div class="field-label">Primary Weakness</div>
+              <select id="audit-weakness" class="feat-input">
+                <option value="No clear Call-to-Action in bio/posts">No clear Call-to-Action</option>
+                <option value="Inconsistent posting schedule">Inconsistent posting schedule</option>
+                <option value="Low quality visual branding">Low quality visual branding</option>
+                <option value="Slow or broken website booking flow">Slow/broken website flow</option>
+                <option value="Poor audio and lighting in video content">Poor video quality</option>
+              </select>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:16px;">
+              <div><div class="field-label">Your Freelance Service</div>
+                <select id="audit-service" class="feat-input">
+                  <option value="Social Media Management">Social Media Management</option>
+                  <option value="Video Editing">Video Editing</option>
+                  <option value="Web Design">Web Design</option>
+                  <option value="Copywriting">Copywriting</option>
+                  <option value="Graphic Design">Graphic Design</option>
+                </select>
+              </div>
+              <div><div class="field-label">Pitch Price</div>
+                <input type="text" id="audit-price" class="feat-input" placeholder="₹2,500">
+              </div>
+            </div>
+
+            <div><div class="field-label">Specific Observation <span>(Be hyper-specific)</span></div>
+              <textarea id="audit-obs" class="feat-input" rows="3" placeholder="e.g. They post great coffee photos, but their bio link is broken and they haven't posted a Reel in 3 weeks."></textarea>
+            </div>
+
+            <button id="audit-btn" class="feat-btn" onclick="generateAudit()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Generate Audit Dossier
+            </button>
+            <div id="audit-loading" class="feat-loading">
+              <div class="spin-sm"></div>
+              <span>Compiling growth diagnostic...</span>
+            </div>
+          </div>
+
+          <div>
+            <div id="audit-result" class="feat-result">
+              
+              <div class="email-window" style="margin-bottom:24px;">
+                <div class="email-titlebar">
+                  <span style="font-size:0.8rem; font-weight:600; color:var(--gray);">COLD EMAIL SCRIPT</span>
+                  <button class="copy-btn" onclick="copyEl('audit-email-text')">Copy</button>
+                </div>
+                <div class="email-body-wrap" id="audit-email-text" style="font-size:0.9rem; line-height:1.7;"></div>
+              </div>
+
+              <div class="niche-box" style="text-align:center;">
+                <div style="font-size:2rem; margin-bottom:12px;">📄</div>
+                <h3 style="font-family:'Playfair Display'; margin-bottom:8px;">Client Audit Ready</h3>
+                <p style="font-size:0.85rem; color:var(--gray); margin-bottom:20px;">Your 5-section consulting dossier has been generated and branded.</p>
+                <button class="auth-submit" style="width:auto; padding:12px 28px;" onclick="downloadAuditPDF()">📥 Download PDF Report</button>
+              </div>
+
+            </div>
+            <div id="audit-empty" style="background:var(--s2); border:1px dashed var(--border); border-radius:16px; padding:48px; text-align:center; color:var(--gray);">
+              <div style="font-size:2.5rem; margin-bottom:16px;">🎯</div>
+              <p style="font-size:.88rem;">Your professional audit and email script will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="overflow:hidden; height:0; width:0; position:absolute; z-index:-9999;">
+        <div id="audit-pdf-canvas" style="width: 800px; padding: 60px; background: #ffffff; color: #111111; font-family: 'DM Sans', sans-serif; line-height: 1.6;">
+          
+          <div style="text-align:center; border-bottom: 2px solid #e5e7eb; padding-bottom: 30px; margin-bottom: 40px;">
+            <img id="pdf-logo-img" style="max-height: 80px; max-width: 200px; margin-bottom: 20px; display:none;">
+            <div id="pdf-avatar" style="width: 70px; height: 70px; border-radius: 50%; background: #111; color: #fff; font-size: 2rem; font-family: 'Playfair Display'; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-weight:700;">?</div>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #111; margin: 0 0 10px 0; letter-spacing: -0.02em;">GROWTH DIAGNOSTIC & STRATEGY REPORT</h1>
+            <div style="font-size: 14px; color: #6b7280; display:flex; justify-content:center; gap:20px;">
+              <span><strong>Prepared for:</strong> <span id="pdf-target"></span></span>
+              <span><strong>Platform:</strong> <span id="pdf-platform"></span></span>
+              <span><strong>Date:</strong> <span id="pdf-date"></span></span>
+            </div>
+          </div>
+
+          <h2 style="font-size: 16px; color: #6366f1; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">1. Initial Brand Assessment</h2>
+          <p id="pdf-sec1" style="margin-bottom: 30px; font-size: 15px;"></p>
+
+          <h2 style="font-size: 16px; color: #6366f1; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">2. The Primary Conversion Bottleneck</h2>
+          <p id="pdf-sec2" style="margin-bottom: 30px; font-size: 15px;"></p>
+
+          <div style="background: #f8fafc; border-left: 4px solid #8b5cf6; padding: 20px; margin-bottom: 30px;">
+            <h2 style="font-size: 15px; color: #111; text-transform:uppercase; letter-spacing:0.05em; margin: 0 0 8px 0;">3. Estimated Opportunity Cost</h2>
+            <p id="pdf-sec3" style="margin: 0; font-size: 15px; color:#334155;"></p>
+          </div>
+
+          <h2 style="font-size: 16px; color: #6366f1; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">4. Immediate Actionable Fix</h2>
+          <div id="pdf-sec4" style="margin-bottom: 30px; font-size: 15px;"></div>
+
+          <h2 style="font-size: 16px; color: #6366f1; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">5. Proposed Implementation Strategy</h2>
+          <p id="pdf-sec5" style="margin-bottom: 15px; font-size: 15px;"></p>
+          <div style="background: #111; color: #fff; padding: 20px; border-radius: 8px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-weight:600;">Project Scope:</span> <span>7 Days</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="font-weight:600;">Total Investment:</span> <span style="font-family:'Playfair Display'; font-weight:700; font-size:1.1rem;" id="pdf-price"></span>
+            </div>
+          </div>
+
+          <div style="margin-top: 60px; text-align:center; font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+            To authorize this implementation, simply reply to my email.<br>
+            Generated via Lancify OS
+          </div>
+
+        </div>
+      </div>
     </div><!-- /page-container -->
   </main>
 </div>
@@ -1247,6 +1390,20 @@ async function findGigs(){
 }
 
 initApp();
+  initApp();
+
+// ═══════════════════════════
+// AUDIT GENERATOR (TROJAN HORSE)
+// ═══════════════════════════
+let currentLogoBase64 = null;
+
+// ... (all the new audit JS code you just pasted) ...
+
+    btn.innerText = origText;
+    btn.disabled = false;
+  }
+}
+
 </script>
 </body>
 </html>
