@@ -433,8 +433,16 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
         </div>
       </div>
       <div id="results-pg-wrap" class="pg">
-        <div id="results-pg"></div>
-      </div>
+  
+  <button onclick="downloadPDF()" style="background:var(--pdim); color:var(--purple); border:1px solid var(--pborder); padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; margin-bottom: 20px;">
+    📥 Download PDF Kit
+  </button>
+
+  <div id="kit-content">
+    <div id="results-pg"></div>
+  </div>
+  
+</div>
 
     </div>
   </main>
@@ -923,6 +931,49 @@ async function generateEmail() {
     console.error(error);
     toast('Failed to draft email. Try again.', 'error');
     loading.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+  async function downloadPDF() {
+  const btn = event.currentTarget;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '⏳ Generating PDF...';
+  btn.disabled = true;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    
+    // This finds the exact box we just wrapped in the HTML step
+    const element = document.getElementById('kit-content'); 
+    
+    if (!element) {
+      toast('Could not find kit content to download.', 'error');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      return;
+    }
+
+    // Takes a high-res, dark-mode screenshot of the kit
+    const canvas = await html2canvas(element, { 
+      scale: 2, 
+      backgroundColor: '#000000',
+      useCORS: true 
+    });
+    
+    const imgData = canvas.toDataURL('image/png');
+    const imgWidth = 210; // A4 paper width
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    doc.save('My-Lancify-Kit.pdf');
+    
+    toast('PDF Downloaded successfully! 🎉', 'success');
+  } catch (error) {
+    console.error(error);
+    toast('Failed to create PDF. Make sure you generated a kit first!', 'error');
+  } finally {
+    btn.innerHTML = originalText;
     btn.disabled = false;
   }
 }
