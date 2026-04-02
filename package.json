@@ -3,7 +3,7 @@
     "build": "mkdir -p public && cp index.html public/ || true"
   },
   "dependencies": {
-    "groq-sdk": "^0.3.2",
-    "@google/genai": "^0.1.2"
+    "groq-sdk": "latest",
+    "@google/genai": "latest"
   }
 }
