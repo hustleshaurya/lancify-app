@@ -188,7 +188,7 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
     <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')">🏠 Home Dashboard</a>
     <a class="nav-item" data-page="chat-pg" onclick="startChat()">✦ Launch Coach</a>
     <a class="nav-item" <a class="nav-item" data-page="proposal-pg" onclick="navigate('proposal-pg')">📝 Proposal Writer <span class="pro-badge">PRO</span></a>
-    <a class="nav-item" onclick="checkPro(() => toast('Email Writer coming soon!', 'success'))">✉️ Email Writer <span class="pro-badge">PRO</span></a>
+    <a class="nav-item" data-page="email-pg" onclick="navigate('email-pg')">✉️ Email Writer <span class="pro-badge">PRO</span></a>
     <div class="sb-group">Insights</div>
     <a class="nav-item" onclick="checkPro(() => toast('Gig Finder coming soon!', 'success'))">🔍 Gig Finder <span class="pro-badge">PRO</span></a>
     <a class="nav-item" onclick="checkPro(() => toast('Income Roadmap coming soon!', 'success'))">🗺️ Income Roadmap <span class="pro-badge">PRO</span></a>
@@ -300,6 +300,93 @@ body{background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif;mi
             <h4 style="font-family:'Playfair Display';color:var(--purple);margin-bottom:12px;font-size:1.1rem;">💡 Why this works</h4>
             <ul id="prop-res-tips" style="color:#ccc;font-size:.85rem;line-height:1.6;padding-left:20px;">
             </ul>
+          </div>
+        </div>
+      </div>
+      <div id="email-pg" class="pg">
+        <div style="margin-bottom:40px; border-bottom: 1px solid var(--border); padding-bottom: 24px;">
+          <h2 style="font-family:'Playfair Display';font-size:2.4rem;margin-bottom:8px; display:flex; align-items:center; gap:12px;">
+            <span style="background:var(--pdim); color:var(--purple); padding:8px 12px; border-radius:12px; font-size:1.5rem;">✉️</span> 
+            Client Email Writer
+          </h2>
+          <p style="color:var(--gray); font-size:1rem;">Draft high-converting, professional client communications in seconds.</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
+          
+          <div style="background:var(--s2); border:1px solid var(--border); border-radius:16px; padding:32px;">
+            <h3 style="font-family:'Playfair Display'; font-size:1.2rem; margin-bottom:24px; color:var(--white);">Message Details</h3>
+            
+            <div class="auth-field">
+              <label style="display:flex; justify-content:space-between;">
+                <span>Email Objective</span>
+              </label>
+              <select id="email-type" class="auth-input" style="appearance:none; cursor:pointer; background-color:var(--s1);">
+                <option value="Follow-up after a proposal">Follow-up on a proposal</option>
+                <option value="Polite payment reminder">Payment reminder (Polite)</option>
+                <option value="Firm payment reminder (Overdue)">Payment reminder (Firm/Overdue)</option>
+                <option value="Delivering final project files">Project Delivery & Handoff</option>
+                <option value="Asking for a review/testimonial">Review / Testimonial Request</option>
+                <option value="Announcing a rate increase">Rate Increase Announcement</option>
+              </select>
+            </div>
+            
+            <div class="auth-field">
+              <label>Communication Tone</label>
+              <select id="email-tone" class="auth-input" style="appearance:none; cursor:pointer; background-color:var(--s1);">
+                <option value="Professional and polite">👔 Professional & Polite</option>
+                <option value="Friendly and warm">👋 Friendly & Warm</option>
+                <option value="Firm and direct">🛑 Firm & Direct</option>
+              </select>
+            </div>
+            
+            <div class="auth-field" style="margin-top:24px;">
+              <label style="display:flex; justify-content:space-between;">
+                <span>Key Context</span>
+                <span style="font-size:0.7rem; color:var(--purple); font-weight:normal;">Be specific</span>
+              </label>
+              <textarea id="email-context" class="auth-input" rows="4" style="background-color:var(--s1); resize:none;" placeholder="E.g. Client's name is Rahul. I'm delivering the final 5 YouTube thumbnails attached here. Hoping to work together again..."></textarea>
+            </div>
+            
+            <button id="email-btn" class="auth-submit" style="margin-top:16px; padding:14px; font-size:0.95rem; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="generateEmail()">
+              Generate Draft ✨
+            </button>
+
+            <div id="email-loading" style="display:none; align-items:center; justify-content:center; gap:12px; margin-top:20px; padding:16px; background:var(--pdim); border-radius:12px; border:1px solid var(--pborder);">
+              <div class="app-spin" style="width:16px; height:16px;"></div>
+              <span style="font-size:.85rem; color:var(--purple); font-weight:600;">Drafting your message...</span>
+            </div>
+          </div>
+
+          <div id="email-result" style="display:none;">
+            
+            <div style="background:var(--s1); border:1px solid var(--pborder); border-radius:16px; overflow:hidden; box-shadow: 0 12px 40px rgba(168,85,247,0.08);">
+              <div style="background:var(--s2); padding:14px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; gap:6px;">
+                  <div style="width:10px; height:10px; border-radius:50%; background:#ef4444;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#eab308;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#22c55e;"></div>
+                </div>
+                <button class="copy-btn" style="background:var(--white); color:var(--bg); border:none; padding:6px 16px; font-weight:600;" onclick="copyText(event,'email-res-text')">Copy Full Text</button>
+              </div>
+              
+              <div style="padding:24px;">
+                <div style="margin-bottom:20px; border-bottom:1px solid var(--s3); padding-bottom:16px; display:flex; align-items:flex-start; gap:12px;">
+                  <span style="color:var(--gray); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px;">Subject</span>
+                  <strong id="email-res-subject" style="color:var(--white); font-size:1.05rem; font-family:'Playfair Display', serif;"></strong>
+                </div>
+                <div id="email-res-text" style="color:#d4d4d4; font-size:0.95rem; line-height:1.8; white-space:pre-wrap; font-family:'DM Sans', sans-serif;"></div>
+              </div>
+            </div>
+
+            <div style="margin-top:20px; background:var(--s2); border:1px dashed var(--border); border-radius:12px; padding:20px;">
+              <h4 style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--gray); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                <span style="color:var(--purple);">🧠</span> AI Strategy Notes
+              </h4>
+              <ul id="email-res-tips" style="color:#a3a3a3; font-size:0.85rem; line-height:1.6; padding-left:20px; margin:0;">
+              </ul>
+            </div>
+
           </div>
         </div>
       </div>
@@ -657,7 +744,71 @@ function copyText(e,id){
     setTimeout(()=>btn.textContent='Copy',2000);
   });
 }
+async function generateEmail() {
+  const emailType = document.getElementById('email-type').value;
+  const tone = document.getElementById('email-tone').value;
+  const context = document.getElementById('email-context').value.trim();
 
+  if (!context) {
+    toast('Please provide some context/details first!', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('email-btn');
+  const loading = document.getElementById('email-loading');
+  const resultDiv = document.getElementById('email-result');
+
+  btn.disabled = true;
+  loading.style.display = 'flex';
+  resultDiv.style.display = 'none';
+
+  const userNiche = savedKitData?.niche || 'Freelancer';
+
+  try {
+    const res = await fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        emailType, context, tone, niche: userNiche
+      })
+    });
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    document.getElementById('email-res-subject').textContent = data.subject || 'Email Draft';
+    document.getElementById('email-res-text').textContent = data.body;
+
+    const tipsList = document.getElementById('email-res-tips');
+    tipsList.innerHTML = '';
+    (data.tips || []).forEach(tip => {
+      const li = document.createElement('li');
+      li.textContent = tip;
+      li.style.marginBottom = '8px';
+      tipsList.appendChild(li);
+    });
+
+    if (currentUser) {
+      await sb.from('emails').insert([{
+        user_id: currentUser.id,
+        email_type: emailType,
+        context: context,
+        email_text: data.body
+      }]);
+    }
+
+    loading.style.display = 'none';
+    resultDiv.style.display = 'block';
+    btn.disabled = false;
+    toast('Email drafted and saved! ✉️', 'success');
+
+  } catch (error) {
+    console.error(error);
+    toast('Failed to draft email. Try again.', 'error');
+    loading.style.display = 'none';
+    btn.disabled = false;
+  }
+}
 initApp();
   async function generateProposal() {
   const jobDesc = document.getElementById('prop-job').value.trim();
