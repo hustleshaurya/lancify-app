@@ -1,49 +1,54 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const { jobDesc, platform, experience, niche } = req.body;
+  const groqApiKey = process.env.GROQ_API_KEY; 
 
-  if (!jobDesc) return res.status(400).json({ error: 'Job description is required' });
+  const modelName = "llama3-70b-8192";
 
-  const prompt = `You are an expert freelance proposal writer for Indian students.
+  const systemPrompt = `You are an elite, top 1% freelance consultant. You are helping a ${niche} win a job on ${platform}.
   
-  Job description: "${jobDesc}"
-  Platform: "${platform}"
-  Student experience: "${experience || 'None specified'}"
-  Student niche: "${niche || 'Freelancer'}"
+  Read the job description: """${jobDesc}"""
+  User Experience: """${experience || 'Beginner level'}"""
 
-  Write a winning proposal that:
-  - Opens with the client's specific problem (not "Dear Sir")
-  - Shows relevant experience in 2 sentences
-  - Gives one specific insight about how to solve their problem
-  - Clear deliverables and timeline
-  - Confident closing with CTA
-  - 150-200 words max
-  - Sounds human, not AI-generated
+  STRICT RULES FOR THE PROPOSAL:
+  1. NO greetings (No "Hi", "Dear", "I hope you are well").
+  2. NO fluff (No "I am a hard worker", "I am interested").
+  3. Start with a "Pattern Interrupt": A sharp observation or immediate solution related to their specific job.
+  4. Use "I" instead of "We".
+  5. Maximum 100 words. 
+  6. Sentences must be under 15 words.
+  7. End with a soft curiosity-based CTA (e.g., "Want me to send over a quick draft of how I'd handle the first part?").
 
-  Return ONLY a valid JSON object in this exact format, with no markdown formatting or extra text:
-  {"subject":"...","proposal":"...","tips":["tip1","tip2","tip3"]}`;
+  Return ONLY a raw JSON object with these keys:
+  - "subject": A punchy, non-spammy subject line.
+  - "proposal": The actual high-converting pitch text.
+  - "tips": An array of 3 very short psychological reasons why this specific pitch works.`;
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-        'Content-Type': 'application/json'
+        "Authorization": `Bearer ${groqApiKey}`,
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
+        model: modelName,
+        messages: [{ role: "system", content: systemPrompt }],
+        temperature: 0.6,
         response_format: { type: "json_object" }
       })
     });
 
     const data = await response.json();
-    const result = JSON.parse(data.choices[0].message.content);
-    res.status(200).json(result);
+    if (data.error) throw new Error(data.error.message);
+
+    res.status(200).json(JSON.parse(data.choices[0].message.content));
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to generate proposal' });
+    console.error("GROQ API ERROR:", error);
+    res.status(500).json({ error: "Failed to write proposal: " + error.message });
   }
 }
