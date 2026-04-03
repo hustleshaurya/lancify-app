@@ -3,65 +3,57 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // We added websiteUrl to the destructured body here
   const { target, platform, weakness, service, price, observation, websiteUrl } = req.body;
   const apiKey = process.env.GEMINI_API_KEY;
-
-  // We are using Gemini 2.5 Flash - the current industry standard for speed/reliability
   const modelName = "gemini-2.5-flash"; 
 
   let scrapedContent = "";
   let contextSnippet = "";
 
-  // 🕸️ THE AUTOPILOT: Scrape the website if a URL was passed from the frontend
+  // 🕸️ AUTOPILOT: Scrape the website if a URL was passed
   if (websiteUrl && websiteUrl.length > 5) {
     try {
-      // Jina Reader converts any URL into clean text for Gemini
       const jinaResponse = await fetch(`https://r.jina.ai/${websiteUrl}`);
       if (jinaResponse.ok) {
         const fullText = await jinaResponse.text();
-        // Take the first 3000 characters (usually the Homepage/Hero section)
         scrapedContent = fullText.substring(0, 3000); 
-        contextSnippet = `\n\nCRITICAL INSTRUCTION: The user provided the client's actual website URL. Here is the scraped text from their homepage: """${scrapedContent}""". IGNORE the manual 'weakness' and 'observation' inputs. Find a REAL, specific conversion bottleneck from this scraped text (e.g., confusing copy, missing CTA, bad structure) and base the entire audit on it.`;
+        contextSnippet = `\n\nThe user provided the client's actual website URL. Scraped text: """${scrapedContent}""". Find a REAL, specific conversion issue from this text (e.g., unclear copy, missing CTA) and base the audit on it. Ignore the manual inputs if they conflict.`;
       }
     } catch (e) {
       console.log("Scraping failed, falling back to manual inputs.");
     }
   }
 
-  // If no URL was provided or scraping failed, use the manual inputs from the dropdowns
   if (!contextSnippet) {
-    contextSnippet = `\n\nThe client's primary weakness is: "${weakness}". A specific observation is: "${observation}". Base the audit heavily on these points.`;
+    contextSnippet = `\n\nThe client's primary weakness is: "${weakness}". Observation: "${observation}". Base the audit heavily on these points.`;
   }
 
-  // 🧠 THE TOP 1% FREELANCER PROMPT
+  // 🧠 THE CALM, ELITE CONSULTANT PROMPT
   const prompt = {
     contents: [{
       parts: [{
-        text: `You are a ruthless, top 1% growth consultant and conversion rate expert. You are auditing ${target} on ${platform}. 
-        You are pitching a ${service} service for ${price}.
+        text: `You are a highly professional, grounded digital consultant. You are writing an audit for ${target} on ${platform}. You offer a ${service} service for ${price}.
 
         ${contextSnippet}
 
-        STRICT RULES:
-        1. NO FLUFF. Do not use words like "delve", "tapestry", "paramount", "landscape", "synergy", or "supercharge".
-        2. Keep sentences under 15 words. Be direct, clinical, and highly professional.
-        3. Identify a hyper-specific problem (Revenue Leakage, Conversion Friction). 
-        4. In Section 3, invent a realistic, conservative mathematical estimate of how much money they are losing per month due to this flaw. Make them feel the pain.
+        STRICT TONE & STYLE RULES:
+        1. Tone: Sound like a real, calm human. Be direct, respectful, and helpful.
+        2. Banned Words: NO dramatic or exaggerated words ("hemorrhage", "massive loss", "critical failure", "supercharge", "delve").
+        3. Sentences: Keep sentences short (under 15 words). Easy to skim.
+        4. Claims: Use realistic ranges (e.g., "5-10 missed inquiries monthly"). Never guarantee results.
 
-        Return ONLY a JSON object with these exact keys:
-        - "email_script": A cold email (under 100 words). Hook them with the specific observation. Offer a quick win. Soft CTA. No "I hope this finds you well".
-        - "sec1_assessment": 2 sentences praising a specific good thing about their current setup to lower their guard.
-        - "sec2_bottleneck": 2 sentences ruthlessly exposing the exact flaw preventing conversions.
-        - "sec3_impact": 2 sentences calculating the estimated lost revenue/clients based on average traffic.
-        - "sec4_fixes": An array of exactly 3 short, actionable, hyper-specific bullet points to fix it.
-        - "sec5_pitch": 2 sentences positioning your ${service} for ${price} as the logical solution with a 7-day timeline.`
+        Return ONLY a JSON object with these exact keys. Follow the structure precisely:
+        - "email_script": A cold email (under 75 words). Start with curiosity. Point out the specific issue calmly. DO NOT pitch the service here. Invite them to view the attached audit. Soft CTA (e.g., "Worth a quick look?").
+        - "sec1_assessment": (The Human Hook) 2 short sentences. Start naturally (e.g., "Quick note — your website looks clean."). Praise one specific good thing.
+        - "sec2_bottleneck": (The Problem) 2 short sentences clearly explaining the ONE specific issue avoiding vague terms.
+        - "sec3_impact": (The Impact) 2 short sentences explaining how this affects conversions using realistic language and soft ranges (e.g., "This likely costs you 3-5 bookings a week").
+        - "sec4_fixes": (Quick Fix) An array of exactly 3 clear, actionable improvements the client can understand and implement for free.
+        - "sec5_pitch": (The Offer) 2 short sentences presenting your ${service} for ${price}. Mention a clear outcome and short timeline (e.g., 5-7 days). Use a soft, non-pushy CTA.`
       }]
     }]
   };
 
   try {
-    // Switching to the v1 stable endpoint for maximum reliability
     const url = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`;
     
     const response = await fetch(url, {
@@ -72,15 +64,9 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     
-    if (data.error) {
-      throw new Error(data.error.message);
-    }
+    if (data.error) throw new Error(data.error.message);
+    if (!data.candidates || !data.candidates[0]) throw new Error("AI returned an empty response.");
 
-    if (!data.candidates || !data.candidates[0]) {
-      throw new Error("AI returned an empty response. Check your API quota.");
-    }
-
-    // Extract and clean the JSON text
     let rawText = data.candidates[0].content.parts[0].text;
     const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
     
