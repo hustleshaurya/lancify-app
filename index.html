@@ -26,62 +26,88 @@
 body { background: var(--bg); color: #fff; font-family: "Inter", sans-serif; height: 100vh; overflow: hidden; }
 
 /* 🧊 ILLUMINATED MESH GRADIENTS */
-.mesh-flare { position: fixed; top: -10%; left: 50%; transform: translateX(-50%); width: 800px; height: 400px; background: radial-gradient(ellipse at top, rgba(139,92,246,0.15) 0%, transparent 70%); filter: blur(80px); pointer-events: none; z-index: 0; }
-.mesh-bg-1 { position: fixed; top: 10%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%); filter: blur(120px); border-radius: 50%; pointer-events: none; z-index: 0; }
-.mesh-bg-2 { position: fixed; bottom: -10%; left: -5%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%); filter: blur(100px); border-radius: 50%; pointer-events: none; z-index: 0; }
+.mesh-flare { position: fixed; top: -15%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse at top, rgba(139,92,246,0.12) 0%, transparent 70%); filter: blur(90px); pointer-events: none; z-index: 0; }
+.mesh-bg-1 { position: fixed; top: 15%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%); filter: blur(120px); border-radius: 50%; pointer-events: none; z-index: 0; }
+.mesh-bg-2 { position: fixed; bottom: -10%; left: -5%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(168,85,247,0.07) 0%, transparent 70%); filter: blur(100px); border-radius: 50%; pointer-events: none; z-index: 0; }
 
 /* 💎 GLASSMORPHISM & DEPTH CARDS */
 .glass-panel { 
-    background: rgba(255, 255, 255, 0.02); 
+    background: rgba(255, 255, 255, 0.015); 
     border: 1px solid var(--border); 
     backdrop-filter: blur(24px); 
     -webkit-backdrop-filter: blur(24px);
     border-radius: 24px; 
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
 }
 .glass-panel:hover { 
     border-color: rgba(139, 92, 246, 0.2); 
-    background: rgba(255, 255, 255, 0.03); 
+    background: rgba(255, 255, 255, 0.025); 
     transform: translateY(-2px); 
-    box-shadow: 0 12px 48px rgba(139, 92, 246, 0.1); 
+    box-shadow: 0 12px 48px rgba(139, 92, 246, 0.12); 
 }
-.glass-header { background: rgba(11, 11, 18, 0.6); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border-bottom: 1px solid var(--border); }
+.glass-header { 
+    background: rgba(11, 11, 18, 0.3); 
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px); 
+    border-bottom: 1px solid rgba(255,255,255,0.03); 
+    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+}
 .glass-sidebar { background: rgba(11, 11, 18, 0.4); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border-right: 1px solid var(--border); }
 
 /* 🧾 INPUTS & DROPDOWNS (Fixed UI) */
-input[type="text"], input[type="email"], input[type="password"], textarea, select { 
+input[type="text"], input[type="email"], input[type="password"], select { 
     width: 100%; 
-    min-height: 48px;
-    background: rgba(255,255,255,0.04); 
-    border: 1px solid rgba(255,255,255,0.08); 
+    height: 48px; /* Fixed Height */
+    background: rgba(255,255,255,0.03); 
+    border: 1px solid rgba(255,255,255,0.06); 
     border-radius: 14px; 
-    padding: 12px 16px; 
+    padding: 0 16px; 
     color: white; 
     font-size: 0.95rem; 
     transition: all 0.25s ease; 
     outline: none; 
+    box-sizing: border-box;
+}
+textarea {
+    width: 100%; 
+    background: rgba(255,255,255,0.03); 
+    border: 1px solid rgba(255,255,255,0.06); 
+    border-radius: 14px; 
+    padding: 16px; 
+    color: white; 
+    font-size: 0.95rem; 
+    transition: all 0.25s ease; 
+    outline: none; 
+    box-sizing: border-box;
+    resize: vertical;
+    line-height: 1.6;
 }
 input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.3); }
+input:hover, textarea:hover, select:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
 input:focus, textarea:focus, select:focus { 
     border-color: var(--purple); 
-    background: rgba(255,255,255,0.06); 
+    background: rgba(255,255,255,0.05); 
     box-shadow: 0 0 0 3px rgba(139,92,246,0.15); 
 }
 
 /* Custom Dropdown Fix */
 select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.5)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.4)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 16px center;
     background-size: 16px;
     cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 40px; /* Make room for arrow */
 }
-select option { background-color: #13131c; color: #fff; padding: 12px; }
+select option { background-color: #0f0f18; color: #fff; padding: 16px; font-size: 0.95rem; }
 
 /* Custom Dropzone File Input */
-.custom-file-upload { position: relative; border: 2px dashed rgba(255,255,255,0.1); border-radius: 16px; background: rgba(255,255,255,0.02); transition: all 0.3s ease; text-align: center; padding: 24px; cursor: pointer; }
+.custom-file-upload { position: relative; border: 2px dashed rgba(255,255,255,0.1); border-radius: 16px; background: rgba(255,255,255,0.015); transition: all 0.3s ease; text-align: center; padding: 28px 24px; cursor: pointer; }
 .custom-file-upload:hover { border-color: var(--purple); background: rgba(139,92,246,0.05); }
 .custom-file-upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
 
@@ -89,27 +115,32 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
 .btn-primary { 
     background: linear-gradient(135deg, #8b5cf6, #6366f1); 
     color: #fff; 
-    border: 1px solid rgba(255,255,255,0.1); 
-    height: 52px; 
-    padding: 0 28px; 
+    border: 1px solid rgba(255,255,255,0.08); 
+    height: 52px; /* Increased Height */
+    padding: 0 32px; 
     border-radius: 14px; 
     font-weight: 600; 
-    font-size: 1rem; 
+    font-size: 1.05rem; 
     cursor: pointer; 
-    transition: all 0.3s ease; 
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
     display: inline-flex; 
     align-items: center; 
     justify-content: center; 
-    gap: 8px; 
-    box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 20px rgba(139, 92, 246, 0.25); 
+    gap: 10px; 
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), 0 4px 15px rgba(139, 92, 246, 0.2); 
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 12px 30px rgba(139, 92, 246, 0.4); border-color: rgba(255,255,255,0.25); }
+.btn-primary:hover { 
+    transform: translateY(-2px); 
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.25), 0 10px 30px rgba(139, 92, 246, 0.4); 
+    background: linear-gradient(135deg, #9b72f8, #7679f3); /* Brighter gradient */
+    border-color: rgba(255,255,255,0.2); 
+}
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
 /* 🧭 NAVIGATION */
-.nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: #9ca3af; transition: all 0.25s ease; border: 1px solid transparent; margin-bottom: 4px; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: #9ca3af; transition: all 0.25s ease; border: 1px solid transparent; margin-bottom: 2px; }
 .nav-item:hover { background: rgba(255, 255, 255, 0.04); color: white; }
-.nav-item.active { background: rgba(255, 255, 255, 0.06); color: white; border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
+.nav-item.active { background: rgba(255, 255, 255, 0.05); color: white; border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
 .nav-item.active i { color: var(--purple); }
 .sb-group { font-size: 0.65rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.12em; margin: 32px 0 12px 16px; }
 
@@ -117,7 +148,10 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
 #app-loading { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 16px; }
 .app-spin { width: 36px; height: 36px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--purple); border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-#login-pg { display: none; min-height: 100vh; align-items: center; justify-content: center; padding: 20px; z-index: 50; position: relative; }
+
+/* Login Page Scroll Fix */
+#login-pg { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 9000; overflow-y: auto; padding: 40px 20px; }
+
 #app-layout { display: none; height: 100vh; width: 100vw; overflow: hidden; position: relative; z-index: 10; }
 #app-layout.on { display: flex; }
 .pg { display: none; animation: pgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -137,9 +171,9 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
 .modal-close:hover { color: #fff; }
 
 /* Typography & Layout Adjustments */
-.field-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 600; color: #9ca3af; margin-bottom: 8px; }
+.field-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 600; color: #9ca3af; margin-bottom: 10px; }
 .field-label span { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: 400; }
-.feat-loading { display: none; align-items: center; justify-content: center; gap: 12px; margin-top: 24px; padding: 20px; background: rgba(139,92,246,0.05); border-radius: 16px; border: 1px solid rgba(139,92,246,0.2); }
+.feat-loading { display: none; align-items: center; justify-content: center; gap: 12px; margin-top: 24px; padding: 20px; background: rgba(139,92,246,0.04); border-radius: 16px; border: 1px solid rgba(139,92,246,0.15); }
 .email-window { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
 .email-titlebar { background: rgba(0,0,0,0.3); padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 
@@ -150,14 +184,14 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
 .av-ai { width: 36px; height: 36px; background: linear-gradient(135deg, var(--purple), var(--pd)); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
 .av-user { width: 36px; height: 36px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .prog-bar { height: 100%; background: linear-gradient(90deg, var(--purple), #ec4899); border-radius: 4px; transition: width .6s cubic-bezier(0.25, 0.8, 0.25, 1); }
-.opt-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: white; padding: 12px 24px; border-radius: 14px; cursor: pointer; font-size: 0.9rem; transition: all .25s ease; }
-.opt-btn:hover, .opt-btn.sel { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.15); transform: translateY(-1px); }
+.opt-btn { background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: white; padding: 12px 24px; border-radius: 14px; cursor: pointer; font-size: 0.9rem; transition: all .25s ease; }
+.opt-btn:hover, .opt-btn.sel { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.1); transform: translateY(-1px); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; border: 2px solid var(--bg); }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
 </style>
 </head>
 <body>
@@ -172,11 +206,10 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
 </div>
 
 <div id="login-pg">
-  <div class="glass-panel" style="width:100%; max-width:440px; padding:56px 48px; text-align:center;">
+  <div class="glass-panel" style="width:100%; max-width:440px; padding:56px 48px; text-align:center; margin: auto; margin-top: 5vh; margin-bottom: 5vh;">
     <div style="display:flex; justify-content:center; margin-bottom:32px;">
-        <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify AI" style="height: 44px; width: auto; object-fit: contain;">
+        <img src="Offical webpage lancify logo.png" alt="Lancify AI" style="height: 48px; width: auto; object-fit: contain;">
     </div>
-    <h1 style="font-family:'Playfair Display',serif; font-weight:700; font-size:2rem; margin-bottom:12px;">Lancify AI</h1>
     <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:40px; line-height: 1.5;">Sign in to access your premium freelance workspace.</p>
    
     <button class="w-full flex items-center justify-center gap-3 bg-white text-black py-4 px-4 rounded-xl font-bold text-sm hover:bg-gray-100 transition-all mb-8 shadow-md" onclick="signInGoogle()">
@@ -193,20 +226,22 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
     <div id="auth-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-4 rounded-xl mb-6 text-left"></div>
     <div id="auth-msg" class="hidden bg-violet-500/10 border border-violet-500/20 text-violet-400 text-sm p-4 rounded-xl mb-6 text-left"></div>
     
-    <div class="text-left mb-6">
-      <label class="block text-sm font-semibold text-gray-400 mb-2">Email Address</label>
-      <input id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
-    </div>
-    <div class="text-left mb-8">
-      <label class="block text-sm font-semibold text-gray-400 mb-2">Password</label>
-      <input id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
-    </div>
-    <div class="text-left mb-8" id="name-field" style="display:none;">
-      <label class="block text-sm font-semibold text-gray-400 mb-2">Full Name</label>
-      <input id="auth-name" type="text" placeholder="John Doe">
+    <div class="text-left mb-6 space-y-6">
+      <div>
+        <label class="field-label">Email Address</label>
+        <input id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div>
+        <label class="field-label">Password</label>
+        <input id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div id="name-field" style="display:none;">
+        <label class="field-label">Full Name</label>
+        <input id="auth-name" type="text" placeholder="John Doe">
+      </div>
     </div>
     
-    <button class="btn-primary w-full" id="auth-btn" onclick="authSubmit()">Sign In</button>
+    <button class="btn-primary w-full mt-2" id="auth-btn" onclick="authSubmit()">Sign In</button>
     <div class="mt-8 text-sm text-gray-500 font-medium" id="auth-toggle-txt">
       Don't have an account? <span onclick="toggleMode()" class="text-violet-400 cursor-pointer hover:text-violet-300 transition-colors">Sign up free</span>
     </div>
@@ -216,14 +251,11 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
 <div id="app-layout" class="flex h-screen w-full">
   
   <aside class="w-[260px] glass-sidebar flex flex-col z-20 shrink-0 h-screen">
-    <div class="p-8 pb-4 flex items-center space-x-3 cursor-pointer" onclick="navigate('home-pg')">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-900/30">
-            <i data-lucide="layout-dashboard" class="text-white w-4 h-4"></i>
-        </div>
-        <h1 class="text-lg font-bold tracking-tight text-white">Menu</h1>
+    <div class="p-8 pb-2">
+        <span class="text-[10px] font-bold tracking-widest uppercase text-gray-500">Workspace</span>
     </div>
     
-    <div class="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar">
+    <div class="flex-1 overflow-y-auto px-4 py-2 custom-scrollbar">
         <div class="sb-group">Growth Tools</div>
         <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')"><i data-lucide="home" class="w-[18px] h-[18px]"></i> Dashboard</a>
         <a class="nav-item" data-page="chat-pg" onclick="startChat()"><i data-lucide="message-square" class="w-[18px] h-[18px]"></i> Launch Coach</a>
@@ -236,26 +268,26 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
         <a class="nav-item" onclick="checkPro(() => toast('Income Roadmap coming soon!','success'))"><i data-lucide="map" class="w-[18px] h-[18px]"></i> Roadmap <span class="ml-auto text-[9px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-1.5 py-0.5 rounded uppercase font-bold">PRO</span></a>
     </div>
 
-    <div class="p-5 border-t border-white/5">
-        <a class="nav-item" id="sb-my-kits" style="display:none;" onclick="navigate('home-pg')"><i data-lucide="folder" class="w-[18px] h-[18px]"></i> My Kits</a>
-        <a class="nav-item text-violet-400 hover:text-violet-300" onclick="showUpgradeModal()"><i data-lucide="zap" class="w-[18px] h-[18px]"></i> Upgrade to Pro</a>
-        <a class="nav-item hover:text-red-400" onclick="signOut()"><i data-lucide="log-out" class="w-[18px] h-[18px]"></i> Sign Out</a>
+    <div class="p-3 border-t border-white/5 space-y-1">
+        <a class="nav-item !py-2.5 text-sm" id="sb-my-kits" style="display:none;" onclick="navigate('home-pg')"><i data-lucide="folder" class="w-4 h-4"></i> My Kits</a>
+        <a class="nav-item !py-2.5 text-sm text-violet-400 hover:text-violet-300" onclick="showUpgradeModal()"><i data-lucide="zap" class="w-4 h-4"></i> Upgrade to Pro</a>
+        <a class="nav-item !py-2.5 text-sm hover:text-red-400" onclick="signOut()"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
     </div>
   </aside>
 
   <main class="flex-1 relative z-10 h-screen overflow-y-auto" id="main-scroll">
-    <header class="h-[80px] glass-header flex items-center justify-between px-10 sticky top-0 z-50 shrink-0">
-      <div class="flex items-center gap-4 cursor-pointer" onclick="navigate('home-pg')">
-        <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify AI Logo" style="height: 32px; width: auto;">
-        <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide border-l border-white/10 pl-4">Lancify AI</span>
+    <header class="h-[76px] glass-header flex items-center justify-between px-10 sticky top-0 z-50 shrink-0">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home-pg')">
+        <img src="Offical webpage lancify logo.png" alt="Lancify AI Logo" style="height: 30px; width: auto;">
+        <span class="text-[1.1rem] font-['Playfair_Display'] font-bold text-white tracking-wide">Lancify AI</span>
       </div>
-      <div class="flex items-center gap-4">
-        <span class="text-sm font-semibold text-gray-300 tracking-wide" id="header-user-name">User</span>
-        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center font-bold text-sm shadow-md border border-white/10" id="header-user-initial">U</div>
+      <div class="flex items-center gap-3">
+        <span class="text-[0.85rem] font-semibold text-gray-300 tracking-wide" id="header-user-name">User</span>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center font-bold text-[0.8rem] shadow-md border border-white/10" id="header-user-initial">U</div>
       </div>
     </header>
 
-    <div class="p-8 md:p-12 lg:p-14 max-w-[1400px] mx-auto w-full pb-32">
+    <div class="p-8 md:p-12 lg:p-16 max-w-[1400px] mx-auto w-full pb-32">
 
       <div id="home-pg" class="pg on">
         <div class="flex justify-between items-end mb-12 flex-wrap gap-6">
@@ -269,10 +301,10 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
-          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-kits">—</div><div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Total Kits</div></div>
-          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-proposals">—</div><div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Proposals</div></div>
-          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-emails">—</div><div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Emails Drafted</div></div>
-          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-gigs">—</div><div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Gigs Found</div></div>
+          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-kits">—</div><div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold">Total Kits</div></div>
+          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-proposals">—</div><div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold">Proposals</div></div>
+          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-emails">—</div><div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold">Emails Drafted</div></div>
+          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-gigs">—</div><div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold">Gigs Found</div></div>
         </div>
 
         <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
@@ -336,8 +368,8 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
         </div>
         
         <div id="input-zone" class="flex gap-4 mt-4">
-          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1" class="flex-1 bg-white/5"></textarea>
-          <button id="send-btn" onclick="sendMsg()" class="btn-primary !w-[52px] !p-0 !rounded-2xl shrink-0"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
+          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1" class="flex-1 bg-white/5 min-h-[52px]"></textarea>
+          <button id="send-btn" onclick="sendMsg()" class="btn-primary !w-[52px] !h-[52px] !p-0 !rounded-2xl shrink-0"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
         </div>
       </div>
 
@@ -359,9 +391,23 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
           <div class="glass-panel p-8 md:p-10 h-full flex flex-col">
             <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Job Details</h3>
             <div class="space-y-6 flex-1">
-                <div><div class="field-label">Platform</div><select id="prop-platform"><option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option><option value="LinkedIn">LinkedIn</option></select></div>
-                <div><div class="field-label">Job Description <span>paste full listing</span></div><textarea id="prop-job" rows="6" placeholder="E.g. Looking for a designer to create 5 posts..."></textarea></div>
-                <div><div class="field-label">Your Experience <span>optional</span></div><input type="text" id="prop-exp" placeholder="E.g. I designed posts for a local cafe last month"></div>
+                <div>
+                    <div class="field-label">Platform</div>
+                    <select id="prop-platform">
+                        <option value="Upwork">Upwork</option>
+                        <option value="Fiverr">Fiverr</option>
+                        <option value="LinkedIn">LinkedIn</option>
+                        <option value="Direct Email">Direct Email</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="field-label">Job Description <span>paste full listing</span></div>
+                    <textarea id="prop-job" rows="6" placeholder="E.g. Looking for a designer to create 5 posts..."></textarea>
+                </div>
+                <div>
+                    <div class="field-label">Your Experience <span>optional</span></div>
+                    <input type="text" id="prop-exp" placeholder="E.g. I designed posts for a local cafe last month">
+                </div>
             </div>
             <button id="prop-btn" class="btn-primary w-full mt-8" onclick="generateProposal()"><i data-lucide="zap" class="w-5 h-5"></i> Write My Proposal</button>
             <div id="prop-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Writing your winning proposal...</span></div>
@@ -381,10 +427,10 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
                 <ul id="prop-res-tips" class="text-sm text-gray-400 leading-relaxed list-disc pl-5 space-y-2"></ul>
               </div>
             </div>
-            <div id="prop-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500">
+            <div id="prop-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500 p-8">
               <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5"><i data-lucide="file-text" class="w-10 h-10 text-gray-400"></i></div>
               <h4 class="text-lg font-bold text-white mb-2">Ready to pitch</h4>
-              <p class="text-sm font-medium text-gray-400 max-w-[250px] text-center">Fill out the details on the left and your AI proposal will appear here.</p>
+              <p class="text-sm font-medium text-gray-400 max-w-[280px] text-center">Fill out the details on the left and your AI proposal will appear here.</p>
             </div>
           </div>
         </div>
@@ -429,10 +475,10 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
                 <ul id="email-res-tips" class="text-sm text-gray-400 leading-relaxed list-disc pl-5 space-y-2"></ul>
               </div>
             </div>
-            <div id="email-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500">
+            <div id="email-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500 p-8">
               <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5"><i data-lucide="mail" class="w-10 h-10 text-gray-400"></i></div>
               <h4 class="text-lg font-bold text-white mb-2">Ready to send</h4>
-              <p class="text-sm font-medium text-gray-400 max-w-[250px] text-center">Set your objective on the left and your email will appear here.</p>
+              <p class="text-sm font-medium text-gray-400 max-w-[280px] text-center">Set your objective on the left and your email will appear here.</p>
             </div>
           </div>
         </div>
@@ -449,7 +495,14 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
           <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Your Details</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div class="md:col-span-2"><div class="field-label">Your Skills</div><input type="text" id="gig-skills" placeholder="E.g. Canva, basic video editing..."></div>
-            <div><div class="field-label">Target Platform</div><select id="gig-platform"><option value="Both">Upwork & Fiverr</option><option value="Fiverr">Fiverr Only</option><option value="Upwork">Upwork Only</option></select></div>
+            <div>
+                <div class="field-label">Target Platform</div>
+                <select id="gig-platform">
+                    <option value="Both">Upwork & Fiverr</option>
+                    <option value="Fiverr">Fiverr Only</option>
+                    <option value="Upwork">Upwork Only</option>
+                </select>
+            </div>
           </div>
           <button id="gig-btn" class="btn-primary w-full md:w-auto" onclick="findGigs()"><i data-lucide="radar" class="w-5 h-5"></i> Scan the Market</button>
           <div id="gig-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Analysing market demand...</span></div>
@@ -477,7 +530,18 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
             <div class="space-y-6 flex-1">
                 <div class="grid grid-cols-2 gap-6">
                   <div><div class="field-label">Business Name</div><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
-                  <div><div class="field-label">Platform</div><select id="audit-platform"><option value="Instagram">Instagram</option><option value="Website">Website</option></select></div>
+                  <div>
+                      <div class="field-label">Platform</div>
+                      <select id="audit-platform">
+                          <option value="Instagram">Instagram</option>
+                          <option value="Facebook">Facebook</option>
+                          <option value="LinkedIn">LinkedIn</option>
+                          <option value="Twitter/X">Twitter/X</option>
+                          <option value="Local Business">Local Business</option>
+                          <option value="Website">Website</option>
+                          <option value="YouTube">YouTube</option>
+                      </select>
+                  </div>
                 </div>
 
                 <div>
@@ -490,10 +554,32 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
                     </div>
                 </div>
 
-                <div><div class="field-label">Primary Weakness</div><select id="audit-weakness"><option value="No clear Call-to-Action in bio/posts">No clear Call-to-Action</option><option value="Inconsistent posting schedule">Inconsistent posting schedule</option><option value="Low quality visual branding">Low quality visual branding</option><option value="Slow or broken website booking flow">Slow/broken website flow</option></select></div>
+                <div>
+                    <div class="field-label">Primary Weakness</div>
+                    <select id="audit-weakness">
+                        <option value="No clear Call-to-Action">No clear Call-to-Action</option>
+                        <option value="Inconsistent posting">Inconsistent posting</option>
+                        <option value="Low engagement">Low engagement</option>
+                        <option value="Poor branding">Poor branding</option>
+                        <option value="Weak website">Weak website</option>
+                        <option value="No funnel system">No funnel system</option>
+                        <option value="Bad copywriting">Bad copywriting</option>
+                    </select>
+                </div>
 
                 <div class="grid grid-cols-2 gap-6">
-                  <div><div class="field-label">Your Service</div><select id="audit-service"><option value="Social Media Management">Social Media Management</option><option value="Web Design">Web Design</option></select></div>
+                  <div>
+                      <div class="field-label">Your Service</div>
+                      <select id="audit-service">
+                          <option value="Web Design">Web Design</option>
+                          <option value="Social Media Management">Social Media Management</option>
+                          <option value="Copywriting">Copywriting</option>
+                          <option value="Funnel Building">Funnel Building</option>
+                          <option value="Ads Management">Ads Management</option>
+                          <option value="SEO Optimization">SEO Optimization</option>
+                          <option value="Branding">Branding</option>
+                      </select>
+                  </div>
                   <div><div class="field-label">Pitch Price</div><input type="text" id="audit-price" placeholder="₹2,500"></div>
                 </div>
 
@@ -521,11 +607,10 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
                 <button class="btn-primary w-full md:w-auto" onclick="downloadAuditPDF()"><i data-lucide="download" class="w-5 h-5"></i> Download PDF Report</button>
               </div>
             </div>
-            
-            <div id="audit-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500">
+            <div id="audit-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500 p-8">
               <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5"><i data-lucide="crosshair" class="w-10 h-10 text-gray-400"></i></div>
               <h4 class="text-lg font-bold text-white mb-2">Awaiting target</h4>
-              <p class="text-sm font-medium text-gray-400 max-w-[250px] text-center">Fill out the intelligence form and your custom audit will appear here.</p>
+              <p class="text-sm font-medium text-gray-400 max-w-[280px] text-center">Fill out the intelligence form on the left and your custom audit will appear here.</p>
             </div>
           </div>
         </div>
@@ -575,7 +660,7 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
     <h3 id="doc-modal-title" class="font-['Playfair_Display'] text-3xl font-bold text-white mb-6 text-left">Document</h3>
     <div id="doc-modal-content" class="text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap max-h-[500px] overflow-y-auto text-left mb-8 custom-scrollbar pr-4"></div>
     <div class="flex justify-end border-t border-white/5 pt-6">
-      <button class="btn-primary !py-3" onclick="copyEl('doc-modal-content')"><i data-lucide="copy" class="w-4 h-4"></i> Copy Text</button>
+      <button class="btn-primary" onclick="copyEl('doc-modal-content')"><i data-lucide="copy" class="w-4 h-4"></i> Copy Text</button>
     </div>
   </div>
 </div>
@@ -587,7 +672,7 @@ select option { background-color: #13131c; color: #fff; padding: 12px; }
     <h3 class="font-['Playfair_Display'] text-4xl font-bold text-white mb-4">Unlock Freelance Pro</h3>
     <p class="text-gray-400 text-base mb-10 leading-relaxed px-4">Get access to the Proposal Writer, Email Writer, Gig Finder, and unlimited AI credits.</p>
     <div class="font-['Playfair_Display'] text-[3.5rem] font-bold text-violet-400 mb-10 tracking-tight">₹399<span class="text-xl text-gray-500 font-sans font-normal tracking-normal">/month</span></div>
-    <button class="btn-primary w-full !py-4 !text-lg" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i></button>
+    <button class="btn-primary w-full" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i></button>
   </div>
 </div>
 
@@ -735,7 +820,7 @@ function renderProposals(props) {
       <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4">${date} • ${p.platform || 'General'}</div>
       <div class="font-['Playfair_Display'] text-xl font-bold text-white mb-8 leading-tight">${shortDesc}</div>
       <div class="mt-auto pt-5 border-t border-white/5">
-        <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewProposal('${p.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Proposal</button>
+        <button class="text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewProposal('${p.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Proposal</button>
       </div></div>`;
   });
   grid.innerHTML = html;
@@ -757,7 +842,7 @@ function renderEmails(emails) {
       <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4">${date}</div>
       <div class="font-['Playfair_Display'] text-xl font-bold text-white mb-8 leading-tight">${e.email_type || 'Client Email'}</div>
       <div class="mt-auto pt-5 border-t border-white/5">
-        <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewEmail('${e.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Email</button>
+        <button class="text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewEmail('${e.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Email</button>
       </div></div>`;
   });
   grid.innerHTML = html;
