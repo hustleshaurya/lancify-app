@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     contextSnippet = `\n\nThe client's primary weakness is: "${weakness}". Observation: "${observation}". Base the audit heavily on these points.`;
   }
 
-  // 🧠 THE GOD-LEVEL CONSULTANT PROMPT
+  // 🧠 THE GOD-LEVEL CONSULTANT PROMPT (V3)
   const prompt = {
     contents: [{
       parts: [{
@@ -37,18 +37,28 @@ export default async function handler(req, res) {
         ${contextSnippet}
 
         STRICT TONE & STYLE RULES:
-        1. Tone: Sound like a real, calm human. Be direct, respectful, and helpful.
-        2. Banned Words: NO dramatic or exaggerated words ("hemorrhage", "massive loss", "critical failure", "supercharge", "delve").
+        1. Tone: Sound like a real, calm human. Be direct, respectful, and helpful. Speak in the first person ("I").
+        2. Banned Words: NO dramatic words ("hemorrhage", "massive loss", "critical failure"). Do NOT use "However" or "My service improves".
         3. Sentences: Keep sentences short (under 15 words). Easy to skim.
-        4. Claims & Psychology: Use realistic ranges. Add a tiny, natural emotional trigger based on missed opportunity from high-intent users. Never guarantee results.
+        4. Claims & Psychology: Use realistic ranges. Add a tiny, natural emotional trigger based on missed opportunity from high-intent users.
 
         Return ONLY a JSON object with these exact keys. Follow the structure precisely:
-        - "email_script": A cold email (under 80 words). FOLLOW THIS EXACT TEMPLATE STRUCTURE: 1. "I was checking out your [Platform] today — especially the [specific flow/page related to the issue]. The [design/vibe] is [compliment]." 2. Point out the specific issue. 3. "This usually causes [target audience] to drop off before [desired action/booking/buying]." 4. "I put together a quick 3-point audit showing exactly where this happens and how to fix it." 5. "Worth a quick look?". DO NOT pitch the service in the email.
+        - "email_script": A cold email. FOLLOW THIS EXACT TEMPLATE: 
+          "Subject: Quick thing I noticed on your [page/flow]
+          
+          Hi [Name],
+          I was checking out your [Platform] today — especially the [specific flow/page related to the issue]. The [design/vibe] is [compliment].
+          One small thing I noticed: [Point out the specific issue clearly], so users [what annoying thing happens].
+          This usually slows down people who are ready to [desired action/booking] quickly.
+          I put together a quick 3-point audit showing exactly where this happens and how to fix it.
+          Worth a quick look?"
+          (DO NOT DEVIATE FROM THIS EMAIL STRUCTURE).
+          
         - "sec1_assessment": (The Human Hook) 2 short sentences. Start naturally (e.g., "Quick note — your website looks clean."). Praise one specific good thing.
         - "sec2_bottleneck": (The Problem) 2 short sentences clearly explaining the ONE specific issue avoiding vague terms.
-        - "sec3_impact": (The Impact) 2 short sentences explaining how this affects conversions using realistic language, soft ranges, AND a tiny emotional trigger. (e.g., "This likely costs you 3-5 bookings a week — especially from mobile users ready to book quickly.").
+        - "sec3_impact": (The Impact) 2 short sentences explaining how this affects conversions. MUST include an emotional trigger about friction for high-intent users (e.g., "This adds friction for users ready to book immediately, likely costing you 5-10 missed inquiries monthly.").
         - "sec4_fixes": (Quick Fix) An array of exactly 3 clear, actionable improvements the client can understand and implement for free.
-        - "sec5_pitch": (The Offer) 2 short sentences presenting your ${service} for ${price}. Mention a clear outcome and short timeline (e.g., 5-7 days). Use a strong but natural closing CTA (e.g., "Happy to show a quick before/after so you can see the impact.").`
+        - "sec5_pitch": (The Offer) 2 short sentences presenting your ${service} for ${price}. DO NOT use generic agency speak. Use a specific, result-focused format like: "I can [implement this specific fix] and improve [specific outcome] in 5-7 days for ${price}." End with exactly this: "Happy to show a quick before/after so you can see the impact."`
       }]
     }]
   };
