@@ -17,49 +17,99 @@
 <style>
 /* 🌌 PREMIUM BACKGROUND & LIGHTING (Lyra Style) */
 :root {
-  --bg: #0b0b12; /* Softer, richer dark tone, NOT pure black */
+  --bg: #0b0b12; 
   --purple: #8b5cf6; 
   --pd: #6d28d9;
   --text-muted: #9ca3af;
-  --border: rgba(255,255,255,0.03); /* Ultra-soft borders */
+  --border: rgba(255,255,255,0.04); 
 }
 body { background: var(--bg); color: #fff; font-family: "Inter", sans-serif; height: 100vh; overflow: hidden; }
 
 /* 🧊 ILLUMINATED MESH GRADIENTS */
-.mesh-flare { position: fixed; top: -10%; left: 50%; transform: translateX(-50%); width: 800px; height: 400px; background: radial-gradient(ellipse at top, rgba(139,92,246,0.12) 0%, transparent 70%); filter: blur(80px); pointer-events: none; z-index: 0; }
+.mesh-flare { position: fixed; top: -10%; left: 50%; transform: translateX(-50%); width: 800px; height: 400px; background: radial-gradient(ellipse at top, rgba(139,92,246,0.15) 0%, transparent 70%); filter: blur(80px); pointer-events: none; z-index: 0; }
 .mesh-bg-1 { position: fixed; top: 10%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%); filter: blur(120px); border-radius: 50%; pointer-events: none; z-index: 0; }
 .mesh-bg-2 { position: fixed; bottom: -10%; left: -5%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%); filter: blur(100px); border-radius: 50%; pointer-events: none; z-index: 0; }
 
 /* 💎 GLASSMORPHISM & DEPTH CARDS */
 .glass-panel { 
-    background: rgba(255, 255, 255, 0.015); 
+    background: rgba(255, 255, 255, 0.02); 
     border: 1px solid var(--border); 
     backdrop-filter: blur(24px); 
     -webkit-backdrop-filter: blur(24px);
     border-radius: 24px; 
-    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
     box-shadow: 0 4px 24px rgba(0,0,0,0.1);
 }
 .glass-panel:hover { 
-    border-color: rgba(139, 92, 246, 0.15); 
-    background: rgba(255, 255, 255, 0.025); 
+    border-color: rgba(139, 92, 246, 0.2); 
+    background: rgba(255, 255, 255, 0.03); 
     transform: translateY(-2px); 
-    box-shadow: 0 12px 48px rgba(139, 92, 246, 0.08); 
+    box-shadow: 0 12px 48px rgba(139, 92, 246, 0.1); 
 }
-.glass-header { background: rgba(11, 11, 18, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+.glass-header { background: rgba(11, 11, 18, 0.6); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border-bottom: 1px solid var(--border); }
 .glass-sidebar { background: rgba(11, 11, 18, 0.4); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border-right: 1px solid var(--border); }
 
-/* Inputs & Buttons */
-input, select, textarea { width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 16px; color: white; font-size: 0.95rem; transition: all 0.25s; outline: none; }
-input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5); box-shadow: 0 0 0 4px rgba(139,92,246,0.1); background: rgba(255,255,255,0.04); }
-.btn-primary { background: linear-gradient(to right, #8b5cf6, #6366f1); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 14px 28px; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 20px rgba(139, 92, 246, 0.2); }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 8px 30px rgba(139, 92, 246, 0.4); border-color: rgba(255,255,255,0.2); }
+/* 🧾 INPUTS & DROPDOWNS (Fixed UI) */
+input[type="text"], input[type="email"], input[type="password"], textarea, select { 
+    width: 100%; 
+    min-height: 48px;
+    background: rgba(255,255,255,0.04); 
+    border: 1px solid rgba(255,255,255,0.08); 
+    border-radius: 14px; 
+    padding: 12px 16px; 
+    color: white; 
+    font-size: 0.95rem; 
+    transition: all 0.25s ease; 
+    outline: none; 
+}
+input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.3); }
+input:focus, textarea:focus, select:focus { 
+    border-color: var(--purple); 
+    background: rgba(255,255,255,0.06); 
+    box-shadow: 0 0 0 3px rgba(139,92,246,0.15); 
+}
+
+/* Custom Dropdown Fix */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.5)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+select option { background-color: #13131c; color: #fff; padding: 12px; }
+
+/* Custom Dropzone File Input */
+.custom-file-upload { position: relative; border: 2px dashed rgba(255,255,255,0.1); border-radius: 16px; background: rgba(255,255,255,0.02); transition: all 0.3s ease; text-align: center; padding: 24px; cursor: pointer; }
+.custom-file-upload:hover { border-color: var(--purple); background: rgba(139,92,246,0.05); }
+.custom-file-upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+
+/* 🎯 BUTTONS */
+.btn-primary { 
+    background: linear-gradient(135deg, #8b5cf6, #6366f1); 
+    color: #fff; 
+    border: 1px solid rgba(255,255,255,0.1); 
+    height: 52px; 
+    padding: 0 28px; 
+    border-radius: 14px; 
+    font-weight: 600; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px; 
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 20px rgba(139, 92, 246, 0.25); 
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 12px 30px rgba(139, 92, 246, 0.4); border-color: rgba(255,255,255,0.25); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
 /* 🧭 NAVIGATION */
 .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: #9ca3af; transition: all 0.25s ease; border: 1px solid transparent; margin-bottom: 4px; }
-.nav-item:hover { background: rgba(255, 255, 255, 0.03); color: white; }
-.nav-item.active { background: rgba(255, 255, 255, 0.05); color: white; border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
+.nav-item:hover { background: rgba(255, 255, 255, 0.04); color: white; }
+.nav-item.active { background: rgba(255, 255, 255, 0.06); color: white; border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
 .nav-item.active i { color: var(--purple); }
 .sb-group { font-size: 0.65rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.12em; margin: 32px 0 12px 16px; }
 
@@ -86,12 +136,12 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
 .modal-close { position: absolute; top: 24px; right: 24px; background: none; border: none; color: #6b7280; cursor: pointer; transition: color .2s; }
 .modal-close:hover { color: #fff; }
 
-/* Specific Feature UI Adjustments */
-.field-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 600; color: #9ca3af; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
-.field-label span { font-size: 0.7rem; color: var(--purple); font-weight: 500; text-transform: none; letter-spacing: 0; }
-.feat-loading { display: none; align-items: center; justify-content: center; gap: 12px; margin-top: 24px; padding: 20px; background: rgba(139,92,246,0.04); border-radius: 16px; border: 1px solid rgba(139,92,246,0.15); }
-.email-window { background: rgba(255,255,255,0.015); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
-.email-titlebar { background: rgba(0,0,0,0.2); padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+/* Typography & Layout Adjustments */
+.field-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 600; color: #9ca3af; margin-bottom: 8px; }
+.field-label span { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+.feat-loading { display: none; align-items: center; justify-content: center; gap: 12px; margin-top: 24px; padding: 20px; background: rgba(139,92,246,0.05); border-radius: 16px; border: 1px solid rgba(139,92,246,0.2); }
+.email-window { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
+.email-titlebar { background: rgba(0,0,0,0.3); padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 
 /* Chat UI Overrides */
 .bubble { padding: 16px 20px; border-radius: 20px; font-size: 0.95rem; line-height: 1.6; max-width: 82%; }
@@ -100,14 +150,14 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
 .av-ai { width: 36px; height: 36px; background: linear-gradient(135deg, var(--purple), var(--pd)); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
 .av-user { width: 36px; height: 36px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .prog-bar { height: 100%; background: linear-gradient(90deg, var(--purple), #ec4899); border-radius: 4px; transition: width .6s cubic-bezier(0.25, 0.8, 0.25, 1); }
-.opt-btn { background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: white; padding: 12px 24px; border-radius: 14px; cursor: pointer; font-size: 0.9rem; transition: all .25s ease; }
-.opt-btn:hover, .opt-btn.sel { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.1); transform: translateY(-1px); }
+.opt-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: white; padding: 12px 24px; border-radius: 14px; cursor: pointer; font-size: 0.9rem; transition: all .25s ease; }
+.opt-btn:hover, .opt-btn.sel { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.15); transform: translateY(-1px); }
 
-/* Scrollbar Fixes */
+/* Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; border: 2px solid var(--bg); }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 </style>
 </head>
 <body>
@@ -118,18 +168,18 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
 
 <div id="app-loading">
   <div class="app-spin"></div>
-  <span style="font-size:.84rem;color:var(--text-muted); font-weight: 500;">Initializing Workspace...</span>
+  <span style="font-size:.9rem;color:var(--text-muted); font-weight: 500;">Initializing Workspace...</span>
 </div>
 
 <div id="login-pg">
   <div class="glass-panel" style="width:100%; max-width:440px; padding:56px 48px; text-align:center;">
     <div style="display:flex; justify-content:center; margin-bottom:32px;">
-        <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify AI" style="height: 38px; width: auto; object-fit: contain;">
+        <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify AI" style="height: 44px; width: auto; object-fit: contain;">
     </div>
     <h1 style="font-family:'Playfair Display',serif; font-weight:700; font-size:2rem; margin-bottom:12px;">Lancify AI</h1>
     <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:40px; line-height: 1.5;">Sign in to access your premium freelance workspace.</p>
    
-    <button class="w-full flex items-center justify-center gap-3 bg-white text-black py-3.5 px-4 rounded-xl font-semibold text-sm hover:bg-gray-100 transition-all mb-8 shadow-md" onclick="signInGoogle()">
+    <button class="w-full flex items-center justify-center gap-3 bg-white text-black py-4 px-4 rounded-xl font-bold text-sm hover:bg-gray-100 transition-all mb-8 shadow-md" onclick="signInGoogle()">
       <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Continue with Google
     </button>
@@ -140,23 +190,23 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
         <div class="flex-1 h-px bg-white/20"></div>
     </div>
 
-    <div id="auth-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3.5 rounded-xl mb-5 text-left"></div>
-    <div id="auth-msg" class="hidden bg-violet-500/10 border border-violet-500/20 text-violet-400 text-sm p-3.5 rounded-xl mb-5 text-left"></div>
+    <div id="auth-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-4 rounded-xl mb-6 text-left"></div>
+    <div id="auth-msg" class="hidden bg-violet-500/10 border border-violet-500/20 text-violet-400 text-sm p-4 rounded-xl mb-6 text-left"></div>
     
-    <div class="text-left mb-5">
-      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Email address</label>
+    <div class="text-left mb-6">
+      <label class="block text-sm font-semibold text-gray-400 mb-2">Email Address</label>
       <input id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
     </div>
-    <div class="text-left mb-5">
-      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Password</label>
+    <div class="text-left mb-8">
+      <label class="block text-sm font-semibold text-gray-400 mb-2">Password</label>
       <input id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
     </div>
     <div class="text-left mb-8" id="name-field" style="display:none;">
-      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Full name</label>
+      <label class="block text-sm font-semibold text-gray-400 mb-2">Full Name</label>
       <input id="auth-name" type="text" placeholder="John Doe">
     </div>
     
-    <button class="btn-primary w-full !py-3.5 !text-base" id="auth-btn" onclick="authSubmit()">Sign In</button>
+    <button class="btn-primary w-full" id="auth-btn" onclick="authSubmit()">Sign In</button>
     <div class="mt-8 text-sm text-gray-500 font-medium" id="auth-toggle-txt">
       Don't have an account? <span onclick="toggleMode()" class="text-violet-400 cursor-pointer hover:text-violet-300 transition-colors">Sign up free</span>
     </div>
@@ -167,7 +217,10 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
   
   <aside class="w-[260px] glass-sidebar flex flex-col z-20 shrink-0 h-screen">
     <div class="p-8 pb-4 flex items-center space-x-3 cursor-pointer" onclick="navigate('home-pg')">
-        <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify AI" style="height: 28px; width: auto; object-fit: contain;">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-900/30">
+            <i data-lucide="layout-dashboard" class="text-white w-4 h-4"></i>
+        </div>
+        <h1 class="text-lg font-bold tracking-tight text-white">Menu</h1>
     </div>
     
     <div class="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar">
@@ -191,19 +244,23 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
   </aside>
 
   <main class="flex-1 relative z-10 h-screen overflow-y-auto" id="main-scroll">
-    <header class="h-[80px] glass-header flex items-center justify-end px-10 sticky top-0 z-50 shrink-0">
-      <div class="flex items-center gap-3">
-        <span class="text-sm font-semibold text-white tracking-wide" id="header-user-name">User</span>
+    <header class="h-[80px] glass-header flex items-center justify-between px-10 sticky top-0 z-50 shrink-0">
+      <div class="flex items-center gap-4 cursor-pointer" onclick="navigate('home-pg')">
+        <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify AI Logo" style="height: 32px; width: auto;">
+        <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide border-l border-white/10 pl-4">Lancify AI</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-sm font-semibold text-gray-300 tracking-wide" id="header-user-name">User</span>
         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center font-bold text-sm shadow-md border border-white/10" id="header-user-initial">U</div>
       </div>
     </header>
 
-    <div class="p-8 md:p-12 lg:p-16 max-w-7xl mx-auto w-full pb-32">
+    <div class="p-8 md:p-12 lg:p-14 max-w-[1400px] mx-auto w-full pb-32">
 
       <div id="home-pg" class="pg on">
         <div class="flex justify-between items-end mb-12 flex-wrap gap-6">
           <div>
-            <p class="text-[11px] text-gray-500 font-bold uppercase tracking-widest mb-3" id="hero-date"></p>
+            <p class="text-xs text-gray-400 font-semibold uppercase tracking-widest mb-3" id="hero-date"></p>
             <h1 class="text-[2.5rem] font-['Playfair_Display'] font-bold text-white tracking-tight" id="hero-greeting">Welcome back.</h1>
           </div>
           <button class="btn-primary" onclick="startChat()">
@@ -279,8 +336,8 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
         </div>
         
         <div id="input-zone" class="flex gap-4 mt-4">
-          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1" class="flex-1"></textarea>
-          <button id="send-btn" onclick="sendMsg()" class="w-[52px] h-[52px] bg-gradient-to-br from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-2xl flex items-center justify-center shrink-0 transition-transform hover:scale-105 shadow-lg border border-white/10"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
+          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1" class="flex-1 bg-white/5"></textarea>
+          <button id="send-btn" onclick="sendMsg()" class="btn-primary !w-[52px] !p-0 !rounded-2xl shrink-0"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
         </div>
       </div>
 
@@ -291,85 +348,91 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
         <div id="kit-content"><div id="results-pg"></div></div>
       </div>
 
-      <div id="proposal-pg" class="pg max-w-5xl mx-auto">
-        <div class="mb-12 pb-8 border-b border-white/5">
+      <div id="proposal-pg" class="pg max-w-6xl mx-auto">
+        <div class="mb-10 pb-6 border-b border-white/5">
           <div class="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-5 shadow-lg"><i data-lucide="briefcase" class="w-8 h-8"></i></div>
-          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-3 tracking-tight">Proposal Writer</h2>
+          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-2 tracking-tight">Proposal Writer</h2>
           <p class="text-gray-400 text-base">Paste a job description and get a tailored, high-converting proposal in seconds.</p>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          <div class="glass-panel">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+          <div class="glass-panel p-8 md:p-10 h-full flex flex-col">
             <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Job Details</h3>
-            <div class="mb-6"><div class="field-label">Platform</div><select id="prop-platform"><option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option><option value="LinkedIn">LinkedIn</option></select></div>
-            <div class="mb-6"><div class="field-label">Job Description <span>paste full listing</span></div><textarea id="prop-job" rows="6" placeholder="E.g. Looking for a designer to create 5 posts..."></textarea></div>
-            <div class="mb-8"><div class="field-label">Your Experience <span>optional</span></div><input type="text" id="prop-exp" placeholder="E.g. I designed posts for a local cafe last month"></div>
-            <button id="prop-btn" class="btn-primary w-full !py-4" onclick="generateProposal()"><i data-lucide="zap" class="w-5 h-5"></i> Write My Proposal</button>
+            <div class="space-y-6 flex-1">
+                <div><div class="field-label">Platform</div><select id="prop-platform"><option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option><option value="LinkedIn">LinkedIn</option></select></div>
+                <div><div class="field-label">Job Description <span>paste full listing</span></div><textarea id="prop-job" rows="6" placeholder="E.g. Looking for a designer to create 5 posts..."></textarea></div>
+                <div><div class="field-label">Your Experience <span>optional</span></div><input type="text" id="prop-exp" placeholder="E.g. I designed posts for a local cafe last month"></div>
+            </div>
+            <button id="prop-btn" class="btn-primary w-full mt-8" onclick="generateProposal()"><i data-lucide="zap" class="w-5 h-5"></i> Write My Proposal</button>
             <div id="prop-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Writing your winning proposal...</span></div>
           </div>
           
-          <div>
-            <div id="prop-result" class="hidden">
-              <div class="glass-panel !p-0 overflow-hidden mb-6">
-                <div class="bg-black/40 px-6 py-5 border-b border-white/5 flex justify-between items-center">
-                  <span class="font-['Playfair_Display'] text-lg font-bold" id="prop-res-subject">Proposal Draft</span>
-                  <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-1.5 rounded-lg" onclick="copyEl('prop-res-text')">Copy</button>
+          <div class="h-full flex flex-col">
+            <div id="prop-result" class="hidden h-full flex-col">
+              <div class="glass-panel !p-0 overflow-hidden flex flex-col flex-1 mb-6">
+                <div class="bg-black/40 px-8 py-5 border-b border-white/5 flex justify-between items-center shrink-0">
+                  <span class="font-['Playfair_Display'] text-xl font-bold text-white" id="prop-res-subject">Proposal Draft</span>
+                  <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-2 rounded-lg" onclick="copyEl('prop-res-text')">Copy</button>
                 </div>
-                <div class="p-8 text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap" id="prop-res-text"></div>
+                <div class="p-8 text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap overflow-y-auto flex-1 custom-scrollbar" id="prop-res-text"></div>
               </div>
-              <div class="glass-panel !bg-transparent border-dashed">
+              <div class="glass-panel !bg-transparent border-dashed shrink-0 p-6">
                 <div class="text-xs uppercase tracking-widest font-bold text-gray-500 mb-4 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-violet-400"></i> Why this works</div>
                 <ul id="prop-res-tips" class="text-sm text-gray-400 leading-relaxed list-disc pl-5 space-y-2"></ul>
               </div>
             </div>
-            <div id="prop-empty" class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500">
-              <i data-lucide="file-text" class="w-12 h-12 mx-auto mb-5 opacity-40"></i>
-              <p class="text-sm font-medium">Your proposal will appear here.</p>
+            <div id="prop-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500">
+              <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5"><i data-lucide="file-text" class="w-10 h-10 text-gray-400"></i></div>
+              <h4 class="text-lg font-bold text-white mb-2">Ready to pitch</h4>
+              <p class="text-sm font-medium text-gray-400 max-w-[250px] text-center">Fill out the details on the left and your AI proposal will appear here.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="email-pg" class="pg max-w-5xl mx-auto">
-        <div class="mb-12 pb-8 border-b border-white/5">
+      <div id="email-pg" class="pg max-w-6xl mx-auto">
+        <div class="mb-10 pb-6 border-b border-white/5">
           <div class="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-5 shadow-lg"><i data-lucide="mail" class="w-8 h-8"></i></div>
-          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-3 tracking-tight">Client Email Writer</h2>
+          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-2 tracking-tight">Client Email Writer</h2>
           <p class="text-gray-400 text-base">Draft professional, high-converting client emails in seconds.</p>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          <div class="glass-panel">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+          <div class="glass-panel p-8 md:p-10 h-full flex flex-col">
             <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Message Settings</h3>
-            <div class="mb-6"><div class="field-label">Email Objective</div><select id="email-type"><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm payment reminder (Overdue)">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review/testimonial">Request Review</option></select></div>
-            <div class="mb-6"><div class="field-label">Tone</div><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
-            <div class="mb-8"><div class="field-label">Key Context <span>be specific</span></div><textarea id="email-context" rows="5" placeholder="E.g. Delivering 5 YouTube thumbnails. Invoice #42 is overdue..."></textarea></div>
-            <button id="email-btn" class="btn-primary w-full !py-4" onclick="generateEmail()"><i data-lucide="zap" class="w-5 h-5"></i> Generate Draft</button>
+            <div class="space-y-6 flex-1">
+                <div><div class="field-label">Email Objective</div><select id="email-type"><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm payment reminder (Overdue)">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review/testimonial">Request Review</option></select></div>
+                <div><div class="field-label">Tone</div><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
+                <div><div class="field-label">Key Context <span>be specific</span></div><textarea id="email-context" rows="5" placeholder="E.g. Delivering 5 YouTube thumbnails. Invoice #42 is overdue..."></textarea></div>
+            </div>
+            <button id="email-btn" class="btn-primary w-full mt-8" onclick="generateEmail()"><i data-lucide="zap" class="w-5 h-5"></i> Generate Draft</button>
             <div id="email-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Drafting your email...</span></div>
           </div>
           
-          <div>
-            <div id="email-result" class="hidden">
-              <div class="glass-panel !p-0 overflow-hidden mb-6">
-                <div class="bg-black/40 px-6 py-5 border-b border-white/5 flex justify-between items-center">
-                   <div class="flex gap-2"><span class="w-3 h-3 rounded-full bg-red-500/80 border border-red-500"></span><span class="w-3 h-3 rounded-full bg-yellow-500/80 border border-yellow-500"></span><span class="w-3 h-3 rounded-full bg-green-500/80 border border-green-500"></span></div>
-                   <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-1.5 rounded-lg" onclick="copyEl('email-res-text')">Copy</button>
+          <div class="h-full flex flex-col">
+            <div id="email-result" class="hidden h-full flex-col">
+              <div class="email-window flex-1 mb-6">
+                <div class="email-titlebar shrink-0">
+                   <div class="flex gap-2"><span class="w-3.5 h-3.5 rounded-full bg-red-500/80 border border-red-500"></span><span class="w-3.5 h-3.5 rounded-full bg-yellow-500/80 border border-yellow-500"></span><span class="w-3.5 h-3.5 rounded-full bg-green-500/80 border border-green-500"></span></div>
+                   <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-2 rounded-lg" onclick="copyEl('email-res-text')">Copy</button>
                 </div>
-                <div class="p-8">
+                <div class="p-8 flex-1 overflow-y-auto custom-scrollbar">
                   <div class="flex items-baseline gap-4 mb-6 border-b border-white/5 pb-5">
-                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Subject</span>
+                    <span class="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Subject</span>
                     <strong class="font-['Playfair_Display'] text-xl text-white" id="email-res-subject"></strong>
                   </div>
                   <div class="text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap" id="email-res-text"></div>
                 </div>
               </div>
-              <div class="glass-panel !bg-transparent border-dashed">
+              <div class="glass-panel !bg-transparent border-dashed shrink-0 p-6">
                 <div class="text-xs uppercase tracking-widest font-bold text-gray-500 mb-4 flex items-center gap-2"><i data-lucide="lightbulb" class="w-4 h-4 text-violet-400"></i> AI Strategy Notes</div>
                 <ul id="email-res-tips" class="text-sm text-gray-400 leading-relaxed list-disc pl-5 space-y-2"></ul>
               </div>
             </div>
-            <div id="email-empty" class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500">
-              <i data-lucide="mail" class="w-12 h-12 mx-auto mb-5 opacity-40"></i>
-              <p class="text-sm font-medium">Your drafted email will appear here.</p>
+            <div id="email-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500">
+              <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5"><i data-lucide="mail" class="w-10 h-10 text-gray-400"></i></div>
+              <h4 class="text-lg font-bold text-white mb-2">Ready to send</h4>
+              <p class="text-sm font-medium text-gray-400 max-w-[250px] text-center">Set your objective on the left and your email will appear here.</p>
             </div>
           </div>
         </div>
@@ -382,13 +445,13 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
           <p class="text-gray-400 text-base">Enter your skills and get data-driven niche recommendations.</p>
         </div>
         
-        <div class="glass-panel mb-10">
+        <div class="glass-panel p-8 md:p-10 mb-10">
           <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Your Details</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div class="md:col-span-2"><div class="field-label">Your Skills</div><input type="text" id="gig-skills" placeholder="E.g. Canva, basic video editing..."></div>
             <div><div class="field-label">Target Platform</div><select id="gig-platform"><option value="Both">Upwork & Fiverr</option><option value="Fiverr">Fiverr Only</option><option value="Upwork">Upwork Only</option></select></div>
           </div>
-          <button id="gig-btn" class="btn-primary w-full md:w-auto !py-4 px-8" onclick="findGigs()"><i data-lucide="radar" class="w-5 h-5"></i> Scan the Market</button>
+          <button id="gig-btn" class="btn-primary w-full md:w-auto" onclick="findGigs()"><i data-lucide="radar" class="w-5 h-5"></i> Scan the Market</button>
           <div id="gig-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Analysing market demand...</span></div>
         </div>
         
@@ -396,62 +459,73 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
           <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
               <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide">Top Recommended Opportunities</span>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="gig-cards-container"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="gig-cards-container"></div>
         </div>
       </div>
 
-      <div id="audit-pg" class="pg max-w-5xl mx-auto">
-        <div class="mb-12 pb-8 border-b border-white/5">
+      <div id="audit-pg" class="pg max-w-6xl mx-auto">
+        <div class="mb-10 pb-6 border-b border-white/5">
           <div class="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-5 shadow-lg"><i data-lucide="wand-2" class="w-8 h-8"></i></div>
-          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-3 tracking-tight">Trojan Horse Audit</h2>
+          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-2 tracking-tight">Trojan Horse Audit</h2>
           <p class="text-gray-400 text-base">Generate a clinical, 3-point growth audit to send as a cold pitch.</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          <div class="glass-panel">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+          <div class="glass-panel p-8 md:p-10 h-full flex flex-col">
             <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Target Intelligence</h3>
             
-            <div class="grid grid-cols-2 gap-6 mb-6">
-              <div><div class="field-label">Business Name</div><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
-              <div><div class="field-label">Platform</div><select id="audit-platform"><option value="Instagram">Instagram</option><option value="Website">Website</option></select></div>
+            <div class="space-y-6 flex-1">
+                <div class="grid grid-cols-2 gap-6">
+                  <div><div class="field-label">Business Name</div><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
+                  <div><div class="field-label">Platform</div><select id="audit-platform"><option value="Instagram">Instagram</option><option value="Website">Website</option></select></div>
+                </div>
+
+                <div>
+                    <div class="field-label">Client Logo <span>(Optional)</span></div>
+                    <div class="custom-file-upload group">
+                        <input type="file" id="audit-logo" accept="image/*">
+                        <i data-lucide="upload-cloud" class="w-8 h-8 text-gray-400 mx-auto mb-3 group-hover:text-violet-400 transition-colors"></i>
+                        <p class="text-sm text-gray-300 font-medium mb-1" id="audit-logo-text">Click or drag logo to upload</p>
+                        <p class="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                    </div>
+                </div>
+
+                <div><div class="field-label">Primary Weakness</div><select id="audit-weakness"><option value="No clear Call-to-Action in bio/posts">No clear Call-to-Action</option><option value="Inconsistent posting schedule">Inconsistent posting schedule</option><option value="Low quality visual branding">Low quality visual branding</option><option value="Slow or broken website booking flow">Slow/broken website flow</option></select></div>
+
+                <div class="grid grid-cols-2 gap-6">
+                  <div><div class="field-label">Your Service</div><select id="audit-service"><option value="Social Media Management">Social Media Management</option><option value="Web Design">Web Design</option></select></div>
+                  <div><div class="field-label">Pitch Price</div><input type="text" id="audit-price" placeholder="₹2,500"></div>
+                </div>
+
+                <div><div class="field-label">Specific Observation <span>(Hook)</span></div><textarea id="audit-obs" rows="3" placeholder="e.g. They post great coffee photos, but their bio link is broken..."></textarea></div>
             </div>
 
-            <div class="mb-6"><div class="field-label">Client Logo <span>(Optional)</span></div><input type="file" id="audit-logo" accept="image/*" class="!py-3.5"></div>
-
-            <div class="mb-6"><div class="field-label">Primary Weakness</div><select id="audit-weakness"><option value="No clear Call-to-Action in bio/posts">No clear Call-to-Action</option><option value="Inconsistent posting schedule">Inconsistent posting schedule</option><option value="Low quality visual branding">Low quality visual branding</option><option value="Slow or broken website booking flow">Slow/broken website flow</option></select></div>
-
-            <div class="grid grid-cols-2 gap-6 mb-6">
-              <div><div class="field-label">Your Service</div><select id="audit-service"><option value="Social Media Management">Social Media Management</option><option value="Web Design">Web Design</option></select></div>
-              <div><div class="field-label">Pitch Price</div><input type="text" id="audit-price" placeholder="₹2,500"></div>
-            </div>
-
-            <div class="mb-8"><div class="field-label">Specific Observation <span>(Hook)</span></div><textarea id="audit-obs" rows="3" placeholder="e.g. They post great coffee photos, but their bio link is broken..."></textarea></div>
-
-            <button id="audit-btn" class="btn-primary w-full !py-4" onclick="generateAudit()"><i data-lucide="zap" class="w-5 h-5"></i> Generate Audit Dossier</button>
+            <button id="audit-btn" class="btn-primary w-full mt-8" onclick="generateAudit()"><i data-lucide="zap" class="w-5 h-5"></i> Generate Audit Dossier</button>
             <div id="audit-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Compiling growth diagnostic...</span></div>
           </div>
 
-          <div>
-            <div id="audit-result" class="hidden">
-              <div class="glass-panel !p-0 overflow-hidden mb-6">
-                <div class="bg-black/40 px-6 py-5 border-b border-white/5 flex justify-between items-center">
-                  <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Cold Email Script</span>
-                  <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-1.5 rounded-lg" onclick="copyEl('audit-email-text')">Copy</button>
+          <div class="h-full flex flex-col">
+            <div id="audit-result" class="hidden h-full flex-col">
+              <div class="glass-panel !p-0 overflow-hidden mb-6 flex-1 flex flex-col">
+                <div class="bg-black/40 px-8 py-5 border-b border-white/5 flex justify-between items-center shrink-0">
+                  <span class="font-['Playfair_Display'] text-xl font-bold text-white">Cold Email Script</span>
+                  <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-2 rounded-lg" onclick="copyEl('audit-email-text')">Copy</button>
                 </div>
-                <div class="p-8 text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap" id="audit-email-text"></div>
+                <div class="p-8 text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap overflow-y-auto custom-scrollbar flex-1" id="audit-email-text"></div>
               </div>
 
-              <div class="glass-panel text-center !py-12">
-                <i data-lucide="file-check-2" class="w-16 h-16 text-emerald-400 mx-auto mb-5 drop-shadow-lg"></i>
+              <div class="glass-panel text-center p-10 shrink-0">
+                <i data-lucide="file-check-2" class="w-14 h-14 text-emerald-400 mx-auto mb-5 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]"></i>
                 <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-3">Client Audit Ready</h3>
-                <p class="text-sm text-gray-400 mb-8 max-w-[250px] mx-auto leading-relaxed">Your 5-section consulting dossier has been generated and branded.</p>
-                <button class="btn-primary" onclick="downloadAuditPDF()"><i data-lucide="download" class="w-4 h-4"></i> Download PDF Report</button>
+                <p class="text-sm text-gray-400 mb-8 max-w-[280px] mx-auto leading-relaxed">Your 5-section consulting dossier has been generated and branded.</p>
+                <button class="btn-primary w-full md:w-auto" onclick="downloadAuditPDF()"><i data-lucide="download" class="w-5 h-5"></i> Download PDF Report</button>
               </div>
             </div>
             
-            <div id="audit-empty" class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500">
-              <i data-lucide="crosshair" class="w-12 h-12 mx-auto mb-5 opacity-40"></i>
-              <p class="text-sm font-medium">Your professional audit and email script will appear here.</p>
+            <div id="audit-empty" class="glass-panel !bg-transparent border-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-gray-500">
+              <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5"><i data-lucide="crosshair" class="w-10 h-10 text-gray-400"></i></div>
+              <h4 class="text-lg font-bold text-white mb-2">Awaiting target</h4>
+              <p class="text-sm font-medium text-gray-400 max-w-[250px] text-center">Fill out the intelligence form and your custom audit will appear here.</p>
             </div>
           </div>
         </div>
@@ -496,7 +570,7 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
 </div>
 
 <div id="view-doc-modal" class="modal-overlay">
-  <div class="modal-card !max-w-2xl">
+  <div class="modal-card !max-w-3xl">
     <button class="modal-close" onclick="document.getElementById('view-doc-modal').classList.remove('on')"><i data-lucide="x" class="w-6 h-6"></i></button>
     <h3 id="doc-modal-title" class="font-['Playfair_Display'] text-3xl font-bold text-white mb-6 text-left">Document</h3>
     <div id="doc-modal-content" class="text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap max-h-[500px] overflow-y-auto text-left mb-8 custom-scrollbar pr-4"></div>
@@ -513,12 +587,11 @@ input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5
     <h3 class="font-['Playfair_Display'] text-4xl font-bold text-white mb-4">Unlock Freelance Pro</h3>
     <p class="text-gray-400 text-base mb-10 leading-relaxed px-4">Get access to the Proposal Writer, Email Writer, Gig Finder, and unlimited AI credits.</p>
     <div class="font-['Playfair_Display'] text-[3.5rem] font-bold text-violet-400 mb-10 tracking-tight">₹399<span class="text-xl text-gray-500 font-sans font-normal tracking-normal">/month</span></div>
-    <button class="btn-primary w-full !py-4 !text-lg" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now <i data-lucide="arrow-right" class="w-5 h-5 ml-1"></i></button>
+    <button class="btn-primary w-full !py-4 !text-lg" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i></button>
   </div>
 </div>
 
 <script>
-// Initialise base icons
 lucide.createIcons();
 
 const { createClient } = supabase;
@@ -968,11 +1041,11 @@ async function generateProposal(){
       await sb.from('proposals').insert([{user_id:currentUser.id,job_description:jobDesc,proposal_text:data.proposal,platform}]);
       loadAllStats(currentUser.id);
     }
-    loading.style.display='none';resultDiv.style.display='block';btn.disabled=false;
+    loading.style.display='none';resultDiv.style.display='flex';btn.disabled=false;
     toast('Proposal generated and saved!','success');
   }catch(error){
     console.error(error);toast('Failed to generate. Try again.','error');
-    loading.style.display='none';btn.disabled=false;emptyDiv&&(emptyDiv.style.display='block');
+    loading.style.display='none';btn.disabled=false;emptyDiv&&(emptyDiv.style.display='flex');
   }
 }
 
@@ -999,11 +1072,11 @@ async function generateEmail(){
       await sb.from('emails').insert([{user_id:currentUser.id,email_type:emailType,context,email_text:data.body}]);
       loadAllStats(currentUser.id);
     }
-    loading.style.display='none';resultDiv.style.display='block';btn.disabled=false;
+    loading.style.display='none';resultDiv.style.display='flex';btn.disabled=false;
     toast('Email drafted and saved!','success');
   }catch(error){
     console.error(error);toast('Failed to draft email. Try again.','error');
-    loading.style.display='none';btn.disabled=false;emptyDiv&&(emptyDiv.style.display='block');
+    loading.style.display='none';btn.disabled=false;emptyDiv&&(emptyDiv.style.display='flex');
   }
 }
 
@@ -1050,11 +1123,16 @@ async function findGigs(){
 let currentLogoBase64 = null;
 document.getElementById('audit-logo').addEventListener('change', function(e) {
   const file = e.target.files[0];
+  const textEl = document.getElementById('audit-logo-text');
   if(file) {
+    textEl.textContent = file.name;
     const reader = new FileReader();
     reader.onload = function(readerEvent) { currentLogoBase64 = readerEvent.target.result; }
     reader.readAsDataURL(file);
-  } else { currentLogoBase64 = null; }
+  } else { 
+    textEl.textContent = "Click or drag logo to upload";
+    currentLogoBase64 = null; 
+  }
 });
 
 async function generateAudit() {
@@ -1100,11 +1178,11 @@ async function generateAudit() {
     fixHtml += '</ul>';
     document.getElementById('pdf-sec4').innerHTML = fixHtml;
 
-    loading.style.display = 'none'; resultDiv.style.display = 'block'; btn.disabled = false;
+    loading.style.display = 'none'; resultDiv.style.display = 'flex'; btn.disabled = false;
     toast('Audit compiled successfully!', 'success');
   } catch(error) {
     console.error(error); toast('Failed to generate audit. Check console.', 'error');
-    loading.style.display = 'none'; btn.disabled = false; if(emptyDiv) emptyDiv.style.display = 'block';
+    loading.style.display = 'none'; btn.disabled = false; if(emptyDiv) emptyDiv.style.display = 'flex';
   }
 }
 
