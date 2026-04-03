@@ -6,7 +6,8 @@ export default async function handler(req, res) {
   const { jobDesc, platform, experience, niche } = req.body;
   const groqApiKey = process.env.GROQ_API_KEY; 
 
-  const modelName = "llama3-70b-8192";
+  // UPDATED MODEL NAME
+  const modelName = "llama-3.3-70b-versatile";
 
   const systemPrompt = `You are an elite, top 1% freelance consultant. You are helping a ${niche} win a job on ${platform}.
   
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: modelName,
-        messages: [{ role: "system", content: systemPrompt }],
+        messages: [{ role: "system", content: systemPrompt }, { role: "user", content: `Job: ${jobDesc}` }],
         temperature: 0.6,
         response_format: { type: "json_object" }
       })
