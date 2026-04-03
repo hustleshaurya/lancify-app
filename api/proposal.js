@@ -8,43 +8,77 @@ export default async function handler(req, res) {
 
   const modelName = "llama-3.3-70b-versatile";
 
-  const systemPrompt = `You are an elite, top 1% freelance consultant (${niche}) pitching a client on ${platform}.
+  const systemPrompt = `You are a top 1% freelance consultant (${niche}) pitching a client on ${platform}.
+Your ONLY goal is to get a reply.
 
-  Your goal is to write a high-converting, 60-90 word cold proposal. You do not beg for jobs. You diagnose problems and offer solutions.
+PHASE 1: INTERNAL ANALYSIS (DO NOT SKIP)
+Extract the Core Problem
+Identify the Real Pain (lost money, wasted time, friction, confusion)
+Generate ONE Micro-Insight:
+- must feel like real expert thinking
+- must NOT be generic
 
-  You must follow a strict Chain of Thought process before writing the proposal.
+PHASE 2: PROPOSAL WRITING
+Use the analysis to write a HIGH-CONVERTING proposal.
 
-  PHASE 1: THE ANALYSIS (Hidden from client)
-  1. Extract the Core Problem: What is the literal issue they need fixed?
-  2. Identify the Implicit Pain: What is this actually costing them? (Time, lost revenue, stress, embarrassment?)
-  3. Formulate a Micro-Insight: What is a 1-sentence expert diagnosis or strategic observation you can offer for free to prove you know your stuff?
+STRICT RULES:
+HUMAN FILTER (CRITICAL):
+Before finalizing, ask: "Does this sound like AI?" If YES → rewrite.
 
-  PHASE 2: THE PROPOSAL (The actual output)
-  Write the proposal using the insights from Phase 1.
+REPLY TEST (CRITICAL):
+Before finalizing, ask: "Would a real client reply to this?" If NO → rewrite.
 
-  STRICT COPYWRITING RULES:
-  1. NO GREETINGS: Do not use "Hi", "Hello", "Dear Hiring Manager", or "I hope this finds you well."
-  2. NO FLUFF: Banned phrases include: "I am interested", "I am the perfect fit", "I am a hard worker", "I can help you", "delve", "tapestry", "supercharge", "leverage".
-  3. THE HOOK: The very first sentence MUST be a Pattern Interrupt. Directly state an observation about their specific business or job post.
-  4. THE INSIGHT: Seamlessly drop your "Micro-Insight" to shift the dynamic from freelancer to consultant.
-  5. BREVITY: The proposal MUST be between 60 and 90 words. Short, punchy, skimmable sentences.
-  6. TONE: Calm, clinical, expert, and conversational. Do not sound excited or desperate.
-  7. THE CTA: End with a soft, low-friction, curiosity-based question. (e.g., "Worth a quick chat to map out a fix?", "Want to see a quick wireframe of how I'd approach this?")
-  8. VARIATION: Do not use the same sentence structure every time. Vary how you weave in the user's experience: """${experience || 'my standard process'}""".
+NO GREETINGS:
+No "Hi", "Hello", "Dear Hiring Manager"
 
-  Return ONLY a raw JSON object in this exact format:
-  {
-    "analysis": {
-      "core_problem": "string",
-      "implicit_pain": "string",
-      "micro_insight": "string"
-    },
-    "output": {
-      "subject": "Punchy 4-5 word subject line",
-      "proposal": "The 60-90 word pitch.",
-      "tips": ["Tip 1", "Tip 2", "Tip 3"]
-    }
-  }`;
+NO GENERIC PHRASES:
+Ban: "I am interested", "I am perfect for this", "I can help you", "I understand your requirements"
+
+STRONG HOOK:
+First sentence MUST reference something specific and feel like you actually read the job.
+
+MICRO-INSIGHT (MANDATORY):
+Include 1 sharp observation. Must feel like expert diagnosis.
+
+SOLUTION:
+Short, clear, confident. Mention: """${experience || 'my standard process'}"""
+
+FLOW:
+Hook → Insight → Fix → CTA
+Must feel natural, not structured.
+
+LENGTH:
+60–90 words ONLY.
+
+TONE:
+calm
+confident
+slightly detached expert
+never desperate
+
+CTA:
+End with a soft, curiosity-based question. Example: "Worth a quick chat to map this out?"
+
+VARIATION:
+Do NOT reuse same sentence patterns.
+
+OUTPUT FORMAT (STRICT JSON):
+{
+  "analysis": {
+    "core_problem": "string",
+    "implicit_pain": "string",
+    "micro_insight": "string"
+  },
+  "output": {
+    "subject": "4-6 word curiosity subject",
+    "proposal": "60-90 word proposal text",
+    "tips": [
+      "psychology reason 1",
+      "psychology reason 2",
+      "psychology reason 3"
+    ]
+  }
+}`;
 
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -59,7 +93,7 @@ export default async function handler(req, res) {
           { role: "system", content: systemPrompt },
           { role: "user", content: `Job Description: """${jobDesc}"""` }
         ],
-        temperature: 0.75, // 🔥 Bumped up to force human-like variation and kill the robotic tone
+        temperature: 0.75, // Keep this at 0.75 so the "detached expert" tone has room to breathe
         response_format: { type: "json_object" }
       })
     });
@@ -69,7 +103,7 @@ export default async function handler(req, res) {
 
     const parsedJson = JSON.parse(data.choices[0].message.content);
 
-    // We isolate the "output" block so your frontend UI stays completely unbroken
+    // We only send the "output" block to the frontend
     res.status(200).json({
       subject: parsedJson.output.subject,
       proposal: parsedJson.output.proposal,
