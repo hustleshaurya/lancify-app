@@ -15,40 +15,55 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-/* 🌌 DEEP MESH & GLASSMORPHISM CORE */
+/* 🌌 PREMIUM BACKGROUND & LIGHTING (Lyra Style) */
 :root {
-  --bg: #07050A; 
+  --bg: #0b0b12; /* Softer, richer dark tone, NOT pure black */
   --purple: #8b5cf6; 
   --pd: #6d28d9;
   --text-muted: #9ca3af;
-  --border: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.03); /* Ultra-soft borders */
 }
-body { background: var(--bg); color: #fff; font-family: "Inter", sans-serif; min-height: 100vh; overflow: hidden; }
+body { background: var(--bg); color: #fff; font-family: "Inter", sans-serif; height: 100vh; overflow: hidden; }
 
-.mesh-bg-1 { position: fixed; top: -15%; right: -5%; width: 600px; height: 600px; background: rgba(88, 28, 135, 0.2); filter: blur(150px); border-radius: 50%; pointer-events: none; z-index: 0; mix-blend-mode: screen; }
-.mesh-bg-2 { position: fixed; bottom: -10%; left: -10%; width: 500px; height: 500px; background: rgba(49, 46, 129, 0.15); filter: blur(120px); border-radius: 50%; pointer-events: none; z-index: 0; mix-blend-mode: screen; }
+/* 🧊 ILLUMINATED MESH GRADIENTS */
+.mesh-flare { position: fixed; top: -10%; left: 50%; transform: translateX(-50%); width: 800px; height: 400px; background: radial-gradient(ellipse at top, rgba(139,92,246,0.12) 0%, transparent 70%); filter: blur(80px); pointer-events: none; z-index: 0; }
+.mesh-bg-1 { position: fixed; top: 10%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%); filter: blur(120px); border-radius: 50%; pointer-events: none; z-index: 0; }
+.mesh-bg-2 { position: fixed; bottom: -10%; left: -5%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%); filter: blur(100px); border-radius: 50%; pointer-events: none; z-index: 0; }
 
-/* 🧊 UI COMPONENTS */
-.glass-panel { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); backdrop-filter: blur(24px); border-radius: 20px; transition: all 0.3s ease; }
-.glass-panel:hover { border-color: rgba(139, 92, 246, 0.2); background: rgba(255, 255, 255, 0.03); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(139, 92, 246, 0.08); }
-.glass-header { background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
-.glass-sidebar { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(30px); border-right: 1px solid var(--border); }
+/* 💎 GLASSMORPHISM & DEPTH CARDS */
+.glass-panel { 
+    background: rgba(255, 255, 255, 0.015); 
+    border: 1px solid var(--border); 
+    backdrop-filter: blur(24px); 
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 24px; 
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+}
+.glass-panel:hover { 
+    border-color: rgba(139, 92, 246, 0.15); 
+    background: rgba(255, 255, 255, 0.025); 
+    transform: translateY(-2px); 
+    box-shadow: 0 12px 48px rgba(139, 92, 246, 0.08); 
+}
+.glass-header { background: rgba(11, 11, 18, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+.glass-sidebar { background: rgba(11, 11, 18, 0.4); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border-right: 1px solid var(--border); }
 
 /* Inputs & Buttons */
-input, select, textarea { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; color: white; font-size: 0.9rem; transition: all 0.3s; outline: none; }
-input:focus, select:focus, textarea:focus { border-color: var(--purple); box-shadow: 0 0 15px rgba(139,92,246,0.15); background: rgba(255,255,255,0.05); }
-.btn-primary { background: linear-gradient(135deg, var(--purple), var(--pd)); color: #fff; border: none; padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2); }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4); }
+input, select, textarea { width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 16px; color: white; font-size: 0.95rem; transition: all 0.25s; outline: none; }
+input:focus, select:focus, textarea:focus { border-color: rgba(139, 92, 246, 0.5); box-shadow: 0 0 0 4px rgba(139,92,246,0.1); background: rgba(255,255,255,0.04); }
+.btn-primary { background: linear-gradient(to right, #8b5cf6, #6366f1); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 14px 28px; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 20px rgba(139, 92, 246, 0.2); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 8px 30px rgba(139, 92, 246, 0.4); border-color: rgba(255,255,255,0.2); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
 /* 🧭 NAVIGATION */
-.nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; cursor: pointer; font-size: 0.88rem; font-weight: 500; color: #9ca3af; transition: all 0.3s; border: 1px solid transparent; margin-bottom: 4px; }
-.nav-item:hover { background: rgba(255, 255, 255, 0.04); color: white; }
-.nav-item.active { background: rgba(255, 255, 255, 0.06); color: white; border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: #9ca3af; transition: all 0.25s ease; border: 1px solid transparent; margin-bottom: 4px; }
+.nav-item:hover { background: rgba(255, 255, 255, 0.03); color: white; }
+.nav-item.active { background: rgba(255, 255, 255, 0.05); color: white; border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
 .nav-item.active i { color: var(--purple); }
-.sb-group { font-size: 0.65rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin: 24px 0 12px 16px; }
+.sb-group { font-size: 0.65rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.12em; margin: 32px 0 12px 16px; }
 
-/* 🧱 CORE LAYOUT & FUNCTIONAL CLASSES (Untouched Logic) */
+/* 🧱 CORE LAYOUT */
 #app-loading { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 16px; }
 .app-spin { width: 36px; height: 36px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--purple); border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -57,388 +72,386 @@ input:focus, select:focus, textarea:focus { border-color: var(--purple); box-sha
 #app-layout.on { display: flex; }
 .pg { display: none; animation: pgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
 .pg.on { display: block; }
-@keyframes pgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pgIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Modals & Toasts */
-.toast { position: fixed; bottom: 24px; right: 24px; background: rgba(20,20,20,0.9); backdrop-filter: blur(10px); border: 1px solid var(--border); color: #fff; padding: 16px 24px; border-radius: 12px; font-size: .9rem; font-weight: 500; transform: translateY(20px); opacity: 0; transition: all .3s ease; z-index: 9999; box-shadow: 0 12px 40px rgba(0,0,0,.6); display: flex; align-items: center; gap: 10px; }
+.toast { position: fixed; bottom: 24px; right: 24px; background: rgba(15,15,22,0.95); backdrop-filter: blur(12px); border: 1px solid var(--border); color: #fff; padding: 16px 24px; border-radius: 16px; font-size: .95rem; font-weight: 500; transform: translateY(20px); opacity: 0; transition: all .3s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 9999; box-shadow: 0 16px 48px rgba(0,0,0,.6); display: flex; align-items: center; gap: 12px; }
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast-success { border-left: 3px solid #10b981; }
 .toast-error { border-left: 3px solid #ef4444; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 5000; opacity: 0; transition: opacity .25s; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; z-index: 5000; opacity: 0; transition: opacity .25s; }
 .modal-overlay.on { display: flex; opacity: 1; }
-.modal-card { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 40px; width: 100%; max-width: 440px; position: relative; transform: scale(0.95); transition: transform .25s ease; box-shadow: 0 32px 80px rgba(139,92,246,0.15); }
+.modal-card { background: #0b0b12; border: 1px solid rgba(255,255,255,0.05); border-radius: 32px; padding: 48px; width: 100%; max-width: 480px; position: relative; transform: scale(0.95); transition: transform .3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: inset 0 1px 1px rgba(255,255,255,0.05), 0 32px 80px rgba(139,92,246,0.15); }
 .modal-overlay.on .modal-card { transform: scale(1); }
-.modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #6b7280; cursor: pointer; transition: color .2s; }
+.modal-close { position: absolute; top: 24px; right: 24px; background: none; border: none; color: #6b7280; cursor: pointer; transition: color .2s; }
 .modal-close:hover { color: #fff; }
 
 /* Specific Feature UI Adjustments */
-.field-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 600; color: #9ca3af; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-.field-label span { font-size: 0.7rem; color: var(--purple); font-weight: 400; text-transform: none; letter-spacing: 0; }
-.feat-loading { display: none; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; padding: 16px; background: rgba(139,92,246,0.05); border-radius: 12px; border: 1px solid rgba(139,92,246,0.2); }
-.email-window { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-.email-titlebar { background: rgba(0,0,0,0.3); padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.field-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 600; color: #9ca3af; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+.field-label span { font-size: 0.7rem; color: var(--purple); font-weight: 500; text-transform: none; letter-spacing: 0; }
+.feat-loading { display: none; align-items: center; justify-content: center; gap: 12px; margin-top: 24px; padding: 20px; background: rgba(139,92,246,0.04); border-radius: 16px; border: 1px solid rgba(139,92,246,0.15); }
+.email-window { background: rgba(255,255,255,0.015); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.email-titlebar { background: rgba(0,0,0,0.2); padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 
 /* Chat UI Overrides */
-.bubble { padding: 14px 18px; border-radius: 16px; font-size: 0.9rem; line-height: 1.6; max-width: 82%; }
-.bubble.ai { background: rgba(255,255,255,0.04); border: 1px solid var(--border); }
-.bubble.usr { background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); color: #ddd; }
-.av-ai { width: 34px; height: 34px; background: linear-gradient(135deg, var(--purple), var(--pd)); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(139,92,246,0.3); }
-.av-user { width: 34px; height: 34px; background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.prog-bar { height: 100%; background: linear-gradient(90deg, var(--purple), #ec4899); border-radius: 2px; transition: width .5s ease; }
-.opt-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; transition: all .2s; }
-.opt-btn:hover, .opt-btn.sel { border-color: var(--purple); background: rgba(139,92,246,0.1); }
+.bubble { padding: 16px 20px; border-radius: 20px; font-size: 0.95rem; line-height: 1.6; max-width: 82%; }
+.bubble.ai { background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+.bubble.usr { background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.15); color: #e5e7eb; }
+.av-ai { width: 36px; height: 36px; background: linear-gradient(135deg, var(--purple), var(--pd)); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
+.av-user { width: 36px; height: 36px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.prog-bar { height: 100%; background: linear-gradient(90deg, var(--purple), #ec4899); border-radius: 4px; transition: width .6s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.opt-btn { background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: white; padding: 12px 24px; border-radius: 14px; cursor: pointer; font-size: 0.9rem; transition: all .25s ease; }
+.opt-btn:hover, .opt-btn.sel { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.1); transform: translateY(-1px); }
 
-::-webkit-scrollbar { width: 6px; }
+/* Scrollbar Fixes */
+::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
 </style>
 </head>
 <body>
 
+<div class="mesh-flare"></div>
 <div class="mesh-bg-1"></div>
 <div class="mesh-bg-2"></div>
 
 <div id="app-loading">
   <div class="app-spin"></div>
-  <span style="font-size:.84rem;color:var(--text-muted);">Initializing Engine...</span>
+  <span style="font-size:.84rem;color:var(--text-muted); font-weight: 500;">Initializing Workspace...</span>
 </div>
 
 <div id="login-pg">
-  <div class="glass-panel" style="width:100%; max-width:420px; padding:48px 40px; text-align:center;">
-    <div style="display:flex; justify-content:center; margin-bottom:24px;">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-900/30">
-            <i data-lucide="layout-dashboard" class="text-white w-6 h-6"></i>
-        </div>
+  <div class="glass-panel" style="width:100%; max-width:440px; padding:56px 48px; text-align:center;">
+    <div style="display:flex; justify-content:center; margin-bottom:32px;">
+        <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify AI" style="height: 38px; width: auto; object-fit: contain;">
     </div>
-    <h1 style="font-family:'Playfair Display',serif; font-weight:700; font-size:1.8rem; margin-bottom:8px;">Lancify AI</h1>
-    <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:32px;">Sign in to access your premium workspace.</p>
+    <h1 style="font-family:'Playfair Display',serif; font-weight:700; font-size:2rem; margin-bottom:12px;">Lancify AI</h1>
+    <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:40px; line-height: 1.5;">Sign in to access your premium freelance workspace.</p>
    
-    <button class="w-full flex items-center justify-center gap-3 bg-white text-black py-3 px-4 rounded-xl font-semibold text-sm hover:bg-gray-100 transition-all mb-6" onclick="signInGoogle()">
+    <button class="w-full flex items-center justify-center gap-3 bg-white text-black py-3.5 px-4 rounded-xl font-semibold text-sm hover:bg-gray-100 transition-all mb-8 shadow-md" onclick="signInGoogle()">
       <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Continue with Google
     </button>
     
-    <div class="flex items-center gap-3 mb-6 opacity-50">
+    <div class="flex items-center gap-4 mb-8 opacity-40">
         <div class="flex-1 h-px bg-white/20"></div>
-        <span class="text-xs text-white/50">OR</span>
+        <span class="text-xs font-semibold tracking-widest text-white">OR</span>
         <div class="flex-1 h-px bg-white/20"></div>
     </div>
 
-    <div id="auth-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-lg mb-4 text-left"></div>
-    <div id="auth-msg" class="hidden bg-violet-500/10 border border-violet-500/20 text-violet-400 text-sm p-3 rounded-lg mb-4 text-left"></div>
+    <div id="auth-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3.5 rounded-xl mb-5 text-left"></div>
+    <div id="auth-msg" class="hidden bg-violet-500/10 border border-violet-500/20 text-violet-400 text-sm p-3.5 rounded-xl mb-5 text-left"></div>
     
-    <div class="text-left mb-4">
-      <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email address</label>
+    <div class="text-left mb-5">
+      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Email address</label>
       <input id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
     </div>
-    <div class="text-left mb-4">
-      <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Password</label>
+    <div class="text-left mb-5">
+      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Password</label>
       <input id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
     </div>
-    <div class="text-left mb-6" id="name-field" style="display:none;">
-      <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full name</label>
+    <div class="text-left mb-8" id="name-field" style="display:none;">
+      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Full name</label>
       <input id="auth-name" type="text" placeholder="John Doe">
     </div>
     
-    <button class="btn-primary w-full" id="auth-btn" onclick="authSubmit()">Sign In</button>
-    <div class="mt-6 text-sm text-gray-500" id="auth-toggle-txt">
-      Don't have an account? <span onclick="toggleMode()" class="text-violet-400 cursor-pointer hover:underline">Sign up free</span>
+    <button class="btn-primary w-full !py-3.5 !text-base" id="auth-btn" onclick="authSubmit()">Sign In</button>
+    <div class="mt-8 text-sm text-gray-500 font-medium" id="auth-toggle-txt">
+      Don't have an account? <span onclick="toggleMode()" class="text-violet-400 cursor-pointer hover:text-violet-300 transition-colors">Sign up free</span>
     </div>
   </div>
 </div>
 
-<div id="app-layout">
-  <aside class="w-64 glass-sidebar flex flex-col z-20 shrink-0">
-    <div class="p-6 pb-2 flex items-center space-x-3 cursor-pointer" onclick="navigate('home-pg')">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-900/30">
-            <i data-lucide="layout-dashboard" class="text-white w-4 h-4"></i>
-        </div>
-        <h1 class="text-lg font-bold tracking-tight text-white">LANCIFY <span class="text-violet-400">AI</span></h1>
+<div id="app-layout" class="flex h-screen w-full">
+  
+  <aside class="w-[260px] glass-sidebar flex flex-col z-20 shrink-0 h-screen">
+    <div class="p-8 pb-4 flex items-center space-x-3 cursor-pointer" onclick="navigate('home-pg')">
+        <img src="Add_a_heading_-_Copy-removebg-preview.png" alt="Lancify AI" style="height: 28px; width: auto; object-fit: contain;">
     </div>
     
-    <div class="flex-1 overflow-y-auto px-4 py-4">
+    <div class="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar">
         <div class="sb-group">Growth Tools</div>
-        <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')"><i data-lucide="home" class="w-4 h-4"></i> Dashboard</a>
-        <a class="nav-item" data-page="chat-pg" onclick="startChat()"><i data-lucide="message-square" class="w-4 h-4"></i> Launch Coach</a>
-        <a class="nav-item" data-page="audit-pg" onclick="navigate('audit-pg')"><i data-lucide="wand-2" class="w-4 h-4"></i> Audit Generator <span class="ml-auto text-[9px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded uppercase font-bold">PRO</span></a>
-        <a class="nav-item" data-page="proposal-pg" onclick="navigate('proposal-pg')"><i data-lucide="briefcase" class="w-4 h-4"></i> Proposal Writer <span class="ml-auto text-[9px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded uppercase font-bold">PRO</span></a>
-        <a class="nav-item" data-page="email-pg" onclick="navigate('email-pg')"><i data-lucide="mail" class="w-4 h-4"></i> Email Writer <span class="ml-auto text-[9px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded uppercase font-bold">PRO</span></a>
+        <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')"><i data-lucide="home" class="w-[18px] h-[18px]"></i> Dashboard</a>
+        <a class="nav-item" data-page="chat-pg" onclick="startChat()"><i data-lucide="message-square" class="w-[18px] h-[18px]"></i> Launch Coach</a>
+        <a class="nav-item" data-page="audit-pg" onclick="navigate('audit-pg')"><i data-lucide="wand-2" class="w-[18px] h-[18px]"></i> Audit Generator <span class="ml-auto text-[9px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-1.5 py-0.5 rounded uppercase font-bold">PRO</span></a>
+        <a class="nav-item" data-page="proposal-pg" onclick="navigate('proposal-pg')"><i data-lucide="briefcase" class="w-[18px] h-[18px]"></i> Proposal Writer <span class="ml-auto text-[9px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-1.5 py-0.5 rounded uppercase font-bold">PRO</span></a>
+        <a class="nav-item" data-page="email-pg" onclick="navigate('email-pg')"><i data-lucide="mail" class="w-[18px] h-[18px]"></i> Email Writer <span class="ml-auto text-[9px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-1.5 py-0.5 rounded uppercase font-bold">PRO</span></a>
         
         <div class="sb-group">Insights</div>
-        <a class="nav-item" data-page="gig-finder-pg" onclick="navigate('gig-finder-pg')"><i data-lucide="search" class="w-4 h-4"></i> Gig Finder <span class="ml-auto text-[9px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded uppercase font-bold">PRO</span></a>
-        <a class="nav-item" onclick="checkPro(() => toast('Income Roadmap coming soon!','success'))"><i data-lucide="map" class="w-4 h-4"></i> Roadmap <span class="ml-auto text-[9px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded uppercase font-bold">PRO</span></a>
+        <a class="nav-item" data-page="gig-finder-pg" onclick="navigate('gig-finder-pg')"><i data-lucide="search" class="w-[18px] h-[18px]"></i> Gig Finder <span class="ml-auto text-[9px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-1.5 py-0.5 rounded uppercase font-bold">PRO</span></a>
+        <a class="nav-item" onclick="checkPro(() => toast('Income Roadmap coming soon!','success'))"><i data-lucide="map" class="w-[18px] h-[18px]"></i> Roadmap <span class="ml-auto text-[9px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-1.5 py-0.5 rounded uppercase font-bold">PRO</span></a>
     </div>
 
-    <div class="p-4 border-t border-white/5">
-        <a class="nav-item" id="sb-my-kits" style="display:none;" onclick="navigate('home-pg')"><i data-lucide="folder" class="w-4 h-4"></i> My Kits</a>
-        <a class="nav-item text-violet-400 hover:text-violet-300" onclick="showUpgradeModal()"><i data-lucide="zap" class="w-4 h-4"></i> Upgrade to Pro</a>
-        <a class="nav-item hover:text-red-400" onclick="signOut()"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+    <div class="p-5 border-t border-white/5">
+        <a class="nav-item" id="sb-my-kits" style="display:none;" onclick="navigate('home-pg')"><i data-lucide="folder" class="w-[18px] h-[18px]"></i> My Kits</a>
+        <a class="nav-item text-violet-400 hover:text-violet-300" onclick="showUpgradeModal()"><i data-lucide="zap" class="w-[18px] h-[18px]"></i> Upgrade to Pro</a>
+        <a class="nav-item hover:text-red-400" onclick="signOut()"><i data-lucide="log-out" class="w-[18px] h-[18px]"></i> Sign Out</a>
     </div>
   </aside>
 
-  <main class="flex-1 flex flex-col relative z-10 overflow-hidden" id="main-scroll">
-    <header class="h-20 glass-header flex items-center justify-end px-10 shrink-0 sticky top-0 z-50">
+  <main class="flex-1 relative z-10 h-screen overflow-y-auto" id="main-scroll">
+    <header class="h-[80px] glass-header flex items-center justify-end px-10 sticky top-0 z-50 shrink-0">
       <div class="flex items-center gap-3">
-        <span class="text-sm font-semibold text-white" id="header-user-name">User</span>
-        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center font-bold text-sm shadow-md" id="header-user-initial">U</div>
+        <span class="text-sm font-semibold text-white tracking-wide" id="header-user-name">User</span>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center font-bold text-sm shadow-md border border-white/10" id="header-user-initial">U</div>
       </div>
     </header>
 
-    <div class="p-10 max-w-6xl mx-auto w-full pb-24">
+    <div class="p-8 md:p-12 lg:p-16 max-w-7xl mx-auto w-full pb-32">
 
       <div id="home-pg" class="pg on">
-        <div class="flex justify-between items-end mb-10 flex-wrap gap-4">
+        <div class="flex justify-between items-end mb-12 flex-wrap gap-6">
           <div>
-            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-2" id="hero-date"></p>
-            <h1 class="text-4xl font-['Playfair_Display'] font-bold text-white tracking-tight" id="hero-greeting">Welcome back.</h1>
+            <p class="text-[11px] text-gray-500 font-bold uppercase tracking-widest mb-3" id="hero-date"></p>
+            <h1 class="text-[2.5rem] font-['Playfair_Display'] font-bold text-white tracking-tight" id="hero-greeting">Welcome back.</h1>
           </div>
           <button class="btn-primary" onclick="startChat()">
             <i data-lucide="plus" class="w-5 h-5"></i> Generate New Kit
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
-          <div class="glass-panel p-6"><div class="text-3xl font-['Playfair_Display'] font-bold text-white mb-1" id="stat-kits">—</div><div class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Total Kits</div></div>
-          <div class="glass-panel p-6"><div class="text-3xl font-['Playfair_Display'] font-bold text-white mb-1" id="stat-proposals">—</div><div class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Proposals</div></div>
-          <div class="glass-panel p-6"><div class="text-3xl font-['Playfair_Display'] font-bold text-white mb-1" id="stat-emails">—</div><div class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Emails Drafted</div></div>
-          <div class="glass-panel p-6"><div class="text-3xl font-['Playfair_Display'] font-bold text-white mb-1" id="stat-gigs">—</div><div class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Gigs Found</div></div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-kits">—</div><div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Total Kits</div></div>
+          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-proposals">—</div><div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Proposals</div></div>
+          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-emails">—</div><div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Emails Drafted</div></div>
+          <div class="glass-panel p-8 text-center md:text-left"><div class="text-4xl font-['Playfair_Display'] font-bold text-white mb-2" id="stat-gigs">—</div><div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Gigs Found</div></div>
         </div>
 
-        <div class="flex items-center justify-between mb-5 border-b border-white/5 pb-3">
-            <span class="text-lg font-['Playfair_Display'] font-semibold text-white">Quick Actions</span>
+        <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+            <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide">Quick Actions</span>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
-          <div class="glass-panel p-7 cursor-pointer group" onclick="startChat()">
-            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-violet-400 mb-5 group-hover:bg-violet-500/20 transition-colors"><i data-lucide="message-square" class="w-6 h-6"></i></div>
-            <h3 class="text-lg font-semibold text-white mb-2">Launch Coach</h3>
-            <p class="text-sm text-gray-400 leading-relaxed">Build your complete freelance identity from scratch with AI.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+          <div class="glass-panel p-8 cursor-pointer group" onclick="startChat()">
+            <div class="w-14 h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-6 group-hover:bg-violet-500/20 transition-all duration-300 shadow-lg"><i data-lucide="message-square" class="w-6 h-6"></i></div>
+            <h3 class="text-xl font-semibold text-white mb-3">Launch Coach</h3>
+            <p class="text-sm text-gray-400 leading-relaxed font-medium">Build your complete freelance identity from scratch with AI.</p>
           </div>
-          <div class="glass-panel p-7 cursor-pointer group" onclick="navigate('proposal-pg')">
-            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-violet-400 mb-5 group-hover:bg-violet-500/20 transition-colors"><i data-lucide="briefcase" class="w-6 h-6"></i></div>
-            <h3 class="text-lg font-semibold text-white mb-2 flex items-center gap-2">Proposal Writer <span class="text-[9px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded uppercase font-bold">PRO</span></h3>
-            <p class="text-sm text-gray-400 leading-relaxed">Turn any job description into a winning proposal in seconds.</p>
+          <div class="glass-panel p-8 cursor-pointer group" onclick="navigate('proposal-pg')">
+            <div class="w-14 h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-6 group-hover:bg-violet-500/20 transition-all duration-300 shadow-lg"><i data-lucide="briefcase" class="w-6 h-6"></i></div>
+            <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-3">Proposal Writer <span class="text-[10px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-2 py-0.5 rounded uppercase font-bold tracking-wider">PRO</span></h3>
+            <p class="text-sm text-gray-400 leading-relaxed font-medium">Turn any job description into a winning proposal in seconds.</p>
           </div>
-          <div class="glass-panel p-7 cursor-pointer group" onclick="navigate('email-pg')">
-            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-violet-400 mb-5 group-hover:bg-violet-500/20 transition-colors"><i data-lucide="mail" class="w-6 h-6"></i></div>
-            <h3 class="text-lg font-semibold text-white mb-2 flex items-center gap-2">Email Writer <span class="text-[9px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded uppercase font-bold">PRO</span></h3>
-            <p class="text-sm text-gray-400 leading-relaxed">Draft professional client communications instantly.</p>
+          <div class="glass-panel p-8 cursor-pointer group" onclick="navigate('email-pg')">
+            <div class="w-14 h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-6 group-hover:bg-violet-500/20 transition-all duration-300 shadow-lg"><i data-lucide="mail" class="w-6 h-6"></i></div>
+            <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-3">Email Writer <span class="text-[10px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-2 py-0.5 rounded uppercase font-bold tracking-wider">PRO</span></h3>
+            <p class="text-sm text-gray-400 leading-relaxed font-medium">Draft professional client communications instantly.</p>
           </div>
-          <div class="glass-panel p-7 cursor-pointer group" onclick="navigate('gig-finder-pg')">
-            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-violet-400 mb-5 group-hover:bg-violet-500/20 transition-colors"><i data-lucide="search" class="w-6 h-6"></i></div>
-            <h3 class="text-lg font-semibold text-white mb-2 flex items-center gap-2">Gig Finder <span class="text-[9px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded uppercase font-bold">PRO</span></h3>
-            <p class="text-sm text-gray-400 leading-relaxed">Discover high-paying, low-competition niches in seconds.</p>
+          <div class="glass-panel p-8 cursor-pointer group" onclick="navigate('gig-finder-pg')">
+            <div class="w-14 h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-6 group-hover:bg-violet-500/20 transition-all duration-300 shadow-lg"><i data-lucide="search" class="w-6 h-6"></i></div>
+            <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-3">Gig Finder <span class="text-[10px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-2 py-0.5 rounded uppercase font-bold tracking-wider">PRO</span></h3>
+            <p class="text-sm text-gray-400 leading-relaxed font-medium">Discover high-paying, low-competition niches in seconds.</p>
           </div>
         </div>
 
-        <div class="flex items-center justify-between mb-5 border-b border-white/5 pb-3">
-            <span class="text-lg font-['Playfair_Display'] font-semibold text-white">My Saved Kits</span>
+        <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+            <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide">My Saved Kits</span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12" id="kits-grid">
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16" id="kits-grid"></div>
 
-        <div class="flex items-center justify-between mb-5 border-b border-white/5 pb-3">
-            <span class="text-lg font-['Playfair_Display'] font-semibold text-white">My Saved Proposals</span>
+        <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+            <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide">My Saved Proposals</span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12" id="props-grid"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16" id="props-grid"></div>
 
-        <div class="flex items-center justify-between mb-5 border-b border-white/5 pb-3">
-            <span class="text-lg font-['Playfair_Display'] font-semibold text-white">My Saved Emails</span>
+        <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+            <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide">My Saved Emails</span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12" id="emails-grid"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16" id="emails-grid"></div>
 
       </div>
 
       <div id="chat-pg" class="pg max-w-3xl mx-auto">
-        <div class="text-center mb-10">
-          <h2 class="font-['Playfair_Display'] text-3xl font-bold mb-2 text-white">Let's build your kit</h2>
-          <p class="text-gray-400 text-sm">5 quick questions — your complete freelance kit in 20 minutes.</p>
+        <div class="text-center mb-12">
+          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold mb-3 text-white">Let's build your kit</h2>
+          <p class="text-gray-400 text-sm font-medium">5 quick questions — your complete freelance kit in 20 minutes.</p>
         </div>
-        <div class="mb-8">
-          <div class="flex justify-between text-xs text-gray-500 font-semibold uppercase tracking-wider mb-2"><span id="prog-lbl">Step 1 of 5</span><span id="prog-pct">0%</span></div>
-          <div class="h-1 bg-white/10 rounded-full overflow-hidden"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+        <div class="mb-10">
+          <div class="flex justify-between text-[11px] text-gray-500 font-bold uppercase tracking-widest mb-3"><span id="prog-lbl">Step 1 of 5</span><span id="prog-pct">0%</span></div>
+          <div class="h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
         </div>
-        <div id="chat-msgs" class="flex flex-col gap-4 mb-6 min-h-[180px]"></div>
+        <div id="chat-msgs" class="flex flex-col gap-6 mb-8 min-h-[220px]"></div>
         
-        <div id="gen-bar" class="hidden items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-xl mt-2">
+        <div id="gen-bar" class="hidden items-center gap-4 p-5 bg-white/5 border border-white/5 rounded-2xl mt-4">
           <div class="app-spin !w-5 !h-5 !border-2"></div>
-          <span id="gen-text" class="text-sm text-violet-400 font-['Playfair_Display'] italic">Analysing your skills...</span>
+          <span id="gen-text" class="text-[15px] text-violet-400 font-['Playfair_Display'] italic font-medium">Analysing your skills...</span>
         </div>
         
-        <div id="input-zone" class="flex gap-3 mt-2">
-          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1" class="flex-1 bg-white/5"></textarea>
-          <button id="send-btn" onclick="sendMsg()" class="w-12 h-12 bg-violet-600 hover:bg-violet-500 text-white rounded-xl flex items-center justify-center shrink-0 transition-transform hover:scale-105"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
+        <div id="input-zone" class="flex gap-4 mt-4">
+          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1" class="flex-1"></textarea>
+          <button id="send-btn" onclick="sendMsg()" class="w-[52px] h-[52px] bg-gradient-to-br from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-2xl flex items-center justify-center shrink-0 transition-transform hover:scale-105 shadow-lg border border-white/10"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
         </div>
       </div>
 
       <div id="results-pg-wrap" class="pg max-w-4xl mx-auto">
-        <button onclick="downloadPDF()" class="bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 border border-violet-500/20 px-5 py-2.5 rounded-lg font-semibold text-sm transition-all mb-6 flex items-center gap-2">
+        <button onclick="downloadPDF()" class="bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 border border-violet-500/20 px-6 py-3 rounded-xl font-semibold text-sm transition-all mb-8 flex items-center gap-2">
           <i data-lucide="download" class="w-4 h-4"></i> Download PDF Kit
         </button>
         <div id="kit-content"><div id="results-pg"></div></div>
       </div>
 
       <div id="proposal-pg" class="pg max-w-5xl mx-auto">
-        <div class="mb-10 pb-8 border-b border-white/5">
-          <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-violet-400 mb-4"><i data-lucide="briefcase" class="w-7 h-7"></i></div>
-          <h2 class="font-['Playfair_Display'] text-3xl font-bold text-white mb-2">Proposal Writer</h2>
-          <p class="text-gray-400">Paste a job description and get a tailored, high-converting proposal in seconds.</p>
+        <div class="mb-12 pb-8 border-b border-white/5">
+          <div class="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-5 shadow-lg"><i data-lucide="briefcase" class="w-8 h-8"></i></div>
+          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-3 tracking-tight">Proposal Writer</h2>
+          <p class="text-gray-400 text-base">Paste a job description and get a tailored, high-converting proposal in seconds.</p>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div class="glass-panel p-8">
-            <h3 class="font-['Playfair_Display'] text-xl font-bold text-white mb-6">Job Details</h3>
-            <div class="mb-5"><div class="field-label">Platform</div><select id="prop-platform"><option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option><option value="LinkedIn">LinkedIn</option></select></div>
-            <div class="mb-5"><div class="field-label">Job Description <span>paste full listing</span></div><textarea id="prop-job" rows="6" placeholder="E.g. Looking for a designer to create 5 posts..."></textarea></div>
-            <div class="mb-6"><div class="field-label">Your Experience <span>optional</span></div><input type="text" id="prop-exp" placeholder="E.g. I designed posts for a local cafe last month"></div>
-            <button id="prop-btn" class="btn-primary w-full" onclick="generateProposal()"><i data-lucide="zap" class="w-4 h-4"></i> Write My Proposal</button>
-            <div id="prop-loading" class="feat-loading"><div class="app-spin !w-4 !h-4 !border-2"></div><span class="text-sm font-semibold text-violet-400">Writing your winning proposal...</span></div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          <div class="glass-panel">
+            <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Job Details</h3>
+            <div class="mb-6"><div class="field-label">Platform</div><select id="prop-platform"><option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option><option value="LinkedIn">LinkedIn</option></select></div>
+            <div class="mb-6"><div class="field-label">Job Description <span>paste full listing</span></div><textarea id="prop-job" rows="6" placeholder="E.g. Looking for a designer to create 5 posts..."></textarea></div>
+            <div class="mb-8"><div class="field-label">Your Experience <span>optional</span></div><input type="text" id="prop-exp" placeholder="E.g. I designed posts for a local cafe last month"></div>
+            <button id="prop-btn" class="btn-primary w-full !py-4" onclick="generateProposal()"><i data-lucide="zap" class="w-5 h-5"></i> Write My Proposal</button>
+            <div id="prop-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Writing your winning proposal...</span></div>
           </div>
           
           <div>
             <div id="prop-result" class="hidden">
-              <div class="glass-panel overflow-hidden mb-4">
-                <div class="bg-black/40 px-5 py-4 border-b border-white/10 flex justify-between items-center">
-                  <span class="font-['Playfair_Display'] font-semibold" id="prop-res-subject">Proposal Draft</span>
-                  <button class="text-xs font-semibold text-gray-400 hover:text-white transition-colors border border-white/10 px-3 py-1 rounded" onclick="copyEl('prop-res-text')">Copy</button>
+              <div class="glass-panel !p-0 overflow-hidden mb-6">
+                <div class="bg-black/40 px-6 py-5 border-b border-white/5 flex justify-between items-center">
+                  <span class="font-['Playfair_Display'] text-lg font-bold" id="prop-res-subject">Proposal Draft</span>
+                  <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-1.5 rounded-lg" onclick="copyEl('prop-res-text')">Copy</button>
                 </div>
-                <div class="p-6 text-sm text-gray-300 leading-relaxed whitespace-pre-wrap" id="prop-res-text"></div>
+                <div class="p-8 text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap" id="prop-res-text"></div>
               </div>
-              <div class="bg-white/5 border border-white/10 border-dashed rounded-xl p-5">
-                <div class="text-xs uppercase tracking-widest font-semibold text-gray-500 mb-3 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-violet-400"></i> Why this works</div>
-                <ul id="prop-res-tips" class="text-sm text-gray-400 leading-relaxed list-disc pl-5"></ul>
+              <div class="glass-panel !bg-transparent border-dashed">
+                <div class="text-xs uppercase tracking-widest font-bold text-gray-500 mb-4 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-violet-400"></i> Why this works</div>
+                <ul id="prop-res-tips" class="text-sm text-gray-400 leading-relaxed list-disc pl-5 space-y-2"></ul>
               </div>
             </div>
-            <div id="prop-empty" class="bg-white/2 border border-white/5 border-dashed rounded-2xl p-12 text-center text-gray-500">
-              <i data-lucide="file-text" class="w-12 h-12 mx-auto mb-4 opacity-50"></i>
-              <p class="text-sm">Your proposal will appear here.</p>
+            <div id="prop-empty" class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500">
+              <i data-lucide="file-text" class="w-12 h-12 mx-auto mb-5 opacity-40"></i>
+              <p class="text-sm font-medium">Your proposal will appear here.</p>
             </div>
           </div>
         </div>
       </div>
 
       <div id="email-pg" class="pg max-w-5xl mx-auto">
-        <div class="mb-10 pb-8 border-b border-white/5">
-          <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-violet-400 mb-4"><i data-lucide="mail" class="w-7 h-7"></i></div>
-          <h2 class="font-['Playfair_Display'] text-3xl font-bold text-white mb-2">Client Email Writer</h2>
-          <p class="text-gray-400">Draft professional, high-converting client emails in seconds.</p>
+        <div class="mb-12 pb-8 border-b border-white/5">
+          <div class="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-5 shadow-lg"><i data-lucide="mail" class="w-8 h-8"></i></div>
+          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-3 tracking-tight">Client Email Writer</h2>
+          <p class="text-gray-400 text-base">Draft professional, high-converting client emails in seconds.</p>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div class="glass-panel p-8">
-            <h3 class="font-['Playfair_Display'] text-xl font-bold text-white mb-6">Message Settings</h3>
-            <div class="mb-5"><div class="field-label">Email Objective</div><select id="email-type"><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm payment reminder (Overdue)">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review/testimonial">Request Review</option></select></div>
-            <div class="mb-5"><div class="field-label">Tone</div><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
-            <div class="mb-6"><div class="field-label">Key Context <span>be specific</span></div><textarea id="email-context" rows="5" placeholder="E.g. Delivering 5 YouTube thumbnails. Invoice #42 is overdue..."></textarea></div>
-            <button id="email-btn" class="btn-primary w-full" onclick="generateEmail()"><i data-lucide="zap" class="w-4 h-4"></i> Generate Draft</button>
-            <div id="email-loading" class="feat-loading"><div class="app-spin !w-4 !h-4 !border-2"></div><span class="text-sm font-semibold text-violet-400">Drafting your email...</span></div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          <div class="glass-panel">
+            <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Message Settings</h3>
+            <div class="mb-6"><div class="field-label">Email Objective</div><select id="email-type"><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm payment reminder (Overdue)">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review/testimonial">Request Review</option></select></div>
+            <div class="mb-6"><div class="field-label">Tone</div><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
+            <div class="mb-8"><div class="field-label">Key Context <span>be specific</span></div><textarea id="email-context" rows="5" placeholder="E.g. Delivering 5 YouTube thumbnails. Invoice #42 is overdue..."></textarea></div>
+            <button id="email-btn" class="btn-primary w-full !py-4" onclick="generateEmail()"><i data-lucide="zap" class="w-5 h-5"></i> Generate Draft</button>
+            <div id="email-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Drafting your email...</span></div>
           </div>
           
           <div>
             <div id="email-result" class="hidden">
-              <div class="email-window mb-4">
-                <div class="email-titlebar">
-                   <div class="flex gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span><span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span></div>
-                   <button class="text-xs font-semibold text-gray-400 hover:text-white transition-colors border border-white/10 px-3 py-1 rounded" onclick="copyEl('email-res-text')">Copy</button>
+              <div class="glass-panel !p-0 overflow-hidden mb-6">
+                <div class="bg-black/40 px-6 py-5 border-b border-white/5 flex justify-between items-center">
+                   <div class="flex gap-2"><span class="w-3 h-3 rounded-full bg-red-500/80 border border-red-500"></span><span class="w-3 h-3 rounded-full bg-yellow-500/80 border border-yellow-500"></span><span class="w-3 h-3 rounded-full bg-green-500/80 border border-green-500"></span></div>
+                   <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-1.5 rounded-lg" onclick="copyEl('email-res-text')">Copy</button>
                 </div>
-                <div class="p-6">
-                  <div class="flex items-baseline gap-3 mb-5 border-b border-white/5 pb-4">
-                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Subject</span>
-                    <strong class="font-['Playfair_Display'] text-lg text-white" id="email-res-subject"></strong>
+                <div class="p-8">
+                  <div class="flex items-baseline gap-4 mb-6 border-b border-white/5 pb-5">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Subject</span>
+                    <strong class="font-['Playfair_Display'] text-xl text-white" id="email-res-subject"></strong>
                   </div>
-                  <div class="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap" id="email-res-text"></div>
+                  <div class="text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap" id="email-res-text"></div>
                 </div>
               </div>
-              <div class="bg-white/5 border border-white/10 border-dashed rounded-xl p-5">
-                <div class="text-xs uppercase tracking-widest font-semibold text-gray-500 mb-3 flex items-center gap-2"><i data-lucide="lightbulb" class="w-4 h-4 text-violet-400"></i> AI Strategy Notes</div>
-                <ul id="email-res-tips" class="text-sm text-gray-400 leading-relaxed list-disc pl-5"></ul>
+              <div class="glass-panel !bg-transparent border-dashed">
+                <div class="text-xs uppercase tracking-widest font-bold text-gray-500 mb-4 flex items-center gap-2"><i data-lucide="lightbulb" class="w-4 h-4 text-violet-400"></i> AI Strategy Notes</div>
+                <ul id="email-res-tips" class="text-sm text-gray-400 leading-relaxed list-disc pl-5 space-y-2"></ul>
               </div>
             </div>
-            <div id="email-empty" class="bg-white/2 border border-white/5 border-dashed rounded-2xl p-12 text-center text-gray-500">
-              <i data-lucide="mail" class="w-12 h-12 mx-auto mb-4 opacity-50"></i>
-              <p class="text-sm">Your drafted email will appear here.</p>
+            <div id="email-empty" class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500">
+              <i data-lucide="mail" class="w-12 h-12 mx-auto mb-5 opacity-40"></i>
+              <p class="text-sm font-medium">Your drafted email will appear here.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="gig-finder-pg" class="pg max-w-4xl mx-auto">
-        <div class="mb-10 pb-8 border-b border-white/5">
-          <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-violet-400 mb-4"><i data-lucide="search" class="w-7 h-7"></i></div>
-          <h2 class="font-['Playfair_Display'] text-3xl font-bold text-white mb-2">Gig Opportunity Finder</h2>
-          <p class="text-gray-400">Enter your skills and get data-driven niche recommendations with demand and competition insights.</p>
+      <div id="gig-finder-pg" class="pg max-w-5xl mx-auto">
+        <div class="mb-12 pb-8 border-b border-white/5">
+          <div class="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-5 shadow-lg"><i data-lucide="search" class="w-8 h-8"></i></div>
+          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-3 tracking-tight">Gig Opportunity Finder</h2>
+          <p class="text-gray-400 text-base">Enter your skills and get data-driven niche recommendations.</p>
         </div>
         
-        <div class="glass-panel p-8 mb-8">
-          <h3 class="font-['Playfair_Display'] text-xl font-bold text-white mb-6">Your Details</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+        <div class="glass-panel mb-10">
+          <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Your Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="md:col-span-2"><div class="field-label">Your Skills</div><input type="text" id="gig-skills" placeholder="E.g. Canva, basic video editing..."></div>
             <div><div class="field-label">Target Platform</div><select id="gig-platform"><option value="Both">Upwork & Fiverr</option><option value="Fiverr">Fiverr Only</option><option value="Upwork">Upwork Only</option></select></div>
           </div>
-          <button id="gig-btn" class="btn-primary w-full md:w-auto" onclick="findGigs()"><i data-lucide="radar" class="w-4 h-4"></i> Scan the Market</button>
-          <div id="gig-loading" class="feat-loading"><div class="app-spin !w-4 !h-4 !border-2"></div><span class="text-sm font-semibold text-violet-400">Analysing market demand...</span></div>
+          <button id="gig-btn" class="btn-primary w-full md:w-auto !py-4 px-8" onclick="findGigs()"><i data-lucide="radar" class="w-5 h-5"></i> Scan the Market</button>
+          <div id="gig-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Analysing market demand...</span></div>
         </div>
         
         <div id="gig-result" class="hidden">
-          <div class="flex items-center justify-between mb-5 border-b border-white/5 pb-3">
-              <span class="text-lg font-['Playfair_Display'] font-semibold text-white">Top Recommended Opportunities</span>
+          <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+              <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide">Top Recommended Opportunities</span>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="gig-cards-container"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="gig-cards-container"></div>
         </div>
       </div>
 
       <div id="audit-pg" class="pg max-w-5xl mx-auto">
-        <div class="mb-10 pb-8 border-b border-white/5">
-          <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-violet-400 mb-4"><i data-lucide="wand-2" class="w-7 h-7"></i></div>
-          <h2 class="font-['Playfair_Display'] text-3xl font-bold text-white mb-2">Trojan Horse Audit</h2>
-          <p class="text-gray-400">Generate a clinical, 3-point growth audit to send as a cold pitch.</p>
+        <div class="mb-12 pb-8 border-b border-white/5">
+          <div class="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-violet-400 mb-5 shadow-lg"><i data-lucide="wand-2" class="w-8 h-8"></i></div>
+          <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold text-white mb-3 tracking-tight">Trojan Horse Audit</h2>
+          <p class="text-gray-400 text-base">Generate a clinical, 3-point growth audit to send as a cold pitch.</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div class="glass-panel p-8">
-            <h3 class="font-['Playfair_Display'] text-xl font-bold text-white mb-6">Target Intelligence</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          <div class="glass-panel">
+            <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8">Target Intelligence</h3>
             
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-2 gap-6 mb-6">
               <div><div class="field-label">Business Name</div><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
               <div><div class="field-label">Platform</div><select id="audit-platform"><option value="Instagram">Instagram</option><option value="Website">Website</option></select></div>
             </div>
 
-            <div class="mb-4"><div class="field-label">Client Logo <span>(Optional)</span></div><input type="file" id="audit-logo" accept="image/*" class="!py-2.5"></div>
+            <div class="mb-6"><div class="field-label">Client Logo <span>(Optional)</span></div><input type="file" id="audit-logo" accept="image/*" class="!py-3.5"></div>
 
-            <div class="mb-4"><div class="field-label">Primary Weakness</div><select id="audit-weakness"><option value="No clear Call-to-Action in bio/posts">No clear Call-to-Action</option><option value="Inconsistent posting schedule">Inconsistent posting schedule</option><option value="Low quality visual branding">Low quality visual branding</option><option value="Slow or broken website booking flow">Slow/broken website flow</option></select></div>
+            <div class="mb-6"><div class="field-label">Primary Weakness</div><select id="audit-weakness"><option value="No clear Call-to-Action in bio/posts">No clear Call-to-Action</option><option value="Inconsistent posting schedule">Inconsistent posting schedule</option><option value="Low quality visual branding">Low quality visual branding</option><option value="Slow or broken website booking flow">Slow/broken website flow</option></select></div>
 
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-2 gap-6 mb-6">
               <div><div class="field-label">Your Service</div><select id="audit-service"><option value="Social Media Management">Social Media Management</option><option value="Web Design">Web Design</option></select></div>
               <div><div class="field-label">Pitch Price</div><input type="text" id="audit-price" placeholder="₹2,500"></div>
             </div>
 
-            <div class="mb-6"><div class="field-label">Specific Observation <span>(Hook)</span></div><textarea id="audit-obs" rows="3" placeholder="e.g. They post great coffee photos, but their bio link is broken..."></textarea></div>
+            <div class="mb-8"><div class="field-label">Specific Observation <span>(Hook)</span></div><textarea id="audit-obs" rows="3" placeholder="e.g. They post great coffee photos, but their bio link is broken..."></textarea></div>
 
-            <button id="audit-btn" class="btn-primary w-full" onclick="generateAudit()"><i data-lucide="zap" class="w-4 h-4"></i> Generate Audit Dossier</button>
-            <div id="audit-loading" class="feat-loading"><div class="app-spin !w-4 !h-4 !border-2"></div><span class="text-sm font-semibold text-violet-400">Compiling growth diagnostic...</span></div>
+            <button id="audit-btn" class="btn-primary w-full !py-4" onclick="generateAudit()"><i data-lucide="zap" class="w-5 h-5"></i> Generate Audit Dossier</button>
+            <div id="audit-loading" class="feat-loading"><div class="app-spin !w-5 !h-5 !border-2"></div><span class="text-sm font-semibold text-violet-400">Compiling growth diagnostic...</span></div>
           </div>
 
           <div>
             <div id="audit-result" class="hidden">
-              <div class="email-window mb-6">
-                <div class="email-titlebar">
-                  <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Cold Email Script</span>
-                  <button class="text-xs font-semibold text-gray-400 hover:text-white transition-colors border border-white/10 px-3 py-1 rounded" onclick="copyEl('audit-email-text')">Copy</button>
+              <div class="glass-panel !p-0 overflow-hidden mb-6">
+                <div class="bg-black/40 px-6 py-5 border-b border-white/5 flex justify-between items-center">
+                  <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Cold Email Script</span>
+                  <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border border-white/10 px-4 py-1.5 rounded-lg" onclick="copyEl('audit-email-text')">Copy</button>
                 </div>
-                <div class="p-6 text-sm text-gray-300 leading-relaxed whitespace-pre-wrap" id="audit-email-text"></div>
+                <div class="p-8 text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap" id="audit-email-text"></div>
               </div>
 
-              <div class="glass-panel p-8 text-center">
-                <i data-lucide="file-check-2" class="w-12 h-12 text-emerald-400 mx-auto mb-4"></i>
-                <h3 class="font-['Playfair_Display'] text-xl font-bold text-white mb-2">Client Audit Ready</h3>
-                <p class="text-sm text-gray-400 mb-6">Your 5-section consulting dossier has been generated and branded.</p>
+              <div class="glass-panel text-center !py-12">
+                <i data-lucide="file-check-2" class="w-16 h-16 text-emerald-400 mx-auto mb-5 drop-shadow-lg"></i>
+                <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-3">Client Audit Ready</h3>
+                <p class="text-sm text-gray-400 mb-8 max-w-[250px] mx-auto leading-relaxed">Your 5-section consulting dossier has been generated and branded.</p>
                 <button class="btn-primary" onclick="downloadAuditPDF()"><i data-lucide="download" class="w-4 h-4"></i> Download PDF Report</button>
               </div>
             </div>
             
-            <div id="audit-empty" class="bg-white/2 border border-white/5 border-dashed rounded-2xl p-12 text-center text-gray-500">
-              <i data-lucide="crosshair" class="w-12 h-12 mx-auto mb-4 opacity-50"></i>
-              <p class="text-sm">Your professional audit and email script will appear here.</p>
+            <div id="audit-empty" class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500">
+              <i data-lucide="crosshair" class="w-12 h-12 mx-auto mb-5 opacity-40"></i>
+              <p class="text-sm font-medium">Your professional audit and email script will appear here.</p>
             </div>
           </div>
         </div>
@@ -483,12 +496,12 @@ input:focus, select:focus, textarea:focus { border-color: var(--purple); box-sha
 </div>
 
 <div id="view-doc-modal" class="modal-overlay">
-  <div class="modal-card">
+  <div class="modal-card !max-w-2xl">
     <button class="modal-close" onclick="document.getElementById('view-doc-modal').classList.remove('on')"><i data-lucide="x" class="w-6 h-6"></i></button>
-    <h3 id="doc-modal-title" class="font-['Playfair_Display'] text-2xl font-bold text-white mb-4 text-left">Document</h3>
-    <div id="doc-modal-content" class="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap max-h-[400px] overflow-y-auto text-left mb-6 custom-scrollbar pr-4"></div>
-    <div class="flex justify-end">
-      <button class="btn-primary !py-2" onclick="copyEl('doc-modal-content')">Copy Text</button>
+    <h3 id="doc-modal-title" class="font-['Playfair_Display'] text-3xl font-bold text-white mb-6 text-left">Document</h3>
+    <div id="doc-modal-content" class="text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap max-h-[500px] overflow-y-auto text-left mb-8 custom-scrollbar pr-4"></div>
+    <div class="flex justify-end border-t border-white/5 pt-6">
+      <button class="btn-primary !py-3" onclick="copyEl('doc-modal-content')"><i data-lucide="copy" class="w-4 h-4"></i> Copy Text</button>
     </div>
   </div>
 </div>
@@ -496,11 +509,11 @@ input:focus, select:focus, textarea:focus { border-color: var(--purple); box-sha
 <div id="upgrade-modal" class="modal-overlay">
   <div class="modal-card text-center">
     <button class="modal-close" onclick="closeUpgradeModal()"><i data-lucide="x" class="w-6 h-6"></i></button>
-    <div class="w-16 h-16 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-violet-900/40"><i data-lucide="zap" class="text-white w-8 h-8"></i></div>
-    <h3 class="font-['Playfair_Display'] text-3xl font-bold text-white mb-3">Unlock Freelance Pro</h3>
-    <p class="text-gray-400 text-sm mb-8 leading-relaxed">Get access to the Proposal Writer, Email Writer, Gig Finder, and unlimited AI credits.</p>
-    <div class="font-['Playfair_Display'] text-5xl font-bold text-violet-400 mb-8">₹399<span class="text-lg text-gray-500 font-sans font-normal">/month</span></div>
-    <button class="btn-primary w-full" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></button>
+    <div class="w-20 h-20 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-violet-900/40 border border-white/10"><i data-lucide="zap" class="text-white w-10 h-10"></i></div>
+    <h3 class="font-['Playfair_Display'] text-4xl font-bold text-white mb-4">Unlock Freelance Pro</h3>
+    <p class="text-gray-400 text-base mb-10 leading-relaxed px-4">Get access to the Proposal Writer, Email Writer, Gig Finder, and unlimited AI credits.</p>
+    <div class="font-['Playfair_Display'] text-[3.5rem] font-bold text-violet-400 mb-10 tracking-tight">₹399<span class="text-xl text-gray-500 font-sans font-normal tracking-normal">/month</span></div>
+    <button class="btn-primary w-full !py-4 !text-lg" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now <i data-lucide="arrow-right" class="w-5 h-5 ml-1"></i></button>
   </div>
 </div>
 
@@ -552,8 +565,8 @@ function toggleMode(){
   document.getElementById('name-field').style.display=isSU?'block':'none';
   document.getElementById('auth-btn').innerHTML=isSU?'Create Account':'Sign In';
   document.getElementById('auth-toggle-txt').innerHTML=isSU
-    ?'Already have an account? <span onclick="toggleMode()" class="text-violet-400 cursor-pointer hover:underline">Sign in</span>'
-    :"Don't have an account? <span onclick=\"toggleMode()\" class=\"text-violet-400 cursor-pointer hover:underline\">Sign up free</span>";
+    ?'Already have an account? <span onclick="toggleMode()" class="text-violet-400 cursor-pointer hover:text-violet-300 transition-colors">Sign in</span>'
+    :"Don't have an account? <span onclick=\"toggleMode()\" class=\"text-violet-400 cursor-pointer hover:text-violet-300 transition-colors\">Sign up free</span>";
   clearAuthMessages();
 }
 async function authSubmit(){
@@ -636,8 +649,8 @@ async function loadAllStats(userId){
 function renderProposals(props) {
   const grid = document.getElementById('props-grid');
   if(!props || props.length === 0) {
-    grid.innerHTML = `<div class="bg-white/2 border border-white/5 border-dashed rounded-2xl p-12 text-center text-gray-500 md:col-span-2 lg:col-span-3">
-      <i data-lucide="file-text" class="w-8 h-8 mx-auto mb-3 opacity-50"></i><p class="text-sm">No proposals yet. Generate your first pitch in the Proposal Writer.</p></div>`;
+    grid.innerHTML = `<div class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500 md:col-span-2 lg:col-span-3">
+      <i data-lucide="file-text" class="w-10 h-10 mx-auto mb-4 opacity-40"></i><p class="text-sm font-medium">No proposals yet. Generate your first pitch in the Proposal Writer.</p></div>`;
     lucide.createIcons();
     return;
   }
@@ -645,11 +658,11 @@ function renderProposals(props) {
   props.forEach(p => {
     const date = new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
     const shortDesc = p.job_description ? p.job_description.substring(0, 45) + '...' : 'Custom Proposal';
-    html += `<div class="glass-panel p-6 flex flex-col hover:border-violet-500/30">
-      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-3">${date} • ${p.platform || 'General'}</div>
-      <div class="font-['Playfair_Display'] text-lg font-bold text-white mb-6 leading-tight">${shortDesc}</div>
-      <div class="mt-auto pt-4 border-t border-white/5">
-        <button class="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewProposal('${p.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Proposal</button>
+    html += `<div class="glass-panel p-8 flex flex-col">
+      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4">${date} • ${p.platform || 'General'}</div>
+      <div class="font-['Playfair_Display'] text-xl font-bold text-white mb-8 leading-tight">${shortDesc}</div>
+      <div class="mt-auto pt-5 border-t border-white/5">
+        <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewProposal('${p.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Proposal</button>
       </div></div>`;
   });
   grid.innerHTML = html;
@@ -659,19 +672,19 @@ function renderProposals(props) {
 function renderEmails(emails) {
   const grid = document.getElementById('emails-grid');
   if(!emails || emails.length === 0) {
-    grid.innerHTML = `<div class="bg-white/2 border border-white/5 border-dashed rounded-2xl p-12 text-center text-gray-500 md:col-span-2 lg:col-span-3">
-      <i data-lucide="mail" class="w-8 h-8 mx-auto mb-3 opacity-50"></i><p class="text-sm">No emails yet. Draft your first client message in the Email Writer.</p></div>`;
+    grid.innerHTML = `<div class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500 md:col-span-2 lg:col-span-3">
+      <i data-lucide="mail" class="w-10 h-10 mx-auto mb-4 opacity-40"></i><p class="text-sm font-medium">No emails yet. Draft your first client message in the Email Writer.</p></div>`;
     lucide.createIcons();
     return;
   }
   let html = '';
   emails.forEach(e => {
     const date = new Date(e.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
-    html += `<div class="glass-panel p-6 flex flex-col hover:border-violet-500/30">
-      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-3">${date}</div>
-      <div class="font-['Playfair_Display'] text-lg font-bold text-white mb-6 leading-tight">${e.email_type || 'Client Email'}</div>
-      <div class="mt-auto pt-4 border-t border-white/5">
-        <button class="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewEmail('${e.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Email</button>
+    html += `<div class="glass-panel p-8 flex flex-col">
+      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4">${date}</div>
+      <div class="font-['Playfair_Display'] text-xl font-bold text-white mb-8 leading-tight">${e.email_type || 'Client Email'}</div>
+      <div class="mt-auto pt-5 border-t border-white/5">
+        <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewEmail('${e.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Email</button>
       </div></div>`;
   });
   grid.innerHTML = html;
@@ -701,11 +714,11 @@ function renderKits(kits){
   userKits=kits;
   const grid=document.getElementById('kits-grid');
   if(!kits||kits.length===0){
-    grid.innerHTML=`<div class="bg-white/2 border border-white/5 border-dashed rounded-2xl p-12 text-center text-gray-500 md:col-span-2 lg:col-span-3">
-      <i data-lucide="folder" class="w-8 h-8 mx-auto mb-3 opacity-50"></i>
-      <h4 class="font-['Playfair_Display'] text-xl font-bold text-white mb-2">No kits yet</h4>
-      <p class="text-sm mb-6">Generate your first freelance kit with the Launch Coach.</p>
-      <button class="btn-primary" onclick="startChat()">Start Launch Coach</button>
+    grid.innerHTML=`<div class="glass-panel !bg-transparent border-dashed !p-16 text-center text-gray-500 md:col-span-2 lg:col-span-3">
+      <i data-lucide="folder" class="w-10 h-10 mx-auto mb-4 opacity-40"></i>
+      <h4 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-3">No kits yet</h4>
+      <p class="text-sm mb-8 font-medium">Generate your first freelance kit with the Launch Coach.</p>
+      <button class="btn-primary mx-auto" onclick="startChat()">Start Launch Coach</button>
     </div>`;
     lucide.createIcons();
     return;
@@ -716,14 +729,14 @@ function renderKits(kits){
     const starred=kit.is_starred;
     const niche=kit.niche||kit.kit_data?.niche||'Freelance Kit';
     
-    html+=`<div class="glass-panel p-6 flex flex-col relative overflow-hidden" id="kp-${kit.id}">
-      <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 to-indigo-500 opacity-60"></div>
-      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-3 pl-2">${date}</div>
-      <div class="font-['Playfair_Display'] text-xl font-bold text-white mb-6 leading-tight pl-2">${niche}</div>
-      <div class="mt-auto pt-4 border-t border-white/5 flex gap-2 pl-2">
-        <button class="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-1 transition-colors border border-white/10 px-2.5 py-1.5 rounded" onclick="viewKit('${kit.id}')"><i data-lucide="eye" class="w-3.5 h-3.5"></i> View</button>
-        <button class="text-xs font-semibold transition-colors border border-white/10 px-2.5 py-1.5 rounded flex items-center gap-1 ${starred ? 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10' : 'text-gray-400 hover:text-white'}" onclick="toggleStar('${kit.id}',${starred})"><i data-lucide="star" class="w-3.5 h-3.5"></i></button>
-        <button class="text-xs font-semibold text-gray-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-colors border border-white/10 px-2.5 py-1.5 rounded flex items-center gap-1 ml-auto" onclick="deleteKit('${kit.id}')"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+    html+=`<div class="glass-panel p-8 flex flex-col relative overflow-hidden" id="kp-${kit.id}">
+      <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-violet-500 to-indigo-500 opacity-80"></div>
+      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4 pl-2">${date}</div>
+      <div class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8 leading-tight pl-2">${niche}</div>
+      <div class="mt-auto pt-5 border-t border-white/5 flex gap-3 pl-2">
+        <button class="text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors border border-white/10 px-3 py-2 rounded-lg" onclick="viewKit('${kit.id}')"><i data-lucide="eye" class="w-4 h-4"></i> View</button>
+        <button class="text-[11px] font-bold uppercase tracking-widest transition-colors border border-white/10 px-3 py-2 rounded-lg flex items-center gap-1.5 ${starred ? 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10' : 'text-gray-400 hover:text-white'}" onclick="toggleStar('${kit.id}',${starred})"><i data-lucide="star" class="w-4 h-4"></i></button>
+        <button class="text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-colors border border-white/10 px-3 py-2 rounded-lg flex items-center gap-1.5 ml-auto" onclick="deleteKit('${kit.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
       </div>
     </div>`;
   });
@@ -799,8 +812,8 @@ function showStep(i){
 }
 function typing(cb){
   const c=document.getElementById('chat-msgs');
-  const el=document.createElement('div');el.className='flex gap-3 items-end';el.id='typing';
-  el.innerHTML='<div class="av-ai"><i data-lucide="sparkles" class="w-4 h-4 text-white"></i></div><div class="bg-white/5 border border-white/10 p-3 rounded-2xl flex gap-1 items-center h-[42px]"><div class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></div><div class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" style="animation-delay: 0.2s"></div><div class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" style="animation-delay: 0.4s"></div></div>';
+  const el=document.createElement('div');el.className='flex gap-4 items-end';el.id='typing';
+  el.innerHTML='<div class="av-ai"><i data-lucide="sparkles" class="w-5 h-5 text-white"></i></div><div class="bg-white/5 border border-white/5 p-4 rounded-2xl flex gap-1.5 items-center h-[52px]"><div class="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></div><div class="w-2 h-2 rounded-full bg-violet-400 animate-pulse" style="animation-delay: 0.2s"></div><div class="w-2 h-2 rounded-full bg-violet-400 animate-pulse" style="animation-delay: 0.4s"></div></div>';
   c.appendChild(el);
   lucide.createIcons();
   scrollBot();
@@ -808,27 +821,27 @@ function typing(cb){
 }
 function addAI(text){
   const c=document.getElementById('chat-msgs');
-  const d=document.createElement('div');d.className='flex gap-3 items-end opacity-0 translate-y-2 transition-all duration-300';
-  d.innerHTML='<div class="av-ai"><i data-lucide="sparkles" class="w-4 h-4 text-white"></i></div><div class="bubble ai">'+text.replace(/\n/g,'<br>')+'</div>';
+  const d=document.createElement('div');d.className='flex gap-4 items-end opacity-0 translate-y-3 transition-all duration-300';
+  d.innerHTML='<div class="av-ai"><i data-lucide="sparkles" class="w-5 h-5 text-white"></i></div><div class="bubble ai">'+text.replace(/\n/g,'<br>')+'</div>';
   c.appendChild(d);
   lucide.createIcons();
-  setTimeout(()=> { d.classList.remove('opacity-0', 'translate-y-2'); }, 10);
+  setTimeout(()=> { d.classList.remove('opacity-0', 'translate-y-3'); }, 10);
   scrollBot();
 }
 function addUser(text){
   const c=document.getElementById('chat-msgs');
-  const d=document.createElement('div');d.className='flex gap-3 items-end flex-row-reverse opacity-0 translate-y-2 transition-all duration-300';
-  d.innerHTML='<div class="av-user text-[10px] text-gray-400 uppercase font-bold">You</div><div class="bubble usr">'+text+'</div>';
+  const d=document.createElement('div');d.className='flex gap-4 items-end flex-row-reverse opacity-0 translate-y-3 transition-all duration-300';
+  d.innerHTML='<div class="av-user text-[10px] text-gray-400 uppercase font-bold tracking-wider">You</div><div class="bubble usr">'+text+'</div>';
   c.appendChild(d);
-  setTimeout(()=> { d.classList.remove('opacity-0', 'translate-y-2'); }, 10);
+  setTimeout(()=> { d.classList.remove('opacity-0', 'translate-y-3'); }, 10);
   scrollBot();
 }
 function addOpts(opts,si){
   const c=document.getElementById('chat-msgs');
-  const row=document.createElement('div');row.className='flex flex-wrap gap-2 ml-12 opacity-0 translate-y-2 transition-all duration-300';
+  const row=document.createElement('div');row.className='flex flex-wrap gap-3 ml-14 opacity-0 translate-y-3 transition-all duration-300';
   opts.forEach(o=>{const b=document.createElement('button');b.className='opt-btn';b.textContent=o;b.onclick=()=>pickOpt(o,si,row);row.appendChild(b);});
   c.appendChild(row);
-  setTimeout(()=> { row.classList.remove('opacity-0', 'translate-y-2'); }, 10);
+  setTimeout(()=> { row.classList.remove('opacity-0', 'translate-y-3'); }, 10);
   scrollBot();
 }
 function pickOpt(val,si,row){
@@ -838,7 +851,7 @@ function pickOpt(val,si,row){
 function sendMsg(){
   if(!waiting)return;
   const t=document.getElementById('txt');const v=t.value.trim();
-  if(!v||v.length<4){t.style.borderColor='#ef4444';setTimeout(()=>t.style.borderColor='rgba(255,255,255,0.1)',1500);return;}
+  if(!v||v.length<4){t.style.borderColor='#ef4444';setTimeout(()=>t.style.borderColor='rgba(255,255,255,0.06)',1500);return;}
   t.value='';autoResize(t);
   answers[STEPS[step].id]=v;addUser(v);lockInput(true);waiting=false;advance();
 }
@@ -868,7 +881,7 @@ async function callAPI(){
     console.error(e);
     document.getElementById('gen-bar').style.display='none';
     addAI('Something went wrong. Please try again.');
-    const btn=document.createElement('button');btn.className='btn-primary';btn.style.cssText='width:auto;margin-left:48px;margin-top:8px;padding:10px 20px;';
+    const btn=document.createElement('button');btn.className='btn-primary';btn.style.cssText='width:auto;margin-left:56px;margin-top:12px;';
     btn.textContent='Retry';btn.onclick=()=>{callAPI();btn.remove();};
     document.getElementById('chat-msgs').appendChild(btn);scrollBot();
   }
@@ -878,37 +891,37 @@ function showResults(kit){
   navigate('results-pg-wrap');
   let planHTML='';
   if(kit.action_plan&&typeof kit.action_plan==='object'){
-    Object.values(kit.action_plan).forEach((v,i)=>{planHTML+=`<div class="flex gap-4 items-start mb-4"><div class="w-7 h-7 bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center justify-center text-xs font-bold text-violet-400 shrink-0">${i+1}</div><div class="text-sm leading-relaxed text-gray-300 pt-1">${v}</div></div>`;});
+    Object.values(kit.action_plan).forEach((v,i)=>{planHTML+=`<div class="flex gap-4 items-start mb-5"><div class="w-8 h-8 bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center justify-center text-sm font-bold text-violet-400 shrink-0 shadow-inner">${i+1}</div><div class="text-[0.95rem] leading-relaxed text-gray-300 pt-1">${v}</div></div>`;});
   }else if(typeof kit.action_plan==='string'){
-    kit.action_plan.split('\n').filter(Boolean).forEach((line,i)=>{planHTML+=`<div class="flex gap-4 items-start mb-4"><div class="w-7 h-7 bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center justify-center text-xs font-bold text-violet-400 shrink-0">${i+1}</div><div class="text-sm leading-relaxed text-gray-300 pt-1">${line.replace(/^Day \d+[:.] */,'')}</div></div>`;});
+    kit.action_plan.split('\n').filter(Boolean).forEach((line,i)=>{planHTML+=`<div class="flex gap-4 items-start mb-5"><div class="w-8 h-8 bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center justify-center text-sm font-bold text-violet-400 shrink-0 shadow-inner">${i+1}</div><div class="text-[0.95rem] leading-relaxed text-gray-300 pt-1">${line.replace(/^Day \d+[:.] */,'')}</div></div>`;});
   }
-  const dRow=d=>(d||'').split('\n').filter(Boolean).map(x=>`<span class="block py-0.5">${x}</span>`).join('');
+  const dRow=d=>(d||'').split('\n').filter(Boolean).map(x=>`<span class="block py-1">${x}</span>`).join('');
   document.getElementById('results-pg').innerHTML=`
-    <div class="text-center mb-10">
-      <div class="text-[10px] font-bold tracking-widest uppercase text-violet-400 mb-3 flex items-center justify-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Your kit is ready</div>
-      <h2 class="font-['Playfair_Display'] text-4xl font-bold mb-3">Your Freelance Launch Kit</h2>
-      <p class="text-gray-400">Built specifically for your skills and goals</p>
+    <div class="text-center mb-12">
+      <div class="text-[11px] font-bold tracking-widest uppercase text-violet-400 mb-4 flex items-center justify-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Your kit is ready</div>
+      <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold mb-4 tracking-tight">Your Freelance Launch Kit</h2>
+      <p class="text-gray-400 text-base">Built specifically for your skills and goals</p>
     </div>
-    <div class="glass-panel p-8 text-center mb-8">
-      <div class="text-[10px] font-bold tracking-widest uppercase text-violet-400 mb-3">Your AI-Assigned Niche</div>
-      <div class="font-['Playfair_Display'] text-2xl font-bold mb-3">${kit.niche||''}</div>
-      <div class="text-sm text-gray-400 leading-relaxed max-w-2xl mx-auto">${kit.niche_reason||''}</div>
+    <div class="glass-panel p-10 text-center mb-10">
+      <div class="text-[11px] font-bold tracking-widest uppercase text-violet-400 mb-4">Your AI-Assigned Niche</div>
+      <div class="font-['Playfair_Display'] text-3xl font-bold mb-4 text-white">${kit.niche||''}</div>
+      <div class="text-[0.95rem] text-gray-400 leading-relaxed max-w-2xl mx-auto">${kit.niche_reason||''}</div>
     </div>
-    <div class="space-y-4">
-      <div class="glass-panel overflow-hidden transition-all duration-300 h-20" onclick="toggleCard(this)"><div class="p-5 flex items-center justify-between cursor-pointer hover:bg-white/5"><div class="flex items-center gap-4"><div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-gray-300"><i data-lucide="folder" class="w-5 h-5"></i></div><div><div class="font-bold text-sm">Portfolio Blurb</div><div class="text-xs text-gray-500">Copy-paste ready bio</div></div></div><button class="text-xs font-semibold text-gray-400 border border-white/10 px-3 py-1 rounded" onclick="event.stopPropagation(); copyEl('port-txt')">Copy</button></div><div class="px-6 pb-6 pt-2"><p id="port-txt" class="text-sm text-gray-300 leading-relaxed">${kit.portfolio_blurb||''}</p></div></div>
-      <div class="glass-panel overflow-hidden transition-all duration-300 h-20" onclick="toggleCard(this)"><div class="p-5 flex items-center justify-between cursor-pointer hover:bg-white/5"><div class="flex items-center gap-4"><div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-gray-300"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div><div><div class="font-bold text-sm">Pricing Packages</div><div class="text-xs text-gray-500">3 tiers with INR pricing</div></div></div></div><div class="px-6 pb-6 pt-2"><table class="w-full text-left text-sm"><thead class="text-xs text-gray-500 uppercase tracking-wider border-b border-white/10"><tr class="pb-2"><th class="pb-3 font-medium">Package</th><th class="pb-3 font-medium">Price</th><th class="pb-3 font-medium">Includes</th><th class="pb-3 font-medium">Time</th></tr></thead><tbody class="divide-y divide-white/5"><tr><td class="py-4"><span class="text-[10px] font-bold px-2 py-1 rounded bg-indigo-500/20 text-indigo-300">${kit.pricing?.basic?.name||'Starter'}</span></td><td class="py-4 font-['Playfair_Display'] font-bold text-base">${kit.pricing?.basic?.price||''}</td><td class="py-4 text-gray-400 text-xs">${dRow(kit.pricing?.basic?.deliverables)}</td><td class="py-4 text-gray-400 text-xs">${kit.pricing?.basic?.timeline||''}</td></tr><tr><td class="py-4"><span class="text-[10px] font-bold px-2 py-1 rounded bg-violet-500/20 text-violet-300">${kit.pricing?.standard?.name||'Standard'}</span></td><td class="py-4 font-['Playfair_Display'] font-bold text-base">${kit.pricing?.standard?.price||''}</td><td class="py-4 text-gray-400 text-xs">${dRow(kit.pricing?.standard?.deliverables)}</td><td class="py-4 text-gray-400 text-xs">${kit.pricing?.standard?.timeline||''}</td></tr><tr><td class="py-4"><span class="text-[10px] font-bold px-2 py-1 rounded bg-yellow-500/20 text-yellow-300">${kit.pricing?.premium?.name||'Premium'}</span></td><td class="py-4 font-['Playfair_Display'] font-bold text-base">${kit.pricing?.premium?.price||''}</td><td class="py-4 text-gray-400 text-xs">${dRow(kit.pricing?.premium?.deliverables)}</td><td class="py-4 text-gray-400 text-xs">${kit.pricing?.premium?.timeline||''}</td></tr></tbody></table></div></div>
-      <div class="glass-panel overflow-hidden transition-all duration-300 h-20" onclick="toggleCard(this)"><div class="p-5 flex items-center justify-between cursor-pointer hover:bg-white/5"><div class="flex items-center gap-4"><div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-gray-300"><i data-lucide="edit" class="w-5 h-5"></i></div><div><div class="font-bold text-sm">Gig Description</div><div class="text-xs text-gray-500">SEO-optimised</div></div></div><button class="text-xs font-semibold text-gray-400 border border-white/10 px-3 py-1 rounded" onclick="event.stopPropagation(); copyEl('gig-txt')">Copy</button></div><div class="px-6 pb-6 pt-2"><p class="text-[10px] uppercase tracking-widest text-violet-400 font-bold mb-1">Gig Title</p><p class="font-semibold mb-4 text-sm">${kit.gig_title||''}</p><p class="text-[10px] uppercase tracking-widest text-violet-400 font-bold mb-1">Gig Description</p><p id="gig-txt" class="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">${kit.gig_description||''}</p></div></div>
-      <div class="glass-panel overflow-hidden transition-all duration-300 h-20" onclick="toggleCard(this)"><div class="p-5 flex items-center justify-between cursor-pointer hover:bg-white/5"><div class="flex items-center gap-4"><div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-gray-300"><i data-lucide="message-circle" class="w-5 h-5"></i></div><div><div class="font-bold text-sm">Cold Pitch Script</div><div class="text-xs text-gray-500">Unlocked via Pro</div></div></div></div><div class="px-6 pb-6 pt-2"><p class="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">${kit.pitch_script||'Your personalised cold pitch script.'}</p></div></div>
-      <div class="glass-panel overflow-hidden transition-all duration-300 h-20" onclick="toggleCard(this)"><div class="p-5 flex items-center justify-between cursor-pointer hover:bg-white/5"><div class="flex items-center gap-4"><div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-gray-300"><i data-lucide="calendar" class="w-5 h-5"></i></div><div><div class="font-bold text-sm">7-Day Launch Plan</div><div class="text-xs text-gray-500">Unlocked via Pro</div></div></div></div><div class="px-6 pb-6 pt-2"><div class="flex flex-col gap-2 mt-2">${planHTML}</div></div></div>
+    <div class="space-y-6">
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="folder" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">Portfolio Blurb</div><div class="text-xs text-gray-500 font-medium">Copy-paste ready bio</div></div></div><button class="text-xs font-bold uppercase tracking-widest text-gray-400 border border-white/10 px-4 py-1.5 rounded-lg hover:text-white transition-colors" onclick="event.stopPropagation(); copyEl('port-txt')">Copy</button></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><p id="port-txt" class="text-[0.95rem] text-gray-300 leading-relaxed">${kit.portfolio_blurb||''}</p></div></div>
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">Pricing Packages</div><div class="text-xs text-gray-500 font-medium">3 tiers with INR pricing</div></div></div></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><table class="w-full text-left text-sm"><thead class="text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-white/10"><tr class="pb-3"><th class="pb-4 font-medium">Package</th><th class="pb-4 font-medium">Price</th><th class="pb-4 font-medium">Includes</th><th class="pb-4 font-medium">Time</th></tr></thead><tbody class="divide-y divide-white/5"><tr><td class="py-5"><span class="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${kit.pricing?.basic?.name||'Starter'}</span></td><td class="py-5 font-['Playfair_Display'] font-bold text-lg text-white">${kit.pricing?.basic?.price||''}</td><td class="py-5 text-gray-300 text-sm leading-relaxed">${dRow(kit.pricing?.basic?.deliverables)}</td><td class="py-5 text-gray-400 text-sm font-medium">${kit.pricing?.basic?.timeline||''}</td></tr><tr><td class="py-5"><span class="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-violet-500/20 text-violet-300 border border-violet-500/30">${kit.pricing?.standard?.name||'Standard'}</span></td><td class="py-5 font-['Playfair_Display'] font-bold text-lg text-white">${kit.pricing?.standard?.price||''}</td><td class="py-5 text-gray-300 text-sm leading-relaxed">${dRow(kit.pricing?.standard?.deliverables)}</td><td class="py-5 text-gray-400 text-sm font-medium">${kit.pricing?.standard?.timeline||''}</td></tr><tr><td class="py-5"><span class="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">${kit.pricing?.premium?.name||'Premium'}</span></td><td class="py-5 font-['Playfair_Display'] font-bold text-lg text-white">${kit.pricing?.premium?.price||''}</td><td class="py-5 text-gray-300 text-sm leading-relaxed">${dRow(kit.pricing?.premium?.deliverables)}</td><td class="py-5 text-gray-400 text-sm font-medium">${kit.pricing?.premium?.timeline||''}</td></tr></tbody></table></div></div>
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="edit" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">Gig Description</div><div class="text-xs text-gray-500 font-medium">SEO-optimised</div></div></div><button class="text-xs font-bold uppercase tracking-widest text-gray-400 border border-white/10 px-4 py-1.5 rounded-lg hover:text-white transition-colors" onclick="event.stopPropagation(); copyEl('gig-txt')">Copy</button></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><p class="text-[10px] uppercase tracking-widest text-violet-400 font-bold mb-2">Gig Title</p><p class="font-bold mb-6 text-base text-white">${kit.gig_title||''}</p><p class="text-[10px] uppercase tracking-widest text-violet-400 font-bold mb-2">Gig Description</p><p id="gig-txt" class="text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap">${kit.gig_description||''}</p></div></div>
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="message-circle" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">Cold Pitch Script</div><div class="text-xs text-gray-500 font-medium">Unlocked via Pro</div></div></div></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><p class="text-[0.95rem] text-gray-300 whitespace-pre-wrap leading-relaxed">${kit.pitch_script||'Your personalised cold pitch script.'}</p></div></div>
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="calendar" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">7-Day Launch Plan</div><div class="text-xs text-gray-500 font-medium">Unlocked via Pro</div></div></div></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><div class="flex flex-col gap-3 mt-2">${planHTML}</div></div></div>
     </div>
-    <div class="mt-12 text-center pb-10 flex gap-4 justify-center flex-wrap">
-      <button class="btn-primary !py-2.5" onclick="showUpgradeModal()"><i data-lucide="zap" class="w-4 h-4"></i> Upgrade to Pro</button>
-      <button onclick="startChat()" class="bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Rebuild Kit</button>
-      <button onclick="navigate('home-pg')" class="bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Dashboard</button>
+    <div class="mt-16 text-center pb-12 flex gap-5 justify-center flex-wrap">
+      <button class="btn-primary" onclick="showUpgradeModal()"><i data-lucide="zap" class="w-5 h-5"></i> Upgrade to Pro</button>
+      <button onclick="startChat()" class="bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 px-8 py-3.5 rounded-xl font-semibold text-[0.95rem] transition-all flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Rebuild Kit</button>
+      <button onclick="navigate('home-pg')" class="bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 px-8 py-3.5 rounded-xl font-semibold text-[0.95rem] transition-all flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Dashboard</button>
     </div>`;
   lucide.createIcons();
 }
-function toggleCard(el){ if(el.classList.contains('h-20')) { el.classList.remove('h-20'); } else { el.classList.add('h-20'); } }
+function toggleCard(el){ if(el.classList.contains('h-[90px]')) { el.classList.remove('h-[90px]'); } else { el.classList.add('h-[90px]'); } }
 function copyEl(id){
   const el=document.getElementById(id);if(!el)return;
   navigator.clipboard.writeText(el.innerText).then(()=>toast('Copied!','success'));
@@ -922,7 +935,7 @@ async function downloadPDF(){
     const {jsPDF}=window.jspdf;const doc=new jsPDF('p','mm','a4');
     const el=document.getElementById('kit-content');
     if(!el){toast('No kit to download','error');return;}
-    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#07050A',useCORS:true});
+    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#0b0b12',useCORS:true});
     const imgData=canvas.toDataURL('image/png');
     const w=210,h=(canvas.height*w)/canvas.width;
     doc.addImage(imgData,'PNG',0,0,w,h);
@@ -1011,15 +1024,15 @@ async function findGigs(){
       const dC=niche.demand?.toLowerCase()==='high'?'text-emerald-400 bg-emerald-400/10':niche.demand?.toLowerCase()==='medium'?'text-yellow-400 bg-yellow-400/10':'text-red-400 bg-red-400/10';
       const cC=niche.competition?.toLowerCase()==='low'?'text-emerald-400 bg-emerald-400/10':niche.competition?.toLowerCase()==='medium'?'text-yellow-400 bg-yellow-400/10':'text-red-400 bg-red-400/10';
       const card=document.createElement('div');
-      card.className='glass-panel p-6 flex flex-col hover:border-violet-500/30'; 
-      card.innerHTML=`<div class="font-['Playfair_Display'] text-xl font-bold text-violet-400 mb-4 leading-tight">${niche.title}</div>
-        <div class="flex justify-between border-y border-white/5 py-3 mb-4">
-          <div><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Demand</div><div class="text-xs font-bold px-2 py-1 rounded inline-block ${dC}">${niche.demand}</div></div>
+      card.className='glass-panel p-8 flex flex-col hover:border-violet-500/30'; 
+      card.innerHTML=`<div class="font-['Playfair_Display'] text-2xl font-bold text-violet-400 mb-6 leading-tight">${niche.title}</div>
+        <div class="flex justify-between border-y border-white/5 py-4 mb-6">
+          <div><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Demand</div><div class="text-xs font-bold px-2.5 py-1.5 rounded-lg inline-block ${dC}">${niche.demand}</div></div>
           <div class="w-px bg-white/5"></div>
-          <div><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Competition</div><div class="text-xs font-bold px-2 py-1 rounded inline-block ${cC}">${niche.competition}</div></div>
+          <div><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Competition</div><div class="text-xs font-bold px-2.5 py-1.5 rounded-lg inline-block ${cC}">${niche.competition}</div></div>
         </div>
-        <div class="mb-4"><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Avg. Pricing</div><div class="font-['Playfair_Display'] font-bold text-lg text-white">${niche.priceRange}</div></div>
-        <div class="bg-black/30 p-3 rounded-lg text-xs text-gray-300 leading-relaxed mt-auto"><strong class="text-white">Why now:</strong> ${niche.whyNow}</div>`;
+        <div class="mb-6"><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Avg. Pricing</div><div class="font-['Playfair_Display'] font-bold text-2xl text-white">${niche.priceRange}</div></div>
+        <div class="bg-black/30 p-4 rounded-xl text-sm text-gray-300 leading-relaxed mt-auto border border-white/5"><strong class="text-white">Why now:</strong> ${niche.whyNow}</div>`;
       container.appendChild(card);
     });
     if(currentUser){
