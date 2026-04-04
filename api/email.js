@@ -3,16 +3,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Matching exactly what your UI has
-  const { objective, tone, context } = req.body; 
+  // Matching exactly what your frontend sent in the screenshot
+  const { emailType, tone, context, niche } = req.body; 
   const groqApiKey = process.env.GROQ_API_KEY; 
 
   const modelName = "llama-3.3-70b-versatile";
 
-  const systemPrompt = `You are a top 1% freelance consultant writing an email. 
+  const systemPrompt = `You are a top 1% freelance consultant (${niche}) writing an email. 
 Your ONLY goal is to get a reply. You do not sell in the email; you sell on the call.
 
-Email Objective: """${objective}"""
+Email Objective: """${emailType}"""
 Tone: """${tone}"""
 Context/Details: """${context}"""
 
