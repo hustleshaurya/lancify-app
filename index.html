@@ -402,7 +402,41 @@ p-8 cursor-pointer group" onclick="startChat()">
 in seconds.</p>
           </div>
         </div>
+<div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4 mt-8">
+            <div>
+              <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide">Client Pipeline</span>
+              <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Track your money</p>
+            </div>
+            <button class="bg-violet-600 hover:bg-violet-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition" onclick="document.getElementById('add-lead-modal').classList.add('on')">
+              <i data-lucide="plus" class="w-4 h-4 inline-block mr-1"></i> Add Lead
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div class="bg-black/20 rounded-2xl p-5 border border-white/5 flex flex-col h-[400px]">
+                <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
+                    <span class="text-xs font-bold uppercase tracking-widest text-violet-400"><i data-lucide="send" class="w-3 h-3 inline"></i> Pitched</span>
+                    <span class="text-xs bg-white/10 px-2 py-1 rounded text-gray-300 font-bold" id="count-pitched">0</span>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-3 custom-scrollbar" id="pipe-pitched"></div>
+            </div>
+            
+            <div class="bg-black/20 rounded-2xl p-5 border border-white/5 flex flex-col h-[400px]">
+                <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
+                    <span class="text-xs font-bold uppercase tracking-widest text-yellow-400"><i data-lucide="message-circle" class="w-3 h-3 inline"></i> In Talks</span>
+                    <span class="text-xs bg-white/10 px-2 py-1 rounded text-gray-300 font-bold" id="count-replied">0</span>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-3 custom-scrollbar" id="pipe-replied"></div>
+            </div>
 
+            <div class="bg-black/20 rounded-2xl p-5 border border-white/5 flex flex-col h-[400px]">
+                <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
+                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-400"><i data-lucide="check-circle" class="w-3 h-3 inline"></i> Closed / Won</span>
+                    <span class="text-xs bg-white/10 px-2 py-1 rounded text-gray-300 font-bold" id="count-won">0</span>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-3 custom-scrollbar" id="pipe-won"></div>
+            </div>
+        </div>
         <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
             <span class="text-xl font-['Playfair_Display'] font-bold text-white tracking-wide">My Saved Kits</span>
         </div>
@@ -939,7 +973,33 @@ Finder, and unlimited AI credits.</p>
     <button class="btn-primary w-full !py-4 !text-lg" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i></button>
   </div>
 </div>
-
+<div id="add-lead-modal" class="modal-overlay">
+  <div class="modal-card !max-w-md">
+    <button class="modal-close" onclick="document.getElementById('add-lead-modal').classList.remove('on')"><i data-lucide="x" class="w-6 h-6"></i></button>
+    <h3 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-6">Add New Lead</h3>
+    
+    <div class="input-wrapper">
+      <label class="field-label">Client / Company Name</label>
+      <input type="text" id="lead-name" placeholder="e.g., Bombay Roastery">
+    </div>
+    <div class="input-wrapper">
+      <label class="field-label">Platform Found</label>
+      <select id="lead-platform">
+        <option value="Upwork">Upwork</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="Cold Email">Cold Email / DMs</option>
+        <option value="Fiverr">Fiverr</option>
+        <option value="Referral">Referral / Other</option>
+      </select>
+    </div>
+    <div class="input-wrapper">
+      <label class="field-label">Estimated Value</label>
+      <input type="text" id="lead-value" placeholder="e.g., ₹15,000">
+    </div>
+    
+    <button class="btn-primary w-full mt-4" id="save-lead-btn" onclick="saveLead()"><i data-lucide="plus" class="w-5 h-5"></i> Add to Pipeline</button>
+  </div>
+</div>
 <script>
 lucide.createIcons();
 const { createClient } = supabase;
@@ -1759,6 +1819,100 @@ async function saveProfile() {
   } finally {
     btn.innerHTML = '<i data-lucide="save" class="w-5 h-5"></i> Save Global Profile';
     lucide.createIcons();
+  }
+}
+  let userLeads = [];
+
+async function loadLeads() {
+  if (!currentUser) return;
+  try {
+    const { data, error } = await sb.from('leads').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+    if (error) throw error;
+    userLeads = data || [];
+    renderPipeline();
+  } catch (err) {
+    console.error('Error loading leads:', err.message);
+  }
+}
+
+function renderPipeline() {
+  const cols = { pitched: '', replied: '', won: '' };
+  let counts = { pitched: 0, replied: 0, won: 0 };
+
+  userLeads.forEach(lead => {
+    const status = lead.status || 'pitched';
+    counts[status]++;
+    
+    // Create the HTML card for each lead
+    cols[status] += `
+      <div class="bg-white/5 hover:bg-white/10 border border-white/10 p-4 rounded-xl transition group">
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="text-white font-bold text-sm truncate pr-2">${lead.client_name}</h4>
+          <span class="text-[10px] bg-black/50 text-gray-400 px-2 py-0.5 rounded font-mono">${lead.project_value || '₹?'}</span>
+        </div>
+        <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-3">${lead.platform}</div>
+        
+        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          ${status !== 'pitched' ? `<button onclick="moveLead('${lead.id}', 'pitched')" class="flex-1 bg-white/5 hover:bg-violet-500/20 text-gray-400 hover:text-violet-400 text-[10px] py-1.5 rounded border border-white/5 transition">Pitch</button>` : ''}
+          ${status !== 'replied' ? `<button onclick="moveLead('${lead.id}', 'replied')" class="flex-1 bg-white/5 hover:bg-yellow-500/20 text-gray-400 hover:text-yellow-400 text-[10px] py-1.5 rounded border border-white/5 transition">Talks</button>` : ''}
+          ${status !== 'won' ? `<button onclick="moveLead('${lead.id}', 'won')" class="flex-1 bg-white/5 hover:bg-emerald-500/20 text-gray-400 hover:text-emerald-400 text-[10px] py-1.5 rounded border border-white/5 transition">Won</button>` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  // Update DOM
+  ['pitched', 'replied', 'won'].forEach(status => {
+    document.getElementById(`pipe-${status}`).innerHTML = cols[status] || `<div class="text-center text-gray-600 text-xs py-10">No leads here yet</div>`;
+    document.getElementById(`count-${status}`).textContent = counts[status];
+  });
+  lucide.createIcons();
+}
+
+async function saveLead() {
+  if (!currentUser) return;
+  const name = document.getElementById('lead-name').value.trim();
+  const platform = document.getElementById('lead-platform').value;
+  const value = document.getElementById('lead-value').value.trim();
+  
+  if (!name) { toast('Client name is required', 'error'); return; }
+  
+  const btn = document.getElementById('save-lead-btn');
+  btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...';
+  
+  try {
+    const { error } = await sb.from('leads').insert([{ user_id: currentUser.id, client_name: name, platform, project_value: value, status: 'pitched' }]);
+    if (error) throw error;
+    
+    toast('Lead added to pipeline!', 'success');
+    document.getElementById('add-lead-modal').classList.remove('on');
+    
+    // Clear inputs
+    document.getElementById('lead-name').value = '';
+    document.getElementById('lead-value').value = '';
+    
+    await loadLeads(); // Refresh the pipeline
+  } catch (err) {
+    toast('Failed to save lead', 'error');
+  } finally {
+    btn.innerHTML = '<i data-lucide="plus" class="w-5 h-5"></i> Add to Pipeline';
+    lucide.createIcons();
+  }
+}
+
+async function moveLead(id, newStatus) {
+  try {
+    // Optimistic UI update (feels instantly fast to the user)
+    const leadIndex = userLeads.findIndex(l => l.id === id);
+    if(leadIndex > -1) userLeads[leadIndex].status = newStatus;
+    renderPipeline();
+    
+    // Background database update
+    const { error } = await sb.from('leads').update({ status: newStatus }).eq('id', id);
+    if (error) throw error;
+  } catch (err) {
+    toast('Failed to move lead', 'error');
+    await loadLeads(); // revert if failed
   }
 }
 initApp();
