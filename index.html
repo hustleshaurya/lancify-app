@@ -1131,6 +1131,7 @@ document.getElementById('stat-proposals').textContent = userProposals.length;
     renderProposals(userProposals);
     renderEmails(userEmails);
     if(kits.length > 0) document.getElementById('sb-my-kits').style.display='flex';
+    await loadLeads();
 } catch(err) { console.error('Stats error:', err.message); }
 }
 
