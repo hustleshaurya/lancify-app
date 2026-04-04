@@ -1308,7 +1308,7 @@ async function generateAudit() {
     const data = await res.json();
     if(data.error) throw new Error(data.error);
 
-    document.getElementById('audit-email-text').innerHTML = (data.email_script || '').replace(/\n/g, '<br>');
+   document.getElementById('audit-email-text').innerHTML = '<strong>Subject:</strong> ' + (data.email_subject || '') + '<br><br>' + (data.email_body || '').replace(/\n/g, '<br>');
     
     document.getElementById('pdf-target').textContent = target;
     document.getElementById('pdf-platform').textContent = platform;
