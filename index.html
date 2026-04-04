@@ -315,6 +315,7 @@ class="w-full flex items-center justify-center gap-3 bg-white text-black py-4 px
     <div class="flex-1 overflow-y-auto px-4 py-2 custom-scrollbar">
         <div class="sb-group">Growth Tools</div>
         <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')"><i data-lucide="home" class="w-[18px] h-[18px]"></i> Dashboard</a>
+      <a class="nav-item" onclick="document.getElementById('profile-modal').classList.add('on')"><i data-lucide="user" class="w-[18px] h-[18px]"></i> My Profile</a>
         <a class="nav-item" 
 data-page="chat-pg" onclick="startChat()"><i data-lucide="message-square" class="w-[18px] h-[18px]"></i> Launch Coach</a>
         <a class="nav-item" data-page="audit-pg" onclick="navigate('audit-pg')"><i data-lucide="wand-2" class="w-[18px] h-[18px]"></i> Audit Generator <span class="ml-auto text-[9px] bg-violet-500/20 border border-violet-500/30 text-violet-300 px-1.5 py-0.5 rounded uppercase font-bold">PRO</span></a>
@@ -877,7 +878,56 @@ overflow-y-auto text-left mb-8 custom-scrollbar pr-4"></div>
     </div>
   </div>
 </div>
-
+<div id="profile-modal" class="modal-overlay">
+  <div class="modal-card !max-w-2xl">
+    <button class="modal-close" onclick="document.getElementById('profile-modal').classList.remove('on')"><i data-lucide="x" class="w-6 h-6"></i></button>
+    <div class="flex items-center gap-4 mb-8 border-b border-white/5 pb-6">
+      <div class="w-14 h-14 bg-violet-500/20 border border-violet-500/30 rounded-2xl flex items-center justify-center text-violet-400 shadow-lg"><i data-lucide="user" class="w-6 h-6"></i></div>
+      <div>
+        <h3 class="font-['Playfair_Display'] text-3xl font-bold text-white">My Freelance Profile</h3>
+        <p class="text-gray-400 text-sm mt-1">Set this once. The AI will use it everywhere.</p>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="md:col-span-2 input-wrapper !mb-0">
+        <label class="field-label">Core Skills <span>(e.g., Video Editing, React, Copywriting)</span></label>
+        <input type="text" id="prof-skills" placeholder="What are you good at?">
+      </div>
+      <div class="input-wrapper !mb-0">
+        <label class="field-label">Your Niche</label>
+        <input type="text" id="prof-niche" placeholder="e.g., Editor for YouTubers">
+      </div>
+      <div class="input-wrapper !mb-0">
+        <label class="field-label">Current Experience</label>
+        <select id="prof-exp">
+          <option value="Complete Beginner">Complete Beginner</option>
+          <option value="Some projects/portfolio">Have a few projects</option>
+          <option value="Experienced Professional">Experienced Professional</option>
+        </select>
+      </div>
+      <div class="input-wrapper !mb-0">
+        <label class="field-label">Primary Platform</label>
+        <select id="prof-platform">
+          <option value="Upwork">Upwork</option>
+          <option value="Fiverr">Fiverr</option>
+          <option value="Cold Email / DM">Cold Email / DMs</option>
+          <option value="LinkedIn">LinkedIn</option>
+        </select>
+      </div>
+      <div class="input-wrapper !mb-0">
+        <label class="field-label">Monthly Goal</label>
+        <select id="prof-goal">
+          <option value="₹5,000 - ₹10,000">₹5,000 - ₹10,000</option>
+          <option value="₹10,000 - ₹25,000">₹10,000 - ₹25,000</option>
+          <option value="₹25,000 - ₹50,000">₹25,000 - ₹50,000</option>
+          <option value="₹50,000+">₹50,000+</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-primary w-full mt-4" id="save-prof-btn" onclick="saveProfile()"><i data-lucide="save" class="w-5 h-5"></i> Save Global Profile</button>
+  </div>
+</div>
 <div id="upgrade-modal" class="modal-overlay">
   <div class="modal-card text-center">
     <button class="modal-close" onclick="closeUpgradeModal()"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -916,17 +966,20 @@ const now = new Date();
   document.getElementById('hero-date').textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 }
 
-function handleLoginSuccess(user){
+async function handleLoginSuccess(user){
   currentUser=user;
   document.getElementById('login-pg').style.display='none';
   document.getElementById('app-layout').classList.add('on');
-const name=user.user_metadata?.full_name||user.email?.split('@')[0]||'User';
+  const name=user.user_metadata?.full_name||user.email?.split('@')[0]||'User';
   document.getElementById('header-user-name').textContent=name;
   document.getElementById('header-user-initial').textContent=name[0].toUpperCase();
   const hour=new Date().getHours();
   const g=hour<12?'Good morning':hour<18?'Good afternoon':'Good evening';
   document.getElementById('hero-greeting').textContent=`${g}, ${name.split(' ')[0]}.`;
   loadAllStats(user.id);
+  
+  await loadProfile(); 
+
   navigate(currentPage);
 }
 
@@ -1646,7 +1699,54 @@ const targetName = document.getElementById('audit-target').value.replace(/\s+/g,
     btn.innerHTML = origText; btn.disabled = false; lucide.createIcons();
   }
 }
+async function loadProfile() {
+  if (!currentUser) return;
+  try {
+    const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+    if (data) {
+      userProfile = { ...userProfile, ...data }; 
+      
+      if(data.skills) document.getElementById('prof-skills').value = data.skills;
+      if(data.niche) document.getElementById('prof-niche').value = data.niche;
+      if(data.experience) document.getElementById('prof-exp').value = data.experience;
+      if(data.platform) document.getElementById('prof-platform').value = data.platform;
+      if(data.income_goal) document.getElementById('prof-goal').value = data.income_goal;
+    }
+  } catch (err) {
+    console.log("No profile found yet");
+  }
+}
 
+async function saveProfile() {
+  if (!currentUser) return;
+  const btn = document.getElementById('save-prof-btn');
+  btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...';
+  
+  const profileData = {
+    id: currentUser.id,
+    full_name: currentUser.user_metadata?.full_name || 'User',
+    skills: document.getElementById('prof-skills').value.trim(),
+    niche: document.getElementById('prof-niche').value.trim(),
+    experience: document.getElementById('prof-exp').value,
+    platform: document.getElementById('prof-platform').value,
+    income_goal: document.getElementById('prof-goal').value
+  };
+
+  try {
+    const { error } = await sb.from('profiles').upsert(profileData);
+    if (error) throw error;
+    
+    userProfile = { ...userProfile, ...profileData }; 
+    toast('Profile saved globally!', 'success');
+    document.getElementById('profile-modal').classList.remove('on');
+  } catch (error) {
+    toast('Failed to save profile', 'error');
+    console.error(error);
+  } finally {
+    btn.innerHTML = '<i data-lucide="save" class="w-5 h-5"></i> Save Global Profile';
+    lucide.createIcons();
+  }
+}
 initApp();
 </script>
 </body>
