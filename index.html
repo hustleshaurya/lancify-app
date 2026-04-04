@@ -1393,7 +1393,7 @@ const exp=document.getElementById('prop-exp').value.trim();
   const resultDiv=document.getElementById('prop-result');
   const emptyDiv=document.getElementById('prop-empty');
   btn.disabled=true;loading.style.display='flex';resultDiv.style.display='none';emptyDiv&&(emptyDiv.style.display='none');
-  const userNiche=savedKitData?.niche||'Freelancer';
+  const userNiche = userProfile.niche || savedKitData?.niche || 'Freelancer';
 try{
     const res=await fetch('/api/proposal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jobDesc,platform,experience:exp,niche:userNiche})});
     const data=await res.json();
@@ -1706,11 +1706,25 @@ async function loadProfile() {
     if (data) {
       userProfile = { ...userProfile, ...data }; 
       
+      // 1. Fill the Profile Modal itself
       if(data.skills) document.getElementById('prof-skills').value = data.skills;
       if(data.niche) document.getElementById('prof-niche').value = data.niche;
       if(data.experience) document.getElementById('prof-exp').value = data.experience;
       if(data.platform) document.getElementById('prof-platform').value = data.platform;
       if(data.income_goal) document.getElementById('prof-goal').value = data.income_goal;
+
+      // 2. THE MAGIC: Auto-fill the Gig Finder!
+      if(data.skills) document.getElementById('gig-skills').value = data.skills;
+      if(data.platform) document.getElementById('gig-platform').value = data.platform;
+
+      // 3. THE MAGIC: Auto-fill the Proposal Writer!
+      if(data.experience) document.getElementById('prop-exp').value = data.experience;
+      if(data.platform) document.getElementById('prop-platform').value = data.platform;
+
+      // 4. THE MAGIC: Auto-fill the Roadmap!
+      if(data.skills) document.getElementById('rm-skills').value = data.skills;
+      if(data.platform) document.getElementById('rm-platform').value = data.platform;
+      if(currentUser.user_metadata?.full_name) document.getElementById('rm-name').value = currentUser.user_metadata.full_name;
     }
   } catch (err) {
     console.log("No profile found yet");
