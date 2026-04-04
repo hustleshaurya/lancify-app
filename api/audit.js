@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   const { target, platform, weakness, service, price, observation, websiteUrl } = req.body;
   const apiKey = process.env.GEMINI_API_KEY;
-  const modelName = "gemini-2.5-flash"; 
+  const modelName = "gemini-2.5-flash";
 
   let scrapedContent = "";
   let contextSnippet = "";
@@ -16,8 +16,15 @@ export default async function handler(req, res) {
       const jinaResponse = await fetch(`https://r.jina.ai/${websiteUrl}`);
       if (jinaResponse.ok) {
         const fullText = await jinaResponse.text();
-        scrapedContent = fullText.substring(0, 3000); 
-        contextSnippet = `\n\nThe user provided the client's actual website URL. Scraped text: """${scrapedContent}""". Find a REAL, specific conversion issue from this text (e.g., unclear copy, missing CTA) and base the audit on it. Ignore the manual inputs if they conflict.`;
+        // Increased from 3000 to 6000 to capture more meaningful page content
+        scrapedContent = fullText.substring(0, 6000);
+        contextSnippet = `
+The client's website was scraped. Here is the actual page content:
+"""${scrapedContent}"""
+
+Read this carefully. Find ONE real, specific friction point — something a first-time visitor would actually get stuck on. 
+This could be: unclear CTA, confusing navigation, missing trust signals, vague service descriptions, no pricing visible, no social proof, etc.
+Base the entire audit on this ONE specific real issue. Do not make up a generic problem.`;
       }
     } catch (e) {
       console.log("Scraping failed, falling back to manual inputs.");
@@ -25,47 +32,82 @@ export default async function handler(req, res) {
   }
 
   if (!contextSnippet) {
-    contextSnippet = `\n\nThe client's primary weakness is: "${weakness}". Observation: "${observation}". Base the audit heavily on these points.`;
+    contextSnippet = `
+The client's primary weakness is: "${weakness}".
+Additional observation: "${observation}".
+Base the entire audit on this specific issue. Do not generalise.`;
   }
 
-  // 🧠 THE GOD-LEVEL CONSULTANT PROMPT (V3)
   const prompt = {
     contents: [{
       parts: [{
-        text: `You are a highly professional, grounded digital consultant. You are writing an audit for ${target} on ${platform}. You offer a ${service} service for ${price}.
+        text: `You are a sharp, experienced freelance digital consultant. You write audit reports and cold emails for potential clients.
 
-        ${contextSnippet}
+You are auditing: ${target}
+Platform: ${platform}
+Your service: ${service}
+Your price: ${price}
 
-        STRICT TONE & STYLE RULES:
-        1. Tone: Sound like a real, calm human. Be direct, respectful, and helpful. Speak in the first person ("I").
-        2. Banned Words: NO dramatic words ("hemorrhage", "massive loss", "critical failure"). Do NOT use "However" or "My service improves".
-        3. Sentences: Keep sentences short (under 15 words). Easy to skim.
-        4. Claims & Psychology: Use realistic ranges. Add a tiny, natural emotional trigger based on missed opportunity from high-intent users.
+${contextSnippet}
 
-        Return ONLY a JSON object with these exact keys. Follow the structure precisely:
-        - "email_script": A cold email. FOLLOW THIS EXACT TEMPLATE: 
-          "Subject: Quick thing I noticed on your [page/flow]
-          
-          Hi [Name],
-          I was checking out your [Platform] today — especially the [specific flow/page related to the issue]. The [design/vibe] is [compliment].
-          One small thing I noticed: [Point out the specific issue clearly], so users [what annoying thing happens].
-          This usually slows down people who are ready to [desired action/booking] quickly.
-          I put together a quick 3-point audit showing exactly where this happens and how to fix it.
-          Worth a quick look?"
-          (DO NOT DEVIATE FROM THIS EMAIL STRUCTURE).
-          
-        - "sec1_assessment": (The Human Hook) 2 short sentences. Start naturally (e.g., "Quick note — your website looks clean."). Praise one specific good thing.
-        - "sec2_bottleneck": (The Problem) 2 short sentences clearly explaining the ONE specific issue avoiding vague terms.
-        - "sec3_impact": (The Impact) 2 short sentences explaining how this affects conversions. MUST include an emotional trigger about friction for high-intent users (e.g., "This adds friction for users ready to book immediately, likely costing you 5-10 missed inquiries monthly.").
-        - "sec4_fixes": (Quick Fix) An array of exactly 3 clear, actionable improvements the client can understand and implement for free.
-        - "sec5_pitch": (The Offer) 2 short sentences presenting your ${service} for ${price}. DO NOT use generic agency speak. Use a specific, result-focused format like: "I can [implement this specific fix] and improve [specific outcome] in 5-7 days for ${price}." End with exactly this: "Happy to show a quick before/after so you can see the impact."`
+---
+
+YOUR WRITING RULES (follow strictly):
+
+1. Sound like a real human, not a marketing tool. Write like you're sending this from your laptop on a Tuesday afternoon.
+2. Sentences must be short — under 15 words each. Easy to skim.
+3. Be specific. If you mention an issue, name exactly where on the page it is.
+4. Never use these words or phrases: "hemorrhage", "massive", "critical failure", "game-changer", "seamless", "leverage", "synergy", "however", "value-driven", "aha moment", "my service improves", "innovative", "cutting-edge".
+5. Do not pad. Every sentence must earn its place.
+6. Use realistic numbers. Don't exaggerate impact.
+7. Write in first person ("I noticed", "I can fix").
+8. The cold email must NOT sound like a template. It should feel like a real person wrote it after genuinely browsing the site for 5 minutes.
+9. Before finalizing any section, ask yourself: "Does this sound like AI wrote it?" If yes, rewrite it more naturally before including it.
+10. Before finalizing the email specifically, ask yourself: "Would a real business owner actually reply to this?" If not, improve the clarity and specificity until the answer is yes.
+
+---
+
+Return ONLY a raw JSON object. No markdown, no backticks, no explanation. Use exactly these keys:
+
+"email_subject":
+"A lowercase, specific, curiosity-driven subject line. Never generic like 'quick question' or 'I can help'. Do not include the word 'Subject:'",
+
+"email_body": 
+"The cold email body. Rules:
+- Opening: reference something real and specific from the site. NOT a generic compliment.
+- Body: mention the ONE specific issue you found and why it matters to someone ready to take action right now.
+- Keep it under 120 words total.
+- Close with a direct, low-commitment ask. Not 'worth a quick look?' — something like 'Want me to send over a before/after?' or 'Open to a 10-minute call this week?'",
+
+"sec1_assessment":
+"2 sentences. Start with something specific you noticed that is actually good about the site. Sound like you actually looked at it, not like you're filling a template slot.",
+
+"sec2_bottleneck":
+"2 sentences. Name the ONE specific friction point clearly. Mention exactly where on the page it is. No vague language.",
+
+"sec3_impact":
+"2 sentences. Explain what this costs them in plain terms. Focus on high-intent users who were ready to act but got stuck. Use a realistic number range — do not always default to '5-10 inquiries.'",
+
+"sec4_fixes":
+[
+  "Actionable, specific, free-to-implement fix 1",
+  "Actionable, specific, free-to-implement fix 2",
+  "Actionable, specific, free-to-implement fix 3"
+],
+
+"sec5_pitch":
+"2 sentences max. Tell them exactly what you'll do and what outcome they can expect. Include a timeframe and the price (${price}). End with: 'Happy to show a quick before/after so you can see the difference.'"
+
+---
+
+Return only the JSON. Start with { and end with }.`
       }]
     }]
   };
 
   try {
     const url = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`;
-    
+
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -73,14 +115,21 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    
+
     if (data.error) throw new Error(data.error.message);
     if (!data.candidates || !data.candidates[0]) throw new Error("AI returned an empty response.");
 
     let rawText = data.candidates[0].content.parts[0].text;
-    const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-    
-    res.status(200).json(JSON.parse(cleanJson));
+
+    // Clean any accidental markdown formatting
+    const cleanJson = rawText
+      .replace(/```json/g, '')
+      .replace(/```/g, '')
+      .trim();
+
+    const parsed = JSON.parse(cleanJson);
+
+    res.status(200).json(parsed);
 
   } catch (error) {
     console.error("API ERROR:", error);
