@@ -1194,7 +1194,7 @@ async function generateEmail(){
     const data=await res.json();
     if(data.error)throw new Error(data.error);
     document.getElementById('email-res-subject').textContent=data.subject||'Email Draft';
-    document.getElementById('email-res-text').textContent=data.body;
+    document.getElementById('email-res-text').innerHTML = data.body.replace(/\n/g, '<br>');
     const ul=document.getElementById('email-res-tips');ul.innerHTML='';
     (data.tips||[]).forEach(tip=>{const li=document.createElement('li');li.textContent=tip;li.style.marginBottom='8px';ul.appendChild(li);});
     if(currentUser){
