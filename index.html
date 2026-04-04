@@ -1219,7 +1219,7 @@ async function findGigs(){
   const container=document.getElementById('gig-cards-container');
   btn.disabled=true;loading.style.display='flex';resultDiv.style.display='none';container.innerHTML='';
   try{
-    const res=await fetch('/api/gig-finder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skills,platform})});
+    const res=await fetch('/api/gigfinder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skills,platform})});
     const data=await res.json();
     if(data.error)throw new Error(data.error);
     (data.niches||[]).forEach((niche,idx)=>{
