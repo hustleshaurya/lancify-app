@@ -14,7 +14,797 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* ═══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lancify | Premium AI Workspace</title>
+
+<link rel="icon" type="image/png" href="Favicon_new_logo-removebg-preview.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+/* 🌌 PREMIUM FLAT DARK MODE (SaaS Style) */
+:root {
+  --bg: #0A0A0A;       /* Deep solid almost-black */
+  --panel: #141414;    /* Slightly lighter panel */
+  --border: #262626;   /* Crisp, subtle border */
+  --border-hover: #333333; 
+  --purple: #8b5cf6; 
+  --text-main: #EDEDED;
+  --text-muted: #888888;
+}
+
+body { 
+  background: var(--bg); 
+  color: var(--text-main); 
+  font-family: "Inter", sans-serif; 
+  height: 100vh;
+  overflow: hidden; 
+}
+
+/* Solid SaaS Panels (No Glassmorphism) */
+.glass-panel { 
+    background: var(--panel);
+    border: 1px solid var(--border); 
+    border-radius: 12px; 
+    transition: border-color 0.2s ease;
+}
+.glass-panel:hover { 
+    border-color: var(--border-hover);
+}
+.glass-panel.dashed {
+    border: 1px dashed var(--border);
+    background: transparent;
+}
+
+/* Sidebar & Header */
+.glass-sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow-x: hidden;
+    white-space: nowrap; /* Prevents text wrapping during collapse */
+    z-index: 50;
+}
+.glass-header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+}
+
+/* SMOOTH SIDEBAR COLLAPSE */
+.glass-sidebar.collapsed {
+    width: 76px !important;
+}
+.nav-item { 
+    display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+    border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; 
+    color: var(--text-muted); transition: all 0.2s ease; margin-bottom: 4px;
+}
+.nav-item:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
+.nav-item.active { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--border); }
+.nav-item.active i { color: var(--text-main); }
+
+/* Fading out text perfectly */
+.nav-item span, .sb-group, .h-logo-text {
+    transition: opacity 0.2s ease;
+    opacity: 1;
+}
+.glass-sidebar.collapsed .nav-item span,
+.glass-sidebar.collapsed .sb-group,
+.glass-sidebar.collapsed .h-logo-text {
+    opacity: 0;
+    pointer-events: none;
+    display: none; /* Removes awkward spacing */
+}
+.sb-group { font-size: 0.65rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0 8px 14px; }
+
+/* 🧾 INPUTS & DROPDOWNS */
+.input-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.field-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+.field-label span { font-size: 0.7rem; color: #555; font-weight: 400; }
+
+input[type="text"], input[type="email"], input[type="password"], input[type="url"], select, textarea { 
+    width: 100%; background: #000; border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px; color: var(--text-main); 
+    font-size: 0.9rem; transition: border-color 0.2s ease; outline: none; box-sizing: border-box;
+}
+textarea { resize: vertical; line-height: 1.5; }
+input::placeholder, textarea::placeholder { color: #555; }
+input:hover, textarea:hover, select:hover { border-color: var(--border-hover); }
+input:focus, textarea:focus, select:focus { border-color: var(--purple); }
+
+/* Custom Dropdown Fixes */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23888888'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
+    cursor: pointer; padding-right: 40px;
+}
+select option { background-color: var(--panel); color: var(--text-main); }
+
+/* Custom Dropzone */
+.custom-file-upload { 
+    position: relative; border: 1px dashed var(--border); border-radius: 8px; 
+    background: #000; transition: all 0.2s ease; text-align: center; padding: 24px; cursor: pointer;
+}
+.custom-file-upload:hover { border-color: var(--purple); }
+.custom-file-upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+
+/* 🎯 BUTTONS */
+.btn-primary { 
+    background: var(--text-main); color: #000; border: none; height: 44px; padding: 0 24px; 
+    border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+    transition: opacity 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* 🧱 CORE LOGIC STYLES */
+#app-loading { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 16px; }
+.app-spin { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--text-main); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Login Page */
+#login-pg { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 9000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+
+#app-layout { display: none; height: 100vh; width: 100vw; overflow: hidden; position: relative; z-index: 10; }
+#app-layout.on { display: flex; }
+.pg { display: none; animation: pgIn 0.3s ease; }
+.pg.on { display: block; }
+@keyframes pgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Modals & Toasts */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--panel); border: 1px solid var(--border); color: var(--text-main); padding: 14px 20px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; transform: translateY(20px); opacity: 0; transition: all .3s ease; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 5000; opacity: 0; transition: opacity .2s; padding: 20px;}
+.modal-overlay.on { display: flex; opacity: 1; }
+.modal-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 32px; width: 100%; max-width: 480px; position: relative; transform: scale(0.98); transition: transform .2s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;}
+.modal-overlay.on .modal-card { transform: scale(1); }
+.modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); cursor: pointer; transition: color .2s; }
+.modal-close:hover { color: var(--text-main); }
+
+/* Feature specific */
+.feat-loading { display: none; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; padding: 16px; background: #000; border-radius: 8px; border: 1px solid var(--border); }
+.email-window { background: #000; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
+
+/* Scrollbar minimal */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+</style>
+</head>
+<body>
+
+<div id="app-loading">
+  <div class="app-spin"></div>
+  <span style="font-size:.8rem;color:var(--text-muted); font-weight: 500;">Loading Workspace...</span>
+</div>
+
+<div id="login-pg">
+  <div class="glass-panel w-full max-w-[400px] p-10 text-center relative z-10 my-auto">
+    <div style="display:flex; justify-content:center; margin-bottom:30px;">
+        <img src="lightthemelogo.png" alt="Lancify AI" style="height: 32px; width: auto; object-fit: contain;">
+    </div>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:30px;">Sign in to your premium workspace.</p>
+   
+    <button class="w-full flex items-center justify-center gap-3 bg-white text-black py-3 px-4 rounded-lg font-semibold text-[0.9rem] hover:bg-gray-200 transition-all mb-6" onclick="signInGoogle()">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    
+    <div class="flex items-center gap-4 mb-6 opacity-40">
+        <div class="flex-1 h-px bg-white/20"></div>
+        <span class="text-[10px] font-semibold tracking-widest text-white uppercase">or</span>
+        <div class="flex-1 h-px bg-white/20"></div>
+    </div>
+
+    <div id="auth-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-lg mb-4 text-left"></div>
+    <div id="auth-msg" class="hidden bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm p-3 rounded-lg mb-4 text-left"></div>
+    
+    <div class="text-left mb-6">
+      <div class="input-wrapper">
+          <label class="field-label">Email Address</label>
+          <input id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div class="input-wrapper !mb-0">
+          <label class="field-label">Password</label>
+          <input id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div class="input-wrapper mt-4" id="name-field" style="display:none;">
+          <label class="field-label">Full Name</label>
+          <input id="auth-name" type="text" placeholder="John Doe">
+      </div>
+    </div>
+    
+    <button class="btn-primary w-full" id="auth-btn" onclick="authSubmit()">Sign In</button>
+    <div class="mt-6 text-xs text-gray-500" id="auth-toggle-txt">
+      Don't have an account? <span onclick="toggleMode()" class="text-white cursor-pointer hover:underline">Sign up free</span>
+    </div>
+  </div>
+</div>
+
+<div id="app-layout" class="flex h-screen w-full">
+  
+  <aside id="main-sidebar" class="w-[240px] glass-sidebar flex flex-col shrink-0 h-screen">
+    <div class="h-[64px] flex items-center px-4 border-b border-[#262626] shrink-0 gap-3">
+        <button onclick="document.getElementById('main-sidebar').classList.toggle('collapsed')" class="text-gray-400 hover:text-white transition p-1">
+            <i data-lucide="menu" class="w-4 h-4"></i>
+        </button>
+        <div class="flex items-center gap-2 cursor-pointer h-logo-text" onclick="navigate('home-pg')">
+            <img src="lightthemelogo.png" alt="Lancify AI" class="h-5 w-auto object-contain">
+        </div>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto px-3 py-4 custom-scrollbar">
+        <div class="sb-group">Workspace</div>
+        <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')">
+            <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span>Dashboard</span>
+        </a>
+        <a class="nav-item" onclick="document.getElementById('profile-modal').classList.add('on')">
+            <i data-lucide="user" class="w-4 h-4 shrink-0"></i> <span>My Profile</span>
+        </a>
+        <a class="nav-item" data-page="chat-pg" onclick="startChat()">
+            <i data-lucide="message-square" class="w-4 h-4 shrink-0"></i> <span>Launch Coach</span>
+        </a>
+        <a class="nav-item" data-page="audit-pg" onclick="navigate('audit-pg')">
+            <i data-lucide="crosshair" class="w-4 h-4 shrink-0"></i> <span>Audit Generator</span>
+        </a>
+        <a class="nav-item" data-page="proposal-pg" onclick="navigate('proposal-pg')">
+            <i data-lucide="file-text" class="w-4 h-4 shrink-0"></i> <span>Proposal Writer</span>
+        </a>
+        <a class="nav-item" data-page="email-pg" onclick="navigate('email-pg')">
+            <i data-lucide="mail" class="w-4 h-4 shrink-0"></i> <span>Email Writer</span>
+        </a>
+        
+        <div class="sb-group">Strategy</div>
+        <a class="nav-item" data-page="gig-finder-pg" onclick="navigate('gig-finder-pg')">
+            <i data-lucide="radar" class="w-4 h-4 shrink-0"></i> <span>Gig Finder</span>
+        </a>
+        <a class="nav-item" onclick="document.querySelectorAll('.pg').forEach(el => el.style.display='none'); document.getElementById('roadmap-wrapper').style.display='block'; window.scrollTo(0,0);">
+            <i data-lucide="map" class="w-4 h-4 shrink-0"></i> <span>Income Roadmap</span>
+        </a>
+    </div>
+
+    <div class="p-3 border-t border-[#262626] space-y-1">
+        <a class="nav-item !py-2 text-xs" onclick="signOut()"><i data-lucide="log-out" class="w-3.5 h-3.5 shrink-0"></i> <span>Sign Out</span></a>
+    </div>
+  </aside>
+
+  <main class="flex-1 relative z-10 h-screen overflow-y-auto custom-scrollbar" id="main-scroll">
+    <header class="h-[64px] glass-header flex items-center justify-between px-8 sticky top-0 z-40 shrink-0">
+      <div class="text-sm font-medium text-gray-400" id="header-breadcrumb">Workspace / Dashboard</div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-medium text-gray-300" id="header-user-name">User</span>
+        <div class="w-8 h-8 rounded-full bg-[#262626] flex items-center justify-center font-bold text-xs border border-[#333]" id="header-user-initial">U</div>
+      </div>
+    </header>
+
+    <div class="p-8 md:p-12 max-w-[1200px] mx-auto w-full pb-32">
+
+      <div id="home-pg" class="pg on">
+        <div class="mb-10">
+            <h1 class="text-3xl font-bold text-white tracking-tight" id="hero-greeting">Good evening.</h1>
+            <p class="text-sm text-gray-400 mt-2">Here is what is happening in your freelance business today.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <div class="glass-panel p-6"><div class="text-2xl font-bold text-white mb-1" id="stat-kits">0</div><div class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Total Kits</div></div>
+          <div class="glass-panel p-6"><div class="text-2xl font-bold text-white mb-1" id="stat-proposals">0</div><div class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Proposals</div></div>
+          <div class="glass-panel p-6"><div class="text-2xl font-bold text-white mb-1" id="stat-emails">0</div><div class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Emails Sent</div></div>
+          <div class="glass-panel p-6"><div class="text-2xl font-bold text-white mb-1" id="stat-gigs">0</div><div class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Gigs Found</div></div>
+        </div>
+
+        <div class="flex items-center justify-between mb-6 border-b border-[#262626] pb-4">
+            <div>
+              <span class="text-lg font-bold text-white tracking-tight">Client Pipeline</span>
+            </div>
+            <button class="bg-white hover:bg-gray-200 text-black font-semibold py-1.5 px-3 rounded-md text-xs transition" onclick="document.getElementById('add-lead-modal').classList.add('on')">
+              <i data-lucide="plus" class="w-3 h-3 inline-block mr-1"></i> Add Lead
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
+            <div class="bg-[#111] rounded-xl p-4 border border-[#262626] flex flex-col h-[350px]">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-[#262626]">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Pitched</span>
+                    <span class="text-[10px] bg-[#262626] px-1.5 py-0.5 rounded text-gray-300" id="count-pitched">0</span>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-2 custom-scrollbar" id="pipe-pitched"></div>
+            </div>
+            
+            <div class="bg-[#111] rounded-xl p-4 border border-[#262626] flex flex-col h-[350px]">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-[#262626]">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400">In Talks</span>
+                    <span class="text-[10px] bg-[#262626] px-1.5 py-0.5 rounded text-gray-300" id="count-replied">0</span>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-2 custom-scrollbar" id="pipe-replied"></div>
+            </div>
+
+            <div class="bg-[#111] rounded-xl p-4 border border-[#262626] flex flex-col h-[350px]">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-[#262626]">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Won</span>
+                    <span class="text-[10px] bg-[#262626] px-1.5 py-0.5 rounded text-gray-300" id="count-won">0</span>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-2 custom-scrollbar" id="pipe-won"></div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 border-b border-[#262626] pb-3">
+            <span class="text-lg font-bold text-white tracking-tight">Quick Actions</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
+          <div class="glass-panel p-6 cursor-pointer" onclick="startChat()">
+            <div class="flex items-center gap-4 mb-2">
+                <i data-lucide="message-square" class="w-5 h-5 text-gray-400"></i>
+                <h3 class="text-md font-semibold text-white">Launch Coach</h3>
+            </div>
+            <p class="text-xs text-gray-500">Build your complete freelance identity from scratch.</p>
+          </div>
+          <div class="glass-panel p-6 cursor-pointer" onclick="navigate('proposal-pg')">
+            <div class="flex items-center gap-4 mb-2">
+                <i data-lucide="file-text" class="w-5 h-5 text-gray-400"></i>
+                <h3 class="text-md font-semibold text-white">Proposal Writer</h3>
+            </div>
+            <p class="text-xs text-gray-500">Turn a job description into a winning pitch.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 border-b border-[#262626] pb-3">
+            <span class="text-lg font-bold text-white tracking-tight">My Saved Kits</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12" id="kits-grid"></div>
+
+      </div>
+
+      <div id="chat-pg" class="pg max-w-2xl mx-auto">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold mb-2 text-white">Launch Coach</h2>
+          <p class="text-gray-400 text-sm">5 quick questions to build your foundation.</p>
+        </div>
+        <div class="mb-8">
+          <div class="flex justify-between text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2"><span id="prog-lbl">Step 1 of 5</span><span id="prog-pct">0%</span></div>
+          <div class="h-1 bg-[#262626] rounded-full overflow-hidden"><div class="h-full bg-white transition-all duration-300" id="prog-bar" style="width:0%"></div></div>
+        </div>
+        <div id="chat-msgs" class="flex flex-col gap-4 mb-6 min-h-[220px] text-sm"></div>
+        
+        <div id="gen-bar" class="hidden items-center gap-3 p-4 bg-[#111] border border-[#262626] rounded-lg mt-4">
+          <div class="app-spin !w-4 !h-4 !border-2"></div>
+          <span id="gen-text" class="text-sm text-gray-300">Analysing your skills...</span>
+        </div>
+        
+        <div id="input-zone" class="flex gap-3 mt-4">
+          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1" class="flex-1 min-h-[44px]"></textarea>
+          <button id="send-btn" onclick="sendMsg()" class="btn-primary !w-[44px] !h-[44px] !p-0"><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+
+      <div id="results-pg-wrap" class="pg max-w-3xl mx-auto">
+        <button onclick="downloadPDF()" class="bg-[#1A1A1A] hover:bg-[#262626] text-white border border-[#333] px-4 py-2 rounded-md text-xs transition mb-6 flex items-center gap-2">
+          <i data-lucide="download" class="w-3 h-3"></i> Download PDF
+        </button>
+        <div id="kit-content"><div id="results-pg"></div></div>
+      </div>
+
+      <div id="proposal-pg" class="pg max-w-5xl mx-auto">
+        <div class="mb-8 border-b border-[#262626] pb-4">
+          <h2 class="text-2xl font-bold text-white mb-1">Proposal Writer</h2>
+          <p class="text-gray-400 text-sm">Paste a job description to generate a tailored pitch.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          <div class="glass-panel p-6 h-full flex flex-col">
+            <div class="flex-1">
+                <div class="input-wrapper">
+                    <label class="field-label">Platform</label>
+                    <select id="prop-platform">
+                        <option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option><option value="LinkedIn">LinkedIn</option><option value="Cold Email">Cold Email</option>
+                    </select>
+                </div>
+                <div class="input-wrapper">
+                    <label class="field-label">Job Description</label>
+                    <textarea id="prop-job" rows="8" placeholder="Paste the client's job post..."></textarea>
+                </div>
+                <div class="input-wrapper !mb-0">
+                    <label class="field-label">Your Experience</label>
+                    <input type="text" id="prop-exp" placeholder="e.g. I edited 10 tech videos...">
+                </div>
+            </div>
+            <button id="prop-btn" class="btn-primary w-full mt-6" onclick="generateProposal()">Generate Proposal</button>
+            <div id="prop-loading" class="feat-loading"><div class="app-spin"></div><span class="text-xs text-gray-300">Writing...</span></div>
+          </div>
+          
+          <div class="h-full flex flex-col">
+            <div id="prop-result" class="hidden h-full flex-col">
+              <div class="glass-panel !p-0 overflow-hidden flex flex-col flex-1 mb-4">
+                <div class="bg-[#111] px-5 py-3 border-b border-[#262626] flex justify-between items-center shrink-0">
+                  <span class="text-sm font-semibold text-white" id="prop-res-subject">Draft</span>
+                  <button class="text-[10px] uppercase font-bold text-gray-400 hover:text-white px-3 py-1 border border-[#333] rounded" onclick="copyEl('prop-res-text')">Copy</button>
+                </div>
+                <div class="p-5 text-sm text-gray-300 whitespace-pre-wrap overflow-y-auto flex-1 custom-scrollbar" id="prop-res-text"></div>
+              </div>
+            </div>
+            <div id="prop-empty" class="glass-panel dashed h-full min-h-[400px] flex flex-col items-center justify-center text-gray-500 p-6 text-center">
+              <i data-lucide="file-text" class="w-8 h-8 mb-3 opacity-50"></i>
+              <p class="text-xs font-medium">Fill out the details to generate your proposal.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="email-pg" class="pg max-w-5xl mx-auto">
+        <div class="mb-8 border-b border-[#262626] pb-4">
+          <h2 class="text-2xl font-bold text-white mb-1">Email Writer</h2>
+          <p class="text-gray-400 text-sm">Draft professional client communications.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          <div class="glass-panel p-6 h-full flex flex-col">
+            <div class="flex-1">
+                <div class="input-wrapper">
+                    <label class="field-label">Objective</label>
+                    <select id="email-type">
+                        <option value="Follow-up on Proposal">Follow-up on Proposal</option>
+                        <option value="Payment Reminder (Polite)">Payment Reminder</option>
+                        <option value="Project Delivery">Project Delivery</option>
+                    </select>
+                </div>
+                <div class="input-wrapper">
+                    <label class="field-label">Tone</label>
+                    <select id="email-tone"><option value="Professional">Professional</option><option value="Friendly">Friendly</option></select>
+                </div>
+                <div class="input-wrapper !mb-0">
+                    <label class="field-label">Context</label>
+                    <textarea id="email-context" rows="6" placeholder="e.g. Delivering 5 thumbnails..."></textarea>
+                </div>
+            </div>
+            <button id="email-btn" class="btn-primary w-full mt-6" onclick="generateEmail()">Draft Email</button>
+            <div id="email-loading" class="feat-loading"><div class="app-spin"></div><span class="text-xs text-gray-300">Drafting...</span></div>
+          </div>
+          <div class="h-full flex flex-col">
+            <div id="email-result" class="hidden h-full flex-col">
+              <div class="email-window flex-1 mb-4">
+                <div class="bg-[#111] px-5 py-3 border-b border-[#262626] flex justify-between items-center shrink-0">
+                   <div class="flex gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#333]"></span><span class="w-2.5 h-2.5 rounded-full bg-[#333]"></span><span class="w-2.5 h-2.5 rounded-full bg-[#333]"></span></div>
+                   <button class="text-[10px] uppercase font-bold text-gray-400 hover:text-white px-3 py-1 border border-[#333] rounded" onclick="copyEl('email-res-text')">Copy</button>
+                </div>
+                <div class="p-5 flex-1 overflow-y-auto custom-scrollbar">
+                  <div class="text-sm text-gray-300 whitespace-pre-wrap" id="email-res-text"></div>
+                </div>
+              </div>
+            </div>
+            <div id="email-empty" class="glass-panel dashed h-full min-h-[400px] flex flex-col items-center justify-center text-gray-500 p-6 text-center">
+              <i data-lucide="mail" class="w-8 h-8 mb-3 opacity-50"></i>
+              <p class="text-xs font-medium">Your email draft will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="gig-finder-pg" class="pg max-w-4xl mx-auto">
+        <div class="mb-8 border-b border-[#262626] pb-4">
+          <h2 class="text-2xl font-bold text-white mb-1">Gig Finder</h2>
+          <p class="text-gray-400 text-sm">Discover high-demand niches for your skills.</p>
+        </div>
+        <div class="glass-panel p-6 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="input-wrapper !mb-0">
+                <label class="field-label">Your Skills</label>
+                <input type="text" id="gig-skills" placeholder="e.g. Video Editing, Canva">
+            </div>
+            <div class="input-wrapper !mb-0">
+                <label class="field-label">Platform</label>
+                <select id="gig-platform"><option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option></select>
+            </div>
+          </div>
+          <button id="gig-btn" class="btn-primary" onclick="findGigs()">Scan Market</button>
+          <div id="gig-loading" class="feat-loading"><div class="app-spin"></div><span class="text-xs text-gray-300">Scanning...</span></div>
+        </div>
+        <div id="gig-result" class="hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="gig-cards-container"></div>
+        </div>
+      </div>
+
+      <div id="roadmap-wrapper" class="pg max-w-3xl mx-auto">
+          <div class="mb-8 border-b border-[#262626] pb-4">
+            <h2 class="text-2xl font-bold text-white mb-1">Income Roadmap</h2>
+            <p class="text-gray-400 text-sm">Your 30-day execution plan.</p>
+          </div>
+          <div id="roadmap-form-container" class="glass-panel p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <input id="rm-name" placeholder="Your Name" class="bg-[#000] border border-[#262626] rounded-md p-3 text-sm text-white w-full outline-none">
+                  <input id="rm-skills" placeholder="Skills (e.g. Video Editing)" class="bg-[#000] border border-[#262626] rounded-md p-3 text-sm text-white w-full outline-none">
+                  <input id="rm-platform" placeholder="Target Platform" class="bg-[#000] border border-[#262626] rounded-md p-3 text-sm text-white w-full outline-none">
+                  <select id="rm-hours" class="bg-[#000] border border-[#262626] rounded-md p-3 text-sm text-white w-full outline-none">
+                      <option value="2">2 hours/day</option><option value="4">4+ hours/day</option>
+                  </select>
+                  <input id="rm-level" placeholder="Current Level" class="bg-[#000] border border-[#262626] rounded-md p-3 text-sm text-white w-full outline-none">
+                  <input id="rm-fear" placeholder="Biggest Fear" class="bg-[#000] border border-[#262626] rounded-md p-3 text-sm text-white w-full outline-none">
+              </div>
+              <button id="rm-btn" onclick="generateRoadmap()" class="btn-primary w-full">Generate Plan</button>
+          </div>
+          <div id="roadmap-result" class="hidden mt-6"></div>
+      </div>
+
+      <div id="audit-pg" class="pg max-w-5xl mx-auto">
+        <div class="mb-8 border-b border-[#262626] pb-4">
+          <h2 class="text-2xl font-bold text-white mb-1">Audit Generator</h2>
+          <p class="text-gray-400 text-sm">Create clinical pitch dossiers for specific clients.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          <div class="glass-panel p-6 h-full">
+               <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div class="input-wrapper !mb-0"><label class="field-label">Target Name</label><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
+                  <div class="input-wrapper !mb-0"><label class="field-label">Platform</label><select id="audit-platform"><option value="Website">Website</option><option value="Instagram">Instagram</option></select></div>
+               </div>
+               <div class="input-wrapper"><label class="field-label">Website URL</label><input type="url" id="audit-url" placeholder="https://..."></div>
+               <div class="input-wrapper"><label class="field-label">Client Logo (Opt)</label>
+                    <div class="custom-file-upload">
+                        <input type="file" id="audit-logo" accept="image/*">
+                        <p class="text-xs text-gray-400" id="audit-logo-text">Click to upload logo</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div class="input-wrapper !mb-0"><label class="field-label">Service</label><input type="text" id="audit-service" placeholder="Web Design"></div>
+                  <div class="input-wrapper !mb-0"><label class="field-label">Price</label><input type="text" id="audit-price" placeholder="₹5,000"></div>
+                </div>
+                <button id="audit-btn" class="btn-primary w-full mt-4" onclick="generateAudit()">Generate Dossier</button>
+                <div id="audit-loading" class="feat-loading"><div class="app-spin"></div><span class="text-xs">Compiling...</span></div>
+          </div>
+          <div class="h-full">
+            <div id="audit-result" class="hidden h-full flex flex-col gap-4">
+              <div class="glass-panel p-5 flex-1 overflow-y-auto text-sm text-gray-300 whitespace-pre-wrap" id="audit-email-text"></div>
+              <button class="bg-[#111] border border-[#333] hover:bg-[#222] text-white py-3 rounded-lg text-sm transition" onclick="downloadAuditPDF()">Download PDF</button>
+            </div>
+            <div id="audit-empty" class="glass-panel dashed h-full min-h-[400px] flex items-center justify-center text-gray-500"><p class="text-xs">Audit will appear here.</p></div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="overflow:hidden;height:0;width:0;position:absolute;z-index:-9999;">
+        <div id="audit-pdf-canvas" style="width: 800px; padding: 60px; background: #ffffff; color: #111111; font-family: 'Inter', sans-serif;">
+          <h1 id="pdf-target" style="font-size:24px; border-bottom:1px solid #eee; padding-bottom:10px;">Target</h1>
+          <p id="pdf-sec1"></p><p id="pdf-sec2"></p><p id="pdf-sec3"></p><div id="pdf-sec4"></div><p id="pdf-sec5"></p><p id="pdf-price"></p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="profile-modal" class="modal-overlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="document.getElementById('profile-modal').classList.remove('on')"><i data-lucide="x" class="w-5 h-5"></i></button>
+    <div class="mb-6 border-b border-[#262626] pb-4">
+        <h3 class="text-xl font-bold text-white">My Profile</h3>
+        <p class="text-gray-400 text-xs mt-1">Data used across your workspace.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="md:col-span-2 input-wrapper !mb-0"><label class="field-label">Core Skills</label><input type="text" id="prof-skills"></div>
+      <div class="input-wrapper !mb-0"><label class="field-label">Your Niche</label><input type="text" id="prof-niche"></div>
+      <div class="input-wrapper !mb-0"><label class="field-label">Experience</label><input type="text" id="prof-exp"></div>
+      <div class="input-wrapper !mb-0"><label class="field-label">Primary Platform</label><input type="text" id="prof-platform"></div>
+      <div class="input-wrapper !mb-0"><label class="field-label">Monthly Goal</label><input type="text" id="prof-goal"></div>
+    </div>
+    <button class="btn-primary w-full" id="save-prof-btn" onclick="saveProfile()">Save Profile</button>
+  </div>
+</div>
+
+<div id="add-lead-modal" class="modal-overlay">
+  <div class="modal-card !max-w-sm">
+    <button class="modal-close" onclick="document.getElementById('add-lead-modal').classList.remove('on')"><i data-lucide="x" class="w-5 h-5"></i></button>
+    <h3 class="text-xl font-bold text-white mb-5">Add Lead</h3>
+    <div class="input-wrapper"><label class="field-label">Client Name</label><input type="text" id="lead-name"></div>
+    <div class="input-wrapper"><label class="field-label">Platform</label><input type="text" id="lead-platform" value="Upwork"></div>
+    <div class="input-wrapper"><label class="field-label">Value</label><input type="text" id="lead-value" placeholder="₹10,000"></div>
+    <button class="btn-primary w-full mt-2" id="save-lead-btn" onclick="saveLead()">Add Lead</button>
+  </div>
+</div>
+
+<script>
+lucide.createIcons();
+const { createClient } = supabase;
+const sb = createClient(
+  'https://qkpyqtynwbvjssrqanmk.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY'
+);
+let currentUser=null, userProfile={is_pro:false}, savedKitData=null, authMode='signin';
+let currentPage='home-pg';
+let userLeads = [];
+
+async function initApp(){
+  const {data:{session}} = await sb.auth.getSession();
+  document.getElementById('app-loading').style.display='none';
+  if(session?.user){ handleLoginSuccess(session.user); }
+  else { document.getElementById('login-pg').style.display='flex'; }
+  sb.auth.onAuthStateChange((_,session)=>{
+    if(session?.user){ handleLoginSuccess(session.user); }
+    else { currentUser=null; document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex'; }
+  });
+}
+
+async function handleLoginSuccess(user){
+  currentUser=user;
+  document.getElementById('login-pg').style.display='none';
+  document.getElementById('app-layout').classList.add('on');
+  const name=user.user_metadata?.full_name||user.email?.split('@')[0]||'User';
+  document.getElementById('header-user-name').textContent=name;
+  document.getElementById('header-user-initial').textContent=name[0].toUpperCase();
+  const hour=new Date().getHours();
+  const g=hour<12?'Good morning':hour<18?'Good afternoon':'Good evening';
+  document.getElementById('hero-greeting').textContent=`${g}, ${name.split(' ')[0]}.`;
+  
+  await loadProfile(); 
+  loadAllStats(user.id);
+  navigate(currentPage);
+}
+
+// PROFILE LOGIC
+async function loadProfile() {
+  if (!currentUser) return;
+  try {
+    const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+    if (data) {
+      userProfile = { ...userProfile, ...data }; 
+      if(data.skills) document.getElementById('prof-skills').value = data.skills;
+      if(data.niche) document.getElementById('prof-niche').value = data.niche;
+      if(data.experience) document.getElementById('prof-exp').value = data.experience;
+      if(data.platform) document.getElementById('prof-platform').value = data.platform;
+      if(data.income_goal) document.getElementById('prof-goal').value = data.income_goal;
+
+      if(data.skills) document.getElementById('gig-skills').value = data.skills;
+      if(data.platform) document.getElementById('gig-platform').value = data.platform;
+      if(data.experience) document.getElementById('prop-exp').value = data.experience;
+      if(data.platform) document.getElementById('prop-platform').value = data.platform;
+      if(data.skills) document.getElementById('rm-skills').value = data.skills;
+      if(data.platform) document.getElementById('rm-platform').value = data.platform;
+      if(currentUser.user_metadata?.full_name) document.getElementById('rm-name').value = currentUser.user_metadata.full_name;
+    }
+  } catch (err) {}
+}
+
+async function saveProfile() {
+  if (!currentUser) return;
+  const btn = document.getElementById('save-prof-btn');
+  btn.innerHTML = 'Saving...';
+  const profileData = {
+    id: currentUser.id, full_name: currentUser.user_metadata?.full_name || 'User',
+    skills: document.getElementById('prof-skills').value.trim(), niche: document.getElementById('prof-niche').value.trim(),
+    experience: document.getElementById('prof-exp').value, platform: document.getElementById('prof-platform').value,
+    income_goal: document.getElementById('prof-goal').value
+  };
+  try {
+    await sb.from('profiles').upsert(profileData);
+    userProfile = { ...userProfile, ...profileData }; 
+    toast('Profile saved!', 'success');
+    document.getElementById('profile-modal').classList.remove('on');
+  } catch (error) { toast('Error saving', 'error'); } 
+  finally { btn.innerHTML = 'Save Profile'; }
+}
+
+// CRM LOGIC
+async function loadLeads() {
+  if (!currentUser) return;
+  try {
+    const { data } = await sb.from('leads').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+    userLeads = data || [];
+    renderPipeline();
+  } catch (err) {}
+}
+
+function renderPipeline() {
+  const cols = { pitched: '', replied: '', won: '' };
+  let counts = { pitched: 0, replied: 0, won: 0 };
+  userLeads.forEach(lead => {
+    const status = lead.status || 'pitched';
+    counts[status]++;
+    cols[status] += `
+      <div class="bg-[#1A1A1A] hover:bg-[#222] border border-[#262626] p-3 rounded-lg transition group">
+        <div class="flex justify-between mb-1"><h4 class="text-white font-medium text-xs truncate">${lead.client_name}</h4><span class="text-[9px] text-gray-500">${lead.project_value||''}</span></div>
+        <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-2">${lead.platform}</div>
+        <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          ${status !== 'pitched' ? `<button onclick="moveLead('${lead.id}', 'pitched')" class="flex-1 bg-[#262626] text-gray-400 text-[9px] py-1 rounded">Pitch</button>` : ''}
+          ${status !== 'replied' ? `<button onclick="moveLead('${lead.id}', 'replied')" class="flex-1 bg-[#262626] text-gray-400 text-[9px] py-1 rounded">Talks</button>` : ''}
+          ${status !== 'won' ? `<button onclick="moveLead('${lead.id}', 'won')" class="flex-1 bg-[#262626] text-gray-400 text-[9px] py-1 rounded">Won</button>` : ''}
+        </div>
+      </div>`;
+  });
+  ['pitched', 'replied', 'won'].forEach(status => {
+    document.getElementById(`pipe-${status}`).innerHTML = cols[status] || `<div class="text-center text-gray-600 text-[10px] py-4">Empty</div>`;
+    document.getElementById(`count-${status}`).textContent = counts[status];
+  });
+}
+
+async function saveLead() {
+  const name = document.getElementById('lead-name').value.trim();
+  if(!name) return toast('Name required', 'error');
+  try {
+    await sb.from('leads').insert([{ user_id: currentUser.id, client_name: name, platform: document.getElementById('lead-platform').value, project_value: document.getElementById('lead-value').value.trim(), status: 'pitched' }]);
+    toast('Lead added!', 'success');
+    document.getElementById('add-lead-modal').classList.remove('on');
+    document.getElementById('lead-name').value = ''; document.getElementById('lead-value').value = '';
+    await loadLeads();
+  } catch (err) { toast('Error', 'error'); }
+}
+
+async function moveLead(id, status) {
+  const idx = userLeads.findIndex(l => l.id === id);
+  if(idx > -1) userLeads[idx].status = status;
+  renderPipeline();
+  await sb.from('leads').update({ status }).eq('id', id);
+}
+
+// STATS & NAVIGATION
+async function loadAllStats(userId){
+  try{
+    const [kitsRes, propsRes, emailsRes, gigsRes] = await Promise.all([
+      sb.from('kits').select('*').eq('user_id',userId).order('created_at',{ascending:false}),
+      sb.from('proposals').select('*').eq('user_id',userId),
+      sb.from('emails').select('*').eq('user_id',userId),
+      sb.from('gig_searches').select('id',{count:'exact'}).eq('user_id',userId)
+    ]);
+    document.getElementById('stat-kits').textContent = (kitsRes.data||[]).length;
+    document.getElementById('stat-proposals').textContent = (propsRes.data||[]).length;
+    document.getElementById('stat-emails').textContent = (emailsRes.data||[]).length;
+    document.getElementById('stat-gigs').textContent = gigsRes.count ?? 0;
+    
+    // Simplistic render for kits grid
+    let html='';
+    (kitsRes.data||[]).forEach(kit=>{
+      html+=`<div class="glass-panel p-5"><div class="text-sm font-bold text-white mb-1">${kit.niche||'Kit'}</div><div class="text-xs text-gray-500">Saved Kit</div></div>`;
+    });
+    document.getElementById('kits-grid').innerHTML = html || '<div class="text-gray-500 text-xs">No kits yet.</div>';
+    await loadLeads();
+  } catch(err) {}
+}
+
+function navigate(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id)?.classList.add('on');
+  currentPage=id; 
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelector(`[data-page="${id}"]`)?.classList.add('active');
+  document.getElementById('header-breadcrumb').textContent = `Workspace / ${id.replace('-pg','').replace('-',' ')}`;
+}
+
+// AUTH
+async function signInGoogle(){ await sb.auth.signInWithOAuth({provider:'google'}); }
+function toggleMode(){ authMode=authMode==='signin'?'signup':'signin'; document.getElementById('name-field').style.display=authMode==='signup'?'block':'none'; document.getElementById('auth-btn').innerHTML=authMode==='signup'?'Create Account':'Sign In'; }
+async function authSubmit(){
+  const e=document.getElementById('auth-email').value, p=document.getElementById('auth-password').value, n=document.getElementById('auth-name').value;
+  if(!e||!p) return;
+  if(authMode==='signup'){ await sb.auth.signUp({email:e,password:p,options:{data:{full_name:n}}}); toast('Check email','success'); }
+  else { await sb.auth.signInWithPassword({email:e,password:p}); }
+}
+async function signOut(){ await sb.auth.signOut(); }
+function toast(m,t='success'){
+  const el=document.createElement('div'); el.className=`toast`; el.innerHTML=m;
+  document.body.appendChild(el); setTimeout(()=>el.classList.add('show'),10); setTimeout(()=>{el.classList.remove('show'); setTimeout(()=>el.remove(),300)},3000);
+}
+function copyEl(id){ navigator.clipboard.writeText(document.getElementById(id).innerText); toast('Copied'); }
+
+// --- MOCK FUNCTIONS FOR API CALLS (Requires backend integration) ---
+async function startChat() { navigate('chat-pg'); }
+async function generateProposal() { toast('Proposal generated (Mock)', 'success'); }
+async function generateEmail() { toast('Email generated (Mock)', 'success'); }
+async function findGigs() { toast('Gigs found (Mock)', 'success'); }
+async function generateRoadmap() { toast('Roadmap generated (Mock)', 'success'); }
+async function generateAudit() { toast('Audit generated (Mock)', 'success'); }
+async function downloadAuditPDF() { toast('Downloading (Mock)', 'success'); }
+async function downloadPDF() { toast('Downloading (Mock)', 'success'); }
+
+initApp();
+</script>
+</body>
+</html>
    THEME SYSTEM — Light (default) + Dark (.dark on <html>)
    ═══════════════════════════════════════════════════════════ */
 :root {
