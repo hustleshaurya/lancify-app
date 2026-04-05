@@ -626,23 +626,31 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
 }
 #onboarding-screen.show { display: flex; }
 
-/* The ElevenLabs-style fluid aurora animation */
+/* ─── PREMIUM ELEVENLABS AURORA ANIMATION ─── */
 #intro-animation {
   position: absolute; inset: 0; background: var(--bg);
   display: flex; align-items: center; justify-content: center;
-  z-index: 9600; transition: opacity 0.8s ease;
+  z-index: 9600; transition: opacity 0.8s ease; overflow: hidden;
 }
-.intro-glow {
-  position: absolute; width: 45vw; height: 45vw; max-width: 600px; max-height: 600px;
-  background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(99,102,241,0.12) 40%, transparent 70%);
-  border-radius: 50%; filter: blur(60px);
-  animation: pulseGlow 4s ease-in-out infinite alternate, floatGlow 7s ease-in-out infinite;
+.aurora-container {
+  position: absolute; inset: 0; filter: blur(80px); opacity: 0.5;
+  display: flex; justify-content: center; align-items: center; pointer-events: none;
 }
-html.dark .intro-glow {
-  background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, rgba(99,102,241,0.2) 40%, transparent 70%);
+html.dark .aurora-container { opacity: 0.3; }
+
+.aurora-blob {
+  position: absolute; border-radius: 50%;
+  animation: blob-float 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
 }
-@keyframes pulseGlow { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 1; } }
-@keyframes floatGlow { 0% { transform: translate(0, 0); } 50% { transform: translate(30px, -30px); } 100% { transform: translate(0, 0); } }
+.aurora-1 { width: 50vw; height: 50vw; background: #8b5cf6; top: -10%; left: -10%; animation-delay: 0s; }
+.aurora-2 { width: 60vw; height: 60vw; background: #3b82f6; bottom: -20%; right: -10%; animation-delay: -3s; }
+.aurora-3 { width: 45vw; height: 45vw; background: #ec4899; animation-delay: -6s; }
+
+@keyframes blob-float {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(8%, 12%) scale(1.1) rotate(90deg); }
+  100% { transform: translate(-5%, -8%) scale(0.9) rotate(180deg); }
+}
 
 .intro-logo-wrap {
   position: relative; z-index: 10; display: flex; align-items: center; gap: 14px;
@@ -652,10 +660,10 @@ html.dark .intro-glow {
 .intro-logo-text { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; color: var(--text-main); letter-spacing: -1px; }
 
 @keyframes logoReveal {
-  0% { opacity: 0; transform: scale(0.95) translateY(10px); filter: blur(10px); }
+  0% { opacity: 0; transform: scale(0.95) translateY(15px); filter: blur(10px); }
   15% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
   85% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
-  100% { opacity: 0; transform: scale(1.05) translateY(-10px); filter: blur(10px); }
+  100% { opacity: 0; transform: scale(1.05) translateY(-15px); filter: blur(10px); }
 }
 
 /* The Wizard UI */
@@ -723,7 +731,11 @@ html.dark .intro-glow {
 </div>
 <div id="onboarding-screen">
   <div id="intro-animation">
-    <div class="intro-glow"></div>
+    <div class="aurora-container">
+      <div class="aurora-blob aurora-1"></div>
+      <div class="aurora-blob aurora-2"></div>
+      <div class="aurora-blob aurora-3"></div>
+    </div>
     <div class="intro-logo-wrap">
       <img src="Favicon_new_logo-removebg-preview.png" alt="Lancify">
       <span class="intro-logo-text">Lancify</span>
@@ -733,7 +745,7 @@ html.dark .intro-glow {
   <div id="onboarding-wizard">
     <div class="wizard-step active" id="wizard-step-1">
       <div class="wizard-title">Welcome to your workspace.</div>
-      <div class="wizard-subtitle">Let's set up your freelance OS. This takes 30 seconds.</div>
+      <div class="wizard-subtitle">Let's personalize your AI. This takes 30 seconds.</div>
       
       <div class="field-group">
         <label class="field-label">What is your primary skill?</label>
@@ -750,14 +762,17 @@ html.dark .intro-glow {
       </div>
       
       <div class="wizard-footer">
-        <div class="wizard-dots"><div class="wizard-dot active"></div><div class="wizard-dot"></div></div>
-        <button class="btn btn-primary" onclick="nextWizardStep(2)">Continue →</button>
+        <button class="btn btn-ghost" id="ob-skip-btn" onclick="skipOnboarding()">Skip</button>
+        <div class="flex items-center gap-4">
+          <div class="wizard-dots"><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
+          <button class="btn btn-primary" onclick="nextWizardStep(2)">Continue →</button>
+        </div>
       </div>
     </div>
 
     <div class="wizard-step" id="wizard-step-2">
       <div class="wizard-title">Define your targets.</div>
-      <div class="wizard-subtitle">The AI will use this to find you high-paying gigs.</div>
+      <div class="wizard-subtitle">Where do you want to find your clients?</div>
       
       <div class="field-group">
         <label class="field-label">Target Platform</label>
@@ -771,6 +786,7 @@ html.dark .intro-glow {
       <div class="field-group">
         <label class="field-label">Monthly Income Goal</label>
         <select id="ob-goal">
+          <option value="₹5,000–₹10,000">₹5,000 – ₹10,000</option>
           <option value="₹10,000–₹25,000">₹10,000 – ₹25,000</option>
           <option value="₹25,000–₹50,000">₹25,000 – ₹50,000</option>
           <option value="₹50,000+">₹50,000+</option>
@@ -778,8 +794,34 @@ html.dark .intro-glow {
       </div>
 
       <div class="wizard-footer">
-        <div class="wizard-dots"><div class="wizard-dot"></div><div class="wizard-dot active"></div></div>
-        <button class="btn btn-primary" id="ob-finish-btn" onclick="finishOnboarding()">Enter Workspace <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></button>
+        <button class="btn btn-ghost" onclick="nextWizardStep(1)">← Back</button>
+        <div class="flex items-center gap-4">
+          <div class="wizard-dots"><div class="wizard-dot"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div></div>
+          <button class="btn btn-primary" onclick="nextWizardStep(3)">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-step" id="wizard-step-3">
+      <div class="wizard-title">One last thing.</div>
+      <div class="wizard-subtitle">What's holding you back the most right now?</div>
+      
+      <div class="field-group">
+        <label class="field-label">Biggest Hurdle</label>
+        <select id="ob-hurdle">
+          <option value="Not sure how to price my services">Not sure how to price my services</option>
+          <option value="Writing proposals takes too long">Writing proposals takes too long</option>
+          <option value="I don't have a portfolio yet">I don't have a portfolio yet</option>
+          <option value="Finding high-quality leads">Finding high-quality leads</option>
+        </select>
+      </div>
+
+      <div class="wizard-footer">
+        <button class="btn btn-ghost" onclick="nextWizardStep(2)">← Back</button>
+        <div class="flex items-center gap-4">
+          <div class="wizard-dots"><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot active"></div></div>
+          <button class="btn btn-primary" id="ob-finish-btn" onclick="finishOnboarding()">Enter Workspace <i data-lucide="check" class="w-4 h-4 ml-1"></i></button>
+        </div>
       </div>
     </div>
   </div>
@@ -1301,6 +1343,13 @@ function onLogin(user) {
   currentUser = user;
   const ls = el('login-screen'); if(ls) ls.style.display='none';
   
+  // 1. ALWAYS show the animation screen first
+  el('onboarding-screen').classList.add('show');
+  el('intro-animation').style.display = 'flex';
+  el('intro-animation').style.opacity = '1';
+  el('onboarding-wizard').classList.remove('show');
+  
+  // 2. Load Dashboard data in background
   const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const firstName = name.split(' ')[0];
   setText('header-avatar', name[0].toUpperCase());
@@ -1309,12 +1358,105 @@ function onLogin(user) {
   setText('ws-name', `${firstName}'s Workspace`);
   setText('acct-ws-name', `${firstName}'s Workspace`);
   
-  // We check the profile first. The profile logic will decide whether to show the Dashboard or the Wizard.
-  loadProfile(user.id);
   loadStats(user.id);
   loadLeads(user.id);
   startCoach();
   lucide.createIcons();
+
+  // 3. Check profile and route intelligently
+  checkRouting(user.id);
+}
+
+async function checkRouting(uid) {
+  try {
+    const {data} = await sb.from('profiles').select('*').eq('user_id', uid).single();
+    
+    if (data && data.skills && data.skills !== 'Skipped') {
+      // ROUTE A: Returning User (They have data)
+      userProfile = {...userProfile, ...data}; 
+      applyProfileToFields(data); 
+      checkProfileBanners(); 
+      
+      // Let animation play, then go straight to dashboard
+      setTimeout(() => {
+        el('intro-animation').style.opacity = '0';
+        setTimeout(() => {
+          el('onboarding-screen').classList.remove('show');
+          el('app-layout').classList.add('show');
+        }, 800);
+      }, 2600);
+
+    } else {
+      // ROUTE B: New User (No skills or skipped)
+      showWizardAfterAnimation();
+    }
+  } catch(e) {
+    // ROUTE C: No profile row found at all (Brand new user)
+    showWizardAfterAnimation();
+  }
+}
+
+function showWizardAfterAnimation() {
+  setTimeout(() => {
+    el('intro-animation').style.opacity = '0';
+    setTimeout(() => {
+      el('intro-animation').style.display = 'none';
+      el('onboarding-wizard').classList.add('show');
+    }, 800);
+  }, 2600);
+}
+
+/* ─── ONBOARDING WIZARD LOGIC ─── */
+function nextWizardStep(step) {
+  document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
+  el(`wizard-step-${step}`).classList.add('active');
+}
+
+async function skipOnboarding() {
+  const btn = el('ob-skip-btn');
+  btn.textContent = 'Skipping...';
+  
+  // Save a dummy profile so they don't get the wizard next time
+  const pd = { user_id: currentUser.id, name: currentUser.user_metadata?.full_name || 'User', skills: 'Skipped' };
+  await sb.from('profiles').upsert([pd], {onConflict:'user_id'});
+  
+  el('onboarding-wizard').style.opacity = '0';
+  setTimeout(() => {
+    el('onboarding-screen').classList.remove('show');
+    el('app-layout').classList.add('show');
+  }, 400);
+}
+
+async function finishOnboarding() {
+  const btn = el('ob-finish-btn');
+  btn.disabled = true; btn.innerHTML = 'Preparing...';
+  
+  const pd = {
+    user_id: currentUser.id,
+    name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0],
+    skills: val('ob-skills') || 'Freelancer',
+    exp_level: val('ob-exp'),
+    platform: val('ob-platform'),
+    income_goal: val('ob-goal')
+  };
+
+  try {
+    await sb.from('profiles').upsert([pd], {onConflict:'user_id'});
+    userProfile = {...userProfile, ...pd};
+    applyProfileToFields(pd);
+    checkProfileBanners();
+    
+    el('onboarding-wizard').style.opacity = '0';
+    setTimeout(() => {
+      el('onboarding-screen').classList.remove('show');
+      el('app-layout').classList.add('show');
+      showToast('Workspace personalized successfully.');
+    }, 400);
+
+  } catch(e) {
+    btn.disabled = false; btn.innerHTML = 'Enter Workspace';
+    showToast('Error saving. Please try again.');
+  }
 }
 /* ─── AUTH ─── */
 async function signInGoogle() { await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}}); }
