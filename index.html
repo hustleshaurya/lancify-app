@@ -1120,12 +1120,43 @@ const sb = createClient(
 let currentUser = null, userProfile = {is_pro:false}, userLeads = [];
 let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null;
+
+/*
+  The chat collects exactly the keys generate.js needs inside answers{}:
+    skills, experience, hours, goal, platform
+  Note: "target" (who they want to work with) maps to "skills" context but is
+  not its own key in the backend — we keep it as extra context in the answers
+  object. The backend only uses: skills, experience, hours, goal, platform.
+  We add a 6th question for platform so we always have it.
+*/
 const chatQuestions = [
-  {q:'What skill do you have, or are learning right now? Be specific — e.g. "video editing", "logo design", "social media posts".', key:'skill'},
-  {q:'Who do you want to work with? Think about the types of businesses or people who would benefit from your skill.', key:'target'},
-  {q:'Have you done any work before — even for free, for a friend, or for yourself?', key:'experience'},
-  {q:'How many hours can you put into freelancing each day?', key:'hours', opts:['1 hour','2 hours','3-4 hours','5+ hours']},
-  {q:"What is your biggest goal for your first month? Be honest!", key:'goal', opts:['Get my first client','Earn ₹10,000','Build a portfolio','Just learn the ropes']}
+  {
+    q: 'What skill do you have, or are learning right now? Be specific — e.g. "video editing", "logo design", "social media posts".',
+    key: 'skills'
+  },
+  {
+    q: 'Who do you want to work with? Think about the types of businesses or people who would benefit from your skill.',
+    key: 'target'
+  },
+  {
+    q: 'Have you done any work before — even for free, for a friend, or for yourself?',
+    key: 'experience'
+  },
+  {
+    q: 'How many hours can you put into freelancing each day?',
+    key: 'hours',
+    opts: ['1 hour', '2 hours', '3-4 hours', '5+ hours']
+  },
+  {
+    q: 'What is your biggest goal for your first month? Be honest!',
+    key: 'goal',
+    opts: ['Get my first client', 'Earn ₹10,000', 'Build a portfolio', 'Just learn the ropes']
+  },
+  {
+    q: 'Which platform do you want to start on?',
+    key: 'platform',
+    opts: ['Upwork', 'Fiverr', 'LinkedIn', 'Instagram DMs']
+  }
 ];
 
 /* ─── INIT ─── */
@@ -1341,28 +1372,116 @@ async function sendChatMsg(){
     el('gen-bar')?.classList.add('show');
     setText('gen-text','Building your complete freelance kit…');
     try {
-      const res=await fetch('/api/launchcoach',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(chatAnswers)});
-      const data=await res.json();
+      /*
+        FIX 1 — Launch Coach
+        ─────────────────────
+        URL:     /api/launchcoach  →  /api/generate
+        Payload: chatAnswers flat  →  { answers: { skills, experience, hours, goal, platform } }
+        The backend (generate.js) destructures req.body.answers, so we wrap the
+        collected chatAnswers object inside the "answers" key.
+        "target" is included for extra context; the model uses it naturally.
+      */
+      const answers = {
+        skills:     chatAnswers.skills    || '',
+        target:     chatAnswers.target    || '',
+        experience: chatAnswers.experience|| '',
+        hours:      chatAnswers.hours     || '2 hours',
+        goal:       chatAnswers.goal      || '',
+        platform:   chatAnswers.platform  || 'Upwork'
+      };
+
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answers })
+      });
+
+      const data = await res.json();
       if(data.error) throw new Error(data.error);
-      savedKitData=data; el('gen-bar')?.classList.remove('show');
+      savedKitData = data;
+      el('gen-bar')?.classList.remove('show');
       renderKit(data);
-      if(currentUser){ await sb.from('kits').insert([{user_id:currentUser.id,kit_data:data,skill:chatAnswers.skill}]); loadStats(currentUser.id); }
-    } catch(e){ el('gen-bar')?.classList.remove('show'); showToast('Error building kit. Try again.'); show('input-zone'); show('chat-progress-wrap'); chatStep=chatQuestions.length-1; }
+      if(currentUser){
+        await sb.from('kits').insert([{
+          user_id: currentUser.id,
+          kit_data: data,
+          skill: answers.skills
+        }]);
+        loadStats(currentUser.id);
+      }
+    } catch(e){
+      el('gen-bar')?.classList.remove('show');
+      showToast('Error building kit. Try again.');
+      show('input-zone'); show('chat-progress-wrap');
+      chatStep = chatQuestions.length - 1;
+    }
   }
 }
 
+/*
+  FIX 1 (continued) — renderKit
+  ─────────────────────────────
+  generate.js returns this shape:
+  {
+    niche, niche_reason, portfolio_blurb,
+    pricing: { basic, standard, premium }  ← each has {name, price, deliverables, timeline}
+    gig_title, gig_description,
+    pitch_script,
+    action_plan: { day1…day7 }
+  }
+  Map every returned key to a readable kit block.
+*/
 function renderKit(data){
   const blocks=el('kit-blocks'); blocks.innerHTML='';
   const add=(title,content)=>{
     const d=document.createElement('div'); d.className='kit-block';
     d.innerHTML=`<h3>${title}</h3><p>${content}</p>`; blocks.appendChild(d);
   };
-  if(data.elevatorPitch) add('Elevator Pitch',data.elevatorPitch);
-  if(data.targetClient) add('Target Client',data.targetClient);
-  if(data.uniqueValue) add('Unique Value Proposition',data.uniqueValue);
-  if(data.coldMessage) add('Cold Outreach Message',data.coldMessage);
-  if(data.pricing){ const d=document.createElement('div'); d.className='kit-block'; d.innerHTML=`<h3>Pricing Tiers</h3><div class="kit-price-grid">${['starter','standard','premium'].filter(t=>data.pricing[t]).map(t=>`<div class="price-tier"><div class="price-tier-name">${t.charAt(0).toUpperCase()+t.slice(1)}</div><div class="price-tier-val">${data.pricing[t]}</div></div>`).join('')}</div>`; blocks.appendChild(d); }
-  if(data.nextSteps) add('Your Next 3 Steps',Array.isArray(data.nextSteps)?data.nextSteps.join('\n'):data.nextSteps);
+
+  if(data.niche)           add('Your Niche', data.niche + (data.niche_reason ? ' — ' + data.niche_reason : ''));
+  if(data.portfolio_blurb) add('Profile / Portfolio Bio', data.portfolio_blurb);
+  if(data.gig_title)       add('Gig Title', data.gig_title);
+  if(data.gig_description) add('Gig Description', data.gig_description);
+  if(data.pitch_script)    add('Cold DM / Pitch Script', data.pitch_script);
+
+  // Pricing tiers
+  if(data.pricing){
+    const tiers = ['basic','standard','premium'];
+    const tiersHtml = tiers
+      .filter(t => data.pricing[t])
+      .map(t => {
+        const tier = data.pricing[t];
+        // tier can be an object {name, price, deliverables, timeline} or a plain string
+        const name  = (typeof tier === 'object') ? (tier.name  || t)             : t;
+        const price = (typeof tier === 'object') ? (tier.price || '—')           : tier;
+        const info  = (typeof tier === 'object') ? (tier.deliverables || '')     : '';
+        const time  = (typeof tier === 'object') ? (tier.timeline ? ` · ${tier.timeline}` : '') : '';
+        return `<div class="price-tier">
+          <div class="price-tier-name">${name.charAt(0).toUpperCase()+name.slice(1)}</div>
+          <div class="price-tier-val">${price}</div>
+          ${info ? `<div style="font-size:11.5px;color:var(--text-muted);margin-top:5px;line-height:1.4">${info}${time}</div>` : ''}
+        </div>`;
+      }).join('');
+    if(tiersHtml){
+      const d=document.createElement('div'); d.className='kit-block';
+      d.innerHTML=`<h3>Pricing Tiers</h3><div class="kit-price-grid">${tiersHtml}</div>`;
+      blocks.appendChild(d);
+    }
+  }
+
+  // 7-day action plan
+  if(data.action_plan){
+    const days = Object.entries(data.action_plan)
+      .sort((a,b)=>a[0].localeCompare(b[0]))
+      .map(([k,v])=>`<div class="roadmap-day" data-day="${k.replace('day','')}"><div style="font-size:13px;color:var(--text-main);line-height:1.5">${v}</div></div>`)
+      .join('');
+    if(days){
+      const d=document.createElement('div'); d.className='kit-block';
+      d.innerHTML=`<h3>Your 7-Day Action Plan</h3>${days}`;
+      blocks.appendChild(d);
+    }
+  }
+
   show('kit-result'); el('kit-result')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -1379,11 +1498,25 @@ async function downloadKitPDF(){
       doc.setFont('helvetica','normal'); doc.setFontSize(12); doc.setTextColor(0);
       const lines=doc.splitTextToSize(String(text),170); doc.text(lines,20,y); y+=lines.length*6+10;
     };
-    if(savedKitData.elevatorPitch) addSection('Elevator Pitch',savedKitData.elevatorPitch);
-    if(savedKitData.targetClient) addSection('Target Client',savedKitData.targetClient);
-    if(savedKitData.uniqueValue) addSection('Unique Value',savedKitData.uniqueValue);
-    if(savedKitData.coldMessage) addSection('Cold Message',savedKitData.coldMessage);
-    if(savedKitData.nextSteps) addSection('Next Steps',Array.isArray(savedKitData.nextSteps)?savedKitData.nextSteps.join('\n'):savedKitData.nextSteps);
+    const d=savedKitData;
+    if(d.niche)           addSection('Niche', d.niche + (d.niche_reason ? ' — '+d.niche_reason : ''));
+    if(d.portfolio_blurb) addSection('Profile Bio', d.portfolio_blurb);
+    if(d.gig_title)       addSection('Gig Title', d.gig_title);
+    if(d.gig_description) addSection('Gig Description', d.gig_description);
+    if(d.pitch_script)    addSection('Cold Pitch Script', d.pitch_script);
+    if(d.pricing){
+      ['basic','standard','premium'].forEach(t=>{
+        if(!d.pricing[t]) return;
+        const tier=d.pricing[t];
+        const label=typeof tier==='object'?`${tier.name||t}: ${tier.price||''}`:String(tier);
+        const desc =typeof tier==='object'?(tier.deliverables||''):'';
+        addSection(`Pricing — ${t.charAt(0).toUpperCase()+t.slice(1)}`, label+(desc?'\n'+desc:''));
+      });
+    }
+    if(d.action_plan){
+      const plan=Object.entries(d.action_plan).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>`${k.toUpperCase()}: ${v}`).join('\n');
+      addSection('7-Day Action Plan', plan);
+    }
     doc.save('my-freelance-kit.pdf');
   } catch(e){ showToast('PDF error. Try again.'); }
 }
@@ -1394,16 +1527,67 @@ function toggleAuditUrl(){ const v=val('audit-platform'); el('audit-url-wrap').s
 function updateLogoText(input){ const f=input.files[0]; if(f) setText('audit-logo-text',f.name); }
 
 async function generateAudit(){
-  const target=val('audit-target'); if(!target) return showToast('Enter a business name');
+  const targetVal=val('audit-target'); if(!targetVal) return showToast('Enter a business name');
   el('audit-btn').disabled=true; loader('audit',true); toggleResult('audit',false);
   try {
-    const logoFile=el('audit-logo').files[0]; let logoBase64='';
-    if(logoFile){ logoBase64=await new Promise(r=>{ const fr=new FileReader(); fr.onload=e=>r(e.target.result.split(',')[1]); fr.readAsDataURL(logoFile); }); }
-    const res=await fetch('/api/audit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({businessName:target,platform:val('audit-platform'),websiteUrl:val('audit-url'),weakness:val('audit-weakness'),service:val('audit-service'),price:val('audit-price'),observation:val('audit-obs'),logoBase64})});
+    /*
+      FIX 3 — Audit Generator
+      ────────────────────────
+      Payload key fix:  businessName  →  target
+      Added:            websiteUrl (needed for Jina scraper in audit.js)
+      audit.js expects: { target, platform, weakness, service, price, observation, websiteUrl }
+      Note: logoBase64 is NOT consumed by the backend audit.js — removed to keep payload clean.
+    */
+    const res=await fetch('/api/audit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        target:      targetVal,
+        platform:    val('audit-platform'),
+        websiteUrl:  val('audit-url'),
+        weakness:    val('audit-weakness'),
+        service:     val('audit-service'),
+        price:       val('audit-price'),
+        observation: val('audit-obs')
+      })
+    });
     const data=await res.json();
     if(data.error) throw new Error(data.error);
-    el('audit-result-text').textContent=data.body||JSON.stringify(data);
+
+    /*
+      FIX 3 (continued) — Audit UI Render
+      ─────────────────────────────────────
+      Backend returns:
+        email_subject, email_body,
+        sec1_assessment, sec2_bottleneck, sec3_impact,
+        sec4_fixes (array), sec5_pitch
+
+      We render the full audit report in audit-result-text,
+      structured so the user can read it and copy it cleanly.
+    */
+    const fixes = Array.isArray(data.sec4_fixes)
+      ? data.sec4_fixes.map((f,i)=>`${i+1}. ${f}`).join('\n')
+      : (data.sec4_fixes||'');
+
+    const fullReport = [
+      data.email_subject ? `SUBJECT: ${data.email_subject}` : '',
+      '',
+      data.email_body    ? `--- COLD EMAIL ---\n${data.email_body}` : '',
+      '',
+      data.sec1_assessment ? `--- WHAT'S WORKING ---\n${data.sec1_assessment}` : '',
+      '',
+      data.sec2_bottleneck ? `--- THE BOTTLENECK ---\n${data.sec2_bottleneck}` : '',
+      '',
+      data.sec3_impact     ? `--- WHAT IT'S COSTING THEM ---\n${data.sec3_impact}` : '',
+      '',
+      fixes                ? `--- QUICK FIXES ---\n${fixes}` : '',
+      '',
+      data.sec5_pitch      ? `--- YOUR PITCH ---\n${data.sec5_pitch}` : ''
+    ].filter(line => line !== null && line !== undefined).join('\n').trim();
+
+    el('audit-result-text').textContent = fullReport;
     toggleResult('audit',true);
+
   } catch(e){ showToast('Error. Try again.'); toggleResult('audit',false,true); }
   el('audit-btn').disabled=false; loader('audit',false);
 }
@@ -1413,12 +1597,50 @@ async function generateProposal(){
   const job=val('prop-job'); if(!job) return showToast('Paste a job description first');
   el('prop-btn').disabled=true; loader('prop',true); toggleResult('prop',false);
   try {
-    const res=await fetch('/api/proposal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({platform:val('prop-platform'),niche:val('prop-niche'),jobDescription:job,experience:val('prop-exp')})});
+    /*
+      FIX 2 — Proposal Writer
+      ────────────────────────
+      Payload key fix: jobDescription  →  jobDesc
+      proposal.js expects: { jobDesc, platform, experience, niche }
+    */
+    const res=await fetch('/api/proposal',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        jobDesc:    job,
+        platform:   val('prop-platform'),
+        niche:      val('prop-niche'),
+        experience: val('prop-exp')
+      })
+    });
     const data=await res.json();
     if(data.error) throw new Error(data.error);
-    el('prop-result-text').textContent=data.body||JSON.stringify(data);
+
+    /*
+      FIX 2 (continued) — Proposal UI Render
+      ────────────────────────────────────────
+      Backend returns: { subject, proposal, tips }
+      Old code used data.body — correct key is data.proposal.
+      We also surface the subject line and tips for extra value.
+    */
+    const subjectLine = data.subject ? `SUBJECT: ${data.subject}\n\n` : '';
+    const tipsBlock = (Array.isArray(data.tips) && data.tips.length)
+      ? '\n\n--- WHY THIS WORKS ---\n' + data.tips.map((t,i)=>`${i+1}. ${t}`).join('\n')
+      : '';
+
+    el('prop-result-text').textContent = subjectLine + (data.proposal || '') + tipsBlock;
     toggleResult('prop',true);
-    if(currentUser){ await sb.from('proposals').insert([{user_id:currentUser.id,platform:val('prop-platform'),niche:val('prop-niche'),proposal_text:data.body||'',job_description:job}]); loadStats(currentUser.id); }
+
+    if(currentUser){
+      await sb.from('proposals').insert([{
+        user_id:       currentUser.id,
+        platform:      val('prop-platform'),
+        niche:         val('prop-niche'),
+        proposal_text: data.proposal || '',
+        job_description: job
+      }]);
+      loadStats(currentUser.id);
+    }
   } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); }
   el('prop-btn').disabled=false; loader('prop',false);
 }
@@ -1428,12 +1650,50 @@ async function generateEmail(){
   const ctx=val('email-context'); if(!ctx) return showToast('Add some context first');
   el('email-btn').disabled=true; loader('email',true); toggleResult('email',false);
   try {
-    const res=await fetch('/api/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({emailType:val('email-type'),tone:val('email-tone'),context:ctx})});
+    /*
+      FIX 4 — Email Writer
+      ─────────────────────
+      Added: niche (from userProfile, falls back to 'Freelancer')
+      email.js expects: { emailType, tone, context, niche }
+    */
+    const res=await fetch('/api/email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        emailType: val('email-type'),
+        tone:      val('email-tone'),
+        context:   ctx,
+        niche:     userProfile.niche || 'Freelancer'
+      })
+    });
     const data=await res.json();
     if(data.error) throw new Error(data.error);
-    el('email-result-text').textContent=data.body||JSON.stringify(data);
+
+    /*
+      FIX 4 (continued) — Email UI Render
+      ─────────────────────────────────────
+      Backend returns: { subject, body, tips }
+      data.body contains \n\n paragraph breaks — we preserve them via
+      white-space:pre-wrap which is already set on .result-box-body.
+      We also surface subject line and tips.
+    */
+    const subjectLine = data.subject ? `SUBJECT: ${data.subject}\n\n` : '';
+    const tipsBlock = (Array.isArray(data.tips) && data.tips.length)
+      ? '\n\n--- WHY THIS WORKS ---\n' + data.tips.map((t,i)=>`${i+1}. ${t}`).join('\n')
+      : '';
+
+    el('email-result-text').textContent = subjectLine + (data.body || '') + tipsBlock;
     toggleResult('email',true);
-    if(currentUser){ await sb.from('emails').insert([{user_id:currentUser.id,email_type:val('email-type'),email_text:data.body||'',context:ctx}]); loadStats(currentUser.id); }
+
+    if(currentUser){
+      await sb.from('emails').insert([{
+        user_id:    currentUser.id,
+        email_type: val('email-type'),
+        email_text: data.body || '',
+        context:    ctx
+      }]);
+      loadStats(currentUser.id);
+    }
   } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); }
   el('email-btn').disabled=false; loader('email',false);
 }
@@ -1443,22 +1703,54 @@ async function findGigs(){
   const skills=val('gig-skills'); if(!skills) return showToast('Enter your skills first');
   el('gig-btn').disabled=true; loader('gig',true); el('gig-results').style.display='none';
   try {
-    const res=await fetch('/api/gigfinder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skills,platform:val('gig-platform')})});
+    /*
+      gigfinder.js expects: { skills, platform, experience, budget }
+      We pass experience and budget from userProfile for richer recommendations.
+    */
+    const res=await fetch('/api/gigfinder',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        skills,
+        platform:   val('gig-platform'),
+        experience: userProfile.exp_level  || 'Beginner — no reviews yet',
+        budget:     userProfile.income_goal|| '₹10,000–₹25,000/month to start'
+      })
+    });
     const data=await res.json();
     if(data.error) throw new Error(data.error);
+
+    /*
+      gigfinder.js returns:
+      { niches: [ { title, demand, competition, entryBarrier, priceRange, whyNow, firstStep } ] }
+    */
     el('gig-cards').innerHTML=(data.niches||[]).map(n=>`
       <div class="gig-card">
-        <h4>${n.title}</h4>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px">${n.whyNow||n.whyGood||'High demand for this skill.'}</p>
-        <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:4px"><strong style="color:var(--text-main)">Price Range:</strong> ${n.priceRange||''}</div>
-        <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px"><strong style="color:var(--text-main)">First Step:</strong> ${n.firstStep||n.firstGig||''}</div>
+        <h4>${n.title||''}</h4>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px">${n.whyNow||'High demand for this skill.'}</p>
+        <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:4px">
+          <strong style="color:var(--text-main)">Price Range:</strong> ${n.priceRange||''}
+        </div>
+        <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">
+          <strong style="color:var(--text-main)">First Step:</strong> ${n.firstStep||''}
+        </div>
         <div class="gig-meta">
           <span class="gig-tag">Demand: ${n.demand||''}</span>
           <span class="gig-tag">Competition: ${n.competition||''}</span>
+          <span class="gig-tag">Entry: ${n.entryBarrier||''}</span>
         </div>
       </div>`).join('');
+
     el('gig-results').style.display='block';
-    if(currentUser){ await sb.from('gig_searches').insert([{user_id:currentUser.id,skills,platform:val('gig-platform'),results_count:(data.niches||[]).length}]); loadStats(currentUser.id); }
+    if(currentUser){
+      await sb.from('gig_searches').insert([{
+        user_id:       currentUser.id,
+        skills,
+        platform:      val('gig-platform'),
+        results_count: (data.niches||[]).length
+      }]);
+      loadStats(currentUser.id);
+    }
   } catch(e){ showToast('Error parsing results. Try again.'); }
   el('gig-btn').disabled=false; loader('gig',false);
 }
@@ -1468,16 +1760,63 @@ async function generateRoadmap(){
   const skills=val('rm-skills'); if(!skills) return showToast('Enter your skills');
   el('rm-btn').disabled=true; loader('rm',true);
   try {
-    const res=await fetch('/api/roadmap',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:val('rm-name'),skills,platform:val('rm-platform'),hoursPerDay:val('rm-hours'),currentLevel:val('rm-level'),biggestFear:val('rm-fear')})});
+    /*
+      roadmap.js expects:
+      { name, skills, platform, hoursPerDay, currentLevel, biggestFear }
+      All keys already match — no payload changes needed here.
+
+      roadmap.js returns:
+      {
+        studentName, goal, platform,
+        weeks: [ { weekNumber, theme, focus, days: [ { day, title, task, why, lancifyTip, timeEstimate } ] } ],
+        finalMessage
+      }
+    */
+    const res=await fetch('/api/roadmap',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name:         val('rm-name'),
+        skills,
+        platform:     val('rm-platform'),
+        hoursPerDay:  val('rm-hours'),
+        currentLevel: val('rm-level'),
+        biggestFear:  val('rm-fear')
+      })
+    });
     const data=await res.json();
     if(data.error) throw new Error(data.error);
-    el('rm-content').innerHTML=(data.weeks||[]).map(w=>`
+
+    // Render goal banner if present
+    const goalText = data.goal ? `<div style="font-size:13.5px;color:var(--text-muted);margin-bottom:24px;padding:12px 16px;background:var(--bg-panel);border:1px solid var(--border);border-radius:8px">${data.goal}</div>` : '';
+
+    el('rm-content').innerHTML = goalText + (data.weeks||[]).map(w=>`
       <div style="margin-bottom:28px">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:14px">Week ${w.weekNumber||w.week} — ${w.theme}</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px">
+          Week ${w.weekNumber||w.week} — ${w.theme||''}
+        </div>
+        ${w.focus ? `<div style="font-size:13px;color:var(--text-muted);margin-bottom:14px">${w.focus}</div>` : ''}
         <div style="display:flex;flex-direction:column;gap:8px">
-          ${(w.days||[]).map(d=>`<div class="roadmap-day" data-day="${d.day}"><div style="font-size:13.5px;color:var(--text-main);line-height:1.5;padding:2px 0"><strong>${d.title||''}</strong>${d.title?': ':''}${d.task}</div></div>`).join('')}
+          ${(w.days||[]).map(d=>`
+            <div class="roadmap-day" data-day="${d.day||''}">
+              <div style="font-size:13.5px;color:var(--text-main);line-height:1.5;padding:2px 0">
+                <strong>${d.title||''}</strong>${d.title?': ':''}${d.task||''}
+              </div>
+              ${d.why ? `<div style="font-size:12px;color:var(--text3);margin-top:4px">${d.why}</div>` : ''}
+              ${d.lancifyTip ? `<div style="font-size:12px;color:#6366f1;margin-top:4px">💡 ${d.lancifyTip}</div>` : ''}
+              ${d.timeEstimate ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">⏱ ${d.timeEstimate}</div>` : ''}
+            </div>`).join('')}
         </div>
       </div>`).join('');
+
+    // Append final message if present
+    if(data.finalMessage){
+      el('rm-content').insertAdjacentHTML('beforeend',`
+        <div style="margin-top:32px;padding:18px 20px;background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;font-size:13.5px;color:var(--text-muted);line-height:1.65">
+          ${data.finalMessage}
+        </div>`);
+    }
+
     el('rm-form').style.display='none'; el('rm-result').style.display='block';
   } catch(e){ showToast('Error. Try again.'); }
   el('rm-btn').disabled=false; loader('rm',false);
