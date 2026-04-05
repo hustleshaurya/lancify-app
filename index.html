@@ -3,781 +3,1202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lancify | Premium AI OS</title>
-
+<title>Lancify — Freelance OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
-/* 🌌 ELEVENLABS LIGHT THEME UI */
-:root { --bg: #ffffff; --text-main: #111827; --border: #e5e7eb; }
-body { background: var(--bg); color: var(--text-main); font-family: "Inter", sans-serif; height: 100vh; overflow: hidden; -webkit-font-smoothing: antialiased; }
-
-/* 💎 CLEAN FLAT PANELS */
-.glass-panel { background: #ffffff; border: 1px solid var(--border); border-radius: 16px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-.glass-panel:hover { border-color: #d1d5db; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-1px); }
-.glass-panel.dashed { border: 1px dashed #d1d5db; background: #f9fafb; box-shadow: none; }
-
-/* 🧾 INPUTS & DROPDOWNS */
-.input-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
-.field-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 600; color: #374151; }
-.field-label span { font-size: 0.75rem; color: #9ca3af; font-weight: 400; }
-
-input[type="text"], input[type="email"], input[type="password"], input[type="url"], select { 
-    width: 100%; height: 44px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 14px; color: #111827; font-size: 0.9rem; transition: all 0.2s ease; outline: none; box-sizing: border-box;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sidebar-w:268px;
+  --header-h:56px;
+  --bg:#ffffff;
+  --bg2:#f9fafb;
+  --bg3:#f3f4f6;
+  --border:#e5e7eb;
+  --border2:#d1d5db;
+  --text:#111827;
+  --text2:#6b7280;
+  --text3:#9ca3af;
+  --accent:#000000;
+  --radius:8px;
+  --radius-lg:12px;
 }
-textarea { width: 100%; background: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; padding: 14px; color: #111827; font-size: 0.9rem; transition: all 0.2s ease; outline: none; resize: vertical; line-height: 1.5; }
-input::placeholder, textarea::placeholder { color: #9ca3af; }
-input:hover, textarea:hover, select:hover { border-color: #9ca3af; }
-input:focus, textarea:focus, select:focus { border-color: #000000; box-shadow: 0 0 0 1px #000000; }
-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; cursor: pointer; }
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 
-.custom-file-upload { position: relative; border: 1px dashed #d1d5db; border-radius: 8px; background: #f9fafb; transition: all 0.2s ease; text-align: center; padding: 24px; cursor: pointer; }
-.custom-file-upload:hover { border-color: #6b7280; background: #f3f4f6; }
-.custom-file-upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#9ca3af}
 
-/* 🎯 BUTTONS */
-.btn-primary { background: #000000; color: #ffffff; border: none; height: 44px; padding: 0 24px; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-primary:hover { background: #1f2937; }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+/* ─── LOADING ─── */
+#loading-screen{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:14px}
+.spin{width:22px;height:22px;border:2px solid #e5e7eb;border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* 🧭 LAYOUT & NAVIGATION */
-.glass-sidebar { background: #ffffff; border-right: 1px solid var(--border); }
-.nav-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: #4b5563; transition: all 0.15s ease; margin-bottom: 2px; }
-.nav-item:hover { background: #f3f4f6; color: #111827; }
-.nav-item.active { background: #f3f4f6; color: #111827; font-weight: 600; }
-.nav-item i { stroke-width: 1.5px; color: #6b7280; }
-.nav-item.active i { color: #111827; }
-.sb-group { font-size: 0.7rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0 8px 12px; }
+/* ─── LOGIN ─── */
+#login-screen{display:none;position:fixed;inset:0;background:#f9fafb;z-index:9000;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+#login-screen.show{display:flex}
+.login-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04)}
+.login-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
+.login-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text3);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;display:none}
+.auth-msg.error{background:#fef2f2;border:1px solid #fecaca;color:#dc2626}
+.auth-msg.success{background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a}
 
-.profile-banner { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #166534; margin-bottom: 20px; cursor: pointer; transition: all 0.2s; }
-.profile-banner:hover { background: #dcfce3; }
+/* ─── SHARED INPUTS ─── */
+.field-label{display:block;font-size:12px;font-weight:600;color:#374151;margin-bottom:6px;letter-spacing:.01em}
+.field-optional{font-size:11px;font-weight:400;color:var(--text3)}
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],select,textarea{
+  display:block;width:100%;background:#fff;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:inherit;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s
+}
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],select{height:38px;padding:0 12px}
+textarea{padding:10px 12px;resize:vertical;line-height:1.55}
+input::placeholder,textarea::placeholder{color:var(--text3)}
+input:hover,select:hover,textarea:hover{border-color:#9ca3af}
+input:focus,select:focus,textarea:focus{border-color:#000;box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:14px;cursor:pointer;padding-right:32px}
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:500;border-radius:var(--radius);transition:all .15s;white-space:nowrap}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:#000;color:#fff;height:38px;padding:0 18px}.btn-primary:hover:not(:disabled){background:#1f2937}
+.btn-secondary{background:#fff;color:var(--text);border:1px solid var(--border2);height:38px;padding:0 16px}.btn-secondary:hover:not(:disabled){background:var(--bg2)}
+.btn-ghost{background:transparent;color:var(--text2);height:32px;padding:0 10px;font-size:13px}.btn-ghost:hover{background:var(--bg3);color:var(--text)}
+.btn-google{background:#fff;color:#374151;border:1px solid var(--border2);height:40px;width:100%;border-radius:var(--radius);box-shadow:0 1px 2px rgba(0,0,0,.04)}.btn-google:hover{background:var(--bg2)}
+.btn-full{width:100%}
+.btn-upgrade{background:#000;color:#fff;height:38px;border-radius:var(--radius);width:100%;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;border:none;transition:background .15s}.btn-upgrade:hover{background:#1f2937}
 
-/* LOGIC STYLES */
-#app-loading { position: fixed; inset: 0; background: #fff; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 16px; }
-.app-spin { width: 24px; height: 24px; border: 2px solid #e5e7eb; border-top-color: #000; border-radius: 50%; animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+/* ─── APP LAYOUT ─── */
+#app-layout{display:none;height:100vh;width:100vw}
+#app-layout.show{display:flex}
 
-#login-pg { display: none; position: fixed; inset: 0; background: #f9fafb; z-index: 9000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
-#app-layout { display: none; height: 100vh; width: 100vw; overflow: hidden; position: relative; z-index: 10; }
-#app-layout.on { display: flex; }
-.pg { display: none; animation: pgIn 0.3s ease; }
-.pg.on { display: block; }
-@keyframes pgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+/* ─── SIDEBAR ─── */
+.sidebar{width:var(--sidebar-w);height:100vh;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.sb-logo{padding:18px 20px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border)}
+.sb-logo-mark{width:26px;height:26px;background:#000;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.sb-logo-mark svg{color:#fff}
+.sb-logo-name{font-size:16px;font-weight:700;letter-spacing:-.4px}
 
-.modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.4); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 5000; opacity: 0; transition: opacity .2s; }
-.modal-overlay.on { display: flex; opacity: 1; }
-.modal-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; width: 100%; max-width: 480px; position: relative; transform: scale(0.98); transition: transform .2s ease; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-.modal-overlay.on .modal-card { transform: scale(1); }
-.modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: #9ca3af; cursor: pointer; }
-.toast { position: fixed; bottom: 24px; right: 24px; background: #111827; color: #fff; padding: 16px 24px; border-radius: 12px; font-size: .95rem; font-weight: 500; transform: translateY(20px); opacity: 0; transition: all .3s ease; z-index: 9999; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; }
-.toast.show { transform: translateY(0); opacity: 1; }
+.sb-workspace{padding:12px 14px;border-bottom:1px solid var(--border)}
+.sb-workspace-btn{display:flex;align-items:center;gap:9px;width:100%;padding:7px 10px;border-radius:7px;cursor:pointer;transition:background .12s;background:transparent;border:none;text-align:left;font-family:inherit}
+.sb-workspace-btn:hover{background:var(--bg3)}
+.ws-dot{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);flex-shrink:0}
+.ws-name{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.ws-chevron{color:var(--text3)}
 
-.bubble { padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; line-height: 1.5; max-width: 82%; }
-.bubble.ai { background: #f3f4f6; color: #111827; }
-.bubble.usr { background: #000; color: #fff; }
-.opt-btn { background: #fff; border: 1px solid #d1d5db; color: #374151; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all .2s ease; }
-.opt-btn:hover, .opt-btn.sel { border-color: #000; background: #f9fafb; }
-.prog-bar { height: 100%; background: #000; border-radius: 4px; transition: width .4s ease; }
+.sb-nav{flex:1;overflow-y:auto;padding:8px 10px}
+.sb-section{font-size:10.5px;font-weight:600;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;padding:16px 8px 6px;user-select:none}
+.nav-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:13.5px;font-weight:400;color:var(--text2);transition:background .12s,color .12s;margin-bottom:1px;user-select:none;position:relative}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--bg3);color:var(--text);font-weight:500}
+.nav-item .icon{width:16px;height:16px;flex-shrink:0;stroke-width:1.75}
+.nav-item.active .icon{stroke-width:2}
+.pro-badge{margin-left:auto;background:#111827;color:#fff;font-size:9.5px;font-weight:600;letter-spacing:.04em;padding:2px 6px;border-radius:99px;line-height:1.5}
+
+.sb-bottom{padding:12px 14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.sb-credits{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.sb-credits-label{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:4px}
+.sb-credits-bar-wrap{height:4px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:5px}
+.sb-credits-bar{height:100%;background:#000;border-radius:99px;width:85%}
+.sb-credits-num{font-size:11.5px;color:var(--text2);font-weight:500}
+
+/* ─── MAIN ─── */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;background:#fff}
+
+/* ─── HEADER ─── */
+.header{height:var(--header-h);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 28px;flex-shrink:0;background:#fff}
+.header-title{font-size:14.5px;font-weight:600;color:var(--text)}
+.header-actions{display:flex;align-items:center;gap:4px}
+.header-avatar{width:30px;height:30px;border-radius:50%;background:#111827;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-left:8px;letter-spacing:0;transition:opacity .12s}
+.header-avatar:hover{opacity:.85}
+.header-icon-btn{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:background .12s,color .12s;border:none;background:transparent}
+.header-icon-btn:hover{background:var(--bg3);color:var(--text)}
+
+/* ─── CONTENT ─── */
+.content-scroll{flex:1;overflow-y:auto;overflow-x:hidden}
+.content-inner{max-width:900px;margin:0 auto;padding:40px 40px 80px}
+.content-inner.wide{max-width:1100px}
+
+/* ─── PAGES ─── */
+.page{display:none;animation:fadeUp .25s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── PAGE HEADER ─── */
+.page-hd{margin-bottom:32px}
+.page-hd h1{font-size:26px;font-weight:700;letter-spacing:-.6px;color:var(--text);margin-bottom:5px}
+.page-hd p{font-size:14px;color:var(--text2)}
+
+/* ─── CARDS ─── */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px}
+.card-dashed{background:var(--bg2);border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:22px 24px}
+
+/* ─── TOOL CARDS (home grid) ─── */
+.tool-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;gap:14px}
+.tool-card:hover{border-color:#d1d5db;box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-1px)}
+.tool-icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tool-card h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.tool-card p{font-size:12.5px;color:var(--text2);line-height:1.4}
+
+/* ─── STAT CARDS ─── */
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.stat-label{font-size:12px;color:var(--text2);font-weight:500}
+.stat-val{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.5px}
+
+/* ─── SECTION TITLE ─── */
+.section-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+
+/* ─── TWO-PANEL TOOL LAYOUT ─── */
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.tool-grid{grid-template-columns:1fr}}
+.panel-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:20px}
+.field-group{margin-bottom:16px}
+.field-group:last-of-type{margin-bottom:0}
+.result-panel{height:100%;display:flex;flex-direction:column}
+.result-box{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);flex:1;display:flex;flex-direction:column;overflow:hidden}
+.result-box-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg2)}
+.result-box-title{font-size:13px;font-weight:600;color:var(--text)}
+.result-box-body{padding:18px;font-size:13.5px;color:#374151;line-height:1.65;flex:1;overflow-y:auto;white-space:pre-wrap}
+.copy-btn{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text2);background:none;border:none;cursor:pointer;padding:3px 6px;border-radius:5px;transition:background .12s,color .12s}
+.copy-btn:hover{background:var(--border);color:var(--text)}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:100%;min-height:320px;color:var(--text3);text-align:center}
+.empty-state p{font-size:13px}
+
+/* ─── INLINE LOADING ─── */
+.inline-loader{display:none;align-items:center;gap:10px;padding:14px 0;font-size:13px;color:var(--text2)}
+.inline-loader.show{display:flex}
+
+/* ─── PROFILE BANNER ─── */
+.profile-banner{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;display:none;align-items:center;gap:9px;font-size:12.5px;color:#15803d;margin-bottom:18px;cursor:pointer;transition:background .12s}
+.profile-banner.show{display:flex}
+.profile-banner:hover{background:#dcfce7}
+
+/* ─── CHAT PAGE ─── */
+.chat-wrap{max-width:660px;margin:0 auto}
+.chat-progress{margin-bottom:28px}
+.chat-progress-labels{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.progress-track{height:3px;background:var(--border);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:#000;border-radius:99px;transition:width .4s ease}
+.chat-msgs{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;min-height:180px}
+.bubble{padding:12px 16px;border-radius:12px;font-size:13.5px;line-height:1.55;max-width:80%}
+.bubble.ai{background:var(--bg3);color:var(--text);align-self:flex-start;border-radius:4px 12px 12px 12px}
+.bubble.usr{background:#000;color:#fff;align-self:flex-end;border-radius:12px 4px 12px 12px}
+.chat-opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.opt-btn{background:#fff;border:1px solid var(--border2);color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;transition:all .12s}
+.opt-btn:hover,.opt-btn.sel{border-color:#000;background:var(--bg2)}
+.chat-gen-bar{display:none;align-items:center;gap:10px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--text);font-style:italic}
+.chat-gen-bar.show{display:flex}
+.chat-input-row{display:flex;gap:10px;margin-top:8px}
+.chat-textarea{flex:1;min-height:50px;max-height:200px;border-radius:10px;padding:14px 16px}
+.send-btn{width:50px;height:50px;background:#000;color:#fff;border:none;border-radius:10px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.send-btn:hover{background:#1f2937}
+
+/* ─── PIPELINE ─── */
+.kanban-col-header{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.kanban-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:10px}
+.kanban-card-name{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:3px}
+.kanban-card-val{font-size:12px;color:var(--text2);margin-bottom:10px}
+.kanban-card-actions{display:flex;gap:6px;flex-wrap:wrap}
+.stage-btn{font-size:11px;background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:6px;cursor:pointer;transition:all .12s;font-family:inherit}
+.stage-btn:hover{background:var(--border);color:var(--text)}
+
+/* ─── MODALS ─── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:800;padding:20px;backdrop-filter:blur(2px)}
+.modal-backdrop.show{display:flex}
+.modal{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:460px;position:relative;box-shadow:0 20px 40px rgba(0,0,0,.12)}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;cursor:pointer;color:var(--text3);border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.modal-close:hover{background:var(--bg3)}
+
+/* ─── ACCOUNT DROPDOWN ─── */
+.account-dropdown{position:absolute;top:calc(var(--header-h) + 6px);right:16px;background:#fff;border:1px solid var(--border);border-radius:12px;width:240px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:500;overflow:hidden;display:none}
+.account-dropdown.show{display:block}
+.acct-credits{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.acct-credits-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px}
+.acct-credits-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text2);margin-bottom:3px}
+.acct-credits-row strong{color:var(--text)}
+.acct-ws{padding:12px 16px;border-bottom:1px solid var(--border)}
+.acct-ws-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:4px}
+.acct-ws-name{font-size:13px;font-weight:500;color:var(--text)}
+.acct-ws-plan{font-size:11.5px;color:var(--text2)}
+.acct-menu{padding:6px}
+.acct-menu-item{display:block;padding:8px 10px;border-radius:7px;font-size:13px;color:var(--text2);cursor:pointer;transition:background .1s;width:100%;text-align:left;background:none;border:none;font-family:inherit}
+.acct-menu-item:hover{background:var(--bg3);color:var(--text)}
+.acct-menu-item.danger{color:#dc2626}
+.acct-menu-item.danger:hover{background:#fef2f2}
+.acct-divider{height:1px;background:var(--border);margin:4px 0}
+
+/* ─── FILE UPLOAD ─── */
+.file-upload{border:1.5px dashed var(--border2);border-radius:var(--radius);background:var(--bg2);padding:22px;text-align:center;cursor:pointer;transition:border-color .12s,background .12s;position:relative;overflow:hidden}
+.file-upload:hover{border-color:#9ca3af;background:var(--bg3)}
+.file-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.file-upload-text{font-size:13px;color:var(--text2);margin-top:8px}
+
+/* ─── TOAST ─── */
+#toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;font-size:13.5px;font-weight:500;transform:translateY(10px);opacity:0;transition:all .25s ease;z-index:9998;pointer-events:none;max-width:320px}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* ─── RESULT KIT ─── */
+.kit-block{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:16px}
+.kit-block h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:10px}
+.kit-block p{font-size:14px;color:var(--text);line-height:1.65}
+.kit-price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+.price-tier{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.price-tier-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin-bottom:6px}
+.price-tier-val{font-size:20px;font-weight:700;color:var(--text)}
+
+/* ─── GIG CARDS ─── */
+.gig-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px}
+.gig-card h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px}
+.gig-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.gig-tag{background:var(--bg2);border:1px solid var(--border);border-radius:99px;padding:3px 10px;font-size:11.5px;color:var(--text2)}
+
+/* ─── ROADMAP ─── */
+.roadmap-day{border-left:2px solid var(--border);padding-left:18px;margin-bottom:20px;position:relative}
+.roadmap-day::before{content:attr(data-day);position:absolute;left:-14px;top:0;width:26px;height:26px;background:#111827;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .content-inner{padding:24px 20px 60px}
+}
 </style>
 </head>
 <body>
 
-<div id="app-loading">
-  <div class="app-spin"></div>
-  <span style="font-size:.85rem;color:#6b7280; font-weight: 500;">Loading Workspace...</span>
+<div id="loading-screen">
+  <div class="sb-logo-mark" style="width:34px;height:34px;border-radius:9px;margin-bottom:4px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+  <div class="spin"></div>
+  <span style="font-size:12.5px;color:var(--text3);font-weight:500">Loading workspace…</span>
 </div>
 
-<div id="login-pg">
-  <div class="glass-panel w-full max-w-[400px] p-8 text-center shadow-xl border-gray-200">
-    <div style="display:flex; justify-content:center; margin-bottom:16px;">
-        <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Lancify</h2>
+<div id="login-screen">
+  <div class="login-card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div class="sb-logo-mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <div class="login-logo">Lancify</div>
     </div>
-    <p style="color:#6b7280; font-size:0.9rem; margin-bottom:32px;">Sign in to your workspace.</p>
-   
-    <button class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 py-2.5 px-4 rounded-lg font-medium text-[0.9rem] hover:bg-gray-50 transition-all mb-6 shadow-sm" onclick="signInGoogle()">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    <div class="login-sub">Sign in to your workspace</div>
+
+    <button class="btn btn-google" onclick="signInGoogle()">
+      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Continue with Google
     </button>
-    
-    <div class="flex items-center gap-4 mb-6 opacity-60">
-        <div class="flex-1 h-px bg-gray-300"></div>
-        <span class="text-[10px] font-semibold tracking-widest text-gray-500 uppercase">or</span>
-        <div class="flex-1 h-px bg-gray-300"></div>
+
+    <div class="login-divider">or</div>
+
+    <div id="auth-error" class="auth-msg error"></div>
+    <div id="auth-success" class="auth-msg success"></div>
+
+    <div class="field-group">
+      <label class="field-label">Email</label>
+      <input type="email" id="auth-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
+    </div>
+    <div class="field-group" style="margin-bottom:0">
+      <label class="field-label">Password</label>
+      <input type="password" id="auth-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+    </div>
+    <div class="field-group" id="name-field" style="display:none;margin-top:14px;margin-bottom:0">
+      <label class="field-label">Full Name</label>
+      <input type="text" id="auth-name" placeholder="Shaurya Abhi">
     </div>
 
-    <div id="auth-error" class="hidden bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-lg mb-6 text-left"></div>
-    <div id="auth-msg" class="hidden bg-green-50 border border-green-200 text-green-700 text-sm p-3 rounded-lg mb-6 text-left"></div>
-    
-    <div class="text-left mb-6">
-      <div class="input-wrapper">
-          <label class="field-label text-gray-700">Email</label>
-          <input id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
-      </div>
-      <div class="input-wrapper !mb-0">
-          <label class="field-label text-gray-700">Password</label>
-          <input id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
-      </div>
-      <div class="input-wrapper mt-4" id="name-field" style="display:none;">
-          <label class="field-label text-gray-700">Full Name</label>
-          <input id="auth-name" type="text" placeholder="John Doe">
-      </div>
-    </div>
-    
-    <button class="btn-primary w-full" id="auth-btn" onclick="authSubmit()">Sign In</button>
-    <div class="mt-6 text-[13px] text-gray-500 font-medium" id="auth-toggle-txt">
-      Don't have an account? <span onclick="toggleMode()" class="text-black cursor-pointer hover:underline transition-colors">Sign up</span>
+    <button class="btn btn-primary btn-full" id="auth-btn" style="margin-top:18px;height:40px" onclick="authSubmit()">Sign In</button>
+    <div style="text-align:center;margin-top:14px;font-size:12.5px;color:var(--text2)" id="auth-toggle">
+      Don't have an account? <span onclick="toggleAuthMode()" style="color:var(--text);font-weight:500;cursor:pointer;text-decoration:underline">Sign up</span>
     </div>
   </div>
 </div>
 
-<div id="app-layout" class="flex h-screen w-full bg-white text-gray-900">
-  
-  <aside class="w-[260px] glass-sidebar flex flex-col z-20 shrink-0 h-screen bg-white">
-    <div class="px-5 pt-6 pb-4">
-      <h2 class="text-xl font-bold tracking-tight text-gray-900">Lancify</h2>
+<div id="app-layout">
+
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <span class="sb-logo-name">Lancify</span>
     </div>
 
-    <div class="px-4 mb-6">
-      <button class="w-full flex items-center justify-between bg-white border border-gray-200 rounded-lg p-2 hover:bg-gray-50 transition-colors shadow-sm">
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center">
-            <div class="w-3 h-3 rounded-full bg-orange-500"></div>
-          </div>
-          <span class="text-[13px] font-medium text-gray-900">My Workspace</span>
-        </div>
-        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+    <div class="sb-workspace">
+      <button class="sb-workspace-btn" onclick="toggleAccountDropdown()">
+        <div class="ws-dot"></div>
+        <span class="ws-name" id="ws-name">My Workspace</span>
+        <i data-lucide="chevron-down" class="ws-chevron" style="width:14px;height:14px;stroke-width:2"></i>
       </button>
     </div>
-    
-    <div class="flex-1 overflow-y-auto px-3 py-2 custom-scrollbar">
-        <div class="sb-group">Tools</div>
-        <a class="nav-item active" data-page="home-pg" onclick="navigate('home-pg')"><i data-lucide="home" class="w-[16px] h-[16px]"></i> Dashboard</a>
-        <a class="nav-item" data-page="profile-pg" onclick="navigate('profile-pg')"><i data-lucide="user" class="w-[16px] h-[16px]"></i> My Profile</a>
-        <a class="nav-item" data-page="chat-pg" onclick="startChat()"><i data-lucide="message-square" class="w-[16px] h-[16px]"></i> Launch Coach</a>
-        <a class="nav-item" data-page="audit-pg" onclick="navigate('audit-pg')"><i data-lucide="sparkles" class="w-[16px] h-[16px]"></i> Audit Generator <span class="ml-auto bg-gray-800 text-white text-[9px] px-1.5 py-[2px] rounded-full font-medium tracking-wide">PRO</span></a>
-        <a class="nav-item" data-page="proposal-pg" onclick="navigate('proposal-pg')"><i data-lucide="file-text" class="w-[16px] h-[16px]"></i> Proposal Writer <span class="ml-auto bg-gray-800 text-white text-[9px] px-1.5 py-[2px] rounded-full font-medium tracking-wide">PRO</span></a>
-        <a class="nav-item" data-page="email-pg" onclick="navigate('email-pg')"><i data-lucide="mail" class="w-[16px] h-[16px]"></i> Email Writer <span class="ml-auto bg-gray-800 text-white text-[9px] px-1.5 py-[2px] rounded-full font-medium tracking-wide">PRO</span></a>
-        
-        <div class="sb-group">Insights</div>
-        <a class="nav-item" data-page="gig-finder-pg" onclick="navigate('gig-finder-pg')"><i data-lucide="search" class="w-[16px] h-[16px]"></i> Gig Finder <span class="ml-auto bg-gray-800 text-white text-[9px] px-1.5 py-[2px] rounded-full font-medium tracking-wide">PRO</span></a>
-        <a class="nav-item" data-page="roadmap-wrapper" onclick="navigate('roadmap-wrapper')"><i data-lucide="map" class="w-[16px] h-[16px]"></i> Roadmap <span class="ml-auto bg-gray-800 text-white text-[9px] px-1.5 py-[2px] rounded-full font-medium tracking-wide">PRO</span></a>
-        <a class="nav-item" data-page="pipeline-pg" onclick="navigate('pipeline-pg')"><i data-lucide="bar-chart-2" class="w-[16px] h-[16px]"></i> Pipeline <span class="ml-auto bg-gray-800 text-white text-[9px] px-1.5 py-[2px] rounded-full font-medium tracking-wide">PRO</span></a>
-    </div>
 
-    <div class="p-4 border-t border-gray-100 mt-auto">
-        <button class="w-full flex items-center justify-center gap-2 bg-black hover:bg-gray-800 text-white py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm" onclick="showUpgradeModal()">
-          <i data-lucide="zap" class="w-4 h-4 fill-white"></i> Upgrade to Pro
-        </button>
-        <button class="w-full text-center text-xs text-red-500 hover:text-red-600 font-medium mt-3" onclick="signOut()">Sign Out</button>
+    <nav class="sb-nav">
+      <div class="sb-section">Tools</div>
+      <div class="nav-item active" data-page="home" onclick="navigate('home')"><i data-lucide="home" class="icon"></i> Dashboard</div>
+      <div class="nav-item" data-page="profile" onclick="navigate('profile')"><i data-lucide="user" class="icon"></i> My Profile</div>
+      <div class="nav-item" data-page="coach" onclick="navigate('coach')"><i data-lucide="message-square" class="icon"></i> Launch Coach</div>
+      <div class="nav-item" data-page="audit" onclick="navigate('audit')"><i data-lucide="sparkles" class="icon"></i> Audit Generator <span class="pro-badge">PRO</span></div>
+      <div class="nav-item" data-page="proposal" onclick="navigate('proposal')"><i data-lucide="file-text" class="icon"></i> Proposal Writer <span class="pro-badge">PRO</span></div>
+      <div class="nav-item" data-page="email" onclick="navigate('email')"><i data-lucide="mail" class="icon"></i> Email Writer <span class="pro-badge">PRO</span></div>
+
+      <div class="sb-section">Insights</div>
+      <div class="nav-item" data-page="gig" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i> Gig Finder <span class="pro-badge">PRO</span></div>
+      <div class="nav-item" data-page="roadmap" onclick="navigate('roadmap')"><i data-lucide="map" class="icon"></i> Roadmap <span class="pro-badge">PRO</span></div>
+      <div class="nav-item" data-page="pipeline" onclick="navigate('pipeline')"><i data-lucide="bar-chart-2" class="icon"></i> Client Pipeline <span class="pro-badge">PRO</span></div>
+    </nav>
+
+    <div class="sb-bottom">
+      <div class="sb-credits">
+        <div class="sb-credits-label">AI Credits</div>
+        <div class="sb-credits-bar-wrap"><div class="sb-credits-bar" id="credits-bar"></div></div>
+        <div class="sb-credits-num"><span id="credits-remaining">850</span> / <span id="credits-total">1,000</span> remaining</div>
+      </div>
+      <button class="btn-upgrade" onclick="showUpgradeModal()">
+        <i data-lucide="zap" style="width:14px;height:14px;fill:#fff;stroke:#fff"></i>
+        Upgrade to Pro
+      </button>
     </div>
   </aside>
 
-  <main class="flex-1 relative z-10 h-screen overflow-y-auto bg-white custom-scrollbar" id="main-scroll">
-    <header class="h-[60px] bg-white border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-50 shrink-0">
-      <div class="flex items-center">
-        <h1 class="text-[15px] font-semibold text-gray-900" id="header-page-title">Dashboard</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="hidden md:flex items-center gap-2 mr-2">
-            <button class="text-[13px] font-medium text-gray-600 hover:text-gray-900 px-2 py-1.5 rounded-md hover:bg-gray-50 transition-colors">Feedback</button>
-            <button class="text-[13px] font-medium text-gray-600 hover:text-gray-900 px-2 py-1.5 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> Docs</button>
-        </div>
-        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-800 to-gray-600 text-white flex items-center justify-center text-sm font-medium cursor-pointer" id="header-user-initial">U</div>
+  <div class="main">
+    <header class="header">
+      <span class="header-title" id="header-title">Dashboard</span>
+      <div class="header-actions">
+        <button class="btn btn-ghost" onclick="showToast('Opening feedback form…')">Feedback</button>
+        <button class="btn btn-ghost" style="gap:5px"><i data-lucide="file-text" style="width:13px;height:13px"></i> Docs</button>
+        <button class="header-icon-btn" onclick="showToast('No new notifications')"><i data-lucide="bell" style="width:16px;height:16px"></i></button>
+        <div class="header-avatar" id="header-avatar" onclick="toggleAccountDropdown()">S</div>
       </div>
     </header>
 
-    <div class="p-8 md:p-12 lg:p-14 max-w-6xl mx-auto w-full pb-32">
-
-      <div id="home-pg" class="pg on">
-        <div class="mb-10">
-          <p class="text-gray-500 text-sm font-medium mb-1">My Workspace</p>
-          <h1 class="text-[32px] font-bold text-gray-900 tracking-tight" id="hero-greeting">Good morning, User</h1>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
-          <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200 text-center cursor-pointer" onclick="startChat()">
-            <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-5"><i data-lucide="message-square" class="w-8 h-8 text-blue-500 stroke-[1.5]"></i></div>
-            <h3 class="text-gray-900 font-semibold text-[15px] mb-1">Launch Coach</h3>
-            <p class="text-gray-500 text-[13px] px-2">Generate your full freelance kit.</p>
-          </div>
-          <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200 text-center cursor-pointer" onclick="navigate('proposal-pg')">
-            <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-5"><i data-lucide="file-text" class="w-8 h-8 text-emerald-500 stroke-[1.5]"></i></div>
-            <h3 class="text-gray-900 font-semibold text-[15px] mb-1">Proposal Writer</h3>
-            <p class="text-gray-500 text-[13px] px-2">Tailored cold pitch generator.</p>
-          </div>
-          <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200 text-center cursor-pointer" onclick="navigate('email-pg')">
-            <div class="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center mb-5"><i data-lucide="mail" class="w-8 h-8 text-amber-500 stroke-[1.5]"></i></div>
-            <h3 class="text-gray-900 font-semibold text-[15px] mb-1">Email Writer</h3>
-            <p class="text-gray-500 text-[13px] px-2">Draft professional client emails.</p>
-          </div>
-          <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200 text-center cursor-pointer" onclick="navigate('audit-pg')">
-            <div class="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center mb-5"><i data-lucide="sparkles" class="w-8 h-8 text-purple-500 stroke-[1.5]"></i></div>
-            <h3 class="text-gray-900 font-semibold text-[15px] mb-1">Audit Generator</h3>
-            <p class="text-gray-500 text-[13px] px-2">3-point growth diagnostics.</p>
-          </div>
-          <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200 text-center cursor-pointer" onclick="navigate('gig-finder-pg')">
-            <div class="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center mb-5"><i data-lucide="search" class="w-8 h-8 text-indigo-500 stroke-[1.5]"></i></div>
-            <h3 class="text-gray-900 font-semibold text-[15px] mb-1">Gig Finder</h3>
-            <p class="text-gray-500 text-[13px] px-2">Match skills to paying niches.</p>
-          </div>
-          <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200 text-center cursor-pointer" onclick="navigate('pipeline-pg')">
-            <div class="w-16 h-16 rounded-2xl bg-rose-50 flex items-center justify-center mb-5"><i data-lucide="bar-chart-2" class="w-8 h-8 text-rose-500 stroke-[1.5]"></i></div>
-            <h3 class="text-gray-900 font-semibold text-[15px] mb-1">Client Pipeline</h3>
-            <p class="text-gray-500 text-[13px] px-2">Kanban board for lead tracking.</p>
-          </div>
-        </div>
-
-        <div>
-          <h2 class="text-[18px] font-semibold text-gray-900 mb-4">Your Recent Activity</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-            <div class="p-4 bg-white border border-gray-200 rounded-xl flex items-center justify-between shadow-sm"><span class="text-[13px] font-medium text-gray-500">Kits</span><span class="text-[18px] font-semibold text-gray-900" id="stat-kits">0</span></div>
-            <div class="p-4 bg-white border border-gray-200 rounded-xl flex items-center justify-between shadow-sm"><span class="text-[13px] font-medium text-gray-500">Proposals</span><span class="text-[18px] font-semibold text-gray-900" id="stat-proposals">0</span></div>
-            <div class="p-4 bg-white border border-gray-200 rounded-xl flex items-center justify-between shadow-sm"><span class="text-[13px] font-medium text-gray-500">Emails</span><span class="text-[18px] font-semibold text-gray-900" id="stat-emails">0</span></div>
-            <div class="p-4 bg-white border border-gray-200 rounded-xl flex items-center justify-between shadow-sm"><span class="text-[13px] font-medium text-gray-500">Gigs</span><span class="text-[18px] font-semibold text-gray-900" id="stat-gigs">0</span></div>
-          </div>
-        </div>
-
-        <h2 class="text-[18px] font-semibold text-gray-900 mb-4 border-b border-gray-100 pb-2">Saved History</h2>
-        <div id="kits-grid" class="mb-8"></div>
-        <div id="props-grid" class="mb-8"></div>
-        <div id="emails-grid"></div>
+    <div class="account-dropdown" id="account-dropdown">
+      <div class="acct-credits">
+        <div class="acct-credits-title">AI Credits</div>
+        <div class="acct-credits-row"><span>Total</span><strong>1,000 credits</strong></div>
+        <div class="acct-credits-row"><span>Remaining</span><strong id="acct-credits-remaining">850</strong></div>
       </div>
-
-      <div id="chat-pg" class="pg max-w-3xl mx-auto">
-        <div class="text-center mb-12">
-          <h2 class="text-[32px] font-bold mb-3 text-gray-900">Let's build your kit</h2>
-          <p class="text-gray-500 text-sm font-medium">5 quick questions — your complete freelance kit in 20 minutes.</p>
-        </div>
-        <div class="mb-10">
-          <div class="flex justify-between text-[11px] text-gray-500 font-bold uppercase tracking-widest mb-3"><span id="prog-lbl">Step 1 of 5</span><span id="prog-pct">0%</span></div>
-          <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden border border-gray-200"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
-        </div>
-        <div id="chat-msgs" class="flex flex-col gap-6 mb-8 min-h-[220px]"></div>
-        
-        <div id="gen-bar" class="hidden items-center gap-4 p-5 bg-gray-50 border border-gray-200 rounded-2xl mt-4">
-          <div class="app-spin !w-5 !h-5 !border-2"></div>
-          <span id="gen-text" class="text-[15px] text-gray-900 italic font-medium">Analysing your skills...</span>
-        </div>
-        <div id="input-zone" class="flex gap-4 mt-4">
-          <textarea id="txt" placeholder="Type your answer..." onkeydown="handleKey(event)" oninput="autoResize(this)" rows="1" class="flex-1 bg-white min-h-[52px] shadow-sm"></textarea>
-          <button id="send-btn" onclick="sendMsg()" class="btn-primary !w-[52px] !h-[52px] !p-0 !rounded-2xl shrink-0"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
-        </div>
+      <div class="acct-ws">
+        <div class="acct-ws-label">Current workspace</div>
+        <div class="acct-ws-name" id="acct-ws-name">My Workspace</div>
+        <div class="acct-ws-plan">Free plan</div>
       </div>
-
-      <div id="results-pg-wrap" class="pg max-w-4xl mx-auto">
-        <button onclick="downloadPDF()" class="bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-300 px-6 py-3 rounded-xl font-semibold text-sm transition-all mb-8 flex items-center gap-2 shadow-sm">
-          <i data-lucide="download" class="w-4 h-4"></i> Download PDF Kit
-        </button>
-        <div id="kit-content"><div id="results-pg"></div></div>
+      <div class="acct-menu">
+        <button class="acct-menu-item" onclick="navigate('profile');toggleAccountDropdown()">Settings</button>
+        <button class="acct-menu-item" onclick="showToast('Workspace settings coming soon')">Workspace settings</button>
+        <button class="acct-menu-item" onclick="showUpgradeModal();toggleAccountDropdown()">Subscription</button>
+        <div class="acct-divider"></div>
+        <button class="acct-menu-item" onclick="showToast('Usage analytics coming soon')">Usage analytics</button>
+        <button class="acct-menu-item" onclick="window.open('https://lancify.framer.website','_blank');toggleAccountDropdown()">Become an affiliate</button>
+        <div class="acct-divider"></div>
+        <button class="acct-menu-item danger" onclick="signOut();toggleAccountDropdown()">Sign out</button>
       </div>
-
-      <div id="proposal-pg" class="pg">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-1">Proposal Writer</h2>
-          <p class="text-gray-500 text-sm">Paste a job description to generate a tailored proposal.</p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          <div class="glass-panel p-6 flex flex-col">
-            <h3 class="text-lg font-semibold text-gray-900 mb-6">Settings</h3>
-            <div id="prop-profile-banner" class="profile-banner hidden" onclick="applyProfileToProposal()">
-              <i data-lucide="user-check" class="w-4 h-4 shrink-0"></i><span>Profile detected — click to auto-fill</span>
-            </div>
-            <div class="flex-1">
-                <div class="input-wrapper"><label class="field-label">Platform</label><select id="prop-platform"><option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option><option value="LinkedIn">LinkedIn</option><option value="Direct Email">Direct Email</option></select></div>
-                <div class="input-wrapper"><label class="field-label">Your Niche</label><input type="text" id="prop-niche" placeholder="e.g. YouTube Thumbnail Design"></div>
-                <div class="input-wrapper"><label class="field-label">Job Description</label><textarea id="prop-job" rows="8" placeholder="Paste listing here..."></textarea></div>
-                <div class="input-wrapper !mb-0"><label class="field-label">Your Experience</label><input type="text" id="prop-exp" placeholder="e.g. I designed posts for a local cafe"></div>
-            </div>
-            <button id="prop-btn" class="btn-primary w-full mt-6" onclick="generateProposal()">Write My Proposal</button>
-            <div id="prop-loading" class="hidden mt-4 text-center text-sm font-medium text-gray-600"><div class="app-spin inline-block align-middle mr-2"></div> Writing...</div>
-          </div>
-          <div class="h-full flex flex-col">
-            <div id="prop-result" class="hidden h-full flex-col">
-              <div class="glass-panel overflow-hidden flex flex-col flex-1 mb-6">
-                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center"><span class="text-sm font-semibold text-gray-900" id="prop-res-subject">Draft</span><button class="text-[11px] font-semibold uppercase text-gray-500 hover:text-gray-900" onclick="copyEl('prop-res-text')">Copy</button></div>
-                <div class="p-6 text-[14px] text-gray-700 leading-relaxed whitespace-pre-wrap overflow-y-auto" id="prop-res-text"></div>
-              </div>
-            </div>
-            <div id="prop-empty" class="glass-panel dashed h-full min-h-[400px] flex flex-col items-center justify-center text-gray-400 p-8">
-              <i data-lucide="file-text" class="w-10 h-10 mb-4 opacity-50"></i><p class="text-sm font-medium text-center">Fill out the details on the left.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="email-pg" class="pg">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-1">Email Writer</h2>
-          <p class="text-gray-500 text-sm">Draft professional client communications instantly.</p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          <div class="glass-panel p-6 flex flex-col">
-            <h3 class="text-lg font-semibold text-gray-900 mb-6">Settings</h3>
-            <div class="flex-1">
-                <div class="input-wrapper"><label class="field-label">Email Objective</label><select id="email-type"><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm payment reminder (Overdue)">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review/testimonial">Request Review</option></select></div>
-                <div class="input-wrapper"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
-                <div class="input-wrapper !mb-0"><label class="field-label">Key Context</label><textarea id="email-context" rows="8" placeholder="E.g. Delivering 5 YouTube thumbnails. Invoice #42 is overdue..."></textarea></div>
-            </div>
-            <button id="email-btn" class="btn-primary w-full mt-6" onclick="generateEmail()">Generate Draft</button>
-            <div id="email-loading" class="hidden mt-4 text-center text-sm font-medium text-gray-600"><div class="app-spin inline-block align-middle mr-2"></div> Drafting...</div>
-          </div>
-          <div class="h-full flex flex-col">
-            <div id="email-result" class="hidden h-full flex-col">
-              <div class="glass-panel overflow-hidden flex flex-col flex-1 mb-6">
-                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center"><span class="text-sm font-semibold text-gray-900" id="email-res-subject">Draft</span><button class="text-[11px] font-semibold uppercase text-gray-500 hover:text-gray-900" onclick="copyEl('email-res-text')">Copy</button></div>
-                <div class="p-6 text-[14px] text-gray-700 leading-relaxed whitespace-pre-wrap overflow-y-auto" id="email-res-text"></div>
-              </div>
-            </div>
-            <div id="email-empty" class="glass-panel dashed h-full min-h-[400px] flex flex-col items-center justify-center text-gray-400 p-8">
-              <i data-lucide="mail" class="w-10 h-10 mb-4 opacity-50"></i><p class="text-sm font-medium text-center">Set your objective on the left.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="audit-pg" class="pg">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-1">Trojan Horse Audit</h2>
-          <p class="text-gray-500 text-sm">Generate a clinical, 3-point growth audit to send as a cold pitch.</p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          <div class="glass-panel p-6 flex flex-col">
-            <h3 class="text-lg font-semibold text-gray-900 mb-6">Target Intelligence</h3>
-            <div class="flex-1">
-               <div class="grid grid-cols-2 gap-4 mb-4">
-                  <div class="input-wrapper !mb-0"><label class="field-label">Business Name</label><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
-                  <div class="input-wrapper !mb-0"><label class="field-label">Platform</label><select id="audit-platform" onchange="toggleWebsiteUrl()"><option value="Instagram">Instagram</option><option value="Website">Website</option><option value="LinkedIn">LinkedIn</option></select></div>
-               </div>
-               <div class="input-wrapper hidden" id="url-input-wrapper"><label class="field-label">Website URL</label><input type="url" id="audit-url" placeholder="https://www.example.com"></div>
-               <div class="input-wrapper">
-                    <label class="field-label">Client Logo <span>(Optional)</span></label>
-                    <div class="custom-file-upload group"><input type="file" id="audit-logo" accept="image/*"><i data-lucide="upload-cloud" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i><p class="text-sm text-gray-600 font-medium mb-1" id="audit-logo-text">Click or drag logo to upload</p></div>
-               </div>
-               <div class="input-wrapper"><label class="field-label">Primary Weakness</label><select id="audit-weakness"><option value="No clear Call-to-Action">No clear Call-to-Action</option><option value="Poor branding">Poor branding</option><option value="Weak website">Weak website</option></select></div>
-               <div class="grid grid-cols-2 gap-4">
-                  <div class="input-wrapper"><label class="field-label">Your Service</label><select id="audit-service"><option value="Web Design">Web Design</option><option value="Social Media Management">Social Media</option><option value="Copywriting">Copywriting</option></select></div>
-                  <div class="input-wrapper"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="₹2,500"></div>
-               </div>
-               <div class="input-wrapper !mb-0"><label class="field-label">Observation <span>(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Bio link is broken..."></textarea></div>
-            </div>
-            <button id="audit-btn" class="btn-primary w-full mt-6" onclick="generateAudit()">Generate Audit Dossier</button>
-            <div id="audit-loading" class="hidden mt-4 text-center text-sm font-medium text-gray-600"><div class="app-spin inline-block align-middle mr-2"></div> Compiling...</div>
-          </div>
-          <div class="h-full flex flex-col">
-            <div id="audit-result" class="hidden h-full flex-col">
-              <div class="glass-panel overflow-hidden flex flex-col flex-1 mb-6">
-                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center"><span class="text-sm font-semibold text-gray-900">Cold Email Script</span><button class="text-[11px] font-semibold uppercase text-gray-500 hover:text-gray-900" onclick="copyEl('audit-email-text')">Copy</button></div>
-                <div class="p-6 text-[14px] text-gray-700 leading-relaxed whitespace-pre-wrap overflow-y-auto" id="audit-email-text"></div>
-              </div>
-              <button class="btn-primary w-full" onclick="downloadAuditPDF()">Download PDF Report</button>
-            </div>
-            <div id="audit-empty" class="glass-panel dashed h-full min-h-[400px] flex flex-col items-center justify-center text-gray-400 p-8">
-              <i data-lucide="crosshair" class="w-10 h-10 mb-4 opacity-50"></i><p class="text-sm font-medium text-center">Fill out the intelligence form on the left.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style="overflow:hidden; height:0; width:0; position:absolute; z-index:-9999;">
-        <div id="audit-pdf-canvas" style="width: 800px; padding: 60px; background: #ffffff; color: #111111; font-family: 'Inter', sans-serif; line-height: 1.6;">
-          <div style="text-align:center; border-bottom: 2px solid #e5e7eb; padding-bottom: 30px; margin-bottom: 40px;">
-            <img id="pdf-logo-img" style="max-height: 80px; max-width: 200px; margin-bottom: 20px; display:none;">
-            <div id="pdf-avatar" style="width: 70px; height: 70px; border-radius: 50%; background: #111; color: #fff; font-size: 2rem; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-weight:700;">?</div>
-            <h1 style="font-size: 28px; font-weight: 700; color: #111; margin: 0 0 10px 0; letter-spacing: -0.02em;">GROWTH DIAGNOSTIC REPORT</h1>
-            <div style="font-size: 14px; color: #6b7280; display:flex; justify-content:center; gap:20px;">
-              <span><strong>Prepared for:</strong> <span id="pdf-target"></span></span><span><strong>Platform:</strong> <span id="pdf-platform"></span></span><span><strong>Date:</strong> <span id="pdf-date"></span></span>
-            </div>
-          </div>
-          <h2 style="font-size: 16px; color: #6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">1. Initial Brand Assessment</h2><p id="pdf-sec1" style="margin-bottom: 30px; font-size: 15px;"></p>
-          <h2 style="font-size: 16px; color: #6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">2. Primary Conversion Bottleneck</h2><p id="pdf-sec2" style="margin-bottom: 30px; font-size: 15px;"></p>
-          <div style="background: #f9fafb; border-left: 4px solid #111; padding: 20px; margin-bottom: 30px;"><h2 style="font-size: 15px; color: #111; text-transform:uppercase; letter-spacing:0.05em; margin: 0 0 8px 0;">3. Estimated Opportunity Cost</h2><p id="pdf-sec3" style="margin: 0; font-size: 15px; color:#374151;"></p></div>
-          <h2 style="font-size: 16px; color: #6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">4. Immediate Actionable Fix</h2><div id="pdf-sec4" style="margin-bottom: 30px; font-size: 15px;"></div>
-          <h2 style="font-size: 16px; color: #6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">5. Proposed Implementation Strategy</h2><p id="pdf-sec5" style="margin-bottom: 15px; font-size: 15px;"></p>
-          <div style="background: #111; color: #fff; padding: 20px; border-radius: 8px;"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="font-weight:600;">Project Scope:</span> <span>7 Days</span></div><div style="display:flex; justify-content:space-between;"><span style="font-weight:600;">Total Investment:</span> <span style="font-weight:700; font-size:1.1rem;" id="pdf-price"></span></div></div>
-        </div>
-      </div>
-
-      <div id="gig-finder-pg" class="pg max-w-5xl mx-auto">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-1">Gig Opportunity Finder</h2>
-          <p class="text-gray-500 text-sm">Enter your skills and get data-driven niche recommendations.</p>
-        </div>
-        <div class="glass-panel p-8 mb-10">
-          <div id="gig-profile-banner" class="profile-banner hidden" onclick="applyProfileToGig()"><i data-lucide="user-check" class="w-4 h-4 shrink-0"></i><span>Profile detected — click to auto-fill</span></div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div class="md:col-span-2 input-wrapper !mb-0"><label class="field-label">Your Skills</label><input type="text" id="gig-skills" placeholder="E.g. Canva, basic video editing..."></div>
-            <div class="input-wrapper !mb-0"><label class="field-label">Target Platform</label><select id="gig-platform"><option value="Both">Upwork & Fiverr</option><option value="Fiverr">Fiverr</option><option value="Upwork">Upwork</option><option value="LinkedIn">LinkedIn</option></select></div>
-          </div>
-          <button id="gig-btn" class="btn-primary" onclick="findGigs()">Scan the Market</button>
-          <div id="gig-loading" class="hidden mt-4 text-sm font-medium text-gray-600"><div class="app-spin inline-block align-middle mr-2"></div> Analysing demand...</div>
-        </div>
-        <div id="gig-result" class="hidden">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">Top Recommendations</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="gig-cards-container"></div>
-        </div>
-      </div>
-
-      <div id="roadmap-wrapper" class="pg max-w-4xl mx-auto">
-        <div id="roadmap-form-container" class="glass-panel p-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-2">Build Your 30-Day Roadmap</h2>
-          <p class="text-gray-500 text-sm mb-6">Tell us where you're starting, and AI will build your daily plan.</p>
-          <div id="rm-profile-banner" class="profile-banner hidden" onclick="applyProfileToRoadmap()"><i data-lucide="user-check" class="w-4 h-4 shrink-0"></i><span>Profile detected — click to auto-fill</span></div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div class="input-wrapper !mb-0"><label class="field-label">Name</label><input id="rm-name" placeholder="Your Name"></div>
-              <div class="input-wrapper !mb-0"><label class="field-label">Skills</label><input id="rm-skills" placeholder="e.g. Video Editing"></div>
-              <div class="input-wrapper !mb-0"><label class="field-label">Target Platform</label><input id="rm-platform" placeholder="e.g. Upwork"></div>
-              <div class="input-wrapper !mb-0"><label class="field-label">Daily Hours</label><select id="rm-hours"><option value="1">1 hour/day</option><option value="2" selected>2 hours/day</option><option value="4">4+ hours/day</option></select></div>
-              <div class="input-wrapper !mb-0"><label class="field-label">Current Level</label><input id="rm-level" placeholder="e.g. Complete Beginner"></div>
-              <div class="input-wrapper !mb-0"><label class="field-label">Biggest Fear</label><input id="rm-fear" placeholder="e.g. Getting scammed"></div>
-          </div>
-          <button id="rm-btn" onclick="generateRoadmap()" class="btn-primary w-full">Generate Roadmap</button>
-        </div>
-        <div id="roadmap-result" class="hidden mt-8"></div>
-      </div>
-
-      <div id="profile-pg" class="pg max-w-3xl mx-auto">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-1">My Profile</h2>
-          <p class="text-gray-500 text-sm">Set this once. Every tool uses it automatically.</p>
-        </div>
-        <div class="glass-panel p-8 mb-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="input-wrapper !mb-0"><label class="field-label">Your Name</label><input type="text" id="prof-name" placeholder="e.g. Shaurya"></div>
-            <div class="input-wrapper !mb-0"><label class="field-label">Primary Skills</label><input type="text" id="prof-skills" placeholder="e.g. Video Editing"></div>
-            <div class="input-wrapper !mb-0"><label class="field-label">Main Niche</label><input type="text" id="prof-niche" placeholder="e.g. YouTube Thumbnails"></div>
-            <div class="input-wrapper !mb-0"><label class="field-label">Target Platform</label><select id="prof-platform"><option value="Upwork">Upwork</option><option value="Fiverr">Fiverr</option><option value="LinkedIn">LinkedIn</option><option value="Both">Both</option></select></div>
-            <div class="input-wrapper !mb-0"><label class="field-label">Experience Level</label><select id="prof-level"><option value="Beginner">Complete Beginner</option><option value="Had 1-2 clients">Had 1-2 Clients</option></select></div>
-            <div class="input-wrapper !mb-0"><label class="field-label">Income Goal</label><select id="prof-goal"><option value="₹10k-25k">₹10,000–₹25,000</option><option value="₹50k+">₹50,000+</option></select></div>
-          </div>
-          <div class="input-wrapper mt-6 !mb-0"><label class="field-label">Experience / Past Work</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a cafe..."></textarea></div>
-        </div>
-        <button id="save-prof-btn" class="btn-primary w-full" onclick="saveProfile()">Save Profile</button>
-      </div>
-
-      <div id="pipeline-pg" class="pg max-w-6xl mx-auto">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-1">Client Pipeline</h2>
-          <p class="text-gray-500 text-sm">Track every lead from first pitch to paid.</p>
-        </div>
-        <div class="glass-panel p-6 mb-8">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-            <div class="input-wrapper !mb-0 md:col-span-2"><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Riya's Bakery"></div>
-            <div class="input-wrapper !mb-0"><label class="field-label">Platform</label><select id="lead-platform"><option value="Instagram">Instagram</option><option value="Upwork">Upwork</option></select></div>
-            <div class="input-wrapper !mb-0"><label class="field-label">Value (₹)</label><input type="text" id="lead-value" placeholder="3500"></div>
-          </div>
-          <button id="save-lead-btn" class="btn-primary mt-5 text-sm h-10 px-4" onclick="saveLead()">Add to Pipeline</button>
-        </div>
-        <div class="grid grid-cols-3 gap-6">
-          <div><div class="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-4 border-b border-gray-200 pb-2">Pitched (<span id="count-pitched">0</span>)</div><div class="space-y-3" id="pipe-pitched"></div></div>
-          <div><div class="text-[11px] font-bold uppercase tracking-widest text-yellow-600 mb-4 border-b border-gray-200 pb-2">In Talks (<span id="count-replied">0</span>)</div><div class="space-y-3" id="pipe-replied"></div></div>
-          <div><div class="text-[11px] font-bold uppercase tracking-widest text-emerald-600 mb-4 border-b border-gray-200 pb-2">Won (<span id="count-won">0</span>)</div><div class="space-y-3" id="pipe-won"></div></div>
-        </div>
-      </div>
-
     </div>
-  </main>
-</div>
 
-<div id="view-doc-modal" class="modal-overlay">
-  <div class="modal-card !max-w-2xl">
-    <button class="modal-close" onclick="document.getElementById('view-doc-modal').classList.remove('on')"><i data-lucide="x" class="w-5 h-5"></i></button>
-    <h3 id="doc-modal-title" class="text-xl font-bold text-gray-900 mb-4">Document</h3>
-    <div id="doc-modal-content" class="text-[14px] text-gray-700 leading-relaxed whitespace-pre-wrap max-h-[400px] overflow-y-auto mb-6 custom-scrollbar"></div>
-    <div class="flex justify-end pt-4 border-t border-gray-200">
-      <button class="btn-primary" onclick="copyEl('doc-modal-content')">Copy Text</button>
+    <div class="content-scroll">
+
+      <div id="page-home" class="page active">
+        <div class="content-inner">
+          <div style="margin-bottom:8px;font-size:13px;color:var(--text2)">My Workspace</div>
+          <h1 id="hero-greeting" style="font-size:30px;font-weight:700;letter-spacing:-.7px;margin-bottom:28px">Good morning, Shaurya</h1>
+
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px">
+            <div class="stat-card"><span class="stat-label">Total Kits</span><span class="stat-val" id="stat-kits">0</span></div>
+            <div class="stat-card"><span class="stat-label">Proposals</span><span class="stat-val" id="stat-proposals">0</span></div>
+            <div class="stat-card"><span class="stat-label">Emails</span><span class="stat-val" id="stat-emails">0</span></div>
+            <div class="stat-card"><span class="stat-label">Gigs Found</span><span class="stat-val" id="stat-gigs">0</span></div>
+          </div>
+
+          <div style="font-size:15px;font-weight:600;margin-bottom:14px">Get started</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px">
+            <div class="tool-card" onclick="navigate('coach')">
+              <div class="tool-icon" style="background:#eff6ff"><i data-lucide="message-square" style="width:26px;height:26px;color:#3b82f6;stroke-width:1.75"></i></div>
+              <div><h3>Launch Coach</h3><p>Generate your complete freelance kit</p></div>
+            </div>
+            <div class="tool-card" onclick="navigate('proposal')">
+              <div class="tool-icon" style="background:#f0fdf4"><i data-lucide="file-text" style="width:26px;height:26px;color:#22c55e;stroke-width:1.75"></i></div>
+              <div><h3>Proposal Writer</h3><p>Tailored cold pitch generator</p></div>
+            </div>
+            <div class="tool-card" onclick="navigate('email')">
+              <div class="tool-icon" style="background:#fffbeb"><i data-lucide="mail" style="width:26px;height:26px;color:#f59e0b;stroke-width:1.75"></i></div>
+              <div><h3>Email Writer</h3><p>Draft professional client emails</p></div>
+            </div>
+            <div class="tool-card" onclick="navigate('audit')">
+              <div class="tool-icon" style="background:#faf5ff"><i data-lucide="sparkles" style="width:26px;height:26px;color:#a855f7;stroke-width:1.75"></i></div>
+              <div><h3>Audit Generator</h3><p>3-point growth diagnostics</p></div>
+            </div>
+            <div class="tool-card" onclick="navigate('gig')">
+              <div class="tool-icon" style="background:#eef2ff"><i data-lucide="search" style="width:26px;height:26px;color:#6366f1;stroke-width:1.75"></i></div>
+              <div><h3>Gig Finder</h3><p>Match skills to paying niches</p></div>
+            </div>
+            <div class="tool-card" onclick="navigate('pipeline')">
+              <div class="tool-icon" style="background:#fff1f2"><i data-lucide="bar-chart-2" style="width:26px;height:26px;color:#f43f5e;stroke-width:1.75"></i></div>
+              <div><h3>Client Pipeline</h3><p>Track leads from pitch to paid</p></div>
+            </div>
+          </div>
+
+          <div class="section-title">Recent activity</div>
+          <div id="recent-activity" style="color:var(--text3);font-size:13.5px;padding:20px 0;text-align:center">No activity yet. Start by creating your first freelance kit!</div>
+        </div>
+      </div>
+
+      <div id="page-coach" class="page">
+        <div class="content-inner">
+          <div class="page-hd"><h1>Launch Coach</h1><p>5 quick questions. Your complete freelance kit in 20 minutes.</p></div>
+
+          <div class="chat-wrap">
+            <div class="chat-progress" id="chat-progress-wrap">
+              <div class="chat-progress-labels"><span id="prog-label">Step 1 of 5</span><span id="prog-pct">0%</span></div>
+              <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+            </div>
+            <div class="chat-msgs" id="chat-msgs"></div>
+            <div class="chat-gen-bar" id="gen-bar"><div class="spin"></div><span id="gen-text">Analysing your skills…</span></div>
+            <div id="input-zone" class="chat-input-row">
+              <textarea class="chat-textarea" id="chat-input" placeholder="Type your answer…" onkeydown="handleChatKey(event)" oninput="autoResize(this)" rows="1"></textarea>
+              <button class="send-btn" onclick="sendChatMsg()"><i data-lucide="arrow-right" style="width:18px;height:18px"></i></button>
+            </div>
+          </div>
+
+          <div id="kit-result" style="display:none;margin-top:28px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+              <h2 style="font-size:20px;font-weight:700;letter-spacing:-.4px">Your Freelance Kit</h2>
+              <button class="btn btn-secondary" onclick="downloadKitPDF()" style="gap:7px"><i data-lucide="download" style="width:14px;height:14px"></i> Download PDF</button>
+            </div>
+            <div id="kit-blocks"></div>
+            <button class="btn btn-secondary" onclick="resetCoach()" style="margin-top:12px">Start Over</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-audit" class="page">
+        <div class="content-inner">
+          <div class="page-hd"><h1>Trojan Horse Audit</h1><p>Generate a clinical, 3-point growth diagnostic to send as a cold pitch.</p></div>
+          <div class="tool-grid">
+            <div class="card" style="display:flex;flex-direction:column">
+              <div class="panel-title">Target Intelligence</div>
+              <div class="field-group">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <div><label class="field-label">Business Name</label><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
+                  <div><label class="field-label">Platform</label><select id="audit-platform" onchange="toggleAuditUrl()"><option>Instagram</option><option>Website</option><option>LinkedIn</option><option>YouTube</option></select></div>
+                </div>
+              </div>
+              <div class="field-group" id="audit-url-wrap" style="display:none"><label class="field-label">Website URL</label><input type="url" id="audit-url" placeholder="https://example.com"></div>
+              <div class="field-group">
+                <label class="field-label">Client Logo <span class="field-optional">(Optional)</span></label>
+                <div class="file-upload"><input type="file" id="audit-logo" accept="image/*" onchange="updateLogoText(this)"><i data-lucide="upload-cloud" style="width:22px;height:22px;color:var(--text3);margin-bottom:6px"></i><div class="file-upload-text" id="audit-logo-text">Click or drag logo to upload</div></div>
+              </div>
+              <div class="field-group">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <div><label class="field-label">Primary Weakness</label><select id="audit-weakness"><option value="No clear CTA">No clear Call-to-Action</option><option value="Poor branding">Poor branding</option><option value="Weak website">Weak website</option><option value="No social proof">No social proof</option></select></div>
+                  <div><label class="field-label">Your Service</label><select id="audit-service"><option>Web Design</option><option>Social Media</option><option>Copywriting</option><option>Video Editing</option><option>SEO</option></select></div>
+                </div>
+              </div>
+              <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="₹2,500"></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
+              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:20px" onclick="generateAudit()">Generate Audit Dossier</button>
+              <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
+            </div>
+            <div class="result-panel">
+              <div class="result-box" id="audit-result-box" style="display:none">
+                <div class="result-box-header"><span class="result-box-title">Cold Email Script</span><button class="copy-btn" onclick="copyEl('audit-result-text')">Copy</button></div>
+                <div class="result-box-body" id="audit-result-text"></div>
+              </div>
+              <div class="card-dashed empty-state" id="audit-empty">
+                <i data-lucide="crosshair" style="width:28px;height:28px;color:var(--text3)"></i>
+                <p>Fill out the intelligence form to generate your cold pitch.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-proposal" class="page">
+        <div class="content-inner">
+          <div class="page-hd"><h1>Proposal Writer</h1><p>Paste a job description to generate a tailored, high-converting proposal.</p></div>
+          <div class="profile-banner" id="prop-banner" onclick="applyProfileTo('proposal')"><i data-lucide="user-check" style="width:14px;height:14px"></i> Profile detected — click to auto-fill your details</div>
+          <div class="tool-grid">
+            <div class="card" style="display:flex;flex-direction:column">
+              <div class="panel-title">Settings</div>
+              <div class="field-group">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <div><label class="field-label">Platform</label><select id="prop-platform"><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Direct Email</option></select></div>
+                  <div><label class="field-label">Your Niche</label><input type="text" id="prop-niche" placeholder="e.g. YouTube Thumbnails"></div>
+                </div>
+              </div>
+              <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing here…"></textarea></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Experience</label><input type="text" id="prop-exp" placeholder="e.g. I designed thumbnails for a 100k channel"></div>
+              <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:20px" onclick="generateProposal()">Write My Proposal</button>
+              <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposal…</span></div>
+            </div>
+            <div class="result-panel">
+              <div class="result-box" id="prop-result-box" style="display:none">
+                <div class="result-box-header"><span class="result-box-title">Your Proposal</span><button class="copy-btn" onclick="copyEl('prop-result-text')">Copy</button></div>
+                <div class="result-box-body" id="prop-result-text"></div>
+              </div>
+              <div class="card-dashed empty-state" id="prop-empty">
+                <i data-lucide="file-text" style="width:28px;height:28px;color:var(--text3)"></i>
+                <p>Fill in the details on the left to generate your proposal.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-email" class="page">
+        <div class="content-inner">
+          <div class="page-hd"><h1>Email Writer</h1><p>Draft professional client communications instantly.</p></div>
+          <div class="tool-grid">
+            <div class="card" style="display:flex;flex-direction:column">
+              <div class="panel-title">Settings</div>
+              <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm overdue payment reminder">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review or testimonial">Request Review / Testimonial</option></select></div>
+              <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for ₹3,500 is 5 days overdue…"></textarea></div>
+              <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:20px" onclick="generateEmail()">Generate Draft</button>
+              <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
+            </div>
+            <div class="result-panel">
+              <div class="result-box" id="email-result-box" style="display:none">
+                <div class="result-box-header"><span class="result-box-title">Email Draft</span><button class="copy-btn" onclick="copyEl('email-result-text')">Copy</button></div>
+                <div class="result-box-body" id="email-result-text"></div>
+              </div>
+              <div class="card-dashed empty-state" id="email-empty">
+                <i data-lucide="mail" style="width:28px;height:28px;color:var(--text3)"></i>
+                <p>Set your objective on the left to draft an email.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-gig" class="page">
+        <div class="content-inner">
+          <div class="page-hd"><h1>Gig Opportunity Finder</h1><p>Enter your skills and get data-driven niche recommendations.</p></div>
+          <div class="profile-banner" id="gig-banner" onclick="applyProfileTo('gig')"><i data-lucide="user-check" style="width:14px;height:14px"></i> Profile detected — click to auto-fill</div>
+          <div class="card" style="margin-bottom:24px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 180px;gap:14px;align-items:end">
+              <div><label class="field-label">Your Skills</label><input type="text" id="gig-skills" placeholder="e.g. Canva, video editing, copywriting"></div>
+              <div><label class="field-label">Target Platform</label><select id="gig-platform"><option value="Both Upwork and Fiverr">Upwork & Fiverr</option><option>Fiverr</option><option>Upwork</option><option>LinkedIn</option></select></div>
+              <button class="btn btn-primary btn-full" id="gig-btn" onclick="findGigs()">Scan Market</button>
+            </div>
+            <div class="inline-loader" id="gig-loader" style="margin-top:12px"><div class="spin"></div><span>Analysing market demand…</span></div>
+          </div>
+          <div id="gig-results" style="display:none">
+            <div class="section-title">Top Recommendations</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" id="gig-cards"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-roadmap" class="page">
+        <div class="content-inner">
+          <div class="page-hd"><h1>30-Day Income Roadmap</h1><p>Tell us where you're starting. AI builds your daily execution plan.</p></div>
+          <div class="profile-banner" id="rm-banner" onclick="applyProfileTo('roadmap')"><i data-lucide="user-check" style="width:14px;height:14px"></i> Profile detected — click to auto-fill</div>
+          <div id="rm-form" class="card">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+              <div><label class="field-label">Your Name</label><input type="text" id="rm-name" placeholder="Shaurya"></div>
+              <div><label class="field-label">Your Skills</label><input type="text" id="rm-skills" placeholder="e.g. Video Editing, Canva"></div>
+              <div><label class="field-label">Target Platform</label><input type="text" id="rm-platform" placeholder="e.g. Upwork"></div>
+              <div><label class="field-label">Daily Hours Available</label><select id="rm-hours"><option value="1 hour">1 hour/day</option><option value="2 hours" selected>2 hours/day</option><option value="4+ hours">4+ hours/day</option></select></div>
+              <div><label class="field-label">Current Level</label><input type="text" id="rm-level" placeholder="e.g. Complete Beginner"></div>
+              <div><label class="field-label">Biggest Fear</label><input type="text" id="rm-fear" placeholder="e.g. Getting scammed, no clients"></div>
+            </div>
+            <button class="btn btn-primary btn-full" id="rm-btn" onclick="generateRoadmap()">Generate 30-Day Roadmap</button>
+            <div class="inline-loader" id="rm-loader"><div class="spin"></div><span>Building your custom roadmap…</span></div>
+          </div>
+          <div id="rm-result" style="display:none;margin-top:24px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <h2 style="font-size:18px;font-weight:700">Your 30-Day Plan</h2>
+              <button class="btn btn-secondary" onclick="resetRoadmap()">Start Over</button>
+            </div>
+            <div id="rm-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-profile" class="page">
+        <div class="content-inner" style="max-width:640px">
+          <div class="page-hd"><h1>My Profile</h1><p>Set this once. Every tool uses it automatically.</p></div>
+          <div class="card" style="margin-bottom:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div><label class="field-label">Your Name</label><input type="text" id="prof-name" placeholder="Shaurya Abhi"></div>
+              <div><label class="field-label">Primary Skills</label><input type="text" id="prof-skills" placeholder="e.g. Video Editing, Canva"></div>
+              <div><label class="field-label">Main Niche</label><input type="text" id="prof-niche" placeholder="e.g. YouTube Thumbnails"></div>
+              <div><label class="field-label">Target Platform</label><select id="prof-platform"><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Both</option></select></div>
+              <div><label class="field-label">Experience Level</label><select id="prof-exp-level"><option>Complete Beginner</option><option>Had 1-2 clients</option><option>3-6 months experience</option><option>6+ months experience</option></select></div>
+              <div><label class="field-label">Monthly Income Goal</label><select id="prof-goal"><option>₹10,000–₹25,000</option><option>₹25,000–₹50,000</option><option>₹50,000+</option></select></div>
+            </div>
+            <div style="margin-top:14px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuber…"></textarea></div>
+          </div>
+          <button class="btn btn-primary" id="save-prof-btn" onclick="saveProfile()">Save Profile</button>
+        </div>
+      </div>
+
+      <div id="page-pipeline" class="page">
+        <div class="content-inner wide">
+          <div class="page-hd"><h1>Client Pipeline</h1><p>Track every lead from first pitch to paid.</p></div>
+          <div class="card" style="margin-bottom:24px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 160px 160px auto;gap:12px;align-items:end">
+              <div><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Riya's Bakery"></div>
+              <div><label class="field-label">Service / Project</label><input type="text" id="lead-service" placeholder="e.g. Instagram posts"></div>
+              <div><label class="field-label">Value (₹)</label><input type="number" id="lead-value" placeholder="3500"></div>
+              <div><label class="field-label">Platform</label><select id="lead-platform"><option>Instagram</option><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option></select></div>
+              <button class="btn btn-primary" onclick="addLead()" style="height:38px">Add Lead</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+            <div>
+              <div class="kanban-col-header" style="color:#6b7280">Pitched (<span id="count-pitched">0</span>)</div>
+              <div id="col-pitched"></div>
+            </div>
+            <div>
+              <div class="kanban-col-header" style="color:#d97706">In Talks (<span id="count-replied">0</span>)</div>
+              <div id="col-replied"></div>
+            </div>
+            <div>
+              <div class="kanban-col-header" style="color:#16a34a">Won (<span id="count-won">0</span>)</div>
+              <div id="col-won"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div></div></div><div class="modal-backdrop" id="upgrade-modal">
+  <div class="modal" style="text-align:center">
+    <button class="modal-close" onclick="closeModal('upgrade-modal')"><i data-lucide="x" style="width:16px;height:16px"></i></button>
+    <div style="width:52px;height:52px;background:#f3f4f6;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
+      <i data-lucide="zap" style="width:24px;height:24px;color:#111827"></i>
     </div>
+    <h3 style="font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px">Unlock Lancify Pro</h3>
+    <p style="font-size:13.5px;color:var(--text2);margin-bottom:24px;line-height:1.55">Get unlimited AI credits, all premium tools, PDF exports, and priority support.</p>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:20px;text-align:left">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">What's included</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:13px;color:var(--text);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:14px;height:14px;color:#16a34a;flex-shrink:0"></i> Unlimited AI credits</div>
+        <div style="font-size:13px;color:var(--text);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:14px;height:14px;color:#16a34a;flex-shrink:0"></i> All Pro tools unlocked</div>
+        <div style="font-size:13px;color:var(--text);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:14px;height:14px;color:#16a34a;flex-shrink:0"></i> PDF export for audits & kits</div>
+        <div style="font-size:13px;color:var(--text);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:14px;height:14px;color:#16a34a;flex-shrink:0"></i> Priority support</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" style="height:42px;font-size:14px" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeModal('upgrade-modal')">Upgrade Now →</button>
   </div>
 </div>
-<div id="upgrade-modal" class="modal-overlay">
-  <div class="modal-card text-center">
-    <button class="modal-close" onclick="closeUpgradeModal()"><i data-lucide="x" class="w-5 h-5"></i></button>
-    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="zap" class="text-black w-8 h-8"></i></div>
-    <h3 class="text-2xl font-bold text-gray-900 mb-2">Unlock Freelance Pro</h3>
-    <p class="text-gray-500 text-sm mb-6">Access all premium AI tools and unlimited credits.</p>
-    <button class="btn-primary w-full" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeUpgradeModal();">Upgrade Now</button>
-  </div>
-</div>
+
+<div id="toast"></div>
 
 <script>
 lucide.createIcons();
-const { createClient } = supabase;
+const {createClient} = supabase;
 const sb = createClient(
   'https://qkpyqtynwbvjssrqanmk.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY'
 );
-let currentUser=null, userProfile={is_pro:false}, savedKitData=null, authMode='signin';
-let currentPage='home-pg';
 
-async function initApp(){
+let currentUser = null, userProfile = {is_pro:false}, userLeads = [];
+let authMode = 'signin';
+let chatStep = 0, chatAnswers = {}, savedKitData = null;
+const chatQuestions = [
+  {q:'What skill do you have, or are learning right now? Be specific — e.g. "video editing", "logo design", "social media posts".', key:'skill'},
+  {q:'Who do you want to work with? Think about the types of businesses or people who would benefit from your skill.', key:'target'},
+  {q:'Have you done any work before — even for free, for a friend, or for yourself?', key:'experience'},
+  {q:'How many hours can you put into freelancing each day?', key:'hours', opts:['1 hour','2 hours','3-4 hours','5+ hours']},
+  {q:'What is your biggest goal for your first month? Be honest!', key:'goal', opts:['Get my first client','Earn ₹10,000','Build a portfolio','Just learn the ropes']}
+];
+
+/* ─── INIT ─── */
+async function initApp() {
   const {data:{session}} = await sb.auth.getSession();
-  document.getElementById('app-loading').style.display='none';
-  if(session?.user){ handleLoginSuccess(session.user); }
-  else { document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex'; }
-  sb.auth.onAuthStateChange((_,session)=>{
-    if(session?.user){ handleLoginSuccess(session.user); }
-    else { currentUser=null; document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex'; }
-  });
+  hide('loading-screen');
+  if (session?.user) onLogin(session.user);
+  else showLogin();
+  sb.auth.onAuthStateChange((_,s) => { if(s?.user) onLogin(s.user); else { currentUser=null; showLogin(); } });
 }
 
-async function handleLoginSuccess(user){
-  currentUser=user;
-  document.getElementById('login-pg').style.display='none';
-  document.getElementById('app-layout').classList.add('on');
-  const name=user.user_metadata?.full_name||user.email?.split('@')[0]||'User';
-  document.getElementById('header-user-initial').textContent=name[0].toUpperCase();
-  const hour=new Date().getHours();
-  const g=hour<12?'Good morning':hour<18?'Good afternoon':'Good evening';
-  document.getElementById('hero-greeting').textContent=`${g}, ${name.split(' ')[0]}`;
-  loadAllStats(user.id);
-  await loadProfile(); 
-  navigate(currentPage);
+function showLogin() { show('login-screen',true,'flex'); hide('app-layout'); }
+
+function onLogin(user) {
+  currentUser = user;
+  hide('login-screen');
+  show('app-layout',true,'flex');
+  const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  const firstName = name.split(' ')[0];
+  el('header-avatar').textContent = name[0].toUpperCase();
+  const h = new Date().getHours();
+  el('hero-greeting').textContent = `${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${firstName}`;
+  el('ws-name').textContent = `${firstName}'s Workspace`;
+  el('acct-ws-name').textContent = `${firstName}'s Workspace`;
+  loadStats(user.id);
+  loadProfile(user.id);
+  loadLeads(user.id);
+  startCoach();
+  lucide.createIcons();
 }
 
-async function signInGoogle(){ const {error}=await sb.auth.signInWithOAuth({provider:'google'}); if(error) showAuthError(error.message); }
-function toggleMode(){
-  authMode=authMode==='signin'?'signup':'signin';
-  const isSU=authMode==='signup';
-  document.getElementById('name-field').style.display=isSU?'block':'none';
-  document.getElementById('auth-btn').innerHTML=isSU?'Create Account':'Sign In';
-  document.getElementById('auth-toggle-txt').innerHTML=isSU ?'Already have an account? <span onclick="toggleMode()" class="text-black cursor-pointer hover:underline">Sign in</span>' :"Don't have an account? <span onclick=\"toggleMode()\" class=\"text-black cursor-pointer hover:underline\">Sign up</span>";
+/* ─── AUTH ─── */
+async function signInGoogle() { await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}}); }
+
+function toggleAuthMode() {
+  authMode = authMode==='signin'?'signup':'signin';
+  const su = authMode==='signup';
+  el('name-field').style.display = su?'block':'none';
+  el('auth-btn').textContent = su?'Create Account':'Sign In';
+  el('auth-toggle').innerHTML = su
+    ? `Already have an account? <span onclick="toggleAuthMode()" style="color:var(--text);font-weight:500;cursor:pointer;text-decoration:underline">Sign in</span>`
+    : `Don't have an account? <span onclick="toggleAuthMode()" style="color:var(--text);font-weight:500;cursor:pointer;text-decoration:underline">Sign up</span>`;
   clearAuthMessages();
 }
-async function authSubmit(){
-  const email=document.getElementById('auth-email').value.trim();
-  const password=document.getElementById('auth-password').value;
-  const name=document.getElementById('auth-name').value.trim();
+
+async function authSubmit() {
+  const email = el('auth-email').value.trim();
+  const pw = el('auth-password').value;
+  if(!email||!pw) return showAuthError('Please fill in all fields.');
+  el('auth-btn').disabled = true; el('auth-btn').textContent = authMode==='signin'?'Signing in…':'Creating account…';
   clearAuthMessages();
-  if(!email||!password){showAuthError('Enter email and password.');return;}
-  const btn=document.getElementById('auth-btn'); btn.disabled=true; btn.innerHTML='Loading...';
-  let result;
-  if(authMode==='signup'){
-    result=await sb.auth.signUp({email,password,options:{data:{full_name:name||email.split('@')[0]}}});
-    if(!result.error&&result.data?.user&&!result.data.session){ showAuthMsg('Check email to confirm.'); btn.disabled=false; btn.textContent='Create Account'; return; }
-  } else { result=await sb.auth.signInWithPassword({email,password}); }
-  btn.disabled=false; btn.textContent=authMode==='signup'?'Create Account':'Sign In';
-  if(result.error) showAuthError(result.error.message);
-}
-async function signOut(){ await sb.auth.signOut(); currentPage='home-pg'; }
-function showAuthError(m){const e=document.getElementById('auth-error');e.textContent=m;e.classList.remove('hidden');e.classList.add('block');}
-function showAuthMsg(m){const e=document.getElementById('auth-msg');e.textContent=m;e.classList.remove('hidden');e.classList.add('block');}
-function clearAuthMessages(){document.getElementById('auth-error').classList.add('hidden');document.getElementById('auth-msg').classList.add('hidden');}
-
-function navigate(id){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  const pg=document.getElementById(id); if(!pg)return;
-  pg.classList.add('on'); currentPage=id; 
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const a=document.querySelector(`[data-page="${id}"]`);if(a)a.classList.add('active');
-  document.getElementById('main-scroll').scrollTo({top:0,behavior:'smooth'});
-  if (id === 'profile-pg') loadProfile();
-  if (id === 'pipeline-pg') loadLeads();
-  showProfileBanners();
-}
-
-function toast(msg,type='success'){
-  const t=document.createElement('div');t.className=`toast toast-${type}`;
-  t.innerHTML= `<span>${msg}</span>`;
-  document.body.appendChild(t); setTimeout(()=>t.classList.add('show'),10);
-  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3000);
-}
-
-function showUpgradeModal(){document.getElementById('upgrade-modal').classList.add('on');}
-function closeUpgradeModal(){document.getElementById('upgrade-modal').classList.remove('on');}
-function copyEl(id){ const el=document.getElementById(id);if(el) navigator.clipboard.writeText(el.innerText).then(()=>toast('Copied!')); }
-
-let userProposals = []; let userEmails = []; let userKits=[]; let userLeads = [];
-
-async function loadAllStats(userId){
-  try{
-    const [kitsRes, propsRes, emailsRes, gigsRes] = await Promise.all([
-      sb.from('kits').select('id,niche,kit_data,is_starred,created_at').eq('user_id',userId).order('created_at',{ascending:false}),
-      sb.from('proposals').select('*').eq('user_id',userId).order('created_at',{ascending:false}),
-      sb.from('emails').select('*').eq('user_id',userId).order('created_at',{ascending:false}),
-      sb.from('gig_searches').select('id',{count:'exact'}).eq('user_id',userId)
-    ]);
-    userKits = kitsRes.data || []; userProposals = propsRes.data || []; userEmails = emailsRes.data || [];
-    document.getElementById('stat-kits').textContent = userKits.length;
-    document.getElementById('stat-proposals').textContent = userProposals.length;
-    document.getElementById('stat-emails').textContent = userEmails.length;
-    document.getElementById('stat-gigs').textContent = gigsRes.count ?? 0;
-    renderKits(userKits); renderProposals(userProposals); renderEmails(userEmails);
-    await loadLeads();
-  } catch(err) { console.error('Stats error:', err.message); }
-}
-
-function renderProposals(props) {
-  const grid = document.getElementById('props-grid');
-  if(!props.length) { grid.innerHTML = `<div class="glass-panel dashed p-8 text-center text-gray-500 text-sm">No proposals yet.</div>`; return; }
-  grid.innerHTML = props.map(p => `<div class="glass-panel p-6 flex flex-col"><div class="text-[10px] text-gray-400 font-bold uppercase mb-2">${new Date(p.created_at).toLocaleDateString()}</div><div class="font-bold text-gray-900 mb-4 truncate">${p.platform || 'Draft'}</div><button class="text-xs font-semibold text-gray-600 hover:text-black mt-auto text-left" onclick="viewProposal('${p.id}')">Read Proposal</button></div>`).join('');
-}
-
-function renderEmails(emails) {
-  const grid = document.getElementById('emails-grid');
-  if(!emails.length) { grid.innerHTML = `<div class="glass-panel dashed p-8 text-center text-gray-500 text-sm">No emails yet.</div>`; return; }
-  grid.innerHTML = emails.map(e => `<div class="glass-panel p-6 flex flex-col"><div class="text-[10px] text-gray-400 font-bold uppercase mb-2">${new Date(e.created_at).toLocaleDateString()}</div><div class="font-bold text-gray-900 mb-4 truncate">${e.email_type || 'Draft'}</div><button class="text-xs font-semibold text-gray-600 hover:text-black mt-auto text-left" onclick="viewEmail('${e.id}')">Read Email</button></div>`).join('');
-}
-
-function renderKits(kits){
-  const grid=document.getElementById('kits-grid');
-  if(!kits.length){ grid.innerHTML=`<div class="glass-panel dashed p-8 text-center text-gray-500 text-sm">No kits yet.</div>`; return; }
-  grid.innerHTML = kits.map(k => `<div class="glass-panel p-6 flex flex-col"><div class="text-[10px] text-gray-400 font-bold uppercase mb-2">${new Date(k.created_at).toLocaleDateString()}</div><div class="font-bold text-gray-900 mb-4 truncate">${k.niche || 'Niche'}</div><div class="mt-auto flex justify-between"><button class="text-xs font-semibold text-gray-600 hover:text-black" onclick="viewKit('${k.id}')">View</button><button class="text-xs font-semibold text-red-400 hover:text-red-600" onclick="deleteKit('${k.id}')">Delete</button></div></div>`).join('');
-}
-
-function viewProposal(id) { const p = userProposals.find(x => x.id === id); if(p) { document.getElementById('doc-modal-title').textContent = p.platform; document.getElementById('doc-modal-content').textContent = p.proposal_text; document.getElementById('view-doc-modal').classList.add('on'); } }
-function viewEmail(id) { const e = userEmails.find(x => x.id === id); if(e) { document.getElementById('doc-modal-title').textContent = e.email_type; document.getElementById('doc-modal-content').textContent = e.email_text; document.getElementById('view-doc-modal').classList.add('on'); } }
-function viewKit(id){const k=userKits.find(x=>x.id===id);if(k){savedKitData=k.kit_data;showResults(k.kit_data);}}
-async function deleteKit(id){ if(confirm('Delete?')){ await sb.from('kits').delete().eq('id',id); userKits=userKits.filter(k=>k.id!==id); renderKits(userKits); toast('Deleted'); } }
-
-/* CHAT ENGINE */
-const STEPS=[{id:'skills',type:'text',q:"What tools or skills do you use?"},{id:'experience',type:'text',q:"Have you ever done anything for someone, even unpaid?"},{id:'hours',type:'opts',opts:['1-2 hrs','2-4 hrs','4+ hrs'],q:"How many hours a day can you give?"},{id:'goal',type:'opts',opts:['Rs 5k-10k','Rs 10k-20k','Rs 20k+'],q:"Income goal?"},{id:'platform',type:'opts',opts:['Fiverr','Upwork','LinkedIn'],q:"Target platform?"}];
-let step=0,answers={},waiting=false;
-function startChat(){ step=0;answers={}; document.getElementById('chat-msgs').innerHTML=''; document.getElementById('input-zone').style.display='flex'; document.getElementById('gen-bar').style.display='none'; document.getElementById('prog-bar').style.width='0%'; navigate('chat-pg'); setTimeout(()=>showStep(0),400); }
-function showStep(i){ document.getElementById('prog-bar').style.width=Math.round((i/STEPS.length)*100)+'%'; document.getElementById('prog-lbl').textContent='Step '+(i+1); addAI(STEPS[i].q); if(STEPS[i].type==='opts'){addOpts(STEPS[i].opts,i);document.getElementById('input-zone').style.display='none';} else{document.getElementById('input-zone').style.display='flex';waiting=true;} }
-function addAI(t){ const c=document.getElementById('chat-msgs'); c.innerHTML+=`<div class="flex gap-4 items-end"><div class="bubble ai">${t}</div></div>`; c.parentElement.scrollTo(0,c.parentElement.scrollHeight); }
-function addUser(t){ const c=document.getElementById('chat-msgs'); c.innerHTML+=`<div class="flex gap-4 items-end flex-row-reverse"><div class="bubble usr">${t}</div></div>`; c.parentElement.scrollTo(0,c.parentElement.scrollHeight); }
-function addOpts(opts,si){ const c=document.getElementById('chat-msgs'); let h=`<div class="flex flex-wrap gap-2 mb-2">`; opts.forEach(o=>h+=`<button class="opt-btn" onclick="pickOpt('${o}',${si})">${o}</button>`); c.innerHTML+=h+'</div>'; c.parentElement.scrollTo(0,c.parentElement.scrollHeight); }
-function pickOpt(val,si){ answers[STEPS[si].id]=val; addUser(val); advance(); }
-function sendMsg(){ if(!waiting)return; const t=document.getElementById('txt'); const v=t.value.trim(); if(v){ t.value=''; answers[STEPS[step].id]=v; addUser(v); waiting=false; advance(); } }
-function advance(){ step++; if(step<STEPS.length)setTimeout(()=>showStep(step),500); else { addAI("Building kit..."); document.getElementById('input-zone').style.display='none'; document.getElementById('gen-bar').style.display='flex'; fetch('/api/generate',{method:'POST',body:JSON.stringify({answers})}).then(r=>r.json()).then(k=>{saveKit(k);showResults(k);}); } }
-async function saveKit(kit){ if(currentUser) { await sb.from('kits').insert([{user_id:currentUser.id,niche:kit.niche,kit_data:kit}]); loadAllStats(currentUser.id); } }
-
-function showResults(kit){
-  navigate('results-pg-wrap');
-  document.getElementById('results-pg').innerHTML=`
-    <div class="text-center mb-10"><h2 class="text-2xl font-bold mb-2">Your Kit: ${kit.niche||'Freelance Niche'}</h2></div>
-    <div class="glass-panel p-6 mb-6"><h3 class="font-bold mb-2">Bio</h3><p class="text-sm text-gray-700">${kit.portfolio_blurb||''}</p></div>
-    <div class="glass-panel p-6 mb-6"><h3 class="font-bold mb-2">Gig</h3><p class="text-sm text-gray-700">${kit.gig_description||''}</p></div>
-    <div class="glass-panel p-6 mb-6"><h3 class="font-bold mb-2">Pricing Strategy</h3><p class="text-sm text-gray-700">${kit.pricing?.basic?.price||''} - ${kit.pricing?.premium?.price||''}</p></div>
-  `;
-}
-async function downloadPDF(){ toast('PDF generating...'); } // Simplified for size
-
-/* TOOLS API CALLS */
-async function generateProposal(){
-  const jobDesc=document.getElementById('prop-job').value; const platform=document.getElementById('prop-platform').value;
-  if(!jobDesc)return toast('Paste a job description');
-  document.getElementById('prop-btn').disabled=true; document.getElementById('prop-loading').style.display='block'; document.getElementById('prop-result').style.display='none'; document.getElementById('prop-empty').style.display='none';
-  try{
-    const res=await fetch('/api/proposal',{method:'POST',body:JSON.stringify({jobDesc,platform,niche:userProfile.niche||'Freelancer'})});
-    const data=await res.json();
-    document.getElementById('prop-res-text').textContent=data.proposal; document.getElementById('prop-result').style.display='flex';
-    if(currentUser) { await sb.from('proposals').insert([{user_id:currentUser.id,job_description:jobDesc,proposal_text:data.proposal,platform}]); loadAllStats(currentUser.id); }
-  }catch(e){toast('Error');document.getElementById('prop-empty').style.display='flex';}finally{document.getElementById('prop-btn').disabled=false; document.getElementById('prop-loading').style.display='none';}
-}
-
-async function generateEmail(){
-  const emailType=document.getElementById('email-type').value; const context=document.getElementById('email-context').value;
-  if(!context)return toast('Add context');
-  document.getElementById('email-btn').disabled=true; document.getElementById('email-loading').style.display='block'; document.getElementById('email-result').style.display='none'; document.getElementById('email-empty').style.display='none';
-  try{
-    const res=await fetch('/api/email',{method:'POST',body:JSON.stringify({emailType,context})}); const data=await res.json();
-    document.getElementById('email-res-text').innerHTML=data.body.replace(/\n/g, '<br>'); document.getElementById('email-result').style.display='flex';
-    if(currentUser) { await sb.from('emails').insert([{user_id:currentUser.id,email_type:emailType,context,email_text:data.body}]); loadAllStats(currentUser.id); }
-  }catch(e){toast('Error');document.getElementById('email-empty').style.display='flex';}finally{document.getElementById('email-btn').disabled=false; document.getElementById('email-loading').style.display='none';}
-}
-
-async function findGigs(){
-  const skills=document.getElementById('gig-skills').value; if(!skills)return;
-  document.getElementById('gig-btn').disabled=true; document.getElementById('gig-loading').style.display='block'; document.getElementById('gig-result').style.display='none';
-  try{
-    const res=await fetch('/api/gigfinder',{method:'POST',body:JSON.stringify({skills,platform:document.getElementById('gig-platform').value})}); const data=await res.json();
-    const c=document.getElementById('gig-cards-container'); c.innerHTML='';
-    (data.niches||[]).forEach(n=>{ c.innerHTML+=`<div class="glass-panel p-6"><h4 class="font-bold mb-2">${n.title}</h4><p class="text-sm text-gray-600 mb-2">Demand: ${n.demand}</p><p class="text-sm text-gray-600">Price: ${n.priceRange}</p></div>`; });
-    document.getElementById('gig-result').style.display='block';
-  }catch(e){}finally{document.getElementById('gig-btn').disabled=false; document.getElementById('gig-loading').style.display='none';}
-}
-
-async function generateRoadmap(){
-  const skills=document.getElementById('rm-skills').value; if(!skills)return;
-  document.getElementById('rm-btn').disabled=true; document.getElementById('rm-btn').textContent='Building...';
-  try{
-    const res=await fetch('/api/roadmap',{method:'POST',body:JSON.stringify({skills})}); const data=await res.json();
-    document.getElementById('roadmap-form-container').style.display='none';
-    document.getElementById('roadmap-result').innerHTML=`<div class="glass-panel p-8 text-center"><h3 class="text-xl font-bold mb-4">Roadmap Built</h3><p class="text-gray-600">Your custom execution plan is ready.</p><button class="btn-primary mt-6" onclick="location.reload()">Reset</button></div>`;
-    document.getElementById('roadmap-result').style.display='block';
-  }catch(e){}finally{document.getElementById('rm-btn').disabled=false;}
-}
-
-// 🛡️ THE CRITICAL NULL CHECK FIX FOR AUDIT LOGO
-const auditLogoEl = document.getElementById('audit-logo');
-if (auditLogoEl) {
-  auditLogoEl.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    const textEl = document.getElementById('audit-logo-text');
-    if(file) { textEl.textContent = file.name; } else { textEl.textContent = "Click or drag logo to upload"; }
-  });
-}
-
-function toggleWebsiteUrl() { document.getElementById('url-input-wrapper').classList.toggle('hidden', document.getElementById('audit-platform').value !== 'Website'); }
-async function generateAudit(){
-  const target=document.getElementById('audit-target').value; if(!target)return toast('Add target');
-  document.getElementById('audit-btn').disabled=true; document.getElementById('audit-loading').style.display='block'; document.getElementById('audit-result').style.display='none'; document.getElementById('audit-empty').style.display='none';
-  try{
-    const res=await fetch('/api/audit',{method:'POST',body:JSON.stringify({target, platform:document.getElementById('audit-platform').value})}); const data=await res.json();
-    document.getElementById('audit-email-text').innerHTML=(data.email_body||'').replace(/\n/g,'<br>'); document.getElementById('audit-result').style.display='flex';
-  }catch(e){}finally{document.getElementById('audit-btn').disabled=false; document.getElementById('audit-loading').style.display='none';}
-}
-function downloadAuditPDF(){ toast("Downloading PDF..."); }
-
-/* PROFILE & PIPELINE */
-async function loadProfile() {
-  if (!currentUser) return;
   try {
-    const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-    if (data) {
-      userProfile = { ...userProfile, ...data }; 
-      if(data.skills) { document.getElementById('prof-skills').value = data.skills; document.getElementById('gig-skills').value = data.skills; document.getElementById('rm-skills').value = data.skills; }
-      if(data.niche) document.getElementById('prof-niche').value = data.niche;
-      if(data.experience) { document.getElementById('prof-exp').value = data.experience; document.getElementById('prop-exp').value = data.experience; }
+    let res;
+    if(authMode==='signin') { res = await sb.auth.signInWithPassword({email,password:pw}); }
+    else {
+      const name = el('auth-name').value.trim();
+      res = await sb.auth.signUp({email,password:pw,options:{data:{full_name:name}}});
+      if(!res.error) { showAuthSuccess('Check your email to confirm your account!'); el('auth-btn').disabled=false; el('auth-btn').textContent='Create Account'; return; }
     }
-  } catch (err) {}
+    if(res.error) showAuthError(res.error.message);
+  } catch(e) { showAuthError('Something went wrong. Try again.'); }
+  el('auth-btn').disabled=false; el('auth-btn').textContent=authMode==='signin'?'Sign In':'Create Account';
+}
+
+async function signOut() { await sb.auth.signOut(); showLogin(); }
+
+function showAuthError(msg) { const e=el('auth-error'); e.textContent=msg; e.style.display='block'; }
+function showAuthSuccess(msg) { const e=el('auth-success'); e.textContent=msg; e.style.display='block'; }
+function clearAuthMessages() { el('auth-error').style.display='none'; el('auth-success').style.display='none'; }
+
+/* ─── NAVIGATION ─── */
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const titles = {home:'Dashboard',coach:'Launch Coach',audit:'Audit Generator',proposal:'Proposal Writer',email:'Email Writer',gig:'Gig Finder',roadmap:'30-Day Roadmap',profile:'My Profile',pipeline:'Client Pipeline'};
+  const pageEl = el('page-'+page);
+  if(pageEl) { pageEl.classList.add('active'); el('content-scroll')?.scrollTo(0,0); }
+  const navEl = document.querySelector(`[data-page="${page}"]`);
+  if(navEl) navEl.classList.add('active');
+  if(el('header-title')) el('header-title').textContent = titles[page]||'Dashboard';
+  closeAccountDropdown();
+}
+
+/* ─── PROFILE ─── */
+async function loadProfile(uid) {
+  try {
+    const {data} = await sb.from('profiles').select('*').eq('id',uid).single();
+    if(data) {
+      userProfile = {...userProfile,...data};
+      if(data.skills) { setVal('prof-skills',data.skills); setVal('gig-skills',data.skills); setVal('rm-skills',data.skills); }
+      if(data.niche) setVal('prof-niche',data.niche);
+      if(data.experience) setVal('prof-exp',data.experience);
+      if(data.name) setVal('prof-name',data.name);
+      if(data.skills) {
+        ['prop-banner','gig-banner','rm-banner'].forEach(id => { const e=el(id); if(e) e.classList.add('show'); });
+      }
+    }
+  } catch(e) {}
 }
 
 async function saveProfile() {
-  if (!currentUser) return;
-  const pd = { id: currentUser.id, skills: document.getElementById('prof-skills').value, niche: document.getElementById('prof-niche').value, experience: document.getElementById('prof-exp').value };
-  await sb.from('profiles').upsert(pd); userProfile = { ...userProfile, ...pd }; toast('Profile saved');
+  if(!currentUser) return;
+  const pd = {id:currentUser.id,name:val('prof-name'),skills:val('prof-skills'),niche:val('prof-niche'),experience:val('prof-exp'),platform:val('prof-platform'),goal:val('prof-goal')};
+  await sb.from('profiles').upsert(pd);
+  userProfile = {...userProfile,...pd};
+  showToast('Profile saved!');
+  if(pd.skills) { ['prop-banner','gig-banner','rm-banner'].forEach(id=>{const e=el(id);if(e)e.classList.add('show')}); }
 }
 
-function showProfileBanners() { document.querySelectorAll('.profile-banner').forEach(el=>el.classList.remove('hidden')); }
-function applyProfileToProposal() { toast('Applied Profile'); } function applyProfileToGig() { toast('Applied Profile'); } function applyProfileToRoadmap() { toast('Applied Profile'); }
+function applyProfileTo(tool) {
+  if(tool==='proposal') { if(userProfile.niche) setVal('prop-niche',userProfile.niche); if(userProfile.experience) setVal('prop-exp',userProfile.experience); showToast('Profile applied!'); }
+  else if(tool==='gig') { if(userProfile.skills) { setVal('gig-skills',userProfile.skills); showToast('Profile applied!'); } }
+  else if(tool==='roadmap') { if(userProfile.skills) { setVal('rm-skills',userProfile.skills); showToast('Profile applied!'); } if(userProfile.name) setVal('rm-name',userProfile.name); }
+}
 
-async function loadLeads() {
-  if (!currentUser) return;
-  const { data } = await sb.from('leads').select('*').eq('user_id', currentUser.id);
-  userLeads = data || []; renderPipeline();
+/* ─── STATS ─── */
+async function loadStats(uid) {
+  try {
+    const [kits,props,emails,gigs] = await Promise.all([
+      sb.from('kits').select('id',{count:'exact'}).eq('user_id',uid),
+      sb.from('proposals').select('id',{count:'exact'}).eq('user_id',uid),
+      sb.from('emails').select('id',{count:'exact'}).eq('user_id',uid),
+      sb.from('gig_searches').select('id',{count:'exact'}).eq('user_id',uid)
+    ]);
+    setText('stat-kits', kits.count||0); setText('stat-proposals',props.count||0);
+    setText('stat-emails',emails.count||0); setText('stat-gigs',gigs.count||0);
+    const used = (kits.count||0)+(props.count||0)+(emails.count||0);
+    const rem = Math.max(0,1000-used*10);
+    setText('credits-remaining',rem); setText('acct-credits-remaining',rem);
+    const pct = Math.max(5,(rem/1000)*100);
+    el('credits-bar').style.width = pct+'%';
+  } catch(e) {}
+}
+
+/* ─── LAUNCH COACH ─── */
+function startCoach() { chatStep=0; chatAnswers={}; clearEl('chat-msgs'); addAiMsg(chatQuestions[0].q, chatQuestions[0].opts); updateProgress(); }
+function resetCoach() { el('kit-result').style.display='none'; show('input-zone'); show('chat-progress-wrap'); startCoach(); }
+
+function addAiMsg(text, opts=[]) {
+  const wrap = el('chat-msgs');
+  const b = document.createElement('div');
+  b.innerHTML = `<div class="bubble ai">${text}</div>`;
+  if(opts.length) {
+    const optDiv = document.createElement('div');
+    optDiv.className='chat-opts';
+    opts.forEach(o => { const btn=document.createElement('button'); btn.className='opt-btn'; btn.textContent=o; btn.onclick=()=>{setVal('chat-input',o);sendChatMsg();}; optDiv.appendChild(btn); });
+    b.appendChild(optDiv);
+  }
+  wrap.appendChild(b); wrap.scrollTop=wrap.scrollHeight;
+}
+
+function addUserMsg(text) {
+  const wrap=el('chat-msgs');
+  const b=document.createElement('div');
+  b.style.display='flex'; b.style.justifyContent='flex-end';
+  b.innerHTML=`<div class="bubble usr">${text}</div>`;
+  wrap.appendChild(b); wrap.scrollTop=wrap.scrollHeight;
+}
+
+function updateProgress() {
+  const pct = Math.round((chatStep/chatQuestions.length)*100);
+  el('prog-fill').style.width=pct+'%';
+  el('prog-pct').textContent=pct+'%';
+  el('prog-label').textContent=`Step ${Math.min(chatStep+1,chatQuestions.length)} of ${chatQuestions.length}`;
+}
+
+function handleChatKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMsg();} }
+
+async function sendChatMsg() {
+  const txt=val('chat-input').trim(); if(!txt) return;
+  addUserMsg(txt); setVal('chat-input','');
+  chatAnswers[chatQuestions[chatStep].key] = txt;
+  chatStep++;
+  if(chatStep<chatQuestions.length) {
+    setTimeout(()=>{ addAiMsg(chatQuestions[chatStep].q, chatQuestions[chatStep].opts||[]); updateProgress(); },400);
+  } else {
+    hide('input-zone'); hide('chat-progress-wrap');
+    el('gen-bar').classList.add('show');
+    el('gen-text').textContent='Analysing your skills and building your kit…';
+    await generateKit();
+  }
+}
+
+async function generateKit() {
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers: chatAnswers })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    savedKitData = {
+      niche: data.niche,
+      bio: data.portfolio_blurb || data.bio,
+      usp: data.gig_title || data.usp,
+      pricing: data.pricing,
+      tip: data.action_plan ? "Follow your 30-day action plan!" : data.tip
+    };
+
+    renderKit(savedKitData);
+    if (currentUser) {
+      await sb.from('kits').insert([{ user_id: currentUser.id, niche: savedKitData.niche, kit_data: savedKitData }]);
+      loadStats(currentUser.id);
+    }
+  } catch (e) {
+    showToast('Error generating kit. Please try again.');
+    el('gen-bar').classList.remove('show');
+    show('input-zone');
+  }
+  el('gen-bar').classList.remove('show');
+}
+
+function renderKit(d) {
+  el('kit-result').style.display='block';
+  el('kit-blocks').innerHTML=`
+    <div class="kit-block"><h3>Your Niche</h3><p>${d.niche||''}</p></div>
+    <div class="kit-block"><h3>Professional Bio</h3><p>${d.bio||''}</p></div>
+    <div class="kit-block"><h3>Your Unique Selling Proposition</h3><p>${d.usp||''}</p></div>
+    <div class="kit-block"><h3>Pricing Strategy</h3><div class="kit-price-grid">
+      <div class="price-tier"><div class="price-tier-name">Starter</div><div class="price-tier-val">${d.pricing?.starter?.price || d.pricing?.basic?.price || 'TBD'}</div></div>
+      <div class="price-tier"><div class="price-tier-name">Standard</div><div class="price-tier-val">${d.pricing?.standard?.price || 'TBD'}</div></div>
+      <div class="price-tier"><div class="price-tier-name">Premium</div><div class="price-tier-val">${d.pricing?.premium?.price || 'TBD'}</div></div>
+    </div></div>
+    <div class="kit-block"><h3>This Week's Action</h3><p>${d.tip||''}</p></div>`;
+}
+
+async function downloadKitPDF() {
+  if(!savedKitData) return;
+  showToast('Generating PDF…');
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(22); doc.setFont('helvetica','bold'); doc.text('Your Freelance Kit',20,25);
+  doc.setFontSize(11); doc.setFont('helvetica','normal'); let y=42;
+  const sections=[['Niche',savedKitData.niche],['Bio',savedKitData.bio],['USP',savedKitData.usp],['First Client Tip',savedKitData.tip]];
+  sections.forEach(([title,text])=>{
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.text(title,20,y); y+=7;
+    doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
+    const lines=doc.splitTextToSize(text||'',170); doc.text(lines,20,y); y+=lines.length*5.5+10;
+  });
+  doc.save('lancify-kit.pdf');
+}
+
+/* ─── AUDIT ─── */
+function toggleAuditUrl() { el('audit-url-wrap').style.display = val('audit-platform')==='Website'?'block':'none'; }
+function updateLogoText(input) { el('audit-logo-text').textContent = input.files[0]?input.files[0].name:'Click or drag logo to upload'; }
+
+async function generateAudit() {
+  const target = val('audit-target');
+  if(!target) return showToast('Add a business name');
+  toggleResult('audit', false);
+  el('audit-btn').disabled = true; loader('audit', true);
+
+  try {
+    const res = await fetch('/api/audit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        target: target,
+        platform: val('audit-platform'),
+        weakness: val('audit-weakness'),
+        service: val('audit-service'),
+        price: val('audit-price'),
+        observation: val('audit-obs')
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    el('audit-result-text').innerHTML = (data.email_body || '').replace(/\n/g, '<br>');
+    toggleResult('audit', true);
+  } catch (e) {
+    showToast('Error. Try again.');
+    toggleResult('audit', false, true);
+  }
+  el('audit-btn').disabled = false; loader('audit', false);
+}
+
+/* ─── PROPOSAL ─── */
+async function generateProposal() {
+  const niche = val('prop-niche'), job = val('prop-job');
+  if(!niche||!job) return showToast('Fill in niche and job description');
+  toggleResult('prop', false);
+  el('prop-btn').disabled = true; loader('prop', true);
+
+  try {
+    const res = await fetch('/api/proposal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jobDesc: job,
+        platform: val('prop-platform'),
+        experience: val('prop-exp'),
+        niche: niche
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    el('prop-result-text').textContent = data.proposal;
+    toggleResult('prop', true);
+    if(currentUser) { await sb.from('proposals').insert([{user_id:currentUser.id, job_description: job, proposal_text: data.proposal, platform: val('prop-platform')}]); loadStats(currentUser.id); }
+  } catch (e) {
+    showToast('Error. Try again.');
+    toggleResult('prop', false, true);
+  }
+  el('prop-btn').disabled = false; loader('prop', false);
+}
+
+/* ─── EMAIL ─── */
+async function generateEmail() {
+  const ctx = val('email-context');
+  if(!ctx) return showToast('Add some context');
+  toggleResult('email', false);
+  el('email-btn').disabled = true; loader('email', true);
+
+  try {
+    const res = await fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        emailType: val('email-type'),
+        context: ctx,
+        tone: val('email-tone')
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    el('email-result-text').innerHTML = data.body.replace(/\n/g, '<br>');
+    toggleResult('email', true);
+    if(currentUser) { await sb.from('emails').insert([{user_id:currentUser.id, email_type:val('email-type'), email_text:data.body, context: ctx}]); loadStats(currentUser.id); }
+  } catch (e) {
+    showToast('Error. Try again.');
+    toggleResult('email', false, true);
+  }
+  el('email-btn').disabled = false; loader('email', false);
+}
+
+/* ─── GIG FINDER ─── */
+async function findGigs() {
+  const skills = val('gig-skills');
+  if(!skills) return showToast('Enter your skills first');
+  el('gig-btn').disabled = true; loader('gig', true); el('gig-results').style.display='none';
+
+  try {
+    const res = await fetch('/api/gigfinder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skills: skills, platform: val('gig-platform') })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    el('gig-cards').innerHTML = (data.niches||[]).map(n => `
+      <div class="gig-card">
+        <h4>${n.title}</h4>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:10px">${n.whyNow || n.whyGood || 'High demand for this skill.'}</p>
+        <div style="font-size:12.5px;color:var(--text2);margin-bottom:4px"><strong style="color:var(--text)">Price Range:</strong> ${n.priceRange}</div>
+        <div style="font-size:12.5px;color:var(--text2);margin-bottom:8px"><strong style="color:var(--text)">First Step:</strong> ${n.firstStep || n.firstGig || 'Create a targeted portfolio piece.'}</div>
+        <div class="gig-meta">
+          <span class="gig-tag">Demand: ${n.demand}</span>
+          <span class="gig-tag">Competition: ${n.competition}</span>
+        </div>
+      </div>`).join('');
+    el('gig-results').style.display='block';
+    if(currentUser) { await sb.from('gig_searches').insert([{user_id:currentUser.id, skills, platform: val('gig-platform'), results_count: (data.niches||[]).length}]); loadStats(currentUser.id); }
+  } catch (e) {
+    showToast('Error parsing results. Try again.');
+  }
+  el('gig-btn').disabled = false; loader('gig', false);
+}
+
+/* ─── ROADMAP ─── */
+async function generateRoadmap() {
+  const skills = val('rm-skills');
+  if(!skills) return showToast('Enter your skills');
+  el('rm-btn').disabled = true; loader('rm', true);
+
+  try {
+    const res = await fetch('/api/roadmap', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: val('rm-name'),
+        skills: skills,
+        platform: val('rm-platform'),
+        hoursPerDay: val('rm-hours'),
+        currentLevel: val('rm-level'),
+        biggestFear: val('rm-fear')
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    el('rm-content').innerHTML = (data.weeks||[]).map(w => `
+      <div style="margin-bottom:28px">
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:14px">Week ${w.weekNumber || w.week} — ${w.theme}</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${(w.days||[]).map(d => `<div class="roadmap-day" data-day="${d.day}"><div style="font-size:13.5px;color:var(--text);line-height:1.5;padding:2px 0"><strong>${d.title || ''}</strong>: ${d.task}</div></div>`).join('')}
+        </div>
+      </div>`).join('');
+    el('rm-form').style.display='none'; el('rm-result').style.display='block';
+  } catch (e) {
+    showToast('Error. Try again.');
+  }
+  el('rm-btn').disabled = false; loader('rm', false);
+}
+
+function resetRoadmap() { el('rm-result').style.display='none'; el('rm-form').style.display='block'; el('rm-btn').disabled=false; }
+
+/* ─── PIPELINE ─── */
+async function loadLeads(uid) {
+  try { const {data}=await sb.from('leads').select('*').eq('user_id',uid); userLeads=data||[]; renderPipeline(); } catch(e) {}
 }
 
 function renderPipeline() {
-  const c = { pitched: '', replied: '', won: '' }; let counts = { pitched: 0, replied: 0, won: 0 };
-  userLeads.forEach(l => { counts[l.status||'pitched']++; c[l.status||'pitched'] += `<div class="glass-panel p-4 mb-3"><div class="font-bold text-sm text-gray-900">${l.client_name}</div><div class="text-xs text-gray-500 mb-2">₹${l.project_value||0}</div><div class="flex gap-2">${l.status!=='pitched'?`<button class="text-[10px] bg-gray-100 px-2 py-1 rounded" onclick="moveLead('${l.id}', 'pitched')">Pitch</button>`:''}${l.status!=='replied'?`<button class="text-[10px] bg-yellow-50 px-2 py-1 rounded" onclick="moveLead('${l.id}', 'replied')">Talks</button>`:''}${l.status!=='won'?`<button class="text-[10px] bg-emerald-50 px-2 py-1 rounded" onclick="moveLead('${l.id}', 'won')">Won</button>`:''}</div></div>`; });
-  ['pitched', 'replied', 'won'].forEach(s => { document.getElementById(`pipe-${s}`).innerHTML = c[s] || `<div class="text-xs text-gray-400 text-center py-4">Empty</div>`; document.getElementById(`count-${s}`).textContent = counts[s]; });
+  const stages=['pitched','replied','won'];
+  const labels={pitched:'pitched',replied:'replied',won:'won'};
+  const buckets={pitched:[],replied:[],won:[]};
+  userLeads.forEach(l=>{ const s=l.status||'pitched'; if(buckets[s]) buckets[s].push(l); });
+  stages.forEach(s=>{
+    el('count-'+s).textContent=buckets[s].length;
+    el('col-'+s).innerHTML = buckets[s].length ? buckets[s].map(l=>`
+      <div class="kanban-card">
+        <div class="kanban-card-name">${l.client_name}</div>
+        <div class="kanban-card-val">${l.project_value?'₹'+Number(l.project_value).toLocaleString('en-IN'):''} ${l.service||''}</div>
+        <div class="kanban-card-actions">
+          ${s!=='pitched'?`<button class="stage-btn" onclick="moveLead('${l.id}','pitched')">Pitched</button>`:''}
+          ${s!=='replied'?`<button class="stage-btn" onclick="moveLead('${l.id}','replied')">In Talks</button>`:''}
+          ${s!=='won'?`<button class="stage-btn" onclick="moveLead('${l.id}','won')">Won</button>`:''}
+          <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="deleteLead('${l.id}')">Delete</button>
+        </div>
+      </div>`).join('')
+    : `<div style="font-size:12.5px;color:var(--text3);text-align:center;padding:20px 0">No leads here</div>`;
+  });
 }
 
-async function saveLead() {
-  if (!currentUser) return;
-  const n = document.getElementById('lead-name').value; if(!n)return;
-  await sb.from('leads').insert([{ user_id: currentUser.id, client_name: n, project_value: document.getElementById('lead-value').value, status: 'pitched' }]);
-  document.getElementById('lead-name').value=''; document.getElementById('lead-value').value=''; toast('Lead Added'); loadLeads();
+async function addLead() {
+  if(!currentUser) return;
+  const n=val('lead-name'); if(!n) return showToast('Add a client name');
+  const lead={user_id:currentUser.id,client_name:n,service:val('lead-service'),project_value:val('lead-value'),platform:val('lead-platform'),status:'pitched'};
+  const {data}=await sb.from('leads').insert([lead]).select().single();
+  if(data) { userLeads.push(data); renderPipeline(); setVal('lead-name',''); setVal('lead-service',''); setVal('lead-value',''); showToast('Lead added!'); }
 }
 
-async function moveLead(id, status) {
-  const i = userLeads.findIndex(l => l.id === id); if(i > -1) userLeads[i].status = status; renderPipeline();
-  await sb.from('leads').update({ status }).eq('id', id);
+async function moveLead(id,status) {
+  const i=userLeads.findIndex(l=>l.id===id); if(i>-1) userLeads[i].status=status; renderPipeline();
+  await sb.from('leads').update({status}).eq('id',id);
 }
+
+async function deleteLead(id) {
+  userLeads=userLeads.filter(l=>l.id!==id); renderPipeline();
+  await sb.from('leads').delete().eq('id',id);
+}
+
+/* ─── UI HELPERS ─── */
+function el(id){return document.getElementById(id)}
+function val(id){return el(id)?.value||''}
+function setVal(id,v){if(el(id))el(id).value=v}
+function setText(id,v){if(el(id))el(id).textContent=v}
+function clearEl(id){if(el(id))el(id).innerHTML=''}
+function show(id,add,display='block'){const e=el(id);if(e){if(add)e.style.display=display;else e.style.display=display}}
+function hide(id){const e=el(id);if(e)e.style.display='none'}
+function loader(prefix,show){el(prefix+'-loader').classList[show?'add':'remove']('show')}
+
+function toggleResult(prefix,show,reset=false) {
+  const resultBox = el(prefix+'-result-box');
+  const emptyBox = el(prefix+'-empty');
+  if(resultBox) resultBox.style.display = show?'flex':'none';
+  if(emptyBox) emptyBox.style.display = (!show&&!reset)?'flex':'none';
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t=el('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function copyEl(id) {
+  const e=el(id); if(!e) return;
+  const txt=e.textContent||e.innerText;
+  navigator.clipboard.writeText(txt).then(()=>showToast('Copied to clipboard!')).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('Copied!');
+  });
+}
+
+function autoResize(ta) { ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,200)+'px'; }
+
+function showUpgradeModal(){el('upgrade-modal').classList.add('show'); lucide.createIcons();}
+function closeModal(id){el(id).classList.remove('show');}
+
+let acctOpen=false;
+function toggleAccountDropdown(){acctOpen=!acctOpen; el('account-dropdown').classList[acctOpen?'add':'remove']('show');}
+function closeAccountDropdown(){acctOpen=false; el('account-dropdown')?.classList.remove('show');}
+document.addEventListener('click',e=>{if(acctOpen&&!el('account-dropdown')?.contains(e.target)&&!el('header-avatar')?.contains(e.target))closeAccountDropdown();});
 
 initApp();
 </script>
