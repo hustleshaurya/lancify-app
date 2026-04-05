@@ -619,70 +619,152 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
   .sidebar.mobile-open{transform:translateX(0)}
   .content-inner{padding:22px 18px 60px}
 }
-   /* ─── PREMIUM ONBOARDING & INTRO ANIMATION ─── */
+  /* ══════════════════════════════════════════════════════════
+     PREMIUM ONBOARDING — ElevenLabs-style aurora + routing fix
+     ══════════════════════════════════════════════════════════ */
+
+/* ── Outer shell — hidden by default, shown via .show ── */
 #onboarding-screen {
-  display: none; position: fixed; inset: 0; background: var(--bg);
-  z-index: 9500; flex-direction: column; align-items: center; justify-content: center;
+  display: none;
+  position: fixed; inset: 0;
+  z-index: 9500;
+  align-items: center; justify-content: center;
+  /* No background here — aurora layer provides it */
+  transition: opacity 0.55s ease;
 }
 #onboarding-screen.show { display: flex; }
+#onboarding-screen.fade-out { opacity: 0; pointer-events: none; }
 
-/* ─── PREMIUM ELEVENLABS AURORA ANIMATION ─── */
-#intro-animation {
-  position: absolute; inset: 0; background: var(--bg);
+/* ── Aurora background — ALWAYS behind wizard AND logo ──
+   Lives as a direct child of #onboarding-screen so it
+   persists even after #intro-logo-layer is hidden.        */
+#aurora-bg {
+  position: absolute; inset: 0;
+  background: var(--bg);
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Canvas fills the aurora layer */
+#aurora-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+
+/* Frosted noise overlay for depth */
+#aurora-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, var(--bg) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Logo reveal layer — fades out, then hides via JS ── */
+#intro-logo-layer {
+  position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  z-index: 9600; transition: opacity 0.8s ease; overflow: hidden;
+  z-index: 10;
+  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.aurora-container {
-  position: absolute; inset: 0; filter: blur(80px); opacity: 0.5;
-  display: flex; justify-content: center; align-items: center; pointer-events: none;
-}
-html.dark .aurora-container { opacity: 0.3; }
-
-.aurora-blob {
-  position: absolute; border-radius: 50%;
-  animation: blob-float 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-}
-.aurora-1 { width: 50vw; height: 50vw; background: #8b5cf6; top: -10%; left: -10%; animation-delay: 0s; }
-.aurora-2 { width: 60vw; height: 60vw; background: #3b82f6; bottom: -20%; right: -10%; animation-delay: -3s; }
-.aurora-3 { width: 45vw; height: 45vw; background: #ec4899; animation-delay: -6s; }
-
-@keyframes blob-float {
-  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-  50% { transform: translate(8%, 12%) scale(1.1) rotate(90deg); }
-  100% { transform: translate(-5%, -8%) scale(0.9) rotate(180deg); }
-}
+#intro-logo-layer.hidden { opacity: 0; pointer-events: none; }
 
 .intro-logo-wrap {
-  position: relative; z-index: 10; display: flex; align-items: center; gap: 14px;
+  display: flex; align-items: center; gap: 14px;
   animation: logoReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-.intro-logo-wrap img { height: 42px; width: auto; }
-.intro-logo-text { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; color: var(--text-main); letter-spacing: -1px; }
+.intro-logo-wrap img { height: 44px; width: auto; filter: drop-shadow(0 0 24px rgba(139,92,246,0.5)); }
+.intro-logo-text {
+  font-size: 40px; font-weight: 700; letter-spacing: -1.5px;
+  background: linear-gradient(135deg, #c4b5fd 0%, #93c5fd 50%, #f9a8d4 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
 
 @keyframes logoReveal {
-  0% { opacity: 0; transform: scale(0.95) translateY(15px); filter: blur(10px); }
-  15% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
-  85% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
-  100% { opacity: 0; transform: scale(1.05) translateY(-15px); filter: blur(10px); }
+  0%   { opacity: 0; transform: scale(0.94) translateY(18px); filter: blur(12px); }
+  14%  { opacity: 1; transform: scale(1)    translateY(0);     filter: blur(0); }
+  82%  { opacity: 1; transform: scale(1)    translateY(0);     filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.06) translateY(-18px); filter: blur(12px); }
 }
 
-/* The Wizard UI */
+/* ── Wizard card — sits on top of aurora ── */
 #onboarding-wizard {
-  display: none; width: 100%; max-width: 480px; padding: 40px;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 16px; box-shadow: var(--shadow-lg);
-  opacity: 0; transform: translateY(20px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative; z-index: 9550;
+  display: none;
+  position: relative; z-index: 20;
+  width: 100%; max-width: 490px;
+  margin: 0 20px;
+  padding: 40px 44px;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 20px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.4) inset;
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  opacity: 0; transform: translateY(22px);
+  transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1);
 }
-#onboarding-wizard.show { display: block; opacity: 1; transform: translateY(0); }
-.wizard-step { display: none; animation: popIn 0.3s ease forwards; }
-.wizard-step.active { display: block; }
-.wizard-title { font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.5px; }
-.wizard-subtitle { font-size: 13.5px; color: var(--text-muted); margin-bottom: 28px; }
-.wizard-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+html.dark #onboarding-wizard {
+  background: rgba(10,10,10,0.75);
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06) inset;
+}
+#onboarding-wizard.show {
+  display: block; opacity: 1; transform: translateY(0);
+}
+
+.wizard-step { display: none; }
+.wizard-step.active { display: block; animation: stepIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+@keyframes stepIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.wizard-title {
+  font-size: 22px; font-weight: 700; color: var(--text-main);
+  margin-bottom: 6px; letter-spacing: -0.4px;
+}
+.wizard-subtitle { font-size: 13.5px; color: var(--text-muted); margin-bottom: 26px; line-height: 1.55; }
+.wizard-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--border);
+}
 .wizard-dots { display: flex; gap: 6px; }
-.wizard-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); transition: background 0.3s; }
-.wizard-dot.active { background: var(--text-main); }
+.wizard-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--border2); transition: all 0.3s ease;
+}
+.wizard-dot.active {
+  background: #8b5cf6; width: 20px; border-radius: 4px;
+}
+
+/* Wizard inputs — slightly frosted to match the glass card */
+#onboarding-wizard input[type=text],
+#onboarding-wizard input[type=email],
+#onboarding-wizard select {
+  background: rgba(255,255,255,0.7);
+  border-color: rgba(0,0,0,0.12);
+}
+html.dark #onboarding-wizard input[type=text],
+html.dark #onboarding-wizard input[type=email],
+html.dark #onboarding-wizard select {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+  color: #fafafa;
+}
+#onboarding-wizard input:focus,
+#onboarding-wizard select:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.18);
+}
+/* Keep wizard btn-ghost readable on aurora */
+#onboarding-wizard .btn-ghost {
+  color: var(--text-muted);
+}
+/* Wizard title gradient accent */
+.wizard-title {
+  background: linear-gradient(135deg, var(--text-main) 60%, #8b5cf6);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 </style>
 </head>
 <body>
@@ -730,12 +812,14 @@ html.dark .aurora-container { opacity: 0.3; }
   </div>
 </div>
 <div id="onboarding-screen">
-  <div id="intro-animation">
-    <div class="aurora-container">
-      <div class="aurora-blob aurora-1"></div>
-      <div class="aurora-blob aurora-2"></div>
-      <div class="aurora-blob aurora-3"></div>
-    </div>
+
+  <!-- Layer 0: Aurora background — always visible while onboarding-screen is shown -->
+  <div id="aurora-bg">
+    <canvas id="aurora-canvas"></canvas>
+  </div>
+
+  <!-- Layer 1: Logo animation — fades out after 2.8s -->
+  <div id="intro-logo-layer">
     <div class="intro-logo-wrap">
       <img src="Favicon_new_logo-removebg-preview.png" alt="Lancify">
       <span class="intro-logo-text">Lancify</span>
@@ -1339,125 +1423,6 @@ function showLogin() {
   if(al) al.style.display='none';
 }
 
-function onLogin(user) {
-  currentUser = user;
-  const ls = el('login-screen'); if(ls) ls.style.display='none';
-  
-  // 1. ALWAYS show the animation screen first
-  el('onboarding-screen').classList.add('show');
-  el('intro-animation').style.display = 'flex';
-  el('intro-animation').style.opacity = '1';
-  el('onboarding-wizard').classList.remove('show');
-  
-  // 2. Load Dashboard data in background
-  const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
-  const firstName = name.split(' ')[0];
-  setText('header-avatar', name[0].toUpperCase());
-  const h = new Date().getHours();
-  setText('hero-greeting', `${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${firstName}`);
-  setText('ws-name', `${firstName}'s Workspace`);
-  setText('acct-ws-name', `${firstName}'s Workspace`);
-  
-  loadStats(user.id);
-  loadLeads(user.id);
-  startCoach();
-  lucide.createIcons();
-
-  // 3. Check profile and route intelligently
-  checkRouting(user.id);
-}
-
-async function checkRouting(uid) {
-  try {
-    const {data} = await sb.from('profiles').select('*').eq('user_id', uid).single();
-    
-    if (data && data.skills && data.skills !== 'Skipped') {
-      // ROUTE A: Returning User (They have data)
-      userProfile = {...userProfile, ...data}; 
-      applyProfileToFields(data); 
-      checkProfileBanners(); 
-      
-      // Let animation play, then go straight to dashboard
-      setTimeout(() => {
-        el('intro-animation').style.opacity = '0';
-        setTimeout(() => {
-          el('onboarding-screen').classList.remove('show');
-          el('app-layout').classList.add('show');
-        }, 800);
-      }, 2600);
-
-    } else {
-      // ROUTE B: New User (No skills or skipped)
-      showWizardAfterAnimation();
-    }
-  } catch(e) {
-    // ROUTE C: No profile row found at all (Brand new user)
-    showWizardAfterAnimation();
-  }
-}
-
-function showWizardAfterAnimation() {
-  setTimeout(() => {
-    el('intro-animation').style.opacity = '0';
-    setTimeout(() => {
-      el('intro-animation').style.display = 'none';
-      el('onboarding-wizard').classList.add('show');
-    }, 800);
-  }, 2600);
-}
-
-/* ─── ONBOARDING WIZARD LOGIC ─── */
-function nextWizardStep(step) {
-  document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
-  el(`wizard-step-${step}`).classList.add('active');
-}
-
-async function skipOnboarding() {
-  const btn = el('ob-skip-btn');
-  btn.textContent = 'Skipping...';
-  
-  // Save a dummy profile so they don't get the wizard next time
-  const pd = { user_id: currentUser.id, name: currentUser.user_metadata?.full_name || 'User', skills: 'Skipped' };
-  await sb.from('profiles').upsert([pd], {onConflict:'user_id'});
-  
-  el('onboarding-wizard').style.opacity = '0';
-  setTimeout(() => {
-    el('onboarding-screen').classList.remove('show');
-    el('app-layout').classList.add('show');
-  }, 400);
-}
-
-async function finishOnboarding() {
-  const btn = el('ob-finish-btn');
-  btn.disabled = true; btn.innerHTML = 'Preparing...';
-  
-  const pd = {
-    user_id: currentUser.id,
-    name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0],
-    skills: val('ob-skills') || 'Freelancer',
-    exp_level: val('ob-exp'),
-    platform: val('ob-platform'),
-    income_goal: val('ob-goal')
-  };
-
-  try {
-    await sb.from('profiles').upsert([pd], {onConflict:'user_id'});
-    userProfile = {...userProfile, ...pd};
-    applyProfileToFields(pd);
-    checkProfileBanners();
-    
-    el('onboarding-wizard').style.opacity = '0';
-    setTimeout(() => {
-      el('onboarding-screen').classList.remove('show');
-      el('app-layout').classList.add('show');
-      showToast('Workspace personalized successfully.');
-    }, 400);
-
-  } catch(e) {
-    btn.disabled = false; btn.innerHTML = 'Enter Workspace';
-    showToast('Error saving. Please try again.');
-  }
-}
 /* ─── AUTH ─── */
 async function signInGoogle() { await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}}); }
 
@@ -1513,24 +1478,6 @@ function navigate(page) {
 }
 
 /* ─── PROFILE ─── */
-async function loadProfile(uid){
-  try {
-    const {data}=await sb.from('profiles').select('*').eq('user_id',uid).single();
-    if(data && data.skills){ 
-      // Existing user with skills. Go straight to app.
-      userProfile={...userProfile,...data}; 
-      applyProfileToFields(data); 
-      checkProfileBanners(); 
-      el('app-layout').classList.add('show');
-    } else {
-      // New user (or no skills set). Trigger onboarding!
-      triggerOnboarding();
-    }
-  } catch(e){
-    // If no profile row exists yet, trigger onboarding!
-    triggerOnboarding();
-  }
-}
 function applyProfileToFields(p){
   if(!p) return;
   setVal('prof-name',p.name||'');
@@ -2183,59 +2130,247 @@ document.addEventListener('click',e=>{
   if(acctOpen&&!el('account-dropdown')?.contains(e.target)&&!el('header-avatar')?.contains(e.target)&&!document.querySelector('.sb-workspace-btn')?.contains(e.target))
     closeAccountDropdown();
 });
-/* ─── ONBOARDING WIZARD LOGIC ─── */
-function triggerOnboarding() {
-  el('app-layout').classList.remove('show');
-  el('onboarding-screen').classList.add('show');
-  
-  // 1. Let the ElevenLabs logo reveal animation play
+/* ══════════════════════════════════════════════════════════
+   AURORA CANVAS — fluid mesh gradient (ElevenLabs-style)
+   ══════════════════════════════════════════════════════════ */
+(function initAurora() {
+  const canvas = document.getElementById('aurora-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const isDark = () => document.documentElement.classList.contains('dark');
+
+  // Orb definitions — position, size, hue, speed
+  const orbs = [
+    { x: 0.15, y: 0.2,  r: 0.52, color: [139, 92,  246], vx: 0.00012, vy: 0.00018, phase: 0 },
+    { x: 0.75, y: 0.65, r: 0.62, color: [ 59, 130, 246], vx: -0.00015, vy: -0.00010, phase: 2.1 },
+    { x: 0.5,  y: 0.45, r: 0.44, color: [236, 72,  153], vx: 0.00010, vy: -0.00013, phase: 4.2 },
+    { x: 0.85, y: 0.15, r: 0.38, color: [167, 139, 250], vx: -0.00008, vy: 0.00016,  phase: 1.0 },
+  ];
+
+  let t = 0;
+  let W, H;
+  let raf;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const bg = isDark() ? [10, 10, 10] : [255, 255, 255];
+    ctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`;
+    ctx.fillRect(0, 0, W, H);
+
+    const alpha = isDark() ? 0.28 : 0.42;
+
+    orbs.forEach(o => {
+      // Lissajous-like drift
+      const px = (o.x + Math.sin(t * o.vx * 6000 + o.phase) * 0.22) * W;
+      const py = (o.y + Math.cos(t * o.vy * 6000 + o.phase + 1) * 0.22) * H;
+      const rad = o.r * Math.max(W, H);
+
+      const grad = ctx.createRadialGradient(px, py, 0, px, py, rad);
+      const [r, g, b] = o.color;
+      grad.addColorStop(0,   `rgba(${r},${g},${b},${alpha})`);
+      grad.addColorStop(0.5, `rgba(${r},${g},${b},${alpha * 0.4})`);
+      grad.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+
+      ctx.save();
+      ctx.filter = 'blur(48px)';
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    });
+
+    // Soft vignette
+    const vignette = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H) * 0.72);
+    vignette.addColorStop(0, 'rgba(0,0,0,0)');
+    vignette.addColorStop(1, isDark() ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.45)');
+    ctx.fillStyle = vignette;
+    ctx.fillRect(0, 0, W, H);
+
+    t++;
+    raf = requestAnimationFrame(draw);
+  }
+
+  // Start immediately so it's ready before onboarding shows
+  draw();
+
+  // Expose stop/start for performance when onboarding is hidden
+  window._auroraStop  = () => cancelAnimationFrame(raf);
+  window._auroraStart = () => { if (!raf) { draw(); } };
+})();
+
+/* ══════════════════════════════════════════════════════════
+   ONBOARDING ROUTING — fixed state machine
+   ══════════════════════════════════════════════════════════
+
+   STATES:
+   A) Returning user (skills exist & ≠ 'Skipped'):
+      → Show aurora + logo → logo fades → fade out entire screen → Dashboard
+
+   B) New user / no skills:
+      → Show aurora + logo → logo fades → aurora stays → wizard fades in
+
+   C) Wizard complete (finish or skip):
+      → Fade out entire screen → Dashboard
+*/
+
+function onLogin(user) {
+  currentUser = user;
+  const ls = el('login-screen'); if (ls) ls.style.display = 'none';
+
+  // Load dashboard data in background
+  const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  const firstName = name.split(' ')[0];
+  setText('header-avatar', name[0].toUpperCase());
+  const h = new Date().getHours();
+  setText('hero-greeting', `${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${firstName}`);
+  setText('ws-name',      `${firstName}'s Workspace`);
+  setText('acct-ws-name', `${firstName}'s Workspace`);
+  loadStats(user.id);
+  loadLeads(user.id);
+  startCoach();
+  lucide.createIcons();
+
+  // Always play the aurora + logo animation first
+  _showOnboardingScreen();
+
+  // Then check routing after DB responds
+  checkRouting(user.id);
+}
+
+function _showOnboardingScreen() {
+  const screen = el('onboarding-screen');
+  screen.classList.remove('fade-out');
+  screen.classList.add('show');
+
+  // Reset logo layer
+  const logoLayer = el('intro-logo-layer');
+  logoLayer.classList.remove('hidden');
+
+  // Hide wizard (reset state for clean re-entry)
+  const wizard = el('onboarding-wizard');
+  wizard.classList.remove('show');
+  wizard.style.display = 'none';
+  wizard.style.opacity = '0';
+
+  // Restart aurora if it was stopped
+  if (window._auroraStart) window._auroraStart();
+}
+
+async function checkRouting(uid) {
+  try {
+    const { data } = await sb.from('profiles').select('*').eq('user_id', uid).single();
+
+    if (data && data.skills && data.skills !== 'Skipped') {
+      // ── ROUTE A: Returning user ──
+      userProfile = { ...userProfile, ...data };
+      applyProfileToFields(data);
+      checkProfileBanners();
+      _routeReturningUser();
+    } else {
+      // ── ROUTE B: New user (row exists but no skills) ──
+      if (data) { userProfile = { ...userProfile, ...data }; }
+      _routeNewUser();
+    }
+  } catch (e) {
+    // ── ROUTE C: No profile row at all ──
+    _routeNewUser();
+  }
+}
+
+function _routeReturningUser() {
+  // Logo plays for 2.8s (CSS), then we fade out the whole screen
   setTimeout(() => {
-    el('intro-animation').style.opacity = '0'; // Fade out animation
-    
-    // 2. Show the Wizard smoothly
+    _fadeOutOnboardingScreen(() => {
+      el('app-layout').classList.add('show');
+    });
+  }, 2800);
+}
+
+function _routeNewUser() {
+  // Logo plays for 2.8s, then hide logo layer and reveal wizard (aurora stays)
+  setTimeout(() => {
+    // Fade out just the logo layer
+    el('intro-logo-layer').classList.add('hidden');
+
+    // After logo transition, show wizard
     setTimeout(() => {
-      el('intro-animation').style.display = 'none';
-      el('onboarding-wizard').classList.add('show');
-    }, 800);
-  }, 2600); // 2.6s matches the CSS keyframe timing
+      const wizard = el('onboarding-wizard');
+      wizard.style.display = 'block';
+      // Force reflow before adding .show so transition fires
+      wizard.getBoundingClientRect();
+      wizard.classList.add('show');
+    }, 700);
+  }, 2800);
 }
 
+function _fadeOutOnboardingScreen(callback) {
+  const screen = el('onboarding-screen');
+  screen.classList.add('fade-out');
+  setTimeout(() => {
+    screen.classList.remove('show', 'fade-out');
+    if (window._auroraStop) window._auroraStop();
+    if (callback) callback();
+  }, 580);
+}
+
+/* ── Wizard step navigation ── */
 function nextWizardStep(step) {
-  document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
-  el(`wizard-step-${step}`).classList.add('active');
+  document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+  el(`wizard-step-${step}`)?.classList.add('active');
 }
 
+/* ── Skip: save 'Skipped' marker so wizard never shows again ── */
+async function skipOnboarding() {
+  const btn = el('ob-skip-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Skipping…'; }
+
+  try {
+    const pd = {
+      user_id: currentUser.id,
+      name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'User',
+      skills: 'Skipped'
+    };
+    await sb.from('profiles').upsert([pd], { onConflict: 'user_id' });
+    userProfile = { ...userProfile, ...pd };
+  } catch(e) { /* non-fatal */ }
+
+  _fadeOutOnboardingScreen(() => {
+    el('app-layout').classList.add('show');
+  });
+}
+
+/* ── Finish: save full profile then go to dashboard ── */
 async function finishOnboarding() {
   const btn = el('ob-finish-btn');
-  btn.disabled = true; btn.textContent = 'Preparing Workspace...';
-  
-  // Grab the data they just typed
+  if (btn) { btn.disabled = true; btn.innerHTML = 'Preparing…'; }
+
   const pd = {
-    user_id: currentUser.id,
-    name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0],
-    skills: val('ob-skills') || 'Freelancer',
-    exp_level: val('ob-exp'),
-    platform: val('ob-platform'),
+    user_id:     currentUser.id,
+    name:        currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'User',
+    skills:      val('ob-skills') || 'Freelancer',
+    exp_level:   val('ob-exp'),
+    platform:    val('ob-platform'),
     income_goal: val('ob-goal')
   };
 
   try {
-    // Save to database
-    await sb.from('profiles').upsert([pd], {onConflict:'user_id'});
-    userProfile = {...userProfile, ...pd};
+    await sb.from('profiles').upsert([pd], { onConflict: 'user_id' });
+    userProfile = { ...userProfile, ...pd };
     applyProfileToFields(pd);
     checkProfileBanners();
-    
-    // Transition to Dashboard
-    el('onboarding-wizard').style.opacity = '0';
-    setTimeout(() => {
-      el('onboarding-screen').classList.remove('show');
-      el('app-layout').classList.add('show');
-      showToast('Workspace personalized successfully.');
-    }, 400);
 
+    _fadeOutOnboardingScreen(() => {
+      el('app-layout').classList.add('show');
+      showToast('Workspace personalized. Welcome! 🚀');
+    });
   } catch(e) {
-    btn.disabled = false; btn.textContent = 'Try Again';
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Enter Workspace'; }
     showToast('Error saving. Please try again.');
   }
 }
