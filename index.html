@@ -410,14 +410,923 @@ select {
 </div>
 
 <script>
-// Keep all your original JavaScript exactly as it was.
-// The only thing to update in your JS is replacing dark-mode strings in render functions.
+<script>
+lucide.createIcons();
+const { createClient } = supabase;
+const sb = createClient(
+  'https://qkpyqtynwbvjssrqanmk.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY'
+);
+let currentUser=null, userProfile={is_pro:false}, savedKitData=null, authMode='signin';
+let currentPage='home-pg';
 
-// EXAMPLE UPDATE inside your render functions:
-// Change `<div class="glass-panel p-8 text-white... ">` 
-// To `<div class="p-5 bg-white border border-gray-200 rounded-xl mb-4 shadow-sm text-gray-900">`
+async function initApp(){
+  const {data:{session}} = await sb.auth.getSession();
+  document.getElementById('app-loading').style.display='none';
+  if(session?.user){ handleLoginSuccess(session.user); }
+  else { document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex';
+}
+  sb.auth.onAuthStateChange((_,session)=>{
+    if(session?.user){ handleLoginSuccess(session.user); }
+    else { currentUser=null; document.getElementById('app-layout').classList.remove('on'); document.getElementById('login-pg').style.display='flex'; }
+  });
+const now = new Date();
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('hero-date').textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+}
 
-// I've kept the JS block small here to fit output limits, paste your original JS here.
+async function handleLoginSuccess(user){
+  currentUser=user;
+  document.getElementById('login-pg').style.display='none';
+  document.getElementById('app-layout').classList.add('on');
+  const name=user.user_metadata?.full_name||user.email?.split('@')[0]||'User';
+  document.getElementById('header-user-name').textContent=name;
+  document.getElementById('header-user-initial').textContent=name[0].toUpperCase();
+  const hour=new Date().getHours();
+  const g=hour<12?'Good morning':hour<18?'Good afternoon':'Good evening';
+  document.getElementById('hero-greeting').textContent=`${g}, ${name.split(' ')[0]}.`;
+  loadAllStats(user.id);
+  
+  await loadProfile(); 
+
+  navigate(currentPage);
+}
+
+async function signInGoogle(){ const {error}=await sb.auth.signInWithOAuth({provider:'google'}); if(error) showAuthError(error.message); }
+function toggleMode(){
+  authMode=authMode==='signin'?'signup':'signin';
+  const isSU=authMode==='signup';
+  document.getElementById('name-field').style.display=isSU?'block':'none';
+  document.getElementById('auth-btn').innerHTML=isSU?'Create Account':'Sign In';
+document.getElementById('auth-toggle-txt').innerHTML=isSU
+    ?'Already have an account? <span onclick="toggleMode()" class="text-violet-400 cursor-pointer hover:text-violet-300 transition-colors">Sign in</span>'
+    :"Don't have an account? <span onclick=\"toggleMode()\" class=\"text-violet-400 cursor-pointer hover:text-violet-300 transition-colors\">Sign up free</span>";
+clearAuthMessages();
+}
+async function authSubmit(){
+  const email=document.getElementById('auth-email').value.trim();
+  const password=document.getElementById('auth-password').value;
+  const name=document.getElementById('auth-name').value.trim();
+  clearAuthMessages();
+if(!email||!password){showAuthError('Please enter your email and password.');return;}
+  if(authMode==='signup'&&password.length<6){showAuthError('Password must be at least 6 characters.');return;}
+  const btn=document.getElementById('auth-btn');
+  btn.disabled=true;
+btn.innerHTML='<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Please wait...';
+  lucide.createIcons();
+  let result;
+  if(authMode==='signup'){
+    result=await sb.auth.signUp({email,password,options:{data:{full_name:name||email.split('@')[0]}}});
+if(!result.error&&result.data?.user&&!result.data.session){
+      showAuthMsg('Check your email to confirm your account, then sign in.');
+      btn.disabled=false; btn.textContent='Create Account'; return;
+}
+  } else { result=await sb.auth.signInWithPassword({email,password}); }
+  btn.disabled=false; btn.textContent=authMode==='signup'?'Create Account':'Sign In';
+  if(result.error) showAuthError(result.error.message);
+}
+async function signOut(){ await sb.auth.signOut();
+currentPage='home-pg'; }
+function showAuthError(m){const e=document.getElementById('auth-error');e.textContent=m;e.classList.remove('hidden');e.classList.add('block');}
+function showAuthMsg(m){const e=document.getElementById('auth-msg');e.textContent=m;e.classList.remove('hidden');e.classList.add('block');}
+function clearAuthMessages(){document.getElementById('auth-error').classList.add('hidden');document.getElementById('auth-msg').classList.add('hidden');}
+
+function navigate(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  const pg=document.getElementById(id);
+  if(!pg){console.warn('Page not found:',id);return;}
+  pg.classList.add('on');
+  currentPage=id; 
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+const a=document.querySelector(`[data-page="${id}"]`);if(a)a.classList.add('active');
+  document.getElementById('main-scroll').scrollTo({top:0,behavior:'smooth'});
+}
+
+function toast(msg,type='success'){
+  const t=document.createElement('div');t.className=`toast toast-${type}`;
+  const icon = type === 'success' ?
+'<i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>' : '<i data-lucide="alert-circle" class="w-5 h-5 text-red-400"></i>';
+  t.innerHTML= icon + `<span>${msg}</span>`;
+  document.body.appendChild(t);
+  lucide.createIcons();
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3500);
+}
+
+function checkPro(action){if(userProfile.is_pro)action();else showUpgradeModal();}
+function showUpgradeModal(){document.getElementById('upgrade-modal').classList.add('on');}
+function closeUpgradeModal(){document.getElementById('upgrade-modal').classList.remove('on');}
+
+let userProposals = [];
+let userEmails = [];
+async function loadAllStats(userId){
+  try{
+    const [kitsRes, propsRes, emailsRes, gigsRes] = await Promise.all([
+      sb.from('kits').select('id,niche,kit_data,is_starred,created_at').eq('user_id',userId).order('created_at',{ascending:false}),
+      sb.from('proposals').select('*').eq('user_id',userId).order('created_at',{ascending:false}),
+      sb.from('emails').select('*').eq('user_id',userId).order('created_at',{ascending:false}),
+      sb.from('gig_searches').select('id',{count:'exact'}).eq('user_id',userId)
+    ]);
+const kits = kitsRes.data || [];
+    userProposals = propsRes.data || [];
+    userEmails = emailsRes.data || [];
+    
+    document.getElementById('stat-kits').textContent = kits.length;
+document.getElementById('stat-proposals').textContent = userProposals.length;
+    document.getElementById('stat-emails').textContent = userEmails.length;
+    document.getElementById('stat-gigs').textContent = gigsRes.count ?? 0;
+    
+    renderKits(kits);
+    renderProposals(userProposals);
+    renderEmails(userEmails);
+    if(kits.length > 0) document.getElementById('sb-my-kits').style.display='flex';
+    await loadLeads();
+} catch(err) { console.error('Stats error:', err.message); }
+}
+
+function renderProposals(props) {
+  const grid = document.getElementById('props-grid');
+if(!props || props.length === 0) {
+    grid.innerHTML = `<div class="glass-panel dashed !p-16 text-center text-gray-500 md:col-span-2 lg:col-span-3">
+      <i data-lucide="file-text" class="w-10 h-10 mx-auto mb-4 opacity-40"></i><p class="text-sm font-medium">No proposals yet.
+Generate your first pitch in the Proposal Writer.</p></div>`;
+    lucide.createIcons();
+    return;
+  }
+  let html = '';
+props.forEach(p => {
+    const date = new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
+    const shortDesc = p.job_description ? p.job_description.substring(0, 45) + '...' : 'Custom Proposal';
+    html += `<div class="glass-panel p-8 flex flex-col">
+      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4">${date} • ${p.platform || 'General'}</div>
+      <div class="font-['Playfair_Display'] text-xl font-bold text-white mb-8 leading-tight">${shortDesc}</div>
+      <div class="mt-auto pt-5 border-t border-white/5">
+        <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewProposal('${p.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Proposal</button>
+   
+   </div></div>`;
+  });
+  grid.innerHTML = html;
+  lucide.createIcons();
+}
+
+function renderEmails(emails) {
+  const grid = document.getElementById('emails-grid');
+if(!emails || emails.length === 0) {
+    grid.innerHTML = `<div class="glass-panel dashed !p-16 text-center text-gray-500 md:col-span-2 lg:col-span-3">
+      <i data-lucide="mail" class="w-10 h-10 mx-auto mb-4 opacity-40"></i><p class="text-sm font-medium">No emails yet.
+Draft your first client message in the Email Writer.</p></div>`;
+    lucide.createIcons();
+    return;
+  }
+  let html = '';
+emails.forEach(e => {
+    const date = new Date(e.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
+    html += `<div class="glass-panel p-8 flex flex-col">
+      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4">${date}</div>
+      <div class="font-['Playfair_Display'] text-xl font-bold text-white mb-8 leading-tight">${e.email_type || 'Client Email'}</div>
+      <div class="mt-auto pt-5 border-t border-white/5">
+        <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2 transition-colors" onclick="viewEmail('${e.id}')"><i data-lucide="eye" class="w-4 h-4"></i> Read Email</button>
+      </div></div>`;
+  });
+grid.innerHTML = html;
+  lucide.createIcons();
+}
+
+function viewProposal(id) {
+  const p = userProposals.find(x => x.id === id);
+if(p) {
+    document.getElementById('doc-modal-title').textContent = 'Proposal for ' + (p.platform || 'Client');
+    document.getElementById('doc-modal-content').textContent = p.proposal_text;
+    document.getElementById('view-doc-modal').classList.add('on');
+}
+}
+
+function viewEmail(id) {
+  const e = userEmails.find(x => x.id === id);
+if(e) {
+    document.getElementById('doc-modal-title').textContent = e.email_type || 'Email Draft';
+    document.getElementById('doc-modal-content').textContent = e.email_text;
+    document.getElementById('view-doc-modal').classList.add('on');
+  }
+}
+
+let userKits=[];
+function renderKits(kits){
+  userKits=kits;
+  const grid=document.getElementById('kits-grid');
+  if(!kits||kits.length===0){
+    grid.innerHTML=`<div class="glass-panel dashed !p-16 text-center text-gray-500 md:col-span-2 lg:col-span-3">
+      <i data-lucide="folder" class="w-10 h-10 mx-auto mb-4 opacity-40"></i>
+      <h4 class="font-['Playfair_Display'] text-2xl font-bold text-white mb-3">No kits yet</h4>
+      <p class="text-sm mb-8 font-medium">Generate your first freelance kit with the Launch Coach.</p>
+      <button class="btn-primary mx-auto" onclick="startChat()">Start Launch Coach</button>
+    </div>`;
+lucide.createIcons();
+    return;
+  }
+  let html='';
+  kits.forEach(kit=>{
+    const date=new Date(kit.created_at).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}).toUpperCase();
+    const starred=kit.is_starred;
+    const niche=kit.niche||kit.kit_data?.niche||'Freelance Kit';
+    
+    html+=`<div class="glass-panel p-8 flex flex-col relative overflow-hidden" id="kp-${kit.id}">
+      <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-violet-500 to-indigo-500 opacity-80"></div>
+      <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4 pl-2">${date}</div>
+      <div class="font-['Playfair_Display'] text-2xl font-bold text-white mb-8 leading-tight pl-2">${niche}</div>
+      <div class="mt-auto pt-5 border-t border-white/5 flex gap-3 pl-2">
+        
+<button class="text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors border border-white/10 px-3 py-2 rounded-lg" onclick="viewKit('${kit.id}')"><i data-lucide="eye" class="w-4 h-4"></i> View</button>
+        <button class="text-[11px] font-bold uppercase tracking-widest transition-colors border border-white/10 px-3 py-2 rounded-lg flex items-center gap-1.5 ${starred ?
+'text-yellow-400 border-yellow-500/30 bg-yellow-500/10' : 'text-gray-400 hover:text-white'}" onclick="toggleStar('${kit.id}',${starred})"><i data-lucide="star" class="w-4 h-4"></i></button>
+        <button class="text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-colors border border-white/10 px-3 py-2 rounded-lg flex items-center gap-1.5 ml-auto" onclick="deleteKit('${kit.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML=html;
+  lucide.createIcons();
+}
+
+function viewKit(id){const k=userKits.find(k=>k.id===id);if(k){savedKitData=k.kit_data;showResults(k.kit_data);}}
+async function toggleStar(id,cur){
+  try{
+    const nv=!cur;
+    const {error}=await sb.from('kits').update({is_starred:nv}).eq('id',id);
+    if(error)throw error;
+    const i=userKits.findIndex(k=>k.id===id);if(i>-1)userKits[i].is_starred=nv;
+    renderKits(userKits);toast(nv?'Starred!':'Removed','success');
+}catch(err){toast('Could not update','error');}
+}
+async function deleteKit(id){
+  if(!confirm('Delete this kit?'))return;
+  try{
+    const {error}=await sb.from('kits').delete().eq('id',id);
+    if(error)throw error;
+    userKits=userKits.filter(k=>k.id!==id);renderKits(userKits);
+    document.getElementById('stat-kits').textContent=userKits.length;
+toast('Kit deleted','success');
+  }catch(err){toast('Failed to delete','error');}
+}
+async function saveKit(kit){
+  if(!currentUser)return;
+  try{
+    const {error}=await sb.from('kits').insert([{user_id:currentUser.id,niche:kit.niche,kit_data:kit,is_pro:userProfile.is_pro}]);
+    if(error)throw error;
+    toast('Kit saved!','success');
+loadAllStats(currentUser.id);
+  }catch(err){console.error('Save error:',err.message);}
+}
+
+// ═══════════════════════════
+// CHAT ENGINE
+// ═══════════════════════════
+const STEPS=[
+  {id:'skills',type:'text',ph:'e.g. coding, Canva, writing...',q:"Hey! Welcome to Lancify.\n\nWhat tools, apps or skills do you use regularly, even casually?"},
+  {id:'experience',type:'text',ph:'e.g. Built a website, wrote a blog...',q:"Have you ever done anything for someone, even unpaid? A logo, a spreadsheet, etc."},
+  {id:'hours',type:'opts',opts:['1-2 hrs/day','2-4 hrs/day','4-6 hrs/day','6+ hrs/day'],q:"How many hours a day can you give to freelancing?"},
+  {id:'goal',type:'opts',opts:['Rs 3,000-5,000','Rs 5,000-10,000','Rs 10,000-20,000','Rs 20,000+'],q:"What is your income goal for your first month?"},
+  {id:'platform',type:'opts',opts:['Fiverr','Upwork','Indian clients (LinkedIn)','All'],q:"Where do you want to find clients?"}
+];
+const GEN_MSGS=['Analysing your skills...','Researching market demand...','Assigning your niche...','Writing your portfolio bio...','Building pricing packages...','Crafting your gig description...','Almost ready...'];
+let step=0,answers={},waiting=false;
+function startChat(){
+  step=0;answers={};
+  document.getElementById('chat-msgs').innerHTML='';
+  document.getElementById('input-zone').style.display='flex';
+  document.getElementById('gen-bar').style.display='none';
+  document.getElementById('prog-bar').style.width='0%';
+  navigate('chat-pg');
+  setTimeout(()=>showStep(0),400);
+}
+function updateProg(){
+  const p=Math.round((step/STEPS.length)*100);
+  document.getElementById('prog-bar').style.width=p+'%';
+  document.getElementById('prog-lbl').textContent='Step '+Math.min(step+1,5)+' of 5';
+document.getElementById('prog-pct').textContent=p+'%';
+}
+function showStep(i){
+  updateProg();
+  typing(()=>{
+    addAI(STEPS[i].q);
+    if(STEPS[i].type==='opts'){addOpts(STEPS[i].opts,i);document.getElementById('input-zone').style.display='none';}
+    else{document.getElementById('input-zone').style.display='flex';lockInput(false);waiting=true;setTimeout(()=>document.getElementById('txt').focus(),100);}
+  });
+}
+function typing(cb){
+  const c=document.getElementById('chat-msgs');
+  const el=document.createElement('div');el.className='flex gap-4 items-end';el.id='typing';
+  el.innerHTML='<div class="av-ai"><i data-lucide="sparkles" class="w-5 h-5 text-white"></i></div><div class="bg-white/5 border border-white/5 p-4 rounded-2xl flex gap-1.5 items-center h-[52px]"><div class="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></div><div class="w-2 h-2 rounded-full bg-violet-400 animate-pulse" style="animation-delay: 0.2s"></div><div class="w-2 h-2 rounded-full bg-violet-400 animate-pulse" style="animation-delay: 0.4s"></div></div>';
+c.appendChild(el);
+  lucide.createIcons();
+  scrollBot();
+  setTimeout(()=>{el.remove();cb();},900+Math.random()*400);
+}
+function addAI(text){
+  const c=document.getElementById('chat-msgs');
+  const d=document.createElement('div');d.className='flex gap-4 items-end opacity-0 translate-y-3 transition-all duration-300';
+d.innerHTML='<div class="av-ai"><i data-lucide="sparkles" class="w-5 h-5 text-white"></i></div><div class="bubble ai">'+text.replace(/\n/g,'<br>')+'</div>';
+  c.appendChild(d);
+  lucide.createIcons();
+  setTimeout(()=> { d.classList.remove('opacity-0', 'translate-y-3'); }, 10);
+  scrollBot();
+}
+function addUser(text){
+  const c=document.getElementById('chat-msgs');
+  const d=document.createElement('div');d.className='flex gap-4 items-end flex-row-reverse opacity-0 translate-y-3 transition-all duration-300';
+d.innerHTML='<div class="av-user text-[10px] text-gray-400 uppercase font-bold tracking-wider">You</div><div class="bubble usr">'+text+'</div>';
+  c.appendChild(d);
+  setTimeout(()=> { d.classList.remove('opacity-0', 'translate-y-3'); }, 10);
+  scrollBot();
+}
+function addOpts(opts,si){
+  const c=document.getElementById('chat-msgs');
+  const row=document.createElement('div');row.className='flex flex-wrap gap-3 ml-14 opacity-0 translate-y-3 transition-all duration-300';
+  opts.forEach(o=>{const b=document.createElement('button');b.className='opt-btn';b.textContent=o;b.onclick=()=>pickOpt(o,si,row);row.appendChild(b);});
+  c.appendChild(row);
+setTimeout(()=> { row.classList.remove('opacity-0', 'translate-y-3'); }, 10);
+  scrollBot();
+}
+function pickOpt(val,si,row){
+  row.querySelectorAll('.opt-btn').forEach(b=>{b.disabled=true;if(b.textContent===val)b.classList.add('sel');});
+  answers[STEPS[si].id]=val;addUser(val);advance();
+}
+function sendMsg(){
+  if(!waiting)return;
+  const t=document.getElementById('txt');const v=t.value.trim();
+if(!v||v.length<4){t.style.borderColor='#ef4444';setTimeout(()=>t.style.borderColor='rgba(255,255,255,0.06)',1500);return;}
+  t.value='';autoResize(t);
+  answers[STEPS[step].id]=v;addUser(v);lockInput(true);waiting=false;advance();
+}
+function advance(){step++;if(step<STEPS.length)setTimeout(()=>showStep(step),500);else setTimeout(kickoff,700);}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+function lockInput(v){document.getElementById('txt').disabled=v;document.getElementById('send-btn').disabled=v;}
+function scrollBot(){const c=document.getElementById('main-scroll');setTimeout(()=>c.scrollTo({top:c.scrollHeight,behavior:'smooth'}),60);}
+
+function kickoff(){
+  typing(()=>{
+    addAI("Perfect! I have everything I need.\n\n<strong>Building your personalised launch kit now.</strong> Give me about 20 seconds.");
+    document.getElementById('input-zone').style.display='none';
+    const gb=document.getElementById('gen-bar');gb.style.display='flex';
+    let mi=0;
+    const iv=setInterval(()=>{mi=(mi+1)%GEN_MSGS.length;document.getElementById('gen-text').textContent=GEN_MSGS[mi];},1800);
+setTimeout(()=>{clearInterval(iv);callAPI();},1500);
+  });
+}
+async function callAPI(){
+  try{
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answers})});
+    const kit=await r.json();
+    if(kit.error)throw new Error(kit.error);
+    saveKit(kit);showResults(kit);
+}catch(e){
+    console.error(e);
+    document.getElementById('gen-bar').style.display='none';
+    addAI('Something went wrong. Please try again.');
+    const btn=document.createElement('button');btn.className='btn-primary';btn.style.cssText='width:auto;margin-left:56px;margin-top:12px;';
+    btn.textContent='Retry';btn.onclick=()=>{callAPI();btn.remove();};
+    document.getElementById('chat-msgs').appendChild(btn);scrollBot();
+  }
+}
+
+function showResults(kit){
+  navigate('results-pg-wrap');
+let planHTML='';
+  if(kit.action_plan&&typeof kit.action_plan==='object'){
+    Object.values(kit.action_plan).forEach((v,i)=>{planHTML+=`<div class="flex gap-4 items-start mb-5"><div class="w-8 h-8 bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center justify-center text-sm font-bold text-violet-400 shrink-0 shadow-inner">${i+1}</div><div class="text-[0.95rem] leading-relaxed text-gray-300 pt-1">${v}</div></div>`;});
+}else if(typeof kit.action_plan==='string'){
+    kit.action_plan.split('\n').filter(Boolean).forEach((line,i)=>{planHTML+=`<div class="flex gap-4 items-start mb-5"><div class="w-8 h-8 bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center justify-center text-sm font-bold text-violet-400 shrink-0 shadow-inner">${i+1}</div><div class="text-[0.95rem] leading-relaxed text-gray-300 pt-1">${line.replace(/^Day \d+[:.] */,'')}</div></div>`;});
+}
+  const dRow=d=>(d||'').split('\n').filter(Boolean).map(x=>`<span class="block py-1">${x}</span>`).join('');
+  document.getElementById('results-pg').innerHTML=`
+    <div class="text-center mb-12">
+      <div class="text-[11px] font-bold tracking-widest uppercase text-violet-400 mb-4 flex items-center justify-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Your kit is ready</div>
+      <h2 class="font-['Playfair_Display'] text-[2.5rem] font-bold mb-4 tracking-tight">Your Freelance Launch Kit</h2>
+      <p class="text-gray-400 text-base">Built specifically for your skills and goals</p>
+    </div>
+    <div class="glass-panel p-10 text-center mb-10">
+      <div class="text-[11px] font-bold tracking-widest uppercase text-violet-400 mb-4">Your AI-Assigned Niche</div>
+      <div class="font-['Playfair_Display'] text-3xl font-bold mb-4 
+text-white">${kit.niche||''}</div>
+      <div class="text-[0.95rem] text-gray-400 leading-relaxed max-w-2xl mx-auto">${kit.niche_reason||''}</div>
+    </div>
+    <div class="space-y-6">
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="folder" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">Portfolio Blurb</div><div class="text-xs text-gray-500 font-medium">Copy-paste ready bio</div></div></div><button class="text-xs font-bold uppercase tracking-widest text-gray-400 border border-white/10 px-4 py-1.5 rounded-lg hover:text-white transition-colors" onclick="event.stopPropagation();
+copyEl('port-txt')">Copy</button></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><p id="port-txt" class="text-[0.95rem] text-gray-300 leading-relaxed">${kit.portfolio_blurb||''}</p></div></div>
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">Pricing Packages</div><div class="text-xs text-gray-500 font-medium">3 tiers with INR pricing</div></div></div></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><table class="w-full text-left text-sm"><thead class="text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-white/10"><tr class="pb-3"><th class="pb-4 font-medium">Package</th><th class="pb-4 font-medium">Price</th><th class="pb-4 font-medium">Includes</th><th class="pb-4 font-medium">Time</th></tr></thead><tbody class="divide-y divide-white/5"><tr><td class="py-5"><span class="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${kit.pricing?.basic?.name||'Starter'}</span></td><td class="py-5 font-['Playfair_Display'] font-bold text-lg text-white">${kit.pricing?.basic?.price||''}</td><td class="py-5 text-gray-300 
+text-sm leading-relaxed">${dRow(kit.pricing?.basic?.deliverables)}</td><td class="py-5 text-gray-400 text-sm font-medium">${kit.pricing?.basic?.timeline||''}</td></tr><tr><td class="py-5"><span class="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-violet-500/20 text-violet-300 border border-violet-500/30">${kit.pricing?.standard?.name||'Standard'}</span></td><td class="py-5 font-['Playfair_Display'] font-bold text-lg text-white">${kit.pricing?.standard?.price||''}</td><td class="py-5 text-gray-300 text-sm leading-relaxed">${dRow(kit.pricing?.standard?.deliverables)}</td><td class="py-5 text-gray-400 text-sm font-medium">${kit.pricing?.standard?.timeline||''}</td></tr><tr><td class="py-5"><span class="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">${kit.pricing?.premium?.name||'Premium'}</span></td><td class="py-5 font-['Playfair_Display'] font-bold text-lg text-white">${kit.pricing?.premium?.price||''}</td><td class="py-5 text-gray-300 text-sm leading-relaxed">${dRow(kit.pricing?.premium?.deliverables)}</td><td class="py-5 text-gray-400 text-sm font-medium">${kit.pricing?.premium?.timeline||''}</td></tr></tbody></table></div></div>
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="edit" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">Gig Description</div><div class="text-xs text-gray-500 font-medium">SEO-optimised</div></div></div><button class="text-xs font-bold uppercase tracking-widest text-gray-400 
+border border-white/10 px-4 py-1.5 rounded-lg hover:text-white transition-colors" onclick="event.stopPropagation(); copyEl('gig-txt')">Copy</button></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><p class="text-[10px] uppercase tracking-widest text-violet-400 font-bold mb-2">Gig Title</p><p class="font-bold mb-6 text-base text-white">${kit.gig_title||''}</p><p class="text-[10px] uppercase tracking-widest text-violet-400 font-bold mb-2">Gig Description</p><p id="gig-txt" class="text-[0.95rem] text-gray-300 leading-relaxed whitespace-pre-wrap">${kit.gig_description||''}</p></div></div>
+      <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="message-circle" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">Cold Pitch Script</div><div class="text-xs text-gray-500 font-medium">Unlocked via Pro</div></div></div></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><p class="text-[0.95rem] text-gray-300 whitespace-pre-wrap leading-relaxed">${kit.pitch_script||'Your personalised cold pitch script.'}</p></div></div>
+     
+ <div class="glass-panel overflow-hidden transition-all duration-300 h-[90px] cursor-pointer" onclick="toggleCard(this)"><div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors"><div class="flex items-center gap-5"><div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-300 shadow-md border border-white/5"><i data-lucide="calendar" class="w-6 h-6"></i></div><div><div class="font-bold text-base text-white">7-Day Launch Plan</div><div class="text-xs text-gray-500 font-medium">Unlocked via Pro</div></div></div></div><div class="px-8 pb-8 pt-4 border-t border-white/5"><div class="flex flex-col gap-3 mt-2">${planHTML}</div></div></div>
+    </div>
+    <div class="mt-16 text-center pb-12 flex gap-5 justify-center flex-wrap">
+      <button class="btn-primary" onclick="showUpgradeModal()"><i data-lucide="zap" class="w-5 h-5"></i> Upgrade to Pro</button>
+      <button onclick="startChat()" class="bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 px-8 py-3.5 rounded-xl font-semibold text-[0.95rem] transition-all flex items-center 
+gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Rebuild Kit</button>
+      <button onclick="navigate('home-pg')" class="bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 px-8 py-3.5 rounded-xl font-semibold text-[0.95rem] transition-all flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Dashboard</button>
+    </div>`;
+lucide.createIcons();
+}
+function toggleCard(el){ if(el.classList.contains('h-[90px]')) { el.classList.remove('h-[90px]'); } else { el.classList.add('h-[90px]'); } }
+function copyEl(id){
+  const el=document.getElementById(id);if(!el)return;
+  navigator.clipboard.writeText(el.innerText).then(()=>toast('Copied!','success'));
+}
+
+async function downloadPDF(){
+  const btn=event.currentTarget;const orig=btn.innerHTML;
+  btn.innerHTML='<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generating...';btn.disabled=true;
+  lucide.createIcons();
+try{
+    const {jsPDF}=window.jspdf;const doc=new jsPDF('p','mm','a4');
+    const el=document.getElementById('kit-content');
+    if(!el){toast('No kit to download','error');return;}
+    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#0b0b12',useCORS:true});
+const imgData=canvas.toDataURL('image/png');
+    const w=210,h=(canvas.height*w)/canvas.width;
+    doc.addImage(imgData,'PNG',0,0,w,h);
+    doc.save('Lancify-Kit.pdf');
+    toast('PDF downloaded!','success');
+  }catch(e){toast('PDF error: '+e.message,'error');}
+  finally{btn.innerHTML=orig;btn.disabled=false;lucide.createIcons();}
+}
+
+async function generateProposal(){
+  const jobDesc=document.getElementById('prop-job').value.trim();
+  const platform=document.getElementById('prop-platform').value;
+const exp=document.getElementById('prop-exp').value.trim();
+  if(!jobDesc){toast('Please paste a job description first','error');return;}
+  const btn=document.getElementById('prop-btn');
+  const loading=document.getElementById('prop-loading');
+  const resultDiv=document.getElementById('prop-result');
+  const emptyDiv=document.getElementById('prop-empty');
+  btn.disabled=true;loading.style.display='flex';resultDiv.style.display='none';emptyDiv&&(emptyDiv.style.display='none');
+  const userNiche = userProfile.niche || savedKitData?.niche || 'Freelancer';
+try{
+    const res=await fetch('/api/proposal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jobDesc,platform,experience:exp,niche:userNiche})});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    document.getElementById('prop-res-subject').textContent=data.subject||'Proposal Draft';
+    document.getElementById('prop-res-text').textContent=data.proposal;
+    const ul=document.getElementById('prop-res-tips');ul.innerHTML='';
+    (data.tips||[]).forEach(tip=>{const li=document.createElement('li');li.textContent=tip;li.style.marginBottom='8px';ul.appendChild(li);});
+if(currentUser){
+      await sb.from('proposals').insert([{user_id:currentUser.id,job_description:jobDesc,proposal_text:data.proposal,platform}]);
+      loadAllStats(currentUser.id);
+    }
+    loading.style.display='none';resultDiv.style.display='flex';btn.disabled=false;
+    toast('Proposal generated and saved!','success');
+}catch(error){
+    console.error(error);toast('Failed to generate. Try again.','error');
+    loading.style.display='none';btn.disabled=false;emptyDiv&&(emptyDiv.style.display='flex');
+  }
+}
+
+async function generateEmail(){
+  const emailType=document.getElementById('email-type').value;
+  const tone=document.getElementById('email-tone').value;
+  const context=document.getElementById('email-context').value.trim();
+if(!context){toast('Please provide some context first!','error');return;}
+  const btn=document.getElementById('email-btn');
+  const loading=document.getElementById('email-loading');
+  const resultDiv=document.getElementById('email-result');
+  const emptyDiv=document.getElementById('email-empty');
+  btn.disabled=true;loading.style.display='flex';resultDiv.style.display='none';emptyDiv&&(emptyDiv.style.display='none');
+  const userNiche=savedKitData?.niche||'Freelancer';
+try{
+    const res=await fetch('/api/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({emailType,context,tone,niche:userNiche})});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    document.getElementById('email-res-subject').textContent=data.subject||'Email Draft';
+    document.getElementById('email-res-text').innerHTML = data.body.replace(/\n/g, '<br>');
+const ul=document.getElementById('email-res-tips');ul.innerHTML='';
+    (data.tips||[]).forEach(tip=>{const li=document.createElement('li');li.textContent=tip;li.style.marginBottom='8px';ul.appendChild(li);});
+    if(currentUser){
+      await sb.from('emails').insert([{user_id:currentUser.id,email_type:emailType,context,email_text:data.body}]);
+      loadAllStats(currentUser.id);
+    }
+    loading.style.display='none';resultDiv.style.display='flex';btn.disabled=false;
+toast('Email drafted and saved!','success');
+  }catch(error){
+    console.error(error);toast('Failed to draft email. Try again.','error');
+    loading.style.display='none';btn.disabled=false;emptyDiv&&(emptyDiv.style.display='flex');
+}
+}
+
+async function findGigs(){
+  const skills=document.getElementById('gig-skills').value.trim();
+  const platform=document.getElementById('gig-platform').value;
+  if(!skills){toast('Please enter some skills first!','error');return;}
+  const btn=document.getElementById('gig-btn');
+  const loading=document.getElementById('gig-loading');
+  const resultDiv=document.getElementById('gig-result');
+const container=document.getElementById('gig-cards-container');
+  btn.disabled=true;loading.style.display='flex';resultDiv.style.display='none';container.innerHTML='';
+  try{
+    const res=await fetch('/api/gigfinder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skills,platform})});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+(data.niches||[]).forEach((niche,idx)=>{
+      const dC=niche.demand?.toLowerCase()==='high'?'text-emerald-400 bg-emerald-400/10':niche.demand?.toLowerCase()==='medium'?'text-yellow-400 bg-yellow-400/10':'text-red-400 bg-red-400/10';
+      const cC=niche.competition?.toLowerCase()==='low'?'text-emerald-400 bg-emerald-400/10':niche.competition?.toLowerCase()==='medium'?'text-yellow-400 bg-yellow-400/10':'text-red-400 bg-red-400/10';
+      const card=document.createElement('div');
+      card.className='glass-panel p-8 flex flex-col hover:border-violet-500/30'; 
+      card.innerHTML=`<div class="font-['Playfair_Display'] text-2xl font-bold text-violet-400 mb-6 leading-tight">${niche.title}</div>
+        <div class="flex justify-between border-y border-white/5 py-4 mb-6">
+          <div><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Demand</div><div class="text-xs font-bold px-2.5 py-1.5 rounded-lg inline-block ${dC}">${niche.demand}</div></div>
+          <div class="w-px bg-white/5"></div>
+ 
+         <div><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Competition</div><div class="text-xs font-bold px-2.5 py-1.5 rounded-lg inline-block ${cC}">${niche.competition}</div></div>
+        </div>
+        <div class="mb-6"><div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Avg.
+Pricing</div><div class="font-['Playfair_Display'] font-bold text-2xl text-white">${niche.priceRange}</div></div>
+        <div class="bg-black/30 p-4 rounded-xl text-sm text-gray-300 leading-relaxed mt-auto border border-white/5 mb-3"><strong class="text-white">Why Now:</strong> ${niche.whyNow}</div>
+<div class="bg-violet-900/20 p-4 rounded-xl text-sm text-violet-200 leading-relaxed border border-violet-500/20"><strong class="text-violet-400">First Step:</strong> ${niche.firstStep}</div>`;
+container.appendChild(card);
+    });
+    if(currentUser){
+      await sb.from('gig_searches').insert([{user_id:currentUser.id,skills,platform,results_count:(data.niches||[]).length}]).then(()=>loadAllStats(currentUser.id)).catch(()=>{});
+    }
+    loading.style.display='none';resultDiv.style.display='block';btn.disabled=false;
+    toast('Market scan complete!','success');
+}catch(error){
+    console.error(error);toast('Failed to scan market. Try again.','error');
+    loading.style.display='none';btn.disabled=false;
+}
+}
+  async function generateRoadmap() {
+    const name = document.getElementById('rm-name').value.trim();
+    const skills = document.getElementById('rm-skills').value.trim();
+const platform = document.getElementById('rm-platform').value.trim();
+    const hoursPerDay = document.getElementById('rm-hours').value;
+    const currentLevel = document.getElementById('rm-level').value.trim();
+    const biggestFear = document.getElementById('rm-fear').value.trim();
+if (!skills || !platform) {
+        toast('Please fill in your Skills and Target Platform!', 'error');
+return;
+    }
+
+    const btn = document.getElementById('rm-btn');
+    const originalText = btn.innerText;
+btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin inline-block mr-2"></i> Architecting Timeline...';
+    btn.disabled = true;
+    if(typeof lucide !== 'undefined') lucide.createIcons();
+try {
+        const res = await fetch('/api/roadmap', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, skills, platform, hoursPerDay, currentLevel, biggestFear })
+        });
+const data = await res.json();
+        if (data.error) throw new Error(data.error);
+// Hide form, show results
+        document.getElementById('roadmap-form-container').style.display = 'none';
+        const resultDiv = document.getElementById('roadmap-result');
+resultDiv.style.display = 'block';
+
+        // Build the Header
+        let html = `
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-white mb-3">Your Mission: ${data.goal}</h2>
+                <p class="text-gray-400">Custom 30-Day Execution Plan for <span class="text-violet-400 font-bold">${data.studentName}</span></p>
+            </div>
+        `;
+// Loop through Weeks and Days
+        data.weeks.forEach(week => {
+            html += `
+            <div class="mb-12">
+                <div class="border-b border-white/10 pb-3 mb-6">
+                    <h3 class="text-2xl font-bold text-violet-400">Week ${week.weekNumber}: ${week.theme}</h3>
+             
+       <p class="text-gray-400 mt-1">${week.focus}</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+
+            week.days.forEach(d => {
+                let tipHtml = d.lancifyTip ? `
+                    
+<div class="mt-4 bg-violet-900/30 border border-violet-500/30 p-3 rounded-lg text-sm text-violet-200">
+                        <strong class="text-violet-400 flex items-center gap-1"><i data-lucide="zap" class="w-4 h-4"></i> Lancify Tip:</strong> 
+                        ${d.lancifyTip}
+                    </div>` : '';
+
+            
+    html += `
+                    <div class="bg-black/40 border border-white/5 p-6 rounded-xl hover:border-white/10 transition flex flex-col h-full">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="bg-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full">Day 
+${d.day}</span>
+                            <span class="text-gray-500 text-xs font-mono"><i data-lucide="clock" class="w-3 h-3 inline"></i> ${d.timeEstimate}</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">${d.title}</h4>
+            
+            <p class="text-gray-300 text-sm mb-4">${d.task}</p>
+                        <p class="text-gray-500 text-sm italic mt-auto">" ${d.why} "</p>
+                        ${tipHtml}
+                    </div>`;
+});
+            html += `</div></div>`;
+        });
+
+        // Add Final Message
+        html += `
+            <div class="bg-emerald-900/20 border border-emerald-500/30 p-8 rounded-2xl mt-8 text-center">
+                <p class="text-emerald-400 font-bold text-xl">${data.finalMessage}</p>
+                <button onclick="location.reload()" class="mt-6 text-sm text-gray-400 hover:text-white underline">Start Over</button>
+            </div>
+        `;
+resultDiv.innerHTML = html;
+        if(typeof lucide !== 'undefined') lucide.createIcons();
+
+    } catch (error) {
+        console.error(error);
+toast('Failed to generate roadmap. Try again.', 'error');
+    } finally {
+        btn.innerHTML = originalText;
+btn.disabled = false;
+    }
+}
+
+// AUDIT GENERATOR (TROJAN HORSE)
+let currentLogoBase64 = null;
+document.getElementById('audit-logo').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const textEl = document.getElementById('audit-logo-text');
+  if(file) {
+    textEl.textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = function(readerEvent) { currentLogoBase64 = readerEvent.target.result; }
+    reader.readAsDataURL(file);
+  } else { 
+    textEl.textContent = "Click or drag logo to upload";
+    currentLogoBase64 = null; 
+  }
+});
+function toggleWebsiteUrl() {
+  const platform = document.getElementById('audit-platform').value;
+  const urlWrapper = document.getElementById('url-input-wrapper');
+  const urlInput = document.getElementById('audit-url');
+if (platform === 'Website') {
+      urlWrapper.classList.remove('hidden');
+// Show it
+  } else {
+      urlWrapper.classList.add('hidden');
+// Hide it
+      urlInput.value = '';
+// Clear the input
+  }
+}
+async function generateAudit() {
+  const target = document.getElementById('audit-target').value.trim();
+  const platform = document.getElementById('audit-platform').value;
+const weakness = document.getElementById('audit-weakness').value;
+  const service = document.getElementById('audit-service').value;
+  const price = document.getElementById('audit-price').value.trim();
+  const observation = document.getElementById('audit-obs').value.trim();
+// 1. Capture the new URL Autopilot field
+  const websiteUrl = document.getElementById('audit-url') ? document.getElementById('audit-url').value.trim() : "";
+// 2. Smarter Validation: Require observation ONLY if no URL is provided
+  if(!target || !price) { toast('Please fill in the Target and Price!', 'error');
+return; }
+  if(!websiteUrl && !observation) { toast('Please provide either a Website URL or an Observation!', 'error'); return;
+}
+
+  const btn = document.getElementById('audit-btn');
+  const loading = document.getElementById('audit-loading');
+  const resultDiv = document.getElementById('audit-result');
+  const emptyDiv = document.getElementById('audit-empty');
+btn.disabled = true; loading.style.display = 'flex'; resultDiv.style.display = 'none'; if(emptyDiv) emptyDiv.style.display = 'none';
+try {
+    // 3. Send the websiteUrl to the backend
+    const res = await fetch('/api/audit', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ target, platform, weakness, service, price, observation, websiteUrl }) 
+    });
+const data = await res.json();
+    if(data.error) throw new Error(data.error);
+
+   document.getElementById('audit-email-text').innerHTML = '<strong>Subject:</strong> ' + (data.email_subject || '') + '<br><br>' + (data.email_body || '').replace(/\n/g, '<br>');
+document.getElementById('pdf-target').textContent = target;
+    document.getElementById('pdf-platform').textContent = platform;
+    document.getElementById('pdf-date').textContent = new Date().toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'});
+    document.getElementById('pdf-price').textContent = price;
+const logoImg = document.getElementById('pdf-logo-img');
+    const avatar = document.getElementById('pdf-avatar');
+    if (currentLogoBase64) { logoImg.src = currentLogoBase64; logoImg.style.display = 'block'; avatar.style.display = 'none';
+} 
+    else { logoImg.style.display = 'none'; avatar.style.display = 'flex'; avatar.textContent = target.charAt(0).toUpperCase();
+}
+
+    document.getElementById('pdf-sec1').textContent = data.sec1_assessment || 'Assessment goes here.';
+    document.getElementById('pdf-sec2').textContent = data.sec2_bottleneck || 'Bottleneck goes here.';
+document.getElementById('pdf-sec3').textContent = data.sec3_impact || 'Impact calculation goes here.';
+    document.getElementById('pdf-sec5').textContent = data.sec5_pitch || 'Pitch goes here.';
+    
+    const fixes = data.sec4_fixes ||
+[];
+    let fixHtml = '<ul style="padding-left: 20px; margin: 0;">';
+    fixes.forEach(fix => { fixHtml += `<li style="margin-bottom: 8px;">${fix}</li>`; });
+fixHtml += '</ul>';
+    document.getElementById('pdf-sec4').innerHTML = fixHtml;
+
+    loading.style.display = 'none'; resultDiv.style.display = 'flex'; btn.disabled = false;
+    toast('Audit compiled successfully!', 'success');
+} catch(error) {
+    console.error(error); toast('Failed to generate audit. Check console.', 'error');
+    loading.style.display = 'none'; btn.disabled = false;
+if(emptyDiv) emptyDiv.style.display = 'flex';
+  }
+}
+
+async function downloadAuditPDF() {
+  const btn = event.currentTarget;
+  const origText = btn.innerHTML;
+btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generating PDF...';
+  btn.disabled = true;
+  lucide.createIcons();
+try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+const pdfContent = document.getElementById('audit-pdf-canvas');
+    pdfContent.parentElement.style.position = 'absolute';
+    pdfContent.parentElement.style.left = '-9999px';
+    pdfContent.parentElement.style.width = '800px';
+    pdfContent.parentElement.style.height = 'auto';
+const canvas = await html2canvas(pdfContent, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+    const imgData = canvas.toDataURL('image/png');
+const w = 210; 
+    const h = (canvas.height * w) / canvas.width;
+    doc.addImage(imgData, 'PNG', 0, 0, w, h);
+const targetName = document.getElementById('audit-target').value.replace(/\s+/g, '-');
+    doc.save(`Audit-Report-${targetName}.pdf`);
+    toast('PDF Downloaded! Time to close the client.', 'success');
+} catch(e) {
+    console.error(e); toast('PDF Error: ' + e.message, 'error');
+} finally {
+    btn.innerHTML = origText; btn.disabled = false; lucide.createIcons();
+  }
+}
+async function loadProfile() {
+  if (!currentUser) return;
+  try {
+    const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+    if (data) {
+      userProfile = { ...userProfile, ...data }; 
+      
+      // 1. Fill the Profile Modal itself
+      if(data.skills) document.getElementById('prof-skills').value = data.skills;
+      if(data.niche) document.getElementById('prof-niche').value = data.niche;
+      if(data.experience) document.getElementById('prof-exp').value = data.experience;
+      if(data.platform) document.getElementById('prof-platform').value = data.platform;
+      if(data.income_goal) document.getElementById('prof-goal').value = data.income_goal;
+
+      // 2. THE MAGIC: Auto-fill the Gig Finder!
+      if(data.skills) document.getElementById('gig-skills').value = data.skills;
+      if(data.platform) document.getElementById('gig-platform').value = data.platform;
+
+      // 3. THE MAGIC: Auto-fill the Proposal Writer!
+      if(data.experience) document.getElementById('prop-exp').value = data.experience;
+      if(data.platform) document.getElementById('prop-platform').value = data.platform;
+
+      // 4. THE MAGIC: Auto-fill the Roadmap!
+      if(data.skills) document.getElementById('rm-skills').value = data.skills;
+      if(data.platform) document.getElementById('rm-platform').value = data.platform;
+      if(currentUser.user_metadata?.full_name) document.getElementById('rm-name').value = currentUser.user_metadata.full_name;
+    }
+  } catch (err) {
+    console.log("No profile found yet");
+  }
+}
+
+async function saveProfile() {
+  if (!currentUser) return;
+  const btn = document.getElementById('save-prof-btn');
+  btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...';
+  
+  const profileData = {
+    id: currentUser.id,
+    full_name: currentUser.user_metadata?.full_name || 'User',
+    skills: document.getElementById('prof-skills').value.trim(),
+    niche: document.getElementById('prof-niche').value.trim(),
+    experience: document.getElementById('prof-exp').value,
+    platform: document.getElementById('prof-platform').value,
+    income_goal: document.getElementById('prof-goal').value
+  };
+
+  try {
+    const { error } = await sb.from('profiles').upsert(profileData);
+    if (error) throw error;
+    
+    userProfile = { ...userProfile, ...profileData }; 
+    toast('Profile saved globally!', 'success');
+    document.getElementById('profile-modal').classList.remove('on');
+  } catch (error) {
+    toast('Failed to save profile', 'error');
+    console.error(error);
+  } finally {
+    btn.innerHTML = '<i data-lucide="save" class="w-5 h-5"></i> Save Global Profile';
+    lucide.createIcons();
+  }
+}
+  let userLeads = [];
+
+async function loadLeads() {
+  if (!currentUser) return;
+  try {
+    const { data, error } = await sb.from('leads').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+    if (error) throw error;
+    userLeads = data || [];
+    renderPipeline();
+  } catch (err) {
+    console.error('Error loading leads:', err.message);
+  }
+}
+
+function renderPipeline() {
+  const cols = { pitched: '', replied: '', won: '' };
+  let counts = { pitched: 0, replied: 0, won: 0 };
+
+  userLeads.forEach(lead => {
+    const status = lead.status || 'pitched';
+    counts[status]++;
+    
+    // Create the HTML card for each lead
+    cols[status] += `
+      <div class="bg-white/5 hover:bg-white/10 border border-white/10 p-4 rounded-xl transition group">
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="text-white font-bold text-sm truncate pr-2">${lead.client_name}</h4>
+          <span class="text-[10px] bg-black/50 text-gray-400 px-2 py-0.5 rounded font-mono">${lead.project_value || '₹?'}</span>
+        </div>
+        <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-3">${lead.platform}</div>
+        
+        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          ${status !== 'pitched' ? `<button onclick="moveLead('${lead.id}', 'pitched')" class="flex-1 bg-white/5 hover:bg-violet-500/20 text-gray-400 hover:text-violet-400 text-[10px] py-1.5 rounded border border-white/5 transition">Pitch</button>` : ''}
+          ${status !== 'replied' ? `<button onclick="moveLead('${lead.id}', 'replied')" class="flex-1 bg-white/5 hover:bg-yellow-500/20 text-gray-400 hover:text-yellow-400 text-[10px] py-1.5 rounded border border-white/5 transition">Talks</button>` : ''}
+          ${status !== 'won' ? `<button onclick="moveLead('${lead.id}', 'won')" class="flex-1 bg-white/5 hover:bg-emerald-500/20 text-gray-400 hover:text-emerald-400 text-[10px] py-1.5 rounded border border-white/5 transition">Won</button>` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  // Update DOM
+  ['pitched', 'replied', 'won'].forEach(status => {
+    document.getElementById(`pipe-${status}`).innerHTML = cols[status] || `<div class="text-center text-gray-600 text-xs py-10">No leads here yet</div>`;
+    document.getElementById(`count-${status}`).textContent = counts[status];
+  });
+  lucide.createIcons();
+}
+
+async function saveLead() {
+  if (!currentUser) return;
+  const name = document.getElementById('lead-name').value.trim();
+  const platform = document.getElementById('lead-platform').value;
+  const value = document.getElementById('lead-value').value.trim();
+  
+  if (!name) { toast('Client name is required', 'error'); return; }
+  
+  const btn = document.getElementById('save-lead-btn');
+  btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...';
+  
+  try {
+    const { error } = await sb.from('leads').insert([{ user_id: currentUser.id, client_name: name, platform, project_value: value, status: 'pitched' }]);
+    if (error) throw error;
+    
+    toast('Lead added to pipeline!', 'success');
+    document.getElementById('add-lead-modal').classList.remove('on');
+    
+    // Clear inputs
+    document.getElementById('lead-name').value = '';
+    document.getElementById('lead-value').value = '';
+    
+    await loadLeads(); // Refresh the pipeline
+  } catch (err) {
+    toast('Failed to save lead', 'error');
+  } finally {
+    btn.innerHTML = '<i data-lucide="plus" class="w-5 h-5"></i> Add to Pipeline';
+    lucide.createIcons();
+  }
+}
+
+async function moveLead(id, newStatus) {
+  try {
+    // Optimistic UI update (feels instantly fast to the user)
+    const leadIndex = userLeads.findIndex(l => l.id === id);
+    if(leadIndex > -1) userLeads[leadIndex].status = newStatus;
+    renderPipeline();
+    
+    // Background database update
+    const { error } = await sb.from('leads').update({ status: newStatus }).eq('id', id);
+    if (error) throw error;
+  } catch (err) {
+    toast('Failed to move lead', 'error');
+    await loadLeads(); // revert if failed
+  }
+}
+initApp();
 </script>
 </body>
 </html>
