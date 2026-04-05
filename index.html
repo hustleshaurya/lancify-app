@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="Favicon_new_logo-removebg-preview.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -21,119 +21,183 @@
    THEME SYSTEM — Light (default) + Dark (.dark on <html>)
    ═══════════════════════════════════════════════════════════ */
 :root {
-  --sidebar-w: 268px;
-  --sidebar-w-collapsed: 68px;
-  --header-h: 56px;
+  --sidebar-w: 248px;
+  --sidebar-w-collapsed: 60px;
+  --header-h: 52px;
   --sidebar-transition: width 0.22s cubic-bezier(0.4,0,0.2,1);
   --radius: 8px;
-  --radius-lg: 12px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+  --radius-lg: 10px;
 
   /* ── Light Theme ── */
   --bg:          #ffffff;
-  --bg-panel:    #f9fafb;
-  --bg-hover:    #f3f4f6;
-  --text-main:   #111827;
-  --text-muted:  #6b7280;
-  --border:      #e5e7eb;
-  --btn-bg:      #000000;
+  --bg-panel:    #f7f7f7;
+  --bg-hover:    #efefef;
+  --text-main:   #0a0a0a;
+  --text-muted:  #6b6b6b;
+  --border:      #e8e8e8;
+  --border2:     #d4d4d4;
+  --btn-bg:      #0a0a0a;
   --btn-text:    #ffffff;
+  --shadow-sm:   0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:   0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:   0 8px 30px rgba(0,0,0,0.12);
 
   --bg2:    var(--bg-panel);
   --bg3:    var(--bg-hover);
   --text:   var(--text-main);
   --text2:  var(--text-muted);
   --text3:  #9ca3af;
-  --border2: #d1d5db;
-  --accent:  #000000;
+  --accent:  #0a0a0a;
 }
 
 /* ── Dark Theme ── */
 html.dark {
-  --bg:         #0a0a0a;
-  --bg-panel:   #111111;
-  --bg-hover:   #1c1c1c;
-  --text-main:  #f9fafb;
-  --text-muted: #a1a1aa;
-  --border:     #27272a;
-  --btn-bg:     #f9fafb;
-  --btn-text:   #0a0a0a;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5), 0 4px 10px -2px rgba(0, 0, 0, 0.3);
+  --bg:          #0a0a0a;
+  --bg-panel:    #111111;
+  --bg-hover:    #1a1a1a;
+  --text-main:   #fafafa;
+  --text-muted:  #a1a1a1;
+  --border:      #262626;
+  --border2:     #333333;
+  --btn-bg:      #fafafa;
+  --btn-text:    #0a0a0a;
+  --shadow-sm:   0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md:   0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg:   0 8px 30px rgba(0,0,0,0.7);
 
   --bg2:    var(--bg-panel);
   --bg3:    var(--bg-hover);
   --text:   var(--text-main);
   --text2:  var(--text-muted);
-  --text3:  #71717a;
-  --border2: #3f3f46;
-  --accent:  #f9fafb;
+  --text3:  #525252;
+  --border2: #333333;
+  --accent:  #fafafa;
 }
 
 html { transition: background-color .2s ease, color .2s ease; }
-*, *::before, *::after { transition: background-color .2s ease, border-color .2s ease, color .15s ease; }
-.sidebar, .sb-logo, .nav-item, .header, .main, .modal-backdrop, #loading-screen { transition: none; }
-.sidebar { transition: width var(--sidebar-transition) !important; }
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text-main);font-family:'Geist','Inter',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text-main);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+/* Precise selective transitions — no blanket global transition */
+.sidebar { transition: width var(--sidebar-transition) !important; }
+.nav-item, .btn, .tool-card, .stat-card, .kanban-card, .acct-menu-item, .header-icon-btn, .sb-collapse-btn, .sb-workspace-btn { transition: background .12s, color .12s, border-color .12s, opacity .12s, transform .1s; }
+input, select, textarea { transition: border-color .15s, box-shadow .15s; }
 
 /* ─── SCROLLBAR ─── */
-::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
 ::-webkit-scrollbar-thumb:hover{background:var(--text3)}
 
 /* ─── LOADING ─── */
-#loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:14px}
-.spin{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--text-main);border-radius:50%;animation:spin .7s linear infinite}
+#loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
+.spin{width:18px;height:18px;border:1.5px solid var(--border2);border-top-color:var(--text-main);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ─── LOGIN ─── */
-#login-screen{display:none;position:fixed;inset:0;background:var(--bg-panel);z-index:9000;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+/* ─── LOGIN — Always white/light ─── */
+#login-screen{
+  display:none;position:fixed;inset:0;
+  background:#f5f5f5;
+  z-index:9000;flex-direction:column;align-items:center;justify-content:center;padding:24px;
+}
 #login-screen.show{display:flex}
-.login-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:var(--shadow-lg)}
-.login-sub{font-size:13px;color:var(--text-muted);margin-bottom:28px; text-align: center;}
-.login-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text3);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.auth-msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;display:none}
+.login-card{
+  background:#ffffff;
+  border:1px solid #e5e5e5;
+  border-radius:14px;
+  padding:40px 36px;
+  width:100%;max-width:388px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.08);
+}
+.login-card * { color: inherit; }
+.login-card { color: #0a0a0a; }
+.login-sub{font-size:13px;color:#6b6b6b;margin-bottom:24px;text-align:center}
+.login-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:#9ca3af;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:#e5e5e5}
+.auth-msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none}
 .auth-msg.error{background:#fef2f2;border:1px solid #fecaca;color:#dc2626}
 .auth-msg.success{background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a}
 
+/* Login-specific overrides for always-light context */
+#login-screen input[type=text],
+#login-screen input[type=email],
+#login-screen input[type=password]{
+  background:#ffffff;
+  border:1px solid #e5e5e5;
+  color:#0a0a0a;
+}
+#login-screen input:focus {
+  border-color:#0a0a0a;
+  box-shadow:0 0 0 2px rgba(0,0,0,0.08);
+}
+#login-screen .field-label { color: #525252; }
+#login-screen .btn-primary {
+  background:#0a0a0a;
+  color:#ffffff;
+}
+#login-screen .btn-google {
+  background:#ffffff;
+  color:#374151;
+  border:1px solid #e5e5e5;
+}
+#login-screen .btn-google:hover { background:#f5f5f5; }
+
 /* ─── INPUTS ─── */
-.field-label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;letter-spacing:.01em}
+.field-label{display:block;font-size:12px;font-weight:500;color:var(--text-muted);margin-bottom:5px;letter-spacing:.01em}
 .field-optional{font-size:11px;font-weight:400;color:var(--text3)}
 input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],select,textarea{
-  display:block;width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);
-  color:var(--text-main);font-family:inherit;font-size:13.5px;outline:none;
-  transition:border-color .15s,box-shadow .15s,background-color .2s
+  display:block;width:100%;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  color:var(--text-main);
+  font-family:inherit;font-size:13px;outline:none;
 }
-input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],select{height:38px;padding:0 12px}
-textarea{padding:10px 12px;resize:vertical;line-height:1.55}
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],select{height:36px;padding:0 11px}
+textarea{padding:9px 11px;resize:vertical;line-height:1.55}
 input::placeholder,textarea::placeholder{color:var(--text3)}
-input:hover,select:hover,textarea:hover{border-color:var(--text3)}
-input:focus,select:focus,textarea:focus{border-color:var(--text-main);box-shadow:0 0 0 1px var(--text-main)}
-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:14px;cursor:pointer;padding-right:32px}
-html.dark select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a1a1aa'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")}
+input:hover,select:hover,textarea:hover{border-color:var(--text-muted)}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--text-main);
+  box-shadow:0 0 0 2px rgba(0,0,0,0.08);
+}
+html.dark input:focus,html.dark select:focus,html.dark textarea:focus{
+  box-shadow:0 0 0 2px rgba(255,255,255,0.08);
+}
+select{
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b6b6b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;background-size:13px;cursor:pointer;padding-right:30px
+}
+html.dark select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a1a1a1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")
+}
 
 /* ─── BUTTONS ─── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:500;border-radius:var(--radius);white-space:nowrap;transition: transform 0.1s ease, opacity 0.15s ease, background-color 0.15s;}
-.btn:active { transform: scale(0.97); }
-.btn:disabled{opacity:.45;cursor:not-allowed; transform: none;}
-.btn-primary{background:var(--btn-bg);color:var(--btn-text);height:38px;padding:0 18px; box-shadow: var(--shadow-sm);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;border-radius:var(--radius);white-space:nowrap}
+.btn:active{transform:scale(0.97)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-primary{background:var(--btn-bg);color:var(--btn-text);height:36px;padding:0 16px;box-shadow:var(--shadow-sm)}
 .btn-primary:hover:not(:disabled){opacity:.85}
-.btn-secondary{background:var(--bg);color:var(--text-main);border:1px solid var(--border2);height:38px;padding:0 16px; box-shadow: var(--shadow-sm);}
+.btn-secondary{background:var(--bg);color:var(--text-main);border:1px solid var(--border2);height:36px;padding:0 14px;box-shadow:var(--shadow-sm)}
 .btn-secondary:hover:not(:disabled){background:var(--bg-hover)}
-.btn-ghost{background:transparent;color:var(--text-muted);height:32px;padding:0 10px;font-size:13px}
+.btn-ghost{background:transparent;color:var(--text-muted);height:30px;padding:0 10px;font-size:13px}
 .btn-ghost:hover{background:var(--bg-hover);color:var(--text-main)}
-.btn-google{background:var(--bg);color:#374151;border:1px solid var(--border2);height:40px;width:100%;border-radius:var(--radius); box-shadow: var(--shadow-sm);}
-.btn-google:hover{background:var(--bg-hover)}
-html.dark .btn-google { color: var(--text-main); }
+.btn-google{
+  background:#ffffff;color:#374151;border:1px solid #e5e5e5;
+  height:38px;width:100%;border-radius:var(--radius);
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;
+}
+.btn-google:hover{background:#f5f5f5}
 .btn-full{width:100%}
-.btn-upgrade{background:var(--btn-bg);color:var(--btn-text);height:38px;border-radius:var(--radius);width:100%;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;border:none;transition: transform 0.1s ease, opacity .15s; box-shadow: var(--shadow-sm);}
-.btn-upgrade:active { transform: scale(0.97); }
+.btn-upgrade{
+  background:var(--btn-bg);color:var(--btn-text);
+  height:36px;border-radius:var(--radius);width:100%;
+  font-size:13px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;border:none;box-shadow:var(--shadow-sm);
+}
+.btn-upgrade:active{transform:scale(0.97)}
 .btn-upgrade:hover{opacity:.85}
 
 /* ─── APP LAYOUT ─── */
@@ -141,116 +205,122 @@ html.dark .btn-google { color: var(--text-main); }
 #app-layout.show{display:flex}
 
 /* ══════════════════════════════════════════════════════════
-   SIDEBAR — Collapsible
+   SIDEBAR
    ══════════════════════════════════════════════════════════ */
 .sidebar{
   width:var(--sidebar-w);
   height:100vh;
   background:var(--bg-panel);
   border-right:1px solid var(--border);
-  display:flex;
-  flex-direction:column;
-  flex-shrink:0;
-  overflow:hidden;
+  display:flex;flex-direction:column;
+  flex-shrink:0;overflow:hidden;
 }
 
 /* ── Logo area ── */
 .sb-logo{
-  padding:0 14px;
+  padding:0 12px;
   height:var(--header-h);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;
   border-bottom:1px solid var(--border);
-  flex-shrink:0;
-  gap:8px;
+  flex-shrink:0;gap:8px;
 }
 
-.logo-img-light, .logo-img-dark, .logo-img-icon{ display:none; height:22px; width:auto; object-fit:contain; flex-shrink:0; }
+.logo-img-light,.logo-img-dark,.logo-img-icon{display:none;height:22px;width:auto;object-fit:contain;flex-shrink:0}
 
-/* Logo state: expanded */
-html:not(.dark) .sidebar:not(.collapsed) .logo-img-light { display:block }
-html.dark .sidebar:not(.collapsed) .logo-img-dark { display:block }
+/* Logo: expanded */
+html:not(.dark) .sidebar:not(.collapsed) .logo-img-light{display:block}
+html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 
-/* Logo state: collapsed */
+/* Logo: collapsed */
 .sidebar.collapsed .logo-img-light,
-.sidebar.collapsed .logo-img-dark { display:none }
-.sidebar.collapsed .logo-img-icon { display:block; height:26px; margin:0 auto }
+.sidebar.collapsed .logo-img-dark{display:none}
+.sidebar.collapsed .logo-img-icon{display:block;height:26px;margin:0 auto}
 
-/* Collapse toggle button */
+/* Collapse toggle */
 .sb-collapse-btn{
-  width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--text-muted);background:transparent;border:none;flex-shrink:0;
-  transition:background .12s,color .12s;
+  width:26px;height:26px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text3);background:transparent;border:none;flex-shrink:0;
 }
-.sb-collapse-btn:hover{background:var(--border);color:var(--text-main)}
+.sb-collapse-btn:hover{background:var(--bg-hover);color:var(--text-muted)}
 .sidebar.collapsed .sb-collapse-btn{margin:0 auto}
 
 /* Workspace row */
-.sb-workspace{padding:10px 10px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden}
+.sb-workspace{padding:8px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden}
 .sb-workspace-btn{
-  display:flex;align-items:center;gap:9px;width:100%;padding:7px 8px;border-radius:7px;
-  cursor:pointer;transition:background .12s;background:transparent;border:none;text-align:left;font-family:inherit;
-  min-width:0;
+  display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border-radius:7px;
+  cursor:pointer;background:transparent;border:none;text-align:left;font-family:inherit;min-width:0;
 }
 .sb-workspace-btn:hover{background:var(--bg-hover)}
-.ws-dot{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#6366f1);flex-shrink:0}
+.ws-dot{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);flex-shrink:0}
 .ws-name{font-size:13px;font-weight:500;color:var(--text-main);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .ws-chevron{color:var(--text3);flex-shrink:0}
 
 /* Collapsed workspace */
-.sidebar.collapsed .sb-workspace-btn{justify-content:center;padding:7px 0}
-.sidebar.collapsed .ws-name,.sidebar.collapsed .ws-chevron{display:none}
+.sidebar.collapsed .sb-workspace-btn{justify-content:center;padding:6px 0}
+.sidebar.collapsed .ws-name,.sidebar.collapsed .ws-chevron{opacity:0;width:0;overflow:hidden;pointer-events:none}
 
 /* Nav */
 .sb-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 8px}
 .sb-section{
-  font-size:10.5px;font-weight:600;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;
-  padding:14px 8px 5px;user-select:none;white-space:nowrap;overflow:hidden;
-  transition:opacity .15s,height .2s;
+  font-size:10px;font-weight:600;color:var(--text3);
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:14px 8px 4px;user-select:none;
+  white-space:nowrap;overflow:hidden;
+  height:auto;opacity:1;
 }
-.sidebar.collapsed .sb-section{height:0;padding:0;opacity:0;pointer-events:none}
+.sidebar.collapsed .sb-section{height:0;padding:0;opacity:0;pointer-events:none;overflow:hidden}
 
 .nav-item{
-  display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;cursor:pointer;
-  font-size:13.5px;font-weight:400;color:var(--text-muted);
-  transition:background .12s,color .12s;margin-bottom:1px;user-select:none;position:relative;
+  display:flex;align-items:center;gap:9px;padding:7px 9px;
+  border-radius:7px;cursor:pointer;
+  font-size:13px;font-weight:400;color:var(--text-muted);
+  margin-bottom:1px;user-select:none;position:relative;
   white-space:nowrap;overflow:hidden;
 }
 .nav-item:hover{background:var(--bg-hover);color:var(--text-main)}
 .nav-item.active{background:var(--bg-hover);color:var(--text-main);font-weight:500}
-.nav-item .icon{width:16px;height:16px;flex-shrink:0;stroke-width:1.75;min-width:16px}
+.nav-item .icon{width:15px;height:15px;flex-shrink:0;stroke-width:1.75;min-width:15px}
 .nav-item.active .icon{stroke-width:2}
-.nav-label{flex:1;overflow:hidden;text-overflow:ellipsis;transition:opacity .15s,width .15s}
+.nav-label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .15s}
 .pro-badge{
-  margin-left:auto;background:var(--text-main);color:var(--bg);font-size:9.5px;font-weight:600;
-  letter-spacing:.04em;padding:2px 6px;border-radius:99px;line-height:1.5;flex-shrink:0;
+  margin-left:auto;
+  background:transparent;
+  color:var(--text3);
+  font-size:9.5px;font-weight:500;
+  letter-spacing:.03em;
+  padding:1px 0;
+  border-radius:99px;
+  line-height:1.5;flex-shrink:0;
+  white-space:nowrap;
   transition:opacity .15s;
 }
 
 /* Collapsed nav */
-.sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;gap:0;position:relative}
-.sidebar.collapsed .nav-label{opacity:0;width:0;overflow:hidden}
+.sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;gap:0}
+.sidebar.collapsed .nav-label{opacity:0;width:0;overflow:hidden;pointer-events:none}
 .sidebar.collapsed .pro-badge{display:none}
 
+/* Tooltip */
 .sidebar.collapsed .nav-item::after{
   content:attr(data-tooltip);
   position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
-  background:var(--text-main);color:var(--bg);font-size:12px;font-weight:500;
-  padding:5px 10px;border-radius:6px;white-space:nowrap;pointer-events:none;
-  opacity:0;transition:opacity .15s;z-index:999;
+  background:var(--text-main);color:var(--bg);
+  font-size:12px;font-weight:500;
+  padding:5px 10px;border-radius:6px;white-space:nowrap;
+  pointer-events:none;opacity:0;transition:opacity .15s;z-index:999;
 }
 .sidebar.collapsed .nav-item:hover::after{opacity:1}
 
 /* Bottom section */
-.sb-bottom{padding:10px 10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.sb-bottom{padding:8px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
 .sb-credits{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow:hidden}
-.sb-credits-label{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:4px;white-space:nowrap}
-.sb-credits-bar-wrap{height:4px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:5px}
+.sb-credits-label{font-size:10.5px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;white-space:nowrap}
+.sb-credits-bar-wrap{height:3px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:6px}
 .sb-credits-bar{height:100%;background:var(--text-main);border-radius:99px;width:85%}
-.sb-credits-num{font-size:11.5px;color:var(--text-muted);font-weight:500;white-space:nowrap}
+.sb-credits-num{font-size:11.5px;color:var(--text-muted);font-weight:400;white-space:nowrap}
 .sidebar.collapsed .sb-credits{display:none}
-.sidebar.collapsed .btn-upgrade{padding:0;justify-content:center;width:44px;height:44px;border-radius:10px;align-self:center}
+.sidebar.collapsed .btn-upgrade{padding:0;justify-content:center;width:40px;height:40px;border-radius:10px;align-self:center}
 .sidebar.collapsed .btn-upgrade .upgrade-label{display:none}
 
 /* ─── MAIN ─── */
@@ -260,20 +330,23 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark { display:block }
 .header{
   height:var(--header-h);border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 20px 0 24px;flex-shrink:0;background:var(--bg);
+  padding:0 20px 0 22px;flex-shrink:0;background:var(--bg);
 }
-.header-title{font-size:14.5px;font-weight:600;color:var(--text-main)}
-.header-actions{display:flex;align-items:center;gap:3px}
+.header-title{font-size:14px;font-weight:600;color:var(--text-main)}
+.header-actions{display:flex;align-items:center;gap:2px}
 .header-avatar{
-  width:30px;height:30px;border-radius:50%;background:var(--text-main);color:var(--bg);
-  font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;margin-left:6px;transition:opacity .12s, transform 0.1s;flex-shrink:0;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--text-main);color:var(--bg);
+  font-size:11px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;margin-left:4px;flex-shrink:0;
 }
-.header-avatar:active{transform: scale(0.92);}
+.header-avatar:active{transform:scale(0.92)}
 .header-avatar:hover{opacity:.8}
 .header-icon-btn{
-  width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--text-muted);transition:background .12s,color .12s;border:none;background:transparent;
+  width:30px;height:30px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-muted);border:none;background:transparent;
 }
 .header-icon-btn:hover{background:var(--bg-hover);color:var(--text-main)}
 
@@ -285,187 +358,281 @@ html.dark #theme-icon-moon{display:none}
 
 /* ─── CONTENT ─── */
 .content-scroll{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
-.content-inner{max-width:900px;margin:0 auto;padding:40px 40px 80px}
-.content-inner.wide{max-width:1100px}
+.content-inner{max-width:880px;margin:0 auto;padding:36px 36px 80px}
+.content-inner.wide{max-width:1060px}
 
 /* ─── PAGES ─── */
-.page{display:none;animation:fadeUp .25s ease}
+.page{display:none;animation:fadeUp .2s ease}
 .page.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
 /* ─── PAGE HEADER ─── */
-.page-hd{margin-bottom:32px}
-.page-hd h1{font-size:26px;font-weight:700;letter-spacing:-.6px;color:var(--text-main);margin-bottom:5px}
-.page-hd p{font-size:14px;color:var(--text-muted)}
+.page-hd{margin-bottom:28px}
+.page-hd h1{font-size:24px;font-weight:700;letter-spacing:-.5px;color:var(--text-main);margin-bottom:4px}
+.page-hd p{font-size:13.5px;color:var(--text-muted)}
 
 /* ─── CARDS ─── */
-.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px; box-shadow: var(--shadow-sm);}
-.card-dashed{background:var(--bg-panel);border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:22px 24px}
+.card{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:20px 22px;
+  box-shadow:var(--shadow-sm);
+}
+.card-dashed{
+  background:var(--bg-panel);
+  border:1px dashed var(--border2);
+  border-radius:var(--radius-lg);
+  padding:20px 22px;
+}
 
 /* ─── TOOL CARDS (home grid) ─── */
 .tool-card{
-  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:28px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;gap:14px;
-  box-shadow: var(--shadow-sm);
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:22px 18px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;cursor:pointer;gap:12px;
+  box-shadow:var(--shadow-sm);
 }
-.tool-card:hover{border-color:var(--border2);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.tool-card:hover{border-color:var(--border2);box-shadow:var(--shadow-md);transform:translateY(-1px)}
 .tool-card:active{transform:translateY(0) scale(0.98)}
-.tool-icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.tool-card h3{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:3px}
-.tool-card p{font-size:12.5px;color:var(--text-muted);line-height:1.4}
+.tool-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.tool-card h3{font-size:13.5px;font-weight:600;color:var(--text-main);margin-bottom:2px}
+.tool-card p{font-size:12px;color:var(--text-muted);line-height:1.4}
 
 /* ─── STAT CARDS ─── */
-.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;display:flex;align-items:center;justify-content:space-between; box-shadow: var(--shadow-sm);}
+.stat-card{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:16px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:var(--shadow-sm);
+}
 .stat-label{font-size:12px;color:var(--text-muted);font-weight:500}
 .stat-val{font-size:22px;font-weight:700;color:var(--text-main);letter-spacing:-.5px}
 
 /* ─── SECTION TITLE ─── */
-.section-title{font-size:15px;font-weight:600;color:var(--text-main);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.section-title{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 
 /* ─── TWO-PANEL TOOL LAYOUT ─── */
-.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:900px){.tool-grid{grid-template-columns:1fr}}
-.panel-title{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:20px}
-.field-group{margin-bottom:16px}
+.panel-title{font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:18px}
+.field-group{margin-bottom:14px}
 .field-group:last-of-type{margin-bottom:0}
 .result-panel{height:100%;display:flex;flex-direction:column}
-.result-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);flex:1;display:flex;flex-direction:column;overflow:hidden; box-shadow: var(--shadow-sm);}
-.result-box-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-panel)}
-.result-box-title{font-size:13px;font-weight:600;color:var(--text-main)}
-.result-box-body{padding:18px;font-size:13.5px;color:var(--text-muted);line-height:1.65;flex:1;overflow-y:auto;white-space:pre-wrap}
-.copy-btn{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:3px 6px;border-radius:5px;transition:background .12s,color .12s}
+.result-box{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius-lg);flex:1;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.result-box-header{
+  padding:11px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg-panel);
+}
+.result-box-title{font-size:12.5px;font-weight:600;color:var(--text-main)}
+.result-box-body{padding:16px;font-size:13.5px;color:var(--text-muted);line-height:1.65;flex:1;overflow-y:auto;white-space:pre-wrap}
+.copy-btn{
+  font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;
+  color:var(--text3);background:none;border:none;cursor:pointer;
+  padding:3px 6px;border-radius:5px;
+}
 .copy-btn:hover{background:var(--border);color:var(--text-main)}
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:100%;min-height:320px;color:var(--text3);text-align:center}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;min-height:300px;color:var(--text3);text-align:center}
 .empty-state p{font-size:13px}
 
 /* ─── INLINE LOADING ─── */
-.inline-loader{display:none;align-items:center;gap:10px;padding:14px 0;font-size:13px;color:var(--text-muted)}
+.inline-loader{display:none;align-items:center;gap:9px;padding:12px 0;font-size:13px;color:var(--text-muted)}
 .inline-loader.show{display:flex}
 
 /* ─── PROFILE BANNER ─── */
-.profile-banner{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;display:none;align-items:center;gap:9px;font-size:12.5px;color:#15803d;margin-bottom:18px;cursor:pointer;transition:background .12s}
+.profile-banner{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:9px 12px;display:none;align-items:center;gap:8px;font-size:12.5px;color:#15803d;margin-bottom:16px;cursor:pointer}
 .profile-banner.show{display:flex}
 .profile-banner:hover{background:#dcfce7}
 html.dark .profile-banner{background:#052e16;border-color:#166534;color:#86efac}
 html.dark .profile-banner:hover{background:#14532d}
 
 /* ─── CHAT PAGE ─── */
-.chat-wrap{max-width:660px;margin:0 auto}
-.chat-progress{margin-bottom:28px}
-.chat-progress-labels{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.progress-track{height:3px;background:var(--border);border-radius:99px;overflow:hidden}
+.chat-wrap{max-width:620px;margin:0 auto}
+.chat-progress{margin-bottom:24px}
+.chat-progress-labels{display:flex;justify-content:space-between;font-size:10.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.progress-track{height:2px;background:var(--border);border-radius:99px;overflow:hidden}
 .progress-fill{height:100%;background:var(--text-main);border-radius:99px;transition:width .4s ease}
-.chat-msgs{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;min-height:180px}
-.bubble{padding:12px 16px;border-radius:12px;font-size:13.5px;line-height:1.55;max-width:80%; box-shadow: var(--shadow-sm);}
-.bubble.ai{background:var(--bg-panel);border: 1px solid var(--border); color:var(--text-main); align-self:flex-start;border-radius:4px 12px 12px 12px}
-.bubble.usr{background:var(--text-main);color:var(--bg);align-self:flex-end;border-radius:12px 4px 12px 12px}
-.chat-opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-.opt-btn{background:var(--bg);border:1px solid var(--border2);color:var(--text-main);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;transition:all .12s; box-shadow: var(--shadow-sm);}
-.opt-btn:active{transform: scale(0.97);}
+.chat-msgs{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;min-height:180px}
+.bubble{padding:11px 15px;border-radius:10px;font-size:13.5px;line-height:1.55;max-width:82%}
+.bubble.ai{background:var(--bg-panel);border:1px solid var(--border);color:var(--text-main);align-self:flex-start;border-radius:3px 10px 10px 10px}
+.bubble.usr{background:var(--text-main);color:var(--bg);align-self:flex-end;border-radius:10px 3px 10px 10px}
+.chat-opts{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.opt-btn{
+  background:var(--bg);border:1px solid var(--border2);color:var(--text-main);
+  padding:7px 13px;border-radius:8px;cursor:pointer;font-size:12.5px;font-family:inherit;
+}
+.opt-btn:active{transform:scale(0.97)}
 .opt-btn:hover,.opt-btn.sel{border-color:var(--text-main);background:var(--bg-panel)}
-.chat-gen-bar{display:none;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--text-main);font-style:italic; box-shadow: var(--shadow-sm);}
+.chat-gen-bar{display:none;align-items:center;gap:9px;padding:12px 14px;background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;font-size:13.5px;color:var(--text-main)}
 .chat-gen-bar.show{display:flex}
-.chat-input-row{display:flex;gap:10px;margin-top:8px}
-.chat-textarea{flex:1;min-height:50px;max-height:200px;border-radius:10px;padding:14px 16px; box-shadow: var(--shadow-sm);}
-.send-btn{width:50px;height:50px;background:var(--text-main);color:var(--bg);border:none;border-radius:10px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:opacity .12s, transform 0.1s; box-shadow: var(--shadow-sm);}
+.chat-input-row{display:flex;gap:8px;margin-top:8px}
+.chat-textarea{flex:1;min-height:48px;max-height:200px;border-radius:10px;padding:13px 14px}
+.send-btn{
+  width:48px;height:48px;background:var(--text-main);color:var(--bg);
+  border:none;border-radius:10px;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
 .send-btn:hover{opacity:.8}
-.send-btn:active{transform: scale(0.95);}
+.send-btn:active{transform:scale(0.95)}
 
-/* ─── PIPELINE ─── */
-.kanban-col-header{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px; display: flex; justify-content: space-between;}
-.kanban-board-col { background: var(--bg-panel); border-radius: var(--radius-lg); padding: 14px; border: 1px solid var(--border); min-height: 400px; }
-.kanban-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px; box-shadow: var(--shadow-sm); cursor: grab;}
-.kanban-card:active { cursor: grabbing; }
-.kanban-card-name{font-size:13.5px;font-weight:600;color:var(--text-main);margin-bottom:3px}
-.kanban-card-val{font-size:12px;color:var(--text-muted);margin-bottom:10px}
-.kanban-card-actions{display:flex;gap:6px;flex-wrap:wrap}
-.stage-btn{font-size:11px;background:var(--bg-panel);border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:6px;cursor:pointer;transition:all .12s;font-family:inherit}
-.stage-btn:hover{background:var(--border);color:var(--text-main)}
+/* ─── PIPELINE / KANBAN ─── */
+.kanban-col-header{
+  font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+  margin-bottom:10px;display:flex;justify-content:space-between;
+}
+.kanban-board-col{
+  background:var(--bg-panel);border-radius:var(--radius-lg);
+  padding:14px;border:1px solid var(--border);min-height:380px;
+}
+.kanban-card{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;padding:13px 15px;margin-bottom:8px;
+  box-shadow:var(--shadow-sm);cursor:grab;
+}
+.kanban-card:active{cursor:grabbing}
+.kanban-card:hover{border-color:var(--border2);box-shadow:var(--shadow-md)}
+.kanban-card-name{font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:2px}
+.kanban-card-val{font-size:11.5px;color:var(--text-muted);margin-bottom:9px}
+.kanban-card-actions{display:flex;gap:5px;flex-wrap:wrap}
+.stage-btn{
+  font-size:11px;background:var(--bg-panel);border:1px solid var(--border);
+  color:var(--text-muted);padding:3px 9px;border-radius:6px;cursor:pointer;font-family:inherit;
+}
+.stage-btn:hover{background:var(--bg-hover);color:var(--text-main)}
 
 /* ─── MODALS ─── */
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:800;padding:20px;backdrop-filter:blur(3px)}
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.55);
+  display:none;align-items:center;justify-content:center;
+  z-index:800;padding:20px;
+  backdrop-filter:blur(4px);
+}
 .modal-backdrop.show{display:flex}
-.modal{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:460px;position:relative;box-shadow:var(--shadow-lg); animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);}
-@keyframes popIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;cursor:pointer;color:var(--text3);border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.modal{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:14px;padding:30px;width:100%;max-width:440px;
+  position:relative;box-shadow:var(--shadow-lg);
+  animation:popIn .22s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes popIn{from{opacity:0;transform:scale(0.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close{
+  position:absolute;top:12px;right:12px;background:none;border:none;cursor:pointer;
+  color:var(--text3);border-radius:6px;width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;
+}
 .modal-close:hover{background:var(--bg-hover)}
 
 /* ─── ACCOUNT DROPDOWN ─── */
 .account-dropdown{
-  position:absolute;top:calc(var(--header-h) + 6px);right:16px;
-  background:var(--bg);border:1px solid var(--border);border-radius:12px;width:240px;
+  position:absolute;top:calc(var(--header-h) + 5px);right:14px;
+  background:var(--bg);border:1px solid var(--border);border-radius:12px;width:230px;
   box-shadow:var(--shadow-lg);z-index:500;overflow:hidden;display:none;
-  animation: fadeUp 0.2s ease;
+  animation:fadeUp .18s ease;
 }
 .account-dropdown.show{display:block}
-.acct-credits{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--bg-panel)}
-.acct-credits-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px}
-.acct-credits-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-muted);margin-bottom:3px}
+.acct-credits{padding:12px 14px;border-bottom:1px solid var(--border);background:var(--bg-panel)}
+.acct-credits-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:7px}
+.acct-credits-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:3px}
 .acct-credits-row strong{color:var(--text-main)}
-.acct-ws{padding:12px 16px;border-bottom:1px solid var(--border)}
-.acct-ws-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:4px}
+.acct-ws{padding:10px 14px;border-bottom:1px solid var(--border)}
+.acct-ws-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:3px}
 .acct-ws-name{font-size:13px;font-weight:500;color:var(--text-main)}
-.acct-ws-plan{font-size:11.5px;color:var(--text-muted)}
-.acct-menu{padding:6px}
-.acct-menu-item{display:block;padding:8px 10px;border-radius:7px;font-size:13px;color:var(--text-muted);cursor:pointer;transition:background .1s;width:100%;text-align:left;background:none;border:none;font-family:inherit}
+.acct-ws-plan{font-size:11px;color:var(--text-muted)}
+.acct-menu{padding:5px}
+.acct-menu-item{
+  display:block;padding:7px 9px;border-radius:6px;
+  font-size:12.5px;color:var(--text-muted);cursor:pointer;
+  width:100%;text-align:left;background:none;border:none;font-family:inherit;
+}
 .acct-menu-item:hover{background:var(--bg-hover);color:var(--text-main)}
 .acct-menu-item.danger{color:#dc2626}
 .acct-menu-item.danger:hover{background:#fef2f2}
 html.dark .acct-menu-item.danger:hover{background:#3f1515}
-.acct-divider{height:1px;background:var(--border);margin:4px 0}
+.acct-divider{height:1px;background:var(--border);margin:3px 0}
 
 /* ─── FILE UPLOAD ─── */
-.file-upload{border:1.5px dashed var(--border2);border-radius:var(--radius);background:var(--bg-panel);padding:22px;text-align:center;cursor:pointer;transition:border-color .12s,background .12s;position:relative;overflow:hidden}
-.file-upload:hover{border-color:var(--text3);background:var(--border)}
+.file-upload{
+  border:1px dashed var(--border2);border-radius:var(--radius);
+  background:var(--bg-panel);padding:20px;text-align:center;
+  cursor:pointer;position:relative;overflow:hidden;
+}
+.file-upload:hover{border-color:var(--text-muted);background:var(--bg-hover)}
 .file-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.file-upload-text{font-size:13px;color:var(--text-muted);margin-top:8px}
+.file-upload-text{font-size:12.5px;color:var(--text-muted);margin-top:6px}
 
 /* ─── TOAST ─── */
-#toast{position:fixed;bottom:24px;right:24px;background:var(--text-main);color:var(--bg);padding:12px 20px;border-radius:10px;font-size:13.5px;font-weight:500;transform:translateY(10px);opacity:0;transition:all .25s ease;z-index:9998;pointer-events:none;max-width:320px; box-shadow: var(--shadow-lg);}
+#toast{
+  position:fixed;bottom:22px;right:22px;
+  background:var(--text-main);color:var(--bg);
+  padding:11px 18px;border-radius:8px;
+  font-size:13px;font-weight:500;
+  transform:translateY(8px);opacity:0;transition:all .22s ease;
+  z-index:9998;pointer-events:none;max-width:300px;
+  box-shadow:var(--shadow-lg);
+}
 #toast.show{opacity:1;transform:translateY(0)}
 
 /* ─── RESULT KIT ─── */
-.kit-block{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:16px; box-shadow: var(--shadow-sm);}
-.kit-block h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:10px}
+.kit-block{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:14px;
+  box-shadow:var(--shadow-sm);
+}
+.kit-block h3{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:8px}
 .kit-block p{font-size:14px;color:var(--text-main);line-height:1.65}
-.kit-price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
-.price-tier{background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
-.price-tier-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:6px}
+.kit-price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.price-tier{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.price-tier-name{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:5px}
 .price-tier-val{font-size:20px;font-weight:700;color:var(--text-main)}
 
 /* ─── GIG CARDS ─── */
-.gig-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px; box-shadow: var(--shadow-sm);}
-.gig-card h4{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:8px}
-.gig-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.gig-tag{background:var(--bg-panel);border:1px solid var(--border);border-radius:99px;padding:3px 10px;font-size:11.5px;color:var(--text-muted)}
+.gig-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow-sm)}
+.gig-card h4{font-size:13.5px;font-weight:600;color:var(--text-main);margin-bottom:7px}
+.gig-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.gig-tag{background:var(--bg-panel);border:1px solid var(--border);border-radius:99px;padding:2px 9px;font-size:11px;color:var(--text-muted)}
 
 /* ─── ROADMAP ─── */
 .roadmap-day{border-left:2px solid var(--border);padding-left:18px;margin-bottom:20px;position:relative}
-.roadmap-day::before{content:attr(data-day);position:absolute;left:-14px;top:0;width:26px;height:26px;background:var(--text-main);color:var(--bg);border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.roadmap-day::before{
+  content:attr(data-day);position:absolute;left:-14px;top:0;
+  width:25px;height:25px;background:var(--text-main);color:var(--bg);
+  border-radius:50%;font-size:10.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
 
 /* ─── RESPONSIVE ─── */
 @media(max-width:768px){
   .sidebar{position:fixed;z-index:200;left:0;top:0;transform:translateX(-100%)}
   .sidebar.mobile-open{transform:translateX(0)}
-  .content-inner{padding:24px 20px 60px}
+  .content-inner{padding:22px 18px 60px}
 }
 </style>
 </head>
 <body>
 
 <div id="loading-screen">
-  <div class="sb-logo-mark" style="width:34px;height:34px;border-radius:9px;margin-bottom:4px">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-  </div>
+  <img src="Favicon_new_logo-removebg-preview.png" alt="Lancify" style="height:32px;width:auto;object-fit:contain;margin-bottom:8px;opacity:.7">
   <div class="spin"></div>
-  <span style="font-size:12.5px;color:var(--text3);font-weight:500">Loading workspace…</span>
+  <span style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.01em">Loading workspace…</span>
 </div>
 
 <div id="login-screen">
   <div class="login-card">
-    <div style="display:flex;align-items:center;justify-content:center;margin-bottom:16px">
-      <img src="lightthemelogo.png" alt="Lancify" style="height: 32px; width: auto; object-fit: contain;">
+    <div style="display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+      <img src="lightthemelogo.png" alt="Lancify" style="height:28px;width:auto;object-fit:contain">
     </div>
     <div class="login-sub">Sign in to your workspace</div>
 
@@ -487,14 +654,14 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
       <label class="field-label">Password</label>
       <input type="password" id="auth-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
     </div>
-    <div class="field-group" id="name-field" style="display:none;margin-top:14px;margin-bottom:0">
+    <div class="field-group" id="name-field" style="display:none;margin-top:12px;margin-bottom:0">
       <label class="field-label">Full Name</label>
       <input type="text" id="auth-name" placeholder="Shaurya Abhi">
     </div>
 
-    <button class="btn btn-primary btn-full" id="auth-btn" style="margin-top:18px;height:40px" onclick="authSubmit()">Sign In</button>
-    <div style="text-align:center;margin-top:14px;font-size:12.5px;color:var(--text-muted)" id="auth-toggle">
-      Don't have an account? <span onclick="toggleAuthMode()" style="color:var(--text-main);font-weight:500;cursor:pointer;text-decoration:underline">Sign up</span>
+    <button class="btn btn-primary btn-full" id="auth-btn" style="margin-top:16px;height:38px" onclick="authSubmit()">Sign In</button>
+    <div style="text-align:center;margin-top:12px;font-size:12px;color:#6b6b6b" id="auth-toggle">
+      Don't have an account? <span onclick="toggleAuthMode()" style="color:#0a0a0a;font-weight:500;cursor:pointer;text-decoration:underline">Sign up</span>
     </div>
   </div>
 </div>
@@ -504,12 +671,12 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
   <aside class="sidebar" id="sidebar">
 
     <div class="sb-logo">
-      <img src="darkthemelogo.png"                        alt="Lancify" class="logo-img-light">
-      <img src="lightthemelogo.png"                       alt="Lancify" class="logo-img-dark">
-      <img src="Favicon_new_logo-removebg-preview.png"   alt="L"       class="logo-img-icon">
+      <img src="lightthemelogo.png"                        alt="Lancify" class="logo-img-light">
+      <img src="darkthemelogo.png"                         alt="Lancify" class="logo-img-dark">
+      <img src="Favicon_new_logo-removebg-preview.png"    alt="L"       class="logo-img-icon">
 
       <button class="sb-collapse-btn" id="sb-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
-        <i data-lucide="panel-left-close" style="width:16px;height:16px;stroke-width:1.75"></i>
+        <i data-lucide="panel-left-close" style="width:15px;height:15px;stroke-width:1.75"></i>
       </button>
     </div>
 
@@ -517,18 +684,18 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
       <button class="sb-workspace-btn" onclick="toggleAccountDropdown()">
         <div class="ws-dot"></div>
         <span class="ws-name" id="ws-name">My Workspace</span>
-        <i data-lucide="chevron-down" class="ws-chevron" style="width:14px;height:14px;stroke-width:2"></i>
+        <i data-lucide="chevron-down" class="ws-chevron" style="width:13px;height:13px;stroke-width:2"></i>
       </button>
     </div>
 
     <nav class="sb-nav">
       <div class="sb-section">Tools</div>
-      <div class="nav-item active" data-page="home"     data-tooltip="Dashboard"        onclick="navigate('home')">    <i data-lucide="home"       class="icon"></i><span class="nav-label"> Dashboard</span></div>
-      <div class="nav-item"        data-page="profile"  data-tooltip="My Profile"       onclick="navigate('profile')"> <i data-lucide="user"       class="icon"></i><span class="nav-label"> My Profile</span></div>
+      <div class="nav-item active" data-page="home"     data-tooltip="Dashboard"        onclick="navigate('home')">    <i data-lucide="home"          class="icon"></i><span class="nav-label"> Dashboard</span></div>
+      <div class="nav-item"        data-page="profile"  data-tooltip="My Profile"       onclick="navigate('profile')"> <i data-lucide="user"          class="icon"></i><span class="nav-label"> My Profile</span></div>
       <div class="nav-item"        data-page="coach"    data-tooltip="Launch Coach"     onclick="navigate('coach')">   <i data-lucide="message-square" class="icon"></i><span class="nav-label"> Launch Coach</span></div>
-      <div class="nav-item"        data-page="audit"    data-tooltip="Audit Generator"  onclick="navigate('audit')">   <i data-lucide="sparkles"   class="icon"></i><span class="nav-label"> Audit Generator</span><span class="pro-badge">PRO</span></div>
-      <div class="nav-item"        data-page="proposal" data-tooltip="Proposal Writer"  onclick="navigate('proposal')"><i data-lucide="file-text"  class="icon"></i><span class="nav-label"> Proposal Writer</span><span class="pro-badge">PRO</span></div>
-      <div class="nav-item"        data-page="email"    data-tooltip="Email Writer"     onclick="navigate('email')">   <i data-lucide="mail"       class="icon"></i><span class="nav-label"> Email Writer</span><span class="pro-badge">PRO</span></div>
+      <div class="nav-item"        data-page="audit"    data-tooltip="Audit Generator"  onclick="navigate('audit')">   <i data-lucide="sparkles"      class="icon"></i><span class="nav-label"> Audit Generator</span><span class="pro-badge">PRO</span></div>
+      <div class="nav-item"        data-page="proposal" data-tooltip="Proposal Writer"  onclick="navigate('proposal')"><i data-lucide="file-text"     class="icon"></i><span class="nav-label"> Proposal Writer</span><span class="pro-badge">PRO</span></div>
+      <div class="nav-item"        data-page="email"    data-tooltip="Email Writer"     onclick="navigate('email')">   <i data-lucide="mail"          class="icon"></i><span class="nav-label"> Email Writer</span><span class="pro-badge">PRO</span></div>
 
       <div class="sb-section">Insights</div>
       <div class="nav-item" data-page="gig"      data-tooltip="Gig Finder"      onclick="navigate('gig')">      <i data-lucide="search"      class="icon"></i><span class="nav-label"> Gig Finder</span><span class="pro-badge">PRO</span></div>
@@ -543,7 +710,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
         <div class="sb-credits-num"><span id="credits-remaining">850</span> / <span id="credits-total">1,000</span> remaining</div>
       </div>
       <button class="btn-upgrade" onclick="showUpgradeModal()">
-        <i data-lucide="zap" style="width:14px;height:14px"></i>
+        <i data-lucide="zap" style="width:13px;height:13px"></i>
         <span class="upgrade-label">Upgrade to Pro</span>
       </button>
     </div>
@@ -551,9 +718,9 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
 
   <div class="main">
     <header class="header">
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:9px">
         <button class="header-icon-btn" id="sb-expand-btn" onclick="toggleSidebar()" title="Expand sidebar" style="display:none">
-          <i data-lucide="panel-left-open" style="width:16px;height:16px;stroke-width:1.75"></i>
+          <i data-lucide="panel-left-open" style="width:15px;height:15px;stroke-width:1.75"></i>
         </button>
         <span class="header-title" id="header-title">Dashboard</span>
       </div>
@@ -561,10 +728,10 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
         <button class="btn btn-ghost" onclick="showToast('Opening feedback form…')">Feedback</button>
         <button class="btn btn-ghost" style="gap:5px"><i data-lucide="file-text" style="width:13px;height:13px"></i> Docs</button>
         <button class="header-icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle theme">
-          <i data-lucide="sun"  id="theme-icon-sun"  style="width:16px;height:16px;stroke-width:1.75"></i>
-          <i data-lucide="moon" id="theme-icon-moon" style="width:16px;height:16px;stroke-width:1.75"></i>
+          <i data-lucide="sun"  id="theme-icon-sun"  style="width:15px;height:15px;stroke-width:1.75"></i>
+          <i data-lucide="moon" id="theme-icon-moon" style="width:15px;height:15px;stroke-width:1.75"></i>
         </button>
-        <button class="header-icon-btn" onclick="showToast('No new notifications')"><i data-lucide="bell" style="width:16px;height:16px"></i></button>
+        <button class="header-icon-btn" onclick="showToast('No new notifications')"><i data-lucide="bell" style="width:15px;height:15px"></i></button>
         <div class="header-avatar" id="header-avatar" onclick="toggleAccountDropdown()">S</div>
       </div>
     </header>
@@ -592,50 +759,50 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
       </div>
     </div>
 
-    <div class="content-scroll">
+    <div class="content-scroll" id="content-scroll">
 
       <div id="page-home" class="page active">
         <div class="content-inner">
-          <div style="margin-bottom:8px;font-size:13px;color:var(--text-muted)">My Workspace</div>
-          <h1 id="hero-greeting" style="font-size:30px;font-weight:700;letter-spacing:-.7px;margin-bottom:28px;color:var(--text-main)">Good morning, Shaurya</h1>
+          <div style="margin-bottom:6px;font-size:12.5px;color:var(--text-muted)">My Workspace</div>
+          <h1 id="hero-greeting" style="font-size:28px;font-weight:700;letter-spacing:-.6px;margin-bottom:26px;color:var(--text-main)">Good morning, Shaurya</h1>
 
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px">
             <div class="stat-card"><span class="stat-label">Total Kits</span><span class="stat-val" id="stat-kits">0</span></div>
             <div class="stat-card"><span class="stat-label">Proposals</span><span class="stat-val" id="stat-proposals">0</span></div>
             <div class="stat-card"><span class="stat-label">Emails</span><span class="stat-val" id="stat-emails">0</span></div>
             <div class="stat-card"><span class="stat-label">Gigs Found</span><span class="stat-val" id="stat-gigs">0</span></div>
           </div>
 
-          <div style="font-size:15px;font-weight:600;margin-bottom:14px;color:var(--text-main)">Get started</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px">
+          <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text-main)">Get started</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px">
             <div class="tool-card" onclick="navigate('coach')">
-              <div class="tool-icon" style="background:rgba(59, 130, 246, 0.1)"><i data-lucide="message-square" style="width:26px;height:26px;color:#3b82f6;stroke-width:1.75"></i></div>
+              <div class="tool-icon" style="background:rgba(59,130,246,0.08)"><i data-lucide="message-square" style="width:22px;height:22px;color:#3b82f6;stroke-width:1.75"></i></div>
               <div><h3>Launch Coach</h3><p>Generate your complete freelance kit</p></div>
             </div>
             <div class="tool-card" onclick="navigate('proposal')">
-              <div class="tool-icon" style="background:rgba(34, 197, 94, 0.1)"><i data-lucide="file-text" style="width:26px;height:26px;color:#22c55e;stroke-width:1.75"></i></div>
+              <div class="tool-icon" style="background:rgba(34,197,94,0.08)"><i data-lucide="file-text" style="width:22px;height:22px;color:#22c55e;stroke-width:1.75"></i></div>
               <div><h3>Proposal Writer</h3><p>Tailored cold pitch generator</p></div>
             </div>
             <div class="tool-card" onclick="navigate('email')">
-              <div class="tool-icon" style="background:rgba(245, 158, 11, 0.1)"><i data-lucide="mail" style="width:26px;height:26px;color:#f59e0b;stroke-width:1.75"></i></div>
+              <div class="tool-icon" style="background:rgba(245,158,11,0.08)"><i data-lucide="mail" style="width:22px;height:22px;color:#f59e0b;stroke-width:1.75"></i></div>
               <div><h3>Email Writer</h3><p>Draft professional client emails</p></div>
             </div>
             <div class="tool-card" onclick="navigate('audit')">
-              <div class="tool-icon" style="background:rgba(168, 85, 247, 0.1)"><i data-lucide="sparkles" style="width:26px;height:26px;color:#a855f7;stroke-width:1.75"></i></div>
+              <div class="tool-icon" style="background:rgba(168,85,247,0.08)"><i data-lucide="sparkles" style="width:22px;height:22px;color:#a855f7;stroke-width:1.75"></i></div>
               <div><h3>Audit Generator</h3><p>3-point growth diagnostics</p></div>
             </div>
             <div class="tool-card" onclick="navigate('gig')">
-              <div class="tool-icon" style="background:rgba(99, 102, 241, 0.1)"><i data-lucide="search" style="width:26px;height:26px;color:#6366f1;stroke-width:1.75"></i></div>
+              <div class="tool-icon" style="background:rgba(99,102,241,0.08)"><i data-lucide="search" style="width:22px;height:22px;color:#6366f1;stroke-width:1.75"></i></div>
               <div><h3>Gig Finder</h3><p>Match skills to paying niches</p></div>
             </div>
             <div class="tool-card" onclick="navigate('pipeline')">
-              <div class="tool-icon" style="background:rgba(244, 63, 94, 0.1)"><i data-lucide="bar-chart-2" style="width:26px;height:26px;color:#f43f5e;stroke-width:1.75"></i></div>
+              <div class="tool-icon" style="background:rgba(244,63,94,0.08)"><i data-lucide="bar-chart-2" style="width:22px;height:22px;color:#f43f5e;stroke-width:1.75"></i></div>
               <div><h3>Client Pipeline</h3><p>Track leads from pitch to paid</p></div>
             </div>
           </div>
 
           <div class="section-title">Recent activity</div>
-          <div id="recent-activity" style="color:var(--text3);font-size:13.5px;padding:20px 0;text-align:center">No activity yet. Start by creating your first freelance kit!</div>
+          <div id="recent-activity" style="color:var(--text3);font-size:13.5px;padding:18px 0;text-align:center">No activity yet. Start by creating your first freelance kit!</div>
         </div>
       </div>
 
@@ -651,16 +818,16 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
             <div class="chat-gen-bar" id="gen-bar"><div class="spin"></div><span id="gen-text">Analysing your skills…</span></div>
             <div id="input-zone" class="chat-input-row">
               <textarea class="chat-textarea" id="chat-input" placeholder="Type your answer…" onkeydown="handleChatKey(event)" oninput="autoResize(this)" rows="1"></textarea>
-              <button class="send-btn" onclick="sendChatMsg()"><i data-lucide="arrow-right" style="width:18px;height:18px"></i></button>
+              <button class="send-btn" onclick="sendChatMsg()"><i data-lucide="arrow-right" style="width:17px;height:17px"></i></button>
             </div>
           </div>
           <div id="kit-result" style="display:none;margin-top:28px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-              <h2 style="font-size:20px;font-weight:700;letter-spacing:-.4px;color:var(--text-main)">Your Freelance Kit</h2>
-              <button class="btn btn-secondary" onclick="downloadKitPDF()" style="gap:7px"><i data-lucide="download" style="width:14px;height:14px"></i> Download PDF</button>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+              <h2 style="font-size:18px;font-weight:700;letter-spacing:-.4px;color:var(--text-main)">Your Freelance Kit</h2>
+              <button class="btn btn-secondary" onclick="downloadKitPDF()" style="gap:6px"><i data-lucide="download" style="width:13px;height:13px"></i> Download PDF</button>
             </div>
             <div id="kit-blocks"></div>
-            <button class="btn btn-secondary" onclick="resetCoach()" style="margin-top:12px">Start Over</button>
+            <button class="btn btn-secondary" onclick="resetCoach()" style="margin-top:10px">Start Over</button>
           </div>
         </div>
       </div>
@@ -672,7 +839,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
             <div class="card" style="display:flex;flex-direction:column">
               <div class="panel-title">Target Intelligence</div>
               <div class="field-group">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
                   <div><label class="field-label">Business Name</label><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
                   <div><label class="field-label">Platform</label><select id="audit-platform" onchange="toggleAuditUrl()"><option>Instagram</option><option>Website</option><option>LinkedIn</option><option>YouTube</option></select></div>
                 </div>
@@ -680,17 +847,17 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
               <div class="field-group" id="audit-url-wrap" style="display:none"><label class="field-label">Website URL</label><input type="url" id="audit-url" placeholder="https://example.com"></div>
               <div class="field-group">
                 <label class="field-label">Client Logo <span class="field-optional">(Optional)</span></label>
-                <div class="file-upload"><input type="file" id="audit-logo" accept="image/*" onchange="updateLogoText(this)"><i data-lucide="upload-cloud" style="width:22px;height:22px;color:var(--text3);margin-bottom:6px"></i><div class="file-upload-text" id="audit-logo-text">Click or drag logo to upload</div></div>
+                <div class="file-upload"><input type="file" id="audit-logo" accept="image/*" onchange="updateLogoText(this)"><i data-lucide="upload-cloud" style="width:20px;height:20px;color:var(--text3);margin-bottom:5px"></i><div class="file-upload-text" id="audit-logo-text">Click or drag logo to upload</div></div>
               </div>
               <div class="field-group">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
                   <div><label class="field-label">Primary Weakness</label><select id="audit-weakness"><option value="No clear CTA">No clear Call-to-Action</option><option value="Poor branding">Poor branding</option><option value="Weak website">Weak website</option><option value="No social proof">No social proof</option></select></div>
                   <div><label class="field-label">Your Service</label><select id="audit-service"><option>Web Design</option><option>Social Media</option><option>Copywriting</option><option>Video Editing</option><option>SEO</option></select></div>
                 </div>
               </div>
               <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="₹2,500"></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:20px" onclick="generateAudit()">Generate Audit Dossier</button>
+              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="generateAudit()">Generate Audit Dossier</button>
               <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
             </div>
             <div class="result-panel">
@@ -699,7 +866,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
                 <div class="result-box-body" id="audit-result-text"></div>
               </div>
               <div class="card-dashed empty-state" id="audit-empty">
-                <i data-lucide="crosshair" style="width:28px;height:28px;color:var(--text3)"></i>
+                <i data-lucide="crosshair" style="width:26px;height:26px;color:var(--text3)"></i>
                 <p>Fill out the intelligence form to generate your cold pitch.</p>
               </div>
             </div>
@@ -710,19 +877,19 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
       <div id="page-proposal" class="page">
         <div class="content-inner">
           <div class="page-hd"><h1>Proposal Writer</h1><p>Paste a job description to generate a tailored, high-converting proposal.</p></div>
-          <div class="profile-banner" id="prop-banner" onclick="applyProfileTo('proposal')"><i data-lucide="user-check" style="width:14px;height:14px"></i> Profile detected — click to auto-fill your details</div>
+          <div class="profile-banner" id="prop-banner" onclick="applyProfileTo('proposal')"><i data-lucide="user-check" style="width:13px;height:13px"></i> Profile detected — click to auto-fill your details</div>
           <div class="tool-grid">
             <div class="card" style="display:flex;flex-direction:column">
               <div class="panel-title">Settings</div>
               <div class="field-group">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
                   <div><label class="field-label">Platform</label><select id="prop-platform"><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Direct Email</option></select></div>
                   <div><label class="field-label">Your Niche</label><input type="text" id="prop-niche" placeholder="e.g. YouTube Thumbnails"></div>
                 </div>
               </div>
               <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing here…"></textarea></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Experience</label><input type="text" id="prop-exp" placeholder="e.g. I designed thumbnails for a 100k channel"></div>
-              <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:20px" onclick="generateProposal()">Write My Proposal</button>
+              <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:18px" onclick="generateProposal()">Write My Proposal</button>
               <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposal…</span></div>
             </div>
             <div class="result-panel">
@@ -731,7 +898,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
                 <div class="result-box-body" id="prop-result-text"></div>
               </div>
               <div class="card-dashed empty-state" id="prop-empty">
-                <i data-lucide="file-text" style="width:28px;height:28px;color:var(--text3)"></i>
+                <i data-lucide="file-text" style="width:26px;height:26px;color:var(--text3)"></i>
                 <p>Fill in the details on the left to generate your proposal.</p>
               </div>
             </div>
@@ -748,7 +915,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
               <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm overdue payment reminder">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review or testimonial">Request Review / Testimonial</option></select></div>
               <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for ₹3,500 is 5 days overdue…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:20px" onclick="generateEmail()">Generate Draft</button>
+              <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="generateEmail()">Generate Draft</button>
               <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
             </div>
             <div class="result-panel">
@@ -757,7 +924,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
                 <div class="result-box-body" id="email-result-text"></div>
               </div>
               <div class="card-dashed empty-state" id="email-empty">
-                <i data-lucide="mail" style="width:28px;height:28px;color:var(--text3)"></i>
+                <i data-lucide="mail" style="width:26px;height:26px;color:var(--text3)"></i>
                 <p>Set your objective on the left to draft an email.</p>
               </div>
             </div>
@@ -768,18 +935,18 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
       <div id="page-gig" class="page">
         <div class="content-inner">
           <div class="page-hd"><h1>Gig Opportunity Finder</h1><p>Enter your skills and get data-driven niche recommendations.</p></div>
-          <div class="profile-banner" id="gig-banner" onclick="applyProfileTo('gig')"><i data-lucide="user-check" style="width:14px;height:14px"></i> Profile detected — click to auto-fill</div>
-          <div class="card" style="margin-bottom:24px">
-            <div style="display:grid;grid-template-columns:1fr 1fr 180px;gap:14px;align-items:end">
+          <div class="profile-banner" id="gig-banner" onclick="applyProfileTo('gig')"><i data-lucide="user-check" style="width:13px;height:13px"></i> Profile detected — click to auto-fill</div>
+          <div class="card" style="margin-bottom:22px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 160px;gap:12px;align-items:end">
               <div><label class="field-label">Your Skills</label><input type="text" id="gig-skills" placeholder="e.g. Canva, video editing, copywriting"></div>
               <div><label class="field-label">Target Platform</label><select id="gig-platform"><option value="Both Upwork and Fiverr">Upwork & Fiverr</option><option>Fiverr</option><option>Upwork</option><option>LinkedIn</option></select></div>
               <button class="btn btn-primary btn-full" id="gig-btn" onclick="findGigs()">Scan Market</button>
             </div>
-            <div class="inline-loader" id="gig-loader" style="margin-top:12px"><div class="spin"></div><span>Analysing market demand…</span></div>
+            <div class="inline-loader" id="gig-loader" style="margin-top:10px"><div class="spin"></div><span>Analysing market demand…</span></div>
           </div>
           <div id="gig-results" style="display:none">
             <div class="section-title">Top Recommendations</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" id="gig-cards"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="gig-cards"></div>
           </div>
         </div>
       </div>
@@ -787,9 +954,9 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
       <div id="page-roadmap" class="page">
         <div class="content-inner">
           <div class="page-hd"><h1>30-Day Income Roadmap</h1><p>Tell us where you're starting. AI builds your daily execution plan.</p></div>
-          <div class="profile-banner" id="rm-banner" onclick="applyProfileTo('roadmap')"><i data-lucide="user-check" style="width:14px;height:14px"></i> Profile detected — click to auto-fill</div>
+          <div class="profile-banner" id="rm-banner" onclick="applyProfileTo('roadmap')"><i data-lucide="user-check" style="width:13px;height:13px"></i> Profile detected — click to auto-fill</div>
           <div id="rm-form" class="card">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
               <div><label class="field-label">Your Name</label><input type="text" id="rm-name" placeholder="Shaurya"></div>
               <div><label class="field-label">Your Skills</label><input type="text" id="rm-skills" placeholder="e.g. Video Editing, Canva"></div>
               <div><label class="field-label">Target Platform</label><input type="text" id="rm-platform" placeholder="e.g. Upwork"></div>
@@ -800,9 +967,9 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
             <button class="btn btn-primary btn-full" id="rm-btn" onclick="generateRoadmap()">Generate 30-Day Roadmap</button>
             <div class="inline-loader" id="rm-loader"><div class="spin"></div><span>Building your custom roadmap…</span></div>
           </div>
-          <div id="rm-result" style="display:none;margin-top:24px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-              <h2 style="font-size:18px;font-weight:700">Your 30-Day Plan</h2>
+          <div id="rm-result" style="display:none;margin-top:22px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+              <h2 style="font-size:17px;font-weight:700">Your 30-Day Plan</h2>
               <button class="btn btn-secondary" onclick="resetRoadmap()">Start Over</button>
             </div>
             <div id="rm-content"></div>
@@ -811,10 +978,10 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
       </div>
 
       <div id="page-profile" class="page">
-        <div class="content-inner" style="max-width:640px">
+        <div class="content-inner" style="max-width:620px">
           <div class="page-hd"><h1>My Profile</h1><p>Set this once. Every tool uses it automatically.</p></div>
-          <div class="card" style="margin-bottom:16px">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="card" style="margin-bottom:14px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
               <div><label class="field-label">Your Name</label><input type="text" id="prof-name" placeholder="Shaurya Abhi"></div>
               <div><label class="field-label">Primary Skills</label><input type="text" id="prof-skills" placeholder="e.g. Video Editing, Canva"></div>
               <div><label class="field-label">Main Niche</label><input type="text" id="prof-niche" placeholder="e.g. YouTube Thumbnails"></div>
@@ -822,7 +989,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
               <div><label class="field-label">Experience Level</label><select id="prof-exp-level"><option>Complete Beginner</option><option>Had 1-2 clients</option><option>3-6 months experience</option><option>6+ months experience</option></select></div>
               <div><label class="field-label">Monthly Income Goal</label><select id="prof-goal"><option>₹10,000–₹25,000</option><option>₹25,000–₹50,000</option><option>₹50,000+</option></select></div>
             </div>
-            <div style="margin-top:14px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuber…"></textarea></div>
+            <div style="margin-top:12px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuber…"></textarea></div>
           </div>
           <button class="btn btn-primary" id="save-prof-btn" onclick="saveProfile()">Save Profile</button>
         </div>
@@ -831,50 +998,54 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
       <div id="page-pipeline" class="page">
         <div class="content-inner wide">
           <div class="page-hd"><h1>Client Pipeline</h1><p>Track every lead from first pitch to paid.</p></div>
-          <div class="card" style="margin-bottom:24px">
-            <div style="display:grid;grid-template-columns:1fr 1fr 160px 160px auto;gap:12px;align-items:end">
+          <div class="card" style="margin-bottom:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 150px 150px auto;gap:10px;align-items:end">
               <div><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Riya's Bakery"></div>
               <div><label class="field-label">Service / Project</label><input type="text" id="lead-service" placeholder="e.g. Instagram posts"></div>
               <div><label class="field-label">Value (₹)</label><input type="number" id="lead-value" placeholder="3500"></div>
               <div><label class="field-label">Platform</label><select id="lead-platform"><option>Instagram</option><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option></select></div>
-              <button class="btn btn-primary" onclick="addLead()" style="height:38px">Add Lead</button>
+              <button class="btn btn-primary" onclick="addLead()" style="height:36px">Add Lead</button>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
             <div class="kanban-board-col">
-              <div class="kanban-col-header" style="color:var(--text-muted)">Pitched (<span id="count-pitched">0</span>)</div>
+              <div class="kanban-col-header" style="color:var(--text-muted)">Pitched <span id="count-pitched" style="background:var(--bg-hover);border-radius:99px;padding:1px 7px;font-size:10px">0</span></div>
               <div id="col-pitched"></div>
             </div>
             <div class="kanban-board-col">
-              <div class="kanban-col-header" style="color:#d97706">In Talks (<span id="count-replied">0</span>)</div>
+              <div class="kanban-col-header" style="color:#d97706">In Talks <span id="count-replied" style="background:rgba(217,119,6,0.1);border-radius:99px;padding:1px 7px;font-size:10px">0</span></div>
               <div id="col-replied"></div>
             </div>
             <div class="kanban-board-col">
-              <div class="kanban-col-header" style="color:#16a34a">Won (<span id="count-won">0</span>)</div>
+              <div class="kanban-col-header" style="color:#16a34a">Won <span id="count-won" style="background:rgba(22,163,74,0.1);border-radius:99px;padding:1px 7px;font-size:10px">0</span></div>
               <div id="col-won"></div>
             </div>
           </div>
         </div>
       </div>
 
-    </div></div></div><div class="modal-backdrop" id="upgrade-modal">
-  <div class="modal" style="text-align:center">
-    <button class="modal-close" onclick="closeModal('upgrade-modal')"><i data-lucide="x" style="width:16px;height:16px"></i></button>
-    <div style="width:52px;height:52px;background:var(--bg-hover);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
-      <i data-lucide="zap" style="width:24px;height:24px;color:var(--text-main)"></i>
     </div>
-    <h3 style="font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px;color:var(--text-main)">Unlock Lancify Pro</h3>
-    <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:24px;line-height:1.55">Get unlimited AI credits, all premium tools, PDF exports, and priority support.</p>
-    <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:20px;text-align:left">
-      <div style="font-size:12px;color:var(--text3);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">What's included</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:13px;color:var(--text-main);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:14px;height:14px;color:#16a34a;flex-shrink:0"></i> Unlimited AI credits</div>
-        <div style="font-size:13px;color:var(--text-main);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:14px;height:14px;color:#16a34a;flex-shrink:0"></i> All Pro tools unlocked</div>
-        <div style="font-size:13px;color:var(--text-main);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:14px;height:14px;color:#16a34a;flex-shrink:0"></i> PDF export for audits & kits</div>
-        <div style="font-size:13px;color:var(--text-main);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:14px;height:14px;color:#16a34a;flex-shrink:0"></i> Priority support</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="upgrade-modal">
+  <div class="modal" style="text-align:center">
+    <button class="modal-close" onclick="closeModal('upgrade-modal')"><i data-lucide="x" style="width:15px;height:15px"></i></button>
+    <div style="width:48px;height:48px;background:var(--bg-hover);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+      <i data-lucide="zap" style="width:22px;height:22px;color:var(--text-main)"></i>
+    </div>
+    <h3 style="font-size:19px;font-weight:700;letter-spacing:-.4px;margin-bottom:7px;color:var(--text-main)">Unlock Lancify Pro</h3>
+    <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:22px;line-height:1.55">Get unlimited AI credits, all premium tools, PDF exports, and priority support.</p>
+    <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:9px;padding:14px 18px;margin-bottom:18px;text-align:left">
+      <div style="font-size:10.5px;color:var(--text3);margin-bottom:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">What's included</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="font-size:13px;color:var(--text-main);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:13px;height:13px;color:#16a34a;flex-shrink:0"></i> Unlimited AI credits</div>
+        <div style="font-size:13px;color:var(--text-main);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:13px;height:13px;color:#16a34a;flex-shrink:0"></i> All Pro tools unlocked</div>
+        <div style="font-size:13px;color:var(--text-main);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:13px;height:13px;color:#16a34a;flex-shrink:0"></i> PDF export for audits & kits</div>
+        <div style="font-size:13px;color:var(--text-main);display:flex;gap:8px;align-items:center"><i data-lucide="check" style="width:13px;height:13px;color:#16a34a;flex-shrink:0"></i> Priority support</div>
       </div>
     </div>
-    <button class="btn btn-primary btn-full" style="height:42px;font-size:14px" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeModal('upgrade-modal')">Upgrade Now →</button>
+    <button class="btn btn-primary btn-full" style="height:40px;font-size:14px" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeModal('upgrade-modal')">Upgrade Now →</button>
   </div>
 </div>
 
@@ -1004,8 +1175,8 @@ function toggleAuthMode() {
   el('name-field').style.display = su?'block':'none';
   el('auth-btn').textContent = su?'Create Account':'Sign In';
   el('auth-toggle').innerHTML = su
-    ? `Already have an account? <span onclick="toggleAuthMode()" style="color:var(--text-main);font-weight:500;cursor:pointer;text-decoration:underline">Sign in</span>`
-    : `Don't have an account? <span onclick="toggleAuthMode()" style="color:var(--text-main);font-weight:500;cursor:pointer;text-decoration:underline">Sign up</span>`;
+    ? `Already have an account? <span onclick="toggleAuthMode()" style="color:#0a0a0a;font-weight:500;cursor:pointer;text-decoration:underline">Sign in</span>`
+    : `Don't have an account? <span onclick="toggleAuthMode()" style="color:#0a0a0a;font-weight:500;cursor:pointer;text-decoration:underline">Sign up</span>`;
   clearAuthMessages();
 }
 
@@ -1050,199 +1221,217 @@ function navigate(page) {
 }
 
 /* ─── PROFILE ─── */
-async function loadProfile(uid) {
+async function loadProfile(uid){
   try {
-    const {data}=await sb.from('profiles').select('*').eq('id',uid).single();
-    if(data){
-      userProfile={...userProfile,...data};
-      if(data.skills){ setVal('prof-skills',data.skills); setVal('gig-skills',data.skills); setVal('rm-skills',data.skills); }
-      if(data.niche)  setVal('prof-niche',data.niche);
-      if(data.experience) setVal('prof-exp',data.experience);
-      if(data.name)   setVal('prof-name',data.name);
-      if(data.skills) ['prop-banner','gig-banner','rm-banner'].forEach(id=>{const e=el(id);if(e)e.classList.add('show');});
-    }
+    const {data}=await sb.from('profiles').select('*').eq('user_id',uid).single();
+    if(data){ userProfile={...userProfile,...data}; applyProfileToFields(data); checkProfileBanners(); }
   } catch(e){}
 }
 
-async function saveProfile() {
-  if(!currentUser) return;
-  const pd={id:currentUser.id,name:val('prof-name'),skills:val('prof-skills'),niche:val('prof-niche'),experience:val('prof-exp'),platform:val('prof-platform'),goal:val('prof-goal')};
-  await sb.from('profiles').upsert(pd);
-  userProfile={...userProfile,...pd};
-  showToast('Profile saved!');
-  if(pd.skills) ['prop-banner','gig-banner','rm-banner'].forEach(id=>{const e=el(id);if(e)e.classList.add('show');});
+function applyProfileToFields(p){
+  if(!p) return;
+  setVal('prof-name',p.name||'');
+  setVal('prof-skills',p.skills||'');
+  setVal('prof-niche',p.niche||'');
+  setVal('prof-exp',p.experience||'');
+  if(p.platform) setVal('prof-platform',p.platform);
+  if(p.exp_level) setVal('prof-exp-level',p.exp_level);
+  if(p.income_goal) setVal('prof-goal',p.income_goal);
 }
 
-function applyProfileTo(tool) {
-  if(tool==='proposal'){ if(userProfile.niche) setVal('prop-niche',userProfile.niche); if(userProfile.experience) setVal('prop-exp',userProfile.experience); showToast('Profile applied!'); }
-  else if(tool==='gig'){ if(userProfile.skills){ setVal('gig-skills',userProfile.skills); showToast('Profile applied!'); } }
-  else if(tool==='roadmap'){ if(userProfile.skills){ setVal('rm-skills',userProfile.skills); showToast('Profile applied!'); } if(userProfile.name) setVal('rm-name',userProfile.name); }
+function checkProfileBanners(){
+  if(userProfile.skills){
+    ['prop','gig','rm'].forEach(id=>{
+      const b=el(id+'-banner'); if(b) b.classList.add('show');
+    });
+  }
+}
+
+function applyProfileTo(tool){
+  if(!userProfile.skills) return;
+  if(tool==='proposal'){ setVal('prop-niche',userProfile.niche||''); setVal('prop-exp',userProfile.experience||''); }
+  if(tool==='gig'){ setVal('gig-skills',userProfile.skills||''); }
+  if(tool==='roadmap'){ setVal('rm-name',userProfile.name||''); setVal('rm-skills',userProfile.skills||''); if(userProfile.exp_level) setVal('rm-level',userProfile.exp_level); }
+  showToast('Profile auto-filled!');
+}
+
+async function saveProfile(){
+  if(!currentUser) return;
+  const p={user_id:currentUser.id,name:val('prof-name'),skills:val('prof-skills'),niche:val('prof-niche'),experience:val('prof-exp'),platform:val('prof-platform'),exp_level:val('prof-exp-level'),income_goal:val('prof-goal')};
+  el('save-prof-btn').disabled=true; el('save-prof-btn').textContent='Saving…';
+  try {
+    await sb.from('profiles').upsert([p],{onConflict:'user_id'});
+    userProfile={...userProfile,...p}; checkProfileBanners(); showToast('Profile saved!');
+  } catch(e){ showToast('Error saving profile.'); }
+  el('save-prof-btn').disabled=false; el('save-prof-btn').textContent='Save Profile';
 }
 
 /* ─── STATS ─── */
-async function loadStats(uid) {
+async function loadStats(uid){
   try {
-    const [kits,props,emails,gigs] = await Promise.all([
-      sb.from('launch_kits').select('id',{count:'exact'}).eq('user_id',uid),
+    const [kits,props,emails,gigs]=await Promise.all([
+      sb.from('kits').select('id',{count:'exact'}).eq('user_id',uid),
       sb.from('proposals').select('id',{count:'exact'}).eq('user_id',uid),
       sb.from('emails').select('id',{count:'exact'}).eq('user_id',uid),
       sb.from('gig_searches').select('id',{count:'exact'}).eq('user_id',uid)
     ]);
-    setText('stat-kits',    kits.count||0);
+    setText('stat-kits',kits.count||0);
     setText('stat-proposals',props.count||0);
-    setText('stat-emails',  emails.count||0);
-    setText('stat-gigs',    gigs.count||0);
-    const used = (kits.count||0)+(props.count||0)+(emails.count||0);
-    const rem  = Math.max(0,1000-used*10);
-    setText('credits-remaining', rem);
-    setText('acct-credits-remaining', rem);
-    const pct = Math.max(5,(rem/1000)*100);
-    el('credits-bar').style.width=pct+'%';
+    setText('stat-emails',emails.count||0);
+    setText('stat-gigs',gigs.count||0);
+    const total=1000, used=((kits.count||0)*10)+((props.count||0)*5)+((emails.count||0)*3)+((gigs.count||0)*8);
+    const remaining=Math.max(0,total-used);
+    setText('credits-remaining',remaining.toLocaleString());
+    setText('acct-credits-remaining',remaining.toLocaleString());
+    const bar=el('credits-bar'); if(bar) bar.style.width=`${Math.round((remaining/total)*100)}%`;
   } catch(e){}
 }
 
 /* ─── LAUNCH COACH ─── */
-function startCoach(){ chatStep=0; chatAnswers={}; clearEl('chat-msgs'); addAiMsg(chatQuestions[0].q,chatQuestions[0].opts||[]); updateProgress(); }
-function resetCoach(){ el('kit-result').style.display='none'; show('input-zone'); show('chat-progress-wrap'); startCoach(); }
-
-function addAiMsg(text,opts=[]){
-  const wrap=el('chat-msgs');
-  const b=document.createElement('div');
-  b.innerHTML=`<div class="bubble ai">${text}</div>`;
-  if(opts.length){
-    const od=document.createElement('div'); od.className='chat-opts';
-    opts.forEach(o=>{ const btn=document.createElement('button'); btn.className='opt-btn'; btn.textContent=o; btn.onclick=()=>{ setVal('chat-input',o); sendChatMsg(); }; od.appendChild(btn); });
-    b.appendChild(od);
-  }
-  wrap.appendChild(b); wrap.scrollTop=wrap.scrollHeight;
+function startCoach(){
+  chatStep=0; chatAnswers={}; savedKitData=null;
+  clearEl('chat-msgs'); hide('kit-result'); show('chat-progress-wrap'); show('input-zone');
+  el('gen-bar')?.classList.remove('show'); el('chat-input')&&(el('chat-input').value='');
+  updateProgress(0);
+  appendBubble('ai',chatQuestions[0].q);
+  showChatOpts(chatQuestions[0].opts||[]);
 }
 
-function addUserMsg(text){
-  const wrap=el('chat-msgs');
-  const b=document.createElement('div');
-  b.style.display='flex'; b.style.justifyContent='flex-end';
-  b.innerHTML=`<div class="bubble usr">${text}</div>`;
-  wrap.appendChild(b); wrap.scrollTop=wrap.scrollHeight;
+function resetCoach(){ startCoach(); }
+
+function updateProgress(step){
+  const pct=Math.round((step/chatQuestions.length)*100);
+  setText('prog-label',`Step ${step+1} of ${chatQuestions.length}`);
+  setText('prog-pct',pct+'%');
+  const f=el('prog-fill'); if(f) f.style.width=pct+'%';
 }
 
-function updateProgress(){
-  const pct=Math.round((chatStep/chatQuestions.length)*100);
-  el('prog-fill').style.width=pct+'%';
-  el('prog-pct').textContent=pct+'%';
-  el('prog-label').textContent=`Step ${Math.min(chatStep+1,chatQuestions.length)} of ${chatQuestions.length}`;
+function appendBubble(role,text){
+  const d=document.createElement('div'); d.className=`bubble ${role}`;
+  d.textContent=text; el('chat-msgs').appendChild(d);
+  el('chat-msgs').scrollTop=el('chat-msgs').scrollHeight;
+  return d;
+}
+
+function showChatOpts(opts){
+  if(!opts||!opts.length) return;
+  const wrap=document.createElement('div'); wrap.className='chat-opts';
+  opts.forEach(o=>{
+    const b=document.createElement('button'); b.className='opt-btn'; b.textContent=o;
+    b.onclick=()=>{ document.querySelectorAll('.opt-btn').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); el('chat-input').value=o; sendChatMsg(); };
+    wrap.appendChild(b);
+  });
+  el('chat-msgs').appendChild(wrap); el('chat-msgs').scrollTop=el('chat-msgs').scrollHeight;
 }
 
 function handleChatKey(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChatMsg(); } }
 
 async function sendChatMsg(){
-  const txt=val('chat-input').trim(); if(!txt) return;
-  addUserMsg(txt); setVal('chat-input','');
-  chatAnswers[chatQuestions[chatStep].key]=txt;
+  const input=el('chat-input'); const text=input.value.trim(); if(!text) return;
+  input.value=''; input.style.height='auto';
+  document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  appendBubble('usr',text);
+  chatAnswers[chatQuestions[chatStep].key]=text;
   chatStep++;
   if(chatStep<chatQuestions.length){
-    setTimeout(()=>{ addAiMsg(chatQuestions[chatStep].q,chatQuestions[chatStep].opts||[]); updateProgress(); },400);
+    updateProgress(chatStep);
+    setTimeout(()=>{ appendBubble('ai',chatQuestions[chatStep].q); showChatOpts(chatQuestions[chatStep].opts||[]); },400);
   } else {
     hide('input-zone'); hide('chat-progress-wrap');
-    el('gen-bar').classList.add('show');
-    el('gen-text').textContent='Analysing your skills and building your kit…';
-    await generateKit();
+    el('gen-bar')?.classList.add('show');
+    setText('gen-text','Building your complete freelance kit…');
+    try {
+      const res=await fetch('/api/launchcoach',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(chatAnswers)});
+      const data=await res.json();
+      if(data.error) throw new Error(data.error);
+      savedKitData=data; el('gen-bar')?.classList.remove('show');
+      renderKit(data);
+      if(currentUser){ await sb.from('kits').insert([{user_id:currentUser.id,kit_data:data,skill:chatAnswers.skill}]); loadStats(currentUser.id); }
+    } catch(e){ el('gen-bar')?.classList.remove('show'); showToast('Error building kit. Try again.'); show('input-zone'); show('chat-progress-wrap'); chatStep=chatQuestions.length-1; }
   }
 }
 
-async function generateKit(){
-  try {
-    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answers:chatAnswers})});
-    const data=await res.json();
-    if(data.error) throw new Error(data.error);
-    
-    savedKitData = {
-      niche: data.niche,
-      bio: data.portfolio_blurb || data.bio,
-      usp: data.gig_title || data.usp,
-      pricing: data.pricing,
-      tip: data.action_plan ? "Follow your 30-day action plan!" : data.tip
-    };
-
-    renderKit(savedKitData);
-    if(currentUser){ await sb.from('launch_kits').insert([{user_id:currentUser.id,kit_data:savedKitData,answers:chatAnswers}]); loadStats(currentUser.id); }
-  } catch(e){ showToast('Error generating kit. Please try again.'); el('gen-bar').classList.remove('show'); show('input-zone'); }
-  el('gen-bar').classList.remove('show');
-}
-
-function renderKit(d){
-  el('kit-result').style.display='block';
-  el('kit-blocks').innerHTML=`
-    <div class="kit-block"><h3>Your Niche</h3><p>${d.niche||''}</p></div>
-    <div class="kit-block"><h3>Professional Bio</h3><p>${d.bio||''}</p></div>
-    <div class="kit-block"><h3>Your Unique Selling Proposition</h3><p>${d.usp||''}</p></div>
-    <div class="kit-block"><h3>Pricing Strategy</h3><div class="kit-price-grid">
-      <div class="price-tier"><div class="price-tier-name">Starter</div><div class="price-tier-val">${d.pricing?.starter?.price || d.pricing?.basic?.price || 'TBD'}</div></div>
-      <div class="price-tier"><div class="price-tier-name">Standard</div><div class="price-tier-val">${d.pricing?.standard?.price || 'TBD'}</div></div>
-      <div class="price-tier"><div class="price-tier-name">Premium</div><div class="price-tier-val">${d.pricing?.premium?.price || 'TBD'}</div></div>
-    </div></div>
-    <div class="kit-block"><h3>This Week's Action</h3><p>${d.tip||''}</p></div>`;
+function renderKit(data){
+  const blocks=el('kit-blocks'); blocks.innerHTML='';
+  const add=(title,content)=>{
+    const d=document.createElement('div'); d.className='kit-block';
+    d.innerHTML=`<h3>${title}</h3><p>${content}</p>`; blocks.appendChild(d);
+  };
+  if(data.elevatorPitch) add('Elevator Pitch',data.elevatorPitch);
+  if(data.targetClient) add('Target Client',data.targetClient);
+  if(data.uniqueValue) add('Unique Value Proposition',data.uniqueValue);
+  if(data.coldMessage) add('Cold Outreach Message',data.coldMessage);
+  if(data.pricing){ const d=document.createElement('div'); d.className='kit-block'; d.innerHTML=`<h3>Pricing Tiers</h3><div class="kit-price-grid">${['starter','standard','premium'].filter(t=>data.pricing[t]).map(t=>`<div class="price-tier"><div class="price-tier-name">${t.charAt(0).toUpperCase()+t.slice(1)}</div><div class="price-tier-val">${data.pricing[t]}</div></div>`).join('')}</div>`; blocks.appendChild(d); }
+  if(data.nextSteps) add('Your Next 3 Steps',Array.isArray(data.nextSteps)?data.nextSteps.join('\n'):data.nextSteps);
+  show('kit-result'); el('kit-result')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 async function downloadKitPDF(){
-  if(!savedKitData) return;
-  showToast('Generating PDF…');
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF();
-  doc.setFontSize(22); doc.setFont('helvetica','bold'); doc.text('Your Freelance Kit',20,25);
-  doc.setFontSize(11); doc.setFont('helvetica','normal'); let y=42;
-  [['Niche',savedKitData.niche],['Bio',savedKitData.bio],['USP',savedKitData.usp],['First Client Tip',savedKitData.tip]].forEach(([title,text])=>{
-    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.text(title,20,y); y+=7;
-    doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
-    const lines=doc.splitTextToSize(text||'',170); doc.text(lines,20,y); y+=lines.length*5.5+10;
-  });
-  doc.save('lancify-kit.pdf');
+  if(!savedKitData) return showToast('Generate your kit first!');
+  showToast('Preparing PDF…');
+  try {
+    const {jsPDF}=window.jspdf; const doc=new jsPDF();
+    doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.text('My Freelance Kit',20,20);
+    let y=35;
+    const addSection=(title,text)=>{
+      if(y>260){ doc.addPage(); y=20; }
+      doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(100); doc.text(title.toUpperCase(),20,y); y+=6;
+      doc.setFont('helvetica','normal'); doc.setFontSize(12); doc.setTextColor(0);
+      const lines=doc.splitTextToSize(String(text),170); doc.text(lines,20,y); y+=lines.length*6+10;
+    };
+    if(savedKitData.elevatorPitch) addSection('Elevator Pitch',savedKitData.elevatorPitch);
+    if(savedKitData.targetClient) addSection('Target Client',savedKitData.targetClient);
+    if(savedKitData.uniqueValue) addSection('Unique Value',savedKitData.uniqueValue);
+    if(savedKitData.coldMessage) addSection('Cold Message',savedKitData.coldMessage);
+    if(savedKitData.nextSteps) addSection('Next Steps',Array.isArray(savedKitData.nextSteps)?savedKitData.nextSteps.join('\n'):savedKitData.nextSteps);
+    doc.save('my-freelance-kit.pdf');
+  } catch(e){ showToast('PDF error. Try again.'); }
 }
 
 /* ─── AUDIT ─── */
-function toggleAuditUrl(){ el('audit-url-wrap').style.display=val('audit-platform')==='Website'?'block':'none'; }
-function updateLogoText(input){ el('audit-logo-text').textContent=input.files[0]?input.files[0].name:'Click or drag logo to upload'; }
+function toggleAuditUrl(){ const v=val('audit-platform'); el('audit-url-wrap').style.display=(v==='Website')?'block':'none'; }
+
+function updateLogoText(input){ const f=input.files[0]; if(f) setText('audit-logo-text',f.name); }
 
 async function generateAudit(){
-  const target=val('audit-target'); if(!target) return showToast('Add a business name');
-  toggleResult('audit',false);
-  el('audit-btn').disabled=true; loader('audit',true);
+  const target=val('audit-target'); if(!target) return showToast('Enter a business name');
+  el('audit-btn').disabled=true; loader('audit',true); toggleResult('audit',false);
   try {
-    const res=await fetch('/api/audit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,platform:val('audit-platform'),weakness:val('audit-weakness'),service:val('audit-service'),price:val('audit-price'),observation:val('audit-obs')})});
+    const logoFile=el('audit-logo').files[0]; let logoBase64='';
+    if(logoFile){ logoBase64=await new Promise(r=>{ const fr=new FileReader(); fr.onload=e=>r(e.target.result.split(',')[1]); fr.readAsDataURL(logoFile); }); }
+    const res=await fetch('/api/audit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({businessName:target,platform:val('audit-platform'),websiteUrl:val('audit-url'),weakness:val('audit-weakness'),service:val('audit-service'),price:val('audit-price'),observation:val('audit-obs'),logoBase64})});
     const data=await res.json();
     if(data.error) throw new Error(data.error);
-    el('audit-result-text').innerHTML=(data.email_body||data.body||'').replace(/\n/g, '<br>');
+    el('audit-result-text').textContent=data.body||JSON.stringify(data);
     toggleResult('audit',true);
-    if(currentUser){ await sb.from('audits').insert([{user_id:currentUser.id,target,result:data.email_body||data.body||''}]); loadStats(currentUser.id); }
   } catch(e){ showToast('Error. Try again.'); toggleResult('audit',false,true); }
   el('audit-btn').disabled=false; loader('audit',false);
 }
 
 /* ─── PROPOSAL ─── */
 async function generateProposal(){
-  const niche=val('prop-niche'),job=val('prop-job'); if(!job) return showToast('Fill in job description');
-  toggleResult('prop',false);
-  el('prop-btn').disabled=true; loader('prop',true);
+  const job=val('prop-job'); if(!job) return showToast('Paste a job description first');
+  el('prop-btn').disabled=true; loader('prop',true); toggleResult('prop',false);
   try {
-    const res=await fetch('/api/proposal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({platform:val('prop-platform'),niche:niche||userProfile.niche||'Freelancer',jobDesc:job,experience:val('prop-exp')})});
+    const res=await fetch('/api/proposal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({platform:val('prop-platform'),niche:val('prop-niche'),jobDescription:job,experience:val('prop-exp')})});
     const data=await res.json();
     if(data.error) throw new Error(data.error);
-    el('prop-result-text').textContent=data.proposal||data.body||'';
+    el('prop-result-text').textContent=data.body||JSON.stringify(data);
     toggleResult('prop',true);
-    if(currentUser){ await sb.from('proposals').insert([{user_id:currentUser.id,niche,proposal_text:data.proposal||'',job_description:job,platform:val('prop-platform')}]); loadStats(currentUser.id); }
+    if(currentUser){ await sb.from('proposals').insert([{user_id:currentUser.id,platform:val('prop-platform'),niche:val('prop-niche'),proposal_text:data.body||'',job_description:job}]); loadStats(currentUser.id); }
   } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); }
   el('prop-btn').disabled=false; loader('prop',false);
 }
 
 /* ─── EMAIL ─── */
 async function generateEmail(){
-  const ctx=val('email-context'); if(!ctx) return showToast('Add some context');
-  toggleResult('email',false);
-  el('email-btn').disabled=true; loader('email',true);
+  const ctx=val('email-context'); if(!ctx) return showToast('Add some context first');
+  el('email-btn').disabled=true; loader('email',true); toggleResult('email',false);
   try {
     const res=await fetch('/api/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({emailType:val('email-type'),tone:val('email-tone'),context:ctx})});
     const data=await res.json();
     if(data.error) throw new Error(data.error);
-    el('email-result-text').innerHTML=(data.body||'').replace(/\n/g, '<br>');
+    el('email-result-text').textContent=data.body||JSON.stringify(data);
     toggleResult('email',true);
     if(currentUser){ await sb.from('emails').insert([{user_id:currentUser.id,email_type:val('email-type'),email_text:data.body||'',context:ctx}]); loadStats(currentUser.id); }
   } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); }
@@ -1284,7 +1473,7 @@ async function generateRoadmap(){
     if(data.error) throw new Error(data.error);
     el('rm-content').innerHTML=(data.weeks||[]).map(w=>`
       <div style="margin-bottom:28px">
-        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:14px">Week ${w.weekNumber||w.week} — ${w.theme}</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:14px">Week ${w.weekNumber||w.week} — ${w.theme}</div>
         <div style="display:flex;flex-direction:column;gap:8px">
           ${(w.days||[]).map(d=>`<div class="roadmap-day" data-day="${d.day}"><div style="font-size:13.5px;color:var(--text-main);line-height:1.5;padding:2px 0"><strong>${d.title||''}</strong>${d.title?': ':''}${d.task}</div></div>`).join('')}
         </div>
@@ -1318,7 +1507,7 @@ function renderPipeline(){
             <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="deleteLead('${l.id}')">Delete</button>
           </div>
         </div>`).join('')
-      : `<div style="font-size:12.5px;color:var(--text3);text-align:center;padding:20px 0">No leads here</div>`;
+      : `<div style="font-size:12px;color:var(--text3);text-align:center;padding:18px 0">No leads here</div>`;
   });
 }
 
