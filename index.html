@@ -2397,36 +2397,46 @@ function onLogin(user) {
 }
 
 async function _decideRoute(uid) {
+  // 1. Ensure the intro animation is visible and playing
+  const intro = el('ob-logo-intro');
+  if (intro) intro.style.display = 'flex';
+
+  // 2. Fetch the user's data in the background while the animation plays
   const localDone = localStorage.getItem('lancify-onboarded-' + uid) === 'yes';
+  let isReturning = false;
+
   try {
     const { data } = await sb.from('profiles').select('skills').eq('user_id', uid).single();
     const dbDone   = data && data.skills && data.skills !== 'Skipped';
+
     if (localDone && dbDone) {
+      isReturning = true; // They are a returning user!
       const { data: full } = await sb.from('profiles').select('*').eq('user_id', uid).single();
       if (full) { userProfile = { ...userProfile, ...full }; applyProfileToFields(full); checkProfileBanners(); }
-      el('app-layout').classList.add('show');
-    } else {
-      _runLogoIntro();
     }
   } catch(e) {
-    _runLogoIntro();
+    isReturning = false; // No profile found, they are a new user
   }
+
+  // 3. Wait for the 2.4s animation to finish, THEN fade it out and route them
+  setTimeout(() => {
+    if (intro) intro.classList.add('hide'); // Start the fade out
+    
+    setTimeout(() => {
+      if (intro) intro.style.display = 'none'; // Completely remove it from the screen
+      
+      if (isReturning) {
+        // Returning user -> Show Dashboard instantly
+        el('app-layout').classList.add('show');
+      } else {
+        // New user -> Show Onboarding Wizard
+        _showOnboarding();
+      }
+    }, 650); // Wait 650ms for the CSS fade-out to finish
+  }, 2400); // Wait 2.4s for the main intro animation to play
 }
 
-/* ── Logo intro → onboarding ── */
-function _runLogoIntro() {
-  const intro = el('ob-logo-intro');
-  if (!intro) { _showOnboarding(); return; }
-  intro.style.display = 'flex';
-  // After 2.4s, fade out logo → show onboarding
-  setTimeout(() => {
-    intro.classList.add('hide');
-    setTimeout(() => {
-      intro.style.display = 'none';
-      _showOnboarding();
-    }, 650);
-  }, 2400);
-}
+// NOTE: You can completely delete the old `function _runLogoIntro()` because it is now safely built into the function above.
 
 function _showOnboarding() {
   _obStep = 1;
