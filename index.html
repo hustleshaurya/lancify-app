@@ -620,143 +620,105 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
   .content-inner{padding:22px 18px 60px}
 }
   /* ══════════════════════════════════════════════════════════
-     ONBOARDING — ElevenLabs logo-first experience
+     ONBOARDING — shown exactly once, no animation
      ══════════════════════════════════════════════════════════ */
 
-/* ── Outer shell ── */
 #onboarding-screen {
   display: none;
   position: fixed; inset: 0;
   z-index: 9500;
-  background: #09090b; /* always dark for the intro — matches ElevenLabs */
+  background: var(--bg);
   align-items: center; justify-content: center;
-  opacity: 1;
-  transition: opacity 0.6s ease;
+  padding: 20px;
+  opacity: 1; transition: opacity 0.4s ease;
 }
 #onboarding-screen.show { display: flex; }
 #onboarding-screen.fade-out { opacity: 0; pointer-events: none; }
 
-/* ── Subtle radial glow behind logo — pure CSS, no canvas ── */
-#onboarding-screen::before {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 50%,
-      rgba(124, 58, 237, 0.18) 0%,
-      rgba(59, 130, 246, 0.10) 40%,
-      transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Logo intro layer ── */
-#intro-logo-layer {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 10;
-  transition: opacity 0.5s ease;
-}
-#intro-logo-layer.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* The logo + wordmark container */
-.intro-logo-wrap {
-  display: flex; align-items: center; gap: 16px;
-  animation: logoReveal 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.intro-logo-wrap img {
-  height: 46px; width: auto;
-}
-
-.intro-logo-text {
-  font-size: 42px;
-  font-weight: 700;
-  letter-spacing: -2px;
-  color: #ffffff;
-}
-
-/* ElevenLabs-style: fade in from slightly blurred/small → hold → scale up + fade out */
-@keyframes logoReveal {
-  0%   { opacity: 0; transform: scale(0.96); filter: blur(8px); }
-  12%  { opacity: 1; transform: scale(1);    filter: blur(0px); }
-  80%  { opacity: 1; transform: scale(1);    filter: blur(0px); }
-  100% { opacity: 0; transform: scale(1.04); filter: blur(6px); }
-}
-
-/* ── Wizard card ── */
+/* ── Card ── */
 #onboarding-wizard {
-  position: relative; z-index: 20;
-  width: 100%; max-width: 480px;
-  margin: 0 20px;
-  padding: 40px 44px;
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
-  border-radius: 18px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.28);
-  /* Visibility controlled entirely via opacity+visibility — no display toggling */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(16px);
-  transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1),
-              transform 0.45s cubic-bezier(0.16,1,0.3,1),
-              visibility 0s linear 0.45s;
-}
-html.dark #onboarding-wizard {
-  background: #111111;
-  border-color: #262626;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.7);
-}
-#onboarding-wizard.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1),
-              transform 0.45s cubic-bezier(0.16,1,0.3,1),
-              visibility 0s linear 0s;
+  width: 100%; max-width: 520px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
 
-/* ── Wizard steps ── */
-.wizard-step { display: none; }
-.wizard-step.active {
+/* Progress bar at top */
+.ob-progress-bar {
+  height: 3px;
+  background: var(--border);
+  position: relative;
+}
+.ob-progress-fill {
+  height: 100%;
+  background: #7c3aed;
+  border-radius: 0 2px 2px 0;
+  transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+
+/* Card body */
+.ob-body {
+  padding: 36px 40px 32px;
+}
+
+/* Step header */
+.ob-step-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: #7c3aed; margin-bottom: 8px;
+}
+.ob-title {
+  font-size: 22px; font-weight: 700; color: var(--text-main);
+  letter-spacing: -0.4px; margin-bottom: 4px;
+}
+.ob-subtitle {
+  font-size: 13px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.55;
+}
+
+/* Step panels */
+.ob-step { display: none; }
+.ob-step.active {
   display: block;
-  animation: stepIn 0.28s cubic-bezier(0.16,1,0.3,1) forwards;
+  animation: obStepIn 0.22s ease forwards;
 }
-@keyframes stepIn {
-  from { opacity: 0; transform: translateX(8px); }
-  to   { opacity: 1; transform: translateX(0); }
+@keyframes obStepIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.wizard-title {
-  font-size: 22px; font-weight: 700;
-  color: var(--text-main);
-  margin-bottom: 6px; letter-spacing: -0.4px;
-}
-.wizard-subtitle {
-  font-size: 13.5px; color: var(--text-muted);
-  margin-bottom: 26px; line-height: 1.55;
-}
-.wizard-footer {
+/* Footer */
+.ob-footer {
   display: flex; justify-content: space-between; align-items: center;
-  margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--border);
+  padding: 20px 40px 28px;
+  border-top: 1px solid var(--border);
 }
-.wizard-dots { display: flex; gap: 6px; align-items: center; }
-.wizard-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--border2);
-  transition: all 0.25s ease;
-}
-.wizard-dot.active {
-  background: #7c3aed; width: 20px; border-radius: 4px;
+.ob-step-counter {
+  font-size: 12px; color: var(--text3); font-weight: 500;
 }
 
-/* Wizard inputs */
+/* Inputs in onboarding use violet focus */
 #onboarding-wizard input:focus,
-#onboarding-wizard select:focus {
+#onboarding-wizard select:focus,
+#onboarding-wizard textarea:focus {
   border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.10);
+}
+
+/* Chip selector (for platform, hours, goal) */
+.ob-chips {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px;
+}
+.ob-chip {
+  padding: 7px 14px; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-weight: 500; border: 1.5px solid var(--border2);
+  background: var(--bg); color: var(--text-muted);
+  transition: all 0.15s ease; user-select: none;
+}
+.ob-chip:hover { border-color: #7c3aed; color: #7c3aed; }
+.ob-chip.selected {
+  border-color: #7c3aed; background: rgba(124,58,237,0.08);
+  color: #7c3aed;
 }
 </style>
 </head>
@@ -805,99 +767,123 @@ html.dark #onboarding-wizard {
   </div>
 </div>
 <div id="onboarding-screen">
-
-  <!-- Logo intro — fades out after 3s, then wizard appears -->
-  <div id="intro-logo-layer">
-    <div class="intro-logo-wrap">
-      <img src="Favicon_new_logo-removebg-preview.png" alt="Lancify">
-      <span class="intro-logo-text">Lancify</span>
-    </div>
-  </div>
-
   <div id="onboarding-wizard">
-    <div class="wizard-step active" id="wizard-step-1">
-      <div class="wizard-title">Welcome to your workspace.</div>
-      <div class="wizard-subtitle">Let's personalize your AI. This takes 30 seconds.</div>
-      
-      <div class="field-group">
-        <label class="field-label">What is your primary skill?</label>
-        <input type="text" id="ob-skills" placeholder="e.g. Video Editing, UI/UX, Copywriting">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Experience Level</label>
-        <select id="ob-exp">
-          <option value="Complete Beginner">Complete Beginner</option>
-          <option value="Had 1-2 clients">Had 1-2 clients</option>
-          <option value="3-6 months experience">3-6 months experience</option>
-          <option value="Experienced">Experienced Professional</option>
-        </select>
-      </div>
-      
-      <div class="wizard-footer">
-        <button class="btn btn-ghost" id="ob-skip-btn" onclick="skipOnboarding()">Skip</button>
-        <div class="flex items-center gap-4">
-          <div class="wizard-dots"><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
-          <button class="btn btn-primary" onclick="nextWizardStep(2)">Continue →</button>
+
+    <!-- Progress bar -->
+    <div class="ob-progress-bar">
+      <div class="ob-progress-fill" id="ob-progress-fill" style="width:25%"></div>
+    </div>
+
+    <div class="ob-body">
+
+      <!-- STEP 1: Who are you? -->
+      <div class="ob-step active" id="ob-step-1">
+        <div class="ob-step-label">Step 1 of 4</div>
+        <div class="ob-title">Welcome. Let's set you up.</div>
+        <div class="ob-subtitle">This takes 60 seconds and makes every AI tool smarter for you.</div>
+        <div class="field-group">
+          <label class="field-label">Your name</label>
+          <input type="text" id="ob-name" placeholder="e.g. Rahul Sharma">
         </div>
+        <div class="field-group" style="margin-bottom:0">
+          <label class="field-label">Your primary skill <span class="field-optional">— be specific</span></label>
+          <input type="text" id="ob-skills" placeholder="e.g. Short-form video editing, UI design, Copywriting">
+        </div>
+      </div>
+
+      <!-- STEP 2: Your experience -->
+      <div class="ob-step" id="ob-step-2">
+        <div class="ob-step-label">Step 2 of 4</div>
+        <div class="ob-title">Your experience level.</div>
+        <div class="ob-subtitle">Honest answer helps us calibrate advice correctly.</div>
+        <div class="field-group">
+          <label class="field-label">Experience</label>
+          <div class="ob-chips" id="ob-exp-chips">
+            <div class="ob-chip" data-val="Complete Beginner" onclick="selectChip('ob-exp-chips',this,'ob-exp')">Just starting out</div>
+            <div class="ob-chip" data-val="Had 1-2 clients" onclick="selectChip('ob-exp-chips',this,'ob-exp')">Done 1–2 projects</div>
+            <div class="ob-chip" data-val="3-6 months experience" onclick="selectChip('ob-exp-chips',this,'ob-exp')">3–6 months in</div>
+            <div class="ob-chip" data-val="Experienced" onclick="selectChip('ob-exp-chips',this,'ob-exp')">Experienced pro</div>
+          </div>
+          <input type="hidden" id="ob-exp">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Hours you can give per day</label>
+          <div class="ob-chips" id="ob-hours-chips">
+            <div class="ob-chip" data-val="1 hour" onclick="selectChip('ob-hours-chips',this,'ob-hours')">1 hr</div>
+            <div class="ob-chip" data-val="2 hours" onclick="selectChip('ob-hours-chips',this,'ob-hours')">2 hrs</div>
+            <div class="ob-chip" data-val="3-4 hours" onclick="selectChip('ob-hours-chips',this,'ob-hours')">3–4 hrs</div>
+            <div class="ob-chip" data-val="5+ hours" onclick="selectChip('ob-hours-chips',this,'ob-hours')">5+ hrs</div>
+          </div>
+          <input type="hidden" id="ob-hours">
+        </div>
+        <div class="field-group" style="margin-bottom:0">
+          <label class="field-label">Biggest challenge right now</label>
+          <div class="ob-chips" id="ob-challenge-chips">
+            <div class="ob-chip" data-val="Finding clients" onclick="selectChip('ob-challenge-chips',this,'ob-challenge')">Finding clients</div>
+            <div class="ob-chip" data-val="Writing proposals" onclick="selectChip('ob-challenge-chips',this,'ob-challenge')">Writing proposals</div>
+            <div class="ob-chip" data-val="Pricing my work" onclick="selectChip('ob-challenge-chips',this,'ob-challenge')">Pricing my work</div>
+            <div class="ob-chip" data-val="Building a portfolio" onclick="selectChip('ob-challenge-chips',this,'ob-challenge')">Building portfolio</div>
+            <div class="ob-chip" data-val="Getting first review" onclick="selectChip('ob-challenge-chips',this,'ob-challenge')">Getting first review</div>
+          </div>
+          <input type="hidden" id="ob-challenge">
+        </div>
+      </div>
+
+      <!-- STEP 3: Platform & niche -->
+      <div class="ob-step" id="ob-step-3">
+        <div class="ob-step-label">Step 3 of 4</div>
+        <div class="ob-title">Where you want to work.</div>
+        <div class="ob-subtitle">We'll tailor proposals, gig titles, and outreach to match your platform.</div>
+        <div class="field-group">
+          <label class="field-label">Target platform</label>
+          <div class="ob-chips" id="ob-platform-chips">
+            <div class="ob-chip" data-val="Upwork" onclick="selectChip('ob-platform-chips',this,'ob-platform')">Upwork</div>
+            <div class="ob-chip" data-val="Fiverr" onclick="selectChip('ob-platform-chips',this,'ob-platform')">Fiverr</div>
+            <div class="ob-chip" data-val="LinkedIn" onclick="selectChip('ob-platform-chips',this,'ob-platform')">LinkedIn</div>
+            <div class="ob-chip" data-val="Instagram DMs" onclick="selectChip('ob-platform-chips',this,'ob-platform')">Instagram DMs</div>
+            <div class="ob-chip" data-val="All platforms" onclick="selectChip('ob-platform-chips',this,'ob-platform')">All of them</div>
+          </div>
+          <input type="hidden" id="ob-platform">
+        </div>
+        <div class="field-group" style="margin-bottom:0">
+          <label class="field-label">Your niche / target client <span class="field-optional">— optional but powerful</span></label>
+          <input type="text" id="ob-niche" placeholder="e.g. SaaS startups, fitness coaches, D2C brands">
+        </div>
+      </div>
+
+      <!-- STEP 4: Goal -->
+      <div class="ob-step" id="ob-step-4">
+        <div class="ob-step-label">Step 4 of 4</div>
+        <div class="ob-title">What's the target?</div>
+        <div class="ob-subtitle">Your first-month income goal shapes every recommendation we make.</div>
+        <div class="field-group">
+          <label class="field-label">Monthly income goal</label>
+          <div class="ob-chips" id="ob-goal-chips">
+            <div class="ob-chip" data-val="₹5,000–₹10,000" onclick="selectChip('ob-goal-chips',this,'ob-goal')">₹5k – ₹10k</div>
+            <div class="ob-chip" data-val="₹10,000–₹25,000" onclick="selectChip('ob-goal-chips',this,'ob-goal')">₹10k – ₹25k</div>
+            <div class="ob-chip" data-val="₹25,000–₹50,000" onclick="selectChip('ob-goal-chips',this,'ob-goal')">₹25k – ₹50k</div>
+            <div class="ob-chip" data-val="₹50,000+" onclick="selectChip('ob-goal-chips',this,'ob-goal')">₹50k+</div>
+          </div>
+          <input type="hidden" id="ob-goal">
+        </div>
+        <div class="field-group" style="margin-bottom:0">
+          <label class="field-label">Anything else we should know? <span class="field-optional">— optional</span></label>
+          <textarea id="ob-extra" rows="3" placeholder="e.g. I'm a student with a laptop and no prior clients. I want to start on Fiverr."></textarea>
+        </div>
+      </div>
+
+    </div><!-- /ob-body -->
+
+    <div class="ob-footer">
+      <button class="btn btn-ghost" id="ob-back-btn" onclick="obBack()" style="visibility:hidden">← Back</button>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="ob-step-counter" id="ob-step-counter">1 / 4</span>
+        <button class="btn btn-primary" id="ob-next-btn" onclick="obNext()" style="min-width:120px">Continue →</button>
       </div>
     </div>
 
-    <div class="wizard-step" id="wizard-step-2">
-      <div class="wizard-title">Define your targets.</div>
-      <div class="wizard-subtitle">Where do you want to find your clients?</div>
-      
-      <div class="field-group">
-        <label class="field-label">Target Platform</label>
-        <select id="ob-platform">
-          <option value="Upwork">Upwork</option>
-          <option value="Fiverr">Fiverr</option>
-          <option value="LinkedIn">LinkedIn / Cold DM</option>
-          <option value="Both">All of the above</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Monthly Income Goal</label>
-        <select id="ob-goal">
-          <option value="₹5,000–₹10,000">₹5,000 – ₹10,000</option>
-          <option value="₹10,000–₹25,000">₹10,000 – ₹25,000</option>
-          <option value="₹25,000–₹50,000">₹25,000 – ₹50,000</option>
-          <option value="₹50,000+">₹50,000+</option>
-        </select>
-      </div>
-
-      <div class="wizard-footer">
-        <button class="btn btn-ghost" onclick="nextWizardStep(1)">← Back</button>
-        <div class="flex items-center gap-4">
-          <div class="wizard-dots"><div class="wizard-dot"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div></div>
-          <button class="btn btn-primary" onclick="nextWizardStep(3)">Continue →</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="wizard-step" id="wizard-step-3">
-      <div class="wizard-title">One last thing.</div>
-      <div class="wizard-subtitle">What's holding you back the most right now?</div>
-      
-      <div class="field-group">
-        <label class="field-label">Biggest Hurdle</label>
-        <select id="ob-hurdle">
-          <option value="Not sure how to price my services">Not sure how to price my services</option>
-          <option value="Writing proposals takes too long">Writing proposals takes too long</option>
-          <option value="I don't have a portfolio yet">I don't have a portfolio yet</option>
-          <option value="Finding high-quality leads">Finding high-quality leads</option>
-        </select>
-      </div>
-
-      <div class="wizard-footer">
-        <button class="btn btn-ghost" onclick="nextWizardStep(2)">← Back</button>
-        <div class="flex items-center gap-4">
-          <div class="wizard-dots"><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot active"></div></div>
-          <button class="btn btn-primary" id="ob-finish-btn" onclick="finishOnboarding()">Enter Workspace <i data-lucide="check" class="w-4 h-4 ml-1"></i></button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>   
+  </div><!-- /onboarding-wizard -->
+</div><!-- /onboarding-screen -->   
 <div id="app-layout">
 
   <aside class="sidebar" id="sidebar">
@@ -2119,156 +2105,171 @@ document.addEventListener('click',e=>{
     closeAccountDropdown();
 });
 /* ══════════════════════════════════════════════════════════
-   ONBOARDING ROUTING — clean state machine
-   ══════════════════════════════════════════════════════════
-   Logo animation: 3s CSS keyframe (fade in → hold → fade out)
-   JS kicks in at 3s to either:
-     A) Returning user → fade out entire screen → dashboard
-     B) New user → fade out logo layer → fade in wizard (same dark bg)
-     C) Wizard done → fade out screen → dashboard
-*/
+   ONBOARDING — shown ONCE, never again
+   Gate 1: localStorage flag 'lancify-onboarded'
+   Gate 2: Supabase profiles.skills column exists & ≠ 'Skipped'
+   Both must agree before we skip onboarding.
+   ══════════════════════════════════════════════════════════ */
+
+let _obStep = 1;
+const OB_TOTAL = 4;
 
 function onLogin(user) {
   currentUser = user;
-  const ls = el('login-screen'); if (ls) ls.style.display = 'none';
+  el('login-screen').style.display = 'none';
 
-  // Load dashboard data in background while animation plays
-  const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  // Populate UI with user info
+  const name      = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const firstName = name.split(' ')[0];
-  setText('header-avatar', name[0].toUpperCase());
+  setText('header-avatar',  name[0].toUpperCase());
+  setText('ws-name',        `${firstName}'s Workspace`);
+  setText('acct-ws-name',   `${firstName}'s Workspace`);
   const h = new Date().getHours();
-  setText('hero-greeting', `${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${firstName}`);
-  setText('ws-name',       `${firstName}'s Workspace`);
-  setText('acct-ws-name',  `${firstName}'s Workspace`);
+  setText('hero-greeting',  `${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${firstName}`);
+
+  // Pre-fill name field
+  if (el('ob-name')) el('ob-name').value = firstName !== 'User' ? name : '';
+
+  // Load background data regardless of route
   loadStats(user.id);
   loadLeads(user.id);
   startCoach();
   lucide.createIcons();
 
-  // Show the intro screen (logo animation starts automatically via CSS)
-  _showIntroScreen();
-
-  // Check DB routing in parallel — result decides what happens after 3s
-  checkRouting(user.id);
+  // Route: check both gates
+  _decideRoute(user.id);
 }
 
-function _showIntroScreen() {
-  const screen = el('onboarding-screen');
-  screen.style.opacity = '1';
-  screen.classList.remove('fade-out');
-  screen.classList.add('show');
+async function _decideRoute(uid) {
+  // Gate 1: fast localStorage check
+  const localDone = localStorage.getItem('lancify-onboarded-' + uid) === 'yes';
 
-  // Reset logo layer to visible (handles re-login edge case)
-  const logoLayer = el('intro-logo-layer');
-  logoLayer.style.transition = 'none';
-  logoLayer.style.opacity = '1';
-  logoLayer.classList.remove('hidden');
-
-  // Ensure wizard is hidden
-  el('onboarding-wizard').classList.remove('show');
-}
-
-// Stored routing decision (set by checkRouting, consumed at 3s)
-let _pendingRoute = null;
-
-async function checkRouting(uid) {
   try {
-    const { data } = await sb.from('profiles').select('*').eq('user_id', uid).single();
-    if (data && data.skills && data.skills !== 'Skipped') {
-      userProfile = { ...userProfile, ...data };
-      applyProfileToFields(data);
-      checkProfileBanners();
-      _pendingRoute = 'returning';
-    } else {
-      if (data) userProfile = { ...userProfile, ...data };
-      _pendingRoute = 'new';
-    }
-  } catch (e) {
-    _pendingRoute = 'new';
-  }
+    const { data } = await sb.from('profiles').select('skills').eq('user_id', uid).single();
+    const dbDone   = data && data.skills && data.skills !== 'Skipped';
 
-  // CSS animation runs for 3s. Execute route decision at exactly 3s.
-  setTimeout(_executeRoute, 3000);
-}
-
-function _executeRoute() {
-  if (_pendingRoute === 'returning') {
-    // Fade out entire screen → show dashboard
-    _fadeOutScreen(() => {
+    if (localDone && dbDone) {
+      // Both gates pass — returning user, go straight to dashboard
+      const { data: full } = await sb.from('profiles').select('*').eq('user_id', uid).single();
+      if (full) { userProfile = { ...userProfile, ...full }; applyProfileToFields(full); checkProfileBanners(); }
       el('app-layout').classList.add('show');
-    });
-  } else {
-    // Fade out ONLY the logo layer, keep dark background → show wizard
-    const logoLayer = el('intro-logo-layer');
-    logoLayer.style.transition = 'opacity 0.5s ease';
-    logoLayer.style.opacity = '0';
-    logoLayer.classList.add('hidden');
-
-    // After logo fades, show wizard on same dark background
-    setTimeout(() => {
-      el('onboarding-wizard').classList.add('show');
-    }, 520);
+    } else {
+      // Either gate failed — show onboarding
+      _showOnboarding();
+    }
+  } catch(e) {
+    // No profile row yet — definitely new user
+    _showOnboarding();
   }
-  _pendingRoute = null;
 }
 
-function _fadeOutScreen(callback) {
-  const screen = el('onboarding-screen');
-  screen.classList.add('fade-out');
-  setTimeout(() => {
-    screen.classList.remove('show', 'fade-out');
-    if (callback) callback();
-  }, 620);
+function _showOnboarding() {
+  _obStep = 1;
+  _obRenderStep();
+  el('onboarding-screen').classList.add('show');
 }
 
-/* ── Wizard step navigation ── */
-function nextWizardStep(step) {
-  document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
-  el(`wizard-step-${step}`)?.classList.add('active');
+function _obRenderStep() {
+  // Show correct step panel
+  document.querySelectorAll('.ob-step').forEach(s => s.classList.remove('active'));
+  el('ob-step-' + _obStep)?.classList.add('active');
+
+  // Progress bar
+  const pct = Math.round((_obStep / OB_TOTAL) * 100);
+  if (el('ob-progress-fill')) el('ob-progress-fill').style.width = pct + '%';
+
+  // Step counter
+  setText('ob-step-counter', `${_obStep} / ${OB_TOTAL}`);
+
+  // Back button visibility
+  const backBtn = el('ob-back-btn');
+  if (backBtn) backBtn.style.visibility = _obStep > 1 ? 'visible' : 'hidden';
+
+  // Next/Finish button label
+  const nextBtn = el('ob-next-btn');
+  if (nextBtn) nextBtn.textContent = _obStep === OB_TOTAL ? 'Enter Workspace →' : 'Continue →';
 }
 
-/* ── Skip ── */
-async function skipOnboarding() {
-  const btn = el('ob-skip-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Skipping…'; }
-  try {
-    const pd = {
-      user_id: currentUser.id,
-      name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'User',
-      skills: 'Skipped'
-    };
-    await sb.from('profiles').upsert([pd], { onConflict: 'user_id' });
-    userProfile = { ...userProfile, ...pd };
-  } catch(e) { /* non-fatal */ }
-  _fadeOutScreen(() => { el('app-layout').classList.add('show'); });
+function obBack() {
+  if (_obStep > 1) { _obStep--; _obRenderStep(); }
 }
 
-/* ── Finish ── */
-async function finishOnboarding() {
-  const btn = el('ob-finish-btn');
-  if (btn) { btn.disabled = true; btn.innerHTML = 'Preparing…'; }
+function obNext() {
+  // Validate current step
+  if (_obStep === 1) {
+    const skill = val('ob-skills').trim();
+    if (!skill) { showToast('Please tell us your primary skill.'); el('ob-skills').focus(); return; }
+  }
+
+  if (_obStep < OB_TOTAL) {
+    _obStep++;
+    _obRenderStep();
+  } else {
+    _obFinish();
+  }
+}
+
+// Chip selector helper
+function selectChip(groupId, chipEl, hiddenId) {
+  document.querySelectorAll('#' + groupId + ' .ob-chip').forEach(c => c.classList.remove('selected'));
+  chipEl.classList.add('selected');
+  const hidden = el(hiddenId);
+  if (hidden) hidden.value = chipEl.dataset.val;
+}
+
+async function _obFinish() {
+  const btn = el('ob-next-btn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
   const pd = {
-    user_id:     currentUser.id,
-    name:        currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'User',
-    skills:      val('ob-skills') || 'Freelancer',
-    exp_level:   val('ob-exp'),
-    platform:    val('ob-platform'),
-    income_goal: val('ob-goal')
+    user_id:    currentUser.id,
+    name:       val('ob-name').trim() || currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'User',
+    skills:     val('ob-skills').trim() || 'Freelancer',
+    niche:      val('ob-niche').trim(),
+    exp_level:  val('ob-exp')      || 'Complete Beginner',
+    platform:   val('ob-platform') || 'Upwork',
+    income_goal:val('ob-goal')     || '₹10,000–₹25,000',
+    experience: val('ob-exp')      || 'Complete Beginner',
+    // extra fields stored in the profile for AI context
+    hours_per_day:   val('ob-hours')     || '2 hours',
+    biggest_challenge: val('ob-challenge') || 'Finding clients',
+    extra_context:   val('ob-extra').trim()
   };
+
   try {
     await sb.from('profiles').upsert([pd], { onConflict: 'user_id' });
     userProfile = { ...userProfile, ...pd };
     applyProfileToFields(pd);
     checkProfileBanners();
-    _fadeOutScreen(() => {
+
+    // Set BOTH gates so they never see onboarding again
+    localStorage.setItem('lancify-onboarded-' + currentUser.id, 'yes');
+
+    // Update name in UI
+    const firstName = pd.name.split(' ')[0];
+    setText('ws-name',       `${firstName}'s Workspace`);
+    setText('acct-ws-name',  `${firstName}'s Workspace`);
+    setText('header-avatar', pd.name[0].toUpperCase());
+
+    // Fade out onboarding → show dashboard
+    const screen = el('onboarding-screen');
+    screen.classList.add('fade-out');
+    setTimeout(() => {
+      screen.classList.remove('show', 'fade-out');
       el('app-layout').classList.add('show');
-      showToast('Workspace ready. Welcome! 🚀');
-    });
+      showToast(`Welcome to Lancify, ${firstName}! 🚀`);
+    }, 420);
+
   } catch(e) {
-    if (btn) { btn.disabled = false; btn.innerHTML = 'Enter Workspace'; }
-    showToast('Error saving. Please try again.');
+    btn.disabled = false; btn.textContent = 'Enter Workspace →';
+    showToast('Error saving profile. Please try again.');
   }
 }
+
+// Legacy stubs — kept so any orphaned HTML onclick calls don't crash
+function nextWizardStep() {}
+function skipOnboarding()  { obNext(); }
+function finishOnboarding(){ _obFinish(); }
 initApp();
 </script>
 </body>
