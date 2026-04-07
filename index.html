@@ -623,76 +623,87 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
      ONBOARDING — Premium animated flow
      ══════════════════════════════════════════════════════════ */
 
-/* ── 0. LOGO INTRO SCREEN ── */
+/* ── 0. AURORA CANVAS — lives at the very bottom of the z-stack ── */
+#ob-aurora-canvas {
+  position: fixed; inset: 0;
+  z-index: 9490;          /* below intro (10000), wizard (9500), quote (9600) */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+#ob-aurora-canvas.visible { opacity: 1; }
+
+/* ── 1. LOGO INTRO SCREEN — transparent so aurora shows through ── */
 #ob-logo-intro {
   position: fixed; inset: 0; z-index: 10000;
-  background: #000;
-  display: flex; flex-direction: column;
+  background: transparent;          /* ← KEY FIX: was #000 */
+  display: none;                    /* JS sets to flex */
+  flex-direction: column;
   align-items: center; justify-content: center;
   gap: 0;
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+#ob-logo-intro.visible {
   opacity: 1;
-  transition: opacity 0.6s ease;
   pointer-events: all;
 }
-#ob-logo-intro.hide { opacity: 0; pointer-events: none; }
-
-.ob-intro-logo {
-  width: 52px; height: 52px;
-  background: #fff; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; transform: scale(0.7);
-  animation: obLogoAppear 0.7s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+#ob-logo-intro.hide {
+  opacity: 0;
+  pointer-events: none;
 }
-.ob-intro-logo svg { color: #000; }
+
+/* Logo + wordmark — blur-reveal entrance together */
+.ob-intro-content {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0;
+  opacity: 0;
+  filter: blur(14px);
+  transform: scale(0.94);
+  transition:
+    opacity 0.75s cubic-bezier(0.16,1,0.3,1),
+    filter  0.75s cubic-bezier(0.16,1,0.3,1),
+    transform 0.75s cubic-bezier(0.16,1,0.3,1);
+}
+.ob-intro-content.revealed {
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1);
+}
+
+/* Logo image wrapper */
+.ob-intro-logo-img {
+  display: block;
+  height: 48px; width: auto; object-fit: contain;
+  /* Drop shadow to make it pop against the colourful aurora */
+  filter: drop-shadow(0 0 24px rgba(255,255,255,0.35)) drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+}
+
+/* Wordmark */
 .ob-intro-wordmark {
-  font-size: 26px; font-weight: 700; letter-spacing: -0.6px;
-  color: #fff; margin-top: 14px;
-  opacity: 0; transform: translateY(6px);
-  animation: obWordmark 0.55s ease 0.85s forwards;
+  font-size: 28px; font-weight: 700; letter-spacing: -0.7px;
+  color: #fff; margin-top: 16px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
 }
 .ob-intro-tagline {
-  font-size: 13px; color: #525252; letter-spacing: 0.02em;
-  margin-top: 6px;
-  opacity: 0;
-  animation: obWordmark 0.5s ease 1.15s forwards;
+  font-size: 13px; color: rgba(255,255,255,0.45); letter-spacing: 0.05em;
+  margin-top: 6px; font-weight: 400;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
-/* Animated grid lines behind logo */
-.ob-intro-grid {
-  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
-  opacity: 0; animation: obWordmark 1s ease 0.2s forwards;
-}
-.ob-intro-grid::before, .ob-intro-grid::after {
+
+/* Dark overlay that sits between aurora and content — adds depth without hiding aurora */
+#ob-logo-intro::before {
   content: '';
   position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
+  background: radial-gradient(ellipse 75% 65% at 50% 50%,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.45) 100%);
+  pointer-events: none;
+  z-index: -1;
 }
-.ob-intro-grid::after {
-  background-image: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,255,255,0.06) 0%, transparent 70%);
-  background-size: auto;
-}
-/* Pulsing ring */
-.ob-intro-ring {
-  position: absolute;
-  width: 120px; height: 120px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.12);
-  animation: obRingPulse 2s ease-in-out 0.5s infinite;
-}
-.ob-intro-ring:nth-child(2) { width: 200px; height: 200px; animation-delay: 0.8s; border-color: rgba(255,255,255,0.07); }
-.ob-intro-ring:nth-child(3) { width: 300px; height: 300px; animation-delay: 1.1s; border-color: rgba(255,255,255,0.04); }
 
-@keyframes obLogoAppear {
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes obWordmark {
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes obRingPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.08); opacity: 0.5; }
-}
+/* Remove all old ring/grid classes — they are no longer in HTML */
 
 /* ── 1. MAIN ONBOARDING SCREEN ── */
 #onboarding-screen {
@@ -952,16 +963,19 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
     </div>
   </div>
 </div>
+<!-- Aurora canvas — z-index 9490, always below everything -->
+<canvas id="ob-aurora-canvas"></canvas>
+
 <div id="ob-logo-intro">
-  <div class="ob-intro-grid"></div>
-  <div class="ob-intro-ring"></div>
-  <div class="ob-intro-ring"></div>
-  <div class="ob-intro-ring"></div>
-  <div class="ob-intro-logo">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  <div class="ob-intro-content" id="ob-intro-content">
+    <img
+      src="Favicon_new_logo-removebg-preview.png"
+      alt="Lancify"
+      class="ob-intro-logo-img"
+    >
+    <div class="ob-intro-wordmark">Lancify</div>
+    <div class="ob-intro-tagline">Your Freelance Operating System</div>
   </div>
-  <div class="ob-intro-wordmark">Lancify</div>
-  <div class="ob-intro-tagline">Your Freelance Operating System</div>
 </div>
 
 <div id="ob-quote-screen">
@@ -2396,48 +2410,173 @@ function onLogin(user) {
   _decideRoute(user.id);
 }
 
-async function _decideRoute(uid) {
-  // 1. Ensure the intro animation is visible and playing
-  const intro = el('ob-logo-intro');
-  if (intro) intro.style.display = 'flex';
+/* ──────────────────────────────────────────────────────────
+   AURORA MESH BACKGROUND
+   Draws soft animated colour blobs on the shared canvas.
+   Called once. Canvas persists under intro + wizard + quotes.
+   ────────────────────────────────────────────────────────── */
+function _startAurora() {
+  const canvas = el('ob-aurora-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
-  // 2. Fetch the user's data in the background while the animation plays
-  const localDone = localStorage.getItem('lancify-onboarded-' + uid) === 'yes';
-  let isReturning = false;
+  // Colour palette — deep, rich, premium. Pure black-and-white
+  // with just enough chroma to feel alive (matches ElevenLabs feel).
+  const blobs = [
+    { x: 0.25, y: 0.30, r: 0.45, h: 220, s: 55, l: 18, dx: 0.00012, dy: 0.00009 },
+    { x: 0.70, y: 0.25, r: 0.40, h: 260, s: 50, l: 16, dx:-0.00010, dy: 0.00012 },
+    { x: 0.50, y: 0.75, r: 0.50, h: 190, s: 45, l: 14, dx: 0.00008, dy:-0.00011 },
+    { x: 0.15, y: 0.70, r: 0.35, h: 300, s: 40, l: 12, dx: 0.00011, dy:-0.00008 },
+    { x: 0.80, y: 0.65, r: 0.38, h: 170, s: 48, l: 15, dx:-0.00009, dy: 0.00010 },
+  ];
 
-  try {
-    const { data } = await sb.from('profiles').select('skills').eq('user_id', uid).single();
-    const dbDone   = data && data.skills && data.skills !== 'Skipped';
+  let rafId;
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
 
-    if (localDone && dbDone) {
-      isReturning = true; // They are a returning user!
-      const { data: full } = await sb.from('profiles').select('*').eq('user_id', uid).single();
-      if (full) { userProfile = { ...userProfile, ...full }; applyProfileToFields(full); checkProfileBanners(); }
-    }
-  } catch(e) {
-    isReturning = false; // No profile found, they are a new user
+  function draw(t) {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050508';
+    ctx.fillRect(0, 0, W, H);
+
+    blobs.forEach(b => {
+      // Slow drift
+      b.x += b.dx; b.y += b.dy;
+      if (b.x < -0.1) b.dx =  Math.abs(b.dx);
+      if (b.x >  1.1) b.dx = -Math.abs(b.dx);
+      if (b.y < -0.1) b.dy =  Math.abs(b.dy);
+      if (b.y >  1.1) b.dy = -Math.abs(b.dy);
+
+      // Breathe
+      const breathe = Math.sin(t * 0.0004 + b.h) * 0.06 + 1;
+      const cx = b.x * W, cy = b.y * H;
+      const radius = b.r * Math.max(W, H) * breathe;
+
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+      grad.addColorStop(0,   `hsla(${b.h}, ${b.s}%, ${b.l}%, 0.90)`);
+      grad.addColorStop(0.5, `hsla(${b.h}, ${b.s}%, ${b.l}%, 0.30)`);
+      grad.addColorStop(1,   `hsla(${b.h}, ${b.s}%, ${b.l}%, 0.00)`);
+
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.globalCompositeOperation = 'source-over';
+    rafId = requestAnimationFrame(draw);
   }
 
-  // 3. Wait for the 2.4s animation to finish, THEN fade it out and route them
-  setTimeout(() => {
-    if (intro) intro.classList.add('hide'); // Start the fade out
-    
-    setTimeout(() => {
-      if (intro) intro.style.display = 'none'; // Completely remove it from the screen
-      
-      if (isReturning) {
-        // Returning user -> Show Dashboard instantly
-        el('app-layout').classList.add('show');
-      } else {
-        // New user -> Show Onboarding Wizard
-        _showOnboarding();
-      }
-    }, 650); // Wait 650ms for the CSS fade-out to finish
-  }, 2400); // Wait 2.4s for the main intro animation to play
+  rafId = requestAnimationFrame(draw);
+
+  // Fade canvas in smoothly
+  setTimeout(() => canvas.classList.add('visible'), 60);
+
+  // Expose stop handle for cleanup if needed
+  canvas._stopAurora = () => {
+    cancelAnimationFrame(rafId);
+    window.removeEventListener('resize', resize);
+  };
 }
 
-// NOTE: You can completely delete the old `function _runLogoIntro()` because it is now safely built into the function above.
+/* ──────────────────────────────────────────────────────────
+   LOGO INTRO — blur-reveal, hold, blur-fade out
+   ────────────────────────────────────────────────────────── */
+function _runIntro(onDone) {
+  const intro   = el('ob-logo-intro');
+  const content = el('ob-intro-content');
+  if (!intro || !content) { onDone(); return; }
 
+  // Phase 1: Show the container (transparent bg, pointer-events none)
+  intro.style.display = 'flex';
+  // tiny rAF pause so display:flex is painted before we add classes
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+
+      // Fade in the overlay shell
+      intro.classList.add('visible');
+
+      // Phase 2: 80ms later — blur-reveal the content
+      setTimeout(() => {
+        content.classList.add('revealed');
+
+        // Phase 3: Hold for 2.0s, then blur-fade OUT
+        setTimeout(() => {
+          content.style.transition =
+            'opacity 0.65s ease, filter 0.65s ease, transform 0.65s ease';
+          content.style.opacity   = '0';
+          content.style.filter    = 'blur(14px)';
+          content.style.transform = 'scale(1.04)';
+
+          // Phase 4: Fade the whole intro overlay out simultaneously
+          intro.classList.add('hide');
+
+          // Phase 5: After fade completes, remove from DOM flow and call back
+          setTimeout(() => {
+            intro.style.display = 'none';
+            intro.classList.remove('visible', 'hide');
+            content.classList.remove('revealed');
+            content.style.cssText = ''; // reset inline styles
+            onDone();
+          }, 680);
+
+        }, 2000); // hold duration
+      }, 80);
+
+    });
+  });
+}
+
+/* ──────────────────────────────────────────────────────────
+   ROUTING — fetches profile in parallel with animation
+   ────────────────────────────────────────────────────────── */
+async function _decideRoute(uid) {
+  // Start the aurora immediately (canvas already in DOM)
+  _startAurora();
+
+  // Prefetch profile data in parallel with the animation
+  const localDone = localStorage.getItem('lancify-onboarded-' + uid) === 'yes';
+  let isReturning  = false;
+  let fullProfile  = null;
+
+  const profilePromise = (async () => {
+    try {
+      const { data } = await sb.from('profiles').select('skills').eq('user_id', uid).single();
+      const dbDone   = data && data.skills && data.skills !== 'Skipped';
+      if (localDone && dbDone) {
+        isReturning = true;
+        const { data: full } = await sb.from('profiles').select('*').eq('user_id', uid).single();
+        fullProfile = full;
+      }
+    } catch (_) { isReturning = false; }
+  })();
+
+  // Play intro. When it finishes, apply the route decision.
+  _runIntro(async () => {
+    await profilePromise; // ensure DB fetch is done (usually already is)
+
+    if (isReturning) {
+      if (fullProfile) {
+        userProfile = { ...userProfile, ...fullProfile };
+        applyProfileToFields(fullProfile);
+        checkProfileBanners();
+      }
+      // Fade aurora out as dashboard takes over
+      const c = el('ob-aurora-canvas');
+      if (c) { c.style.transition = 'opacity 0.8s ease'; c.style.opacity = '0'; }
+      el('app-layout').classList.add('show');
+    } else {
+      // New user → keep aurora alive under the wizard
+      _showOnboarding();
+    }
+  });
+}
 function _showOnboarding() {
   _obStep = 1;
   _obRenderStep();
