@@ -1058,7 +1058,582 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   background: #222; transition: background .3s, width .3s;
 }
 .ob-quote-dot.active { background: #fff; width: 20px; border-radius: 2px; }
+/* ═══════════════════════════════════════════════════════════
+   OPPORTUNITY ENGINE
+   ═══════════════════════════════════════════════════════════ */
 
+/* Search card top row */
+.opp-search-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 10px;
+  align-items: end;
+}
+
+/* Results grid */
+.opp-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 1100px) { .opp-results-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 700px)  { .opp-results-grid { grid-template-columns: 1fr; } }
+
+/* Opportunity card */
+.opp-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .18s ease, border-color .18s ease, transform .15s ease;
+}
+.opp-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border2);
+  transform: translateY(-1px);
+}
+
+/* Card header strip */
+.opp-card-header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.opp-card-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+}
+.opp-card-platform {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Match score badge */
+.opp-match-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding: 3px 8px;
+  border-radius: 99px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.opp-match-high {
+  background: rgba(22, 163, 74, 0.10);
+  color: #16a34a;
+  border: 1px solid rgba(22, 163, 74, 0.20);
+}
+html.dark .opp-match-high {
+  background: rgba(22, 163, 74, 0.12);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.20);
+}
+.opp-match-mid {
+  background: rgba(124, 58, 237, 0.10);
+  color: #7c3aed;
+  border: 1px solid rgba(124, 58, 237, 0.20);
+}
+html.dark .opp-match-mid {
+  background: rgba(124, 58, 237, 0.12);
+  color: #a78bfa;
+  border-color: rgba(167, 139, 250, 0.20);
+}
+
+/* Card body fields */
+.opp-card-body {
+  padding: 14px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.opp-field-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--text3);
+  margin-bottom: 3px;
+}
+.opp-field-value {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+/* Problem field gets a subtle left accent */
+.opp-problem-wrap {
+  padding-left: 10px;
+  border-left: 2px solid var(--border2);
+}
+.opp-problem-wrap .opp-field-value {
+  color: var(--text-main);
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+/* Card action buttons grid */
+.opp-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--border);
+}
+.opp-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+  border: 1px solid var(--border2);
+  background: var(--bg);
+  color: var(--text-muted);
+  transition: background .13s, color .13s, border-color .13s;
+}
+.opp-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+  border-color: var(--border2);
+}
+.opp-action-btn:active { transform: scale(0.97); }
+/* Save Lead gets a primary accent on hover */
+.opp-action-btn.save:hover {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border-color: var(--btn-bg);
+}
+
+/* Empty / placeholder state for results */
+.opp-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 60px 20px;
+  color: var(--text3);
+  text-align: center;
+  font-size: 13px;
+}
+.opp-empty-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 4px;
+}
+
+/* Scanning skeleton shimmer */
+.opp-skeleton {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 240px;
+  position: relative;
+}
+.opp-skeleton::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(128,128,128,0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: oppShimmer 1.4s ease infinite;
+}
+@keyframes oppShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+   /* ═══════════════════════════════════════════════════════
+   OPPORTUNITY ENGINE
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Mock lead database — realistic, varied, convincing ── */
+const _oppLeadBank = {
+  'Content Creators': [
+    {
+      name: 'FitWithNehaa',
+      platform: 'YouTube',
+      followers: '14.2k subscribers',
+      problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
+      strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.',
+      match: 96,
+      jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel. Current thumbnails are basic and not getting clicks.',
+    },
+    {
+      name: 'TravelDiariesByKaran',
+      platform: 'Instagram',
+      followers: '8.7k followers',
+      problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
+      strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement stat as the hook.',
+      match: 91,
+      jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator. Consistency is the main goal.',
+    },
+    {
+      name: 'SkillsWithPriya',
+      platform: 'LinkedIn',
+      followers: '3.1k followers',
+      problem: 'Posts are long-form only — no carousel posts, no short-form content. Low reach despite solid expertise.',
+      strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting professional growth audience.',
+      match: 88,
+      jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts and personal brand content for a career coach.',
+    },
+  ],
+  'Local Businesses': [
+    {
+      name: 'Chai & Chapters Café',
+      platform: 'Instagram',
+      followers: '2.3k followers',
+      problem: 'Bio link goes to a dead page. No clear CTA in posts. They have great photos but zero conversion path.',
+      strategy: 'Fix the link-in-bio → landing page first. Then pitch a social media package. The broken link is your foot in the door.',
+      match: 94,
+      jobDesc: 'A local café needs someone to manage their Instagram, fix their bio, and create a simple landing page to drive orders.',
+    },
+    {
+      name: 'GreenLeaf Salon',
+      platform: 'Website',
+      followers: 'Google Business: 4.1★',
+      problem: 'Website loads in 7.2s, not mobile-optimised, and has no booking widget. Losing walk-ins to a competitor with online booking.',
+      strategy: 'Lead with the 7-second load time and lost bookings angle. Offer a website revamp + Calendly integration for ₹8,000.',
+      match: 93,
+      jobDesc: 'A local salon wants a faster, mobile-friendly website with an online appointment booking system integrated.',
+    },
+    {
+      name: 'QuickFix Electronics',
+      platform: 'Google Maps',
+      followers: '127 reviews, 3.8★',
+      problem: 'Review score is below the local average of 4.2★. No response to any negative reviews. Missing trust signals.',
+      strategy: 'Offer a reputation management starter: review response templates + a QR code system to collect 5-star reviews from happy customers.',
+      match: 87,
+      jobDesc: 'Small electronics repair shop needs help managing online reviews and improving Google Business profile reputation.',
+    },
+  ],
+  'Startups': [
+    {
+      name: 'Zolvr (SaaS)',
+      platform: 'Product Hunt',
+      followers: '312 upvotes',
+      problem: 'Landing page copy is feature-heavy, not benefit-driven. No social proof above the fold. Trial signups likely converting below 3%.',
+      strategy: 'Offer a landing page copy audit as a free value-add, then pitch a full copy rewrite focused on ICP pain points.',
+      match: 95,
+      jobDesc: 'Early-stage SaaS startup needs a copywriter to rewrite homepage and landing page to improve trial signups and reduce bounce rate.',
+    },
+    {
+      name: 'Mealio App',
+      platform: 'LinkedIn',
+      followers: '890 followers',
+      problem: 'App screenshots in the Play Store are plain UI dumps with no context. Reviews mention "confusing onboarding". No explainer video.',
+      strategy: 'Pitch a 60-second explainer video + redesigned app store screenshots. Show a competitor example as a reference.',
+      match: 90,
+      jobDesc: 'Food-tech startup needs a short explainer video and better app store visuals to improve install conversion rates.',
+    },
+    {
+      name: 'Hirrdly (HR Tool)',
+      platform: 'Website',
+      followers: '—',
+      problem: 'Blog has 2 posts from 6 months ago. SEO score is 34/100. Missing product-led content that drives organic signups.',
+      strategy: 'Offer 4 long-form SEO articles/month targeting HR manager keywords. Frame it as pipeline-building, not just writing.',
+      match: 85,
+      jobDesc: 'B2B HR software company needs a content writer to produce SEO-optimised blog posts targeting HR managers and CHROs.',
+    },
+  ],
+  'E-commerce Brands': [
+    {
+      name: 'ThreadCraft Co.',
+      platform: 'Instagram',
+      followers: '11k followers',
+      problem: 'Product images are shot on plain white backgrounds. Competitors are using lifestyle shots. Cart abandonment likely high.',
+      strategy: 'Offer 10 lifestyle product photo edits as a paid trial. If the brand sells fashion, lifestyle imagery converts 30% better.',
+      match: 92,
+      jobDesc: 'D2C clothing brand needs a product photo editor who can create lifestyle-style edits from existing product shots.',
+    },
+    {
+      name: 'PureRoot Organics',
+      platform: 'Website',
+      followers: 'Shopify store',
+      problem: 'Email list exists (1,400 subs) but last campaign was 4 months ago. No welcome sequence, no abandoned cart flow.',
+      strategy: 'Lead with the dormant list angle — "your list is making ₹0 right now." Pitch a 3-email welcome sequence + 1 promo campaign.',
+      match: 89,
+      jobDesc: 'Organic skincare brand wants someone to set up basic email automations — welcome sequence and abandoned cart recovery.',
+    },
+    {
+      name: 'GadgetNest',
+      platform: 'Amazon',
+      followers: '4.3★ seller rating',
+      problem: 'Product descriptions are bullet-point dumps with no storytelling. Competitor products with similar specs outrank them.',
+      strategy: 'Offer a single product listing rewrite as a demo. If it ranks better, they\'ll want the full catalogue done.',
+      match: 86,
+      jobDesc: 'Amazon seller needs product listing copywriter to rewrite descriptions with better keywords and benefit-driven language.',
+    },
+  ],
+  'Coaches & Consultants': [
+    {
+      name: 'Manav Sharma — Biz Coach',
+      platform: 'LinkedIn',
+      followers: '6.4k followers',
+      problem: 'Strong personal brand but no lead magnet, no email list, no freebie to convert followers into contacts.',
+      strategy: 'Pitch building a simple lead magnet (PDF checklist or mini-guide) + a 3-step email welcome sequence for ₹5,000.',
+      match: 93,
+      jobDesc: 'Business coach needs a copywriter to create a lead magnet (PDF) and a short email welcome sequence to build their list.',
+    },
+    {
+      name: 'Ritika\'s Wellness Studio',
+      platform: 'Instagram',
+      followers: '4.8k followers',
+      problem: 'Selling 1:1 sessions via DM with no booking page. Zero automation. Spending 2+ hrs/day on manual scheduling.',
+      strategy: 'Offer a Calendly + payment page setup. Frame the ROI: 2 hrs/day saved = 60 hrs/month returned to client delivery.',
+      match: 91,
+      jobDesc: 'Wellness coach needs help setting up online booking, a simple payment page, and automating their client intake process.',
+    },
+    {
+      name: 'CareerCompass Academy',
+      platform: 'YouTube',
+      followers: '7.1k subscribers',
+      problem: 'Selling a ₹4,999 course but no sales page — just a Gumroad link. No testimonials section, no FAQ, no urgency.',
+      strategy: 'Build a dedicated course sales page. A proper page with social proof can increase conversion by 3–5x vs bare Gumroad.',
+      match: 88,
+      jobDesc: 'Online course creator needs a sales page designed and written to sell their career coaching program.',
+    },
+  ],
+};
+
+/* ── Fallback leads if type not in bank ── */
+const _oppFallback = [
+  {
+    name: 'Generic Brand Co.',
+    platform: 'Instagram',
+    followers: '5k followers',
+    problem: 'Inconsistent posting, no content strategy visible, low engagement rate.',
+    strategy: 'Offer a content audit and monthly content package as an entry point.',
+    match: 82,
+    jobDesc: 'Small brand needs a social media content creator for Instagram.',
+  },
+];
+
+/* ── Render a single opportunity card ── */
+function _renderOppCard(lead) {
+  const badgeClass = lead.match >= 90 ? 'opp-match-high' : 'opp-match-mid';
+
+  // Escape function for safe inline HTML
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  return `
+    <div class="opp-card">
+      <div class="opp-card-header">
+        <div>
+          <div class="opp-card-name">${esc(lead.name)}</div>
+          <div class="opp-card-platform">
+            <i data-lucide="radio" style="width:10px;height:10px"></i>
+            ${esc(lead.platform)} · ${esc(lead.followers)}
+          </div>
+        </div>
+        <span class="opp-match-badge ${badgeClass}">
+          ● ${lead.match}% Match
+        </span>
+      </div>
+
+      <div class="opp-card-body">
+        <div>
+          <div class="opp-field-label">Key Problem Detected</div>
+          <div class="opp-problem-wrap">
+            <div class="opp-field-value">${esc(lead.problem)}</div>
+          </div>
+        </div>
+        <div>
+          <div class="opp-field-label">Outreach Strategy</div>
+          <div class="opp-field-value">${esc(lead.strategy)}</div>
+        </div>
+      </div>
+
+      <div class="opp-card-actions">
+        <button class="opp-action-btn" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
+          <i data-lucide="sparkles" style="width:11px;height:11px"></i> Run Audit
+        </button>
+        <button class="opp-action-btn" onclick="routeToProposal('${esc(lead.jobDesc)}')">
+          <i data-lucide="file-text" style="width:11px;height:11px"></i> Write Proposal
+        </button>
+        <button class="opp-action-btn" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(lead.problem)}')">
+          <i data-lucide="mail" style="width:11px;height:11px"></i> Draft Email
+        </button>
+        <button class="opp-action-btn save" onclick="routeToLead('${esc(lead.name)}','${esc(lead.platform)}')">
+          <i data-lucide="plus" style="width:11px;height:11px"></i> Save Lead
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+/* ── Main scan function ── */
+async function scanOpportunities() {
+  const btn    = el('opp-scan-btn');
+  const loader = el('opp-loader');
+  const wrap   = el('opp-results-wrap');
+  const type   = val('opp-type');
+  const prompt = val('opp-prompt');
+
+  if (!prompt.trim()) {
+    showToast('Describe your ideal lead first.');
+    el('opp-prompt').focus();
+    return;
+  }
+
+  // Loading state
+  btn.disabled = true;
+  loader.classList.add('show');
+
+  // Skeleton cards while "scanning"
+  wrap.innerHTML = `
+    <div class="opp-results-grid">
+      <div class="opp-skeleton"></div>
+      <div class="opp-skeleton"></div>
+      <div class="opp-skeleton"></div>
+    </div>`;
+
+  // Simulate async AI scan (replace with real fetch('/api/opportunity', ...) later)
+  await new Promise(resolve => setTimeout(resolve, 2200));
+
+  // Pick leads from bank
+  const pool  = _oppLeadBank[type] || _oppFallback;
+  // Shuffle slightly so repeated scans feel fresh
+  const leads = [...pool].sort(() => Math.random() - 0.45).slice(0, 3);
+
+  // Render cards
+  wrap.innerHTML = `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`;
+  lucide.createIcons();
+
+  // Done
+  loader.classList.remove('show');
+  btn.disabled = false;
+
+  showToast(`Found ${leads.length} high-intent opportunities.`);
+}
+
+/* ── Cross-tool routing functions ── */
+
+/**
+ * Pre-fills the Audit Generator and navigates to it.
+ * Matches the existing #audit-target and #audit-platform fields.
+ */
+function routeToAudit(targetName, platform) {
+  // Set the business name
+  setVal('audit-target', targetName);
+
+  // Map platform string to the exact <option> values in the audit select
+  const platformMap = {
+    'Instagram': 'Instagram',
+    'YouTube':   'YouTube',
+    'LinkedIn':  'LinkedIn',
+    'Website':   'Website',
+    'Google Maps': 'Website',
+    'Amazon':    'Website',
+    'Product Hunt': 'Website',
+    'Shopify store': 'Website',
+  };
+  const mappedPlatform = platformMap[platform] || 'Instagram';
+  setVal('audit-platform', mappedPlatform);
+
+  // Trigger the URL field visibility toggle (existing function)
+  if (typeof toggleAuditUrl === 'function') toggleAuditUrl();
+
+  navigate('audit');
+  showToast(`Audit pre-filled for "${targetName}" → ${mappedPlatform}`);
+}
+
+/**
+ * Pre-fills the Proposal Writer job description and navigates to it.
+ * Matches the existing #prop-job field.
+ */
+function routeToProposal(jobDesc) {
+  setVal('prop-job', jobDesc);
+  // Clear the result panel so the user sees a fresh state
+  const rb = el('prop-result-box');
+  const eb = el('prop-empty');
+  if (rb) rb.style.display = 'none';
+  if (eb) eb.style.display = 'flex';
+
+  navigate('proposal');
+  showToast('Job description pre-filled in Proposal Writer.');
+}
+
+/**
+ * Pre-fills the Email Writer with a cold outreach context and navigates to it.
+ * Matches the existing #email-context and #email-type fields.
+ */
+function routeToDraftEmail(leadName, problem) {
+  // Set email objective to cold outreach style
+  setVal('email-type', 'Follow-up after a proposal');
+
+  // Pre-fill context so the user just hits Generate
+  const context = `Lead: ${leadName}\n\nKey problem I identified: ${problem}\n\nGoal: Send a personalised cold outreach email that opens with this specific observation to demonstrate I actually researched them.`;
+  setVal('email-context', context);
+
+  // Clear old result
+  const rb = el('email-result-box');
+  const eb = el('email-empty');
+  if (rb) rb.style.display = 'none';
+  if (eb) eb.style.display = 'flex';
+
+  navigate('email');
+  showToast(`Email context pre-filled for "${leadName}".`);
+}
+
+/**
+ * Pre-fills the Client Pipeline lead form and navigates to it.
+ * Matches the existing #lead-name and #lead-platform fields.
+ */
+function routeToLead(name, platform) {
+  setVal('lead-name', name);
+
+  // Map to the exact <option> values in #lead-platform select
+  const pipelineMap = {
+    'Instagram':    'Instagram',
+    'LinkedIn':     'LinkedIn',
+    'Upwork':       'Upwork',
+    'Fiverr':       'Fiverr',
+    'YouTube':      'Instagram', // closest available in the pipeline select
+    'Website':      'Upwork',
+    'Google Maps':  'Instagram',
+    'Amazon':       'Upwork',
+    'Product Hunt': 'Upwork',
+    'Shopify store':'Upwork',
+  };
+  setVal('lead-platform', pipelineMap[platform] || 'Instagram');
+
+  navigate('pipeline');
+  showToast(`"${name}" pre-filled in Pipeline — review and click Add Lead.`);
+}
 </style>
 </head>
 <body>
@@ -1305,6 +1880,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
       <div class="nav-item" data-page="gig"      data-tooltip="Gig Finder"      onclick="navigate('gig')">      <i data-lucide="search"      class="icon"></i><span class="nav-label"> Gig Finder</span><span class="pro-badge">PRO</span></div>
       <div class="nav-item" data-page="roadmap"  data-tooltip="Roadmap"         onclick="navigate('roadmap')">  <i data-lucide="map"         class="icon"></i><span class="nav-label"> Roadmap</span><span class="pro-badge">PRO</span></div>
       <div class="nav-item" data-page="pipeline" data-tooltip="Client Pipeline" onclick="navigate('pipeline')"> <i data-lucide="bar-chart-2" class="icon"></i><span class="nav-label"> Client Pipeline</span><span class="pro-badge">PRO</span></div>
+       <div class="nav-item" data-page="opportunity" data-tooltip="Opportunity Engine" onclick="navigate('opportunity')"><i data-lucide="target" class="icon"></i><span class="nav-label"> Opportunity Engine</span><span class="pro-badge">PRO</span></div>
     </nav>
 
     <div class="sb-bottom">
@@ -1612,7 +2188,57 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
           </div>
         </div>
       </div>
+<div id="page-opportunity" class="page">
+        <div class="content-inner wide">
+          <div class="page-hd">
+            <h1>Opportunity Engine</h1>
+            <p>Find your next client. Analyse their gap. Pitch in one click.</p>
+          </div>
 
+          <!-- Search card -->
+          <div class="card" style="margin-bottom:22px">
+            <div class="opp-search-grid">
+              <div>
+                <label class="field-label">Target Type</label>
+                <select id="opp-type">
+                  <option value="Content Creators">Content Creators</option>
+                  <option value="Local Businesses">Local Businesses</option>
+                  <option value="Startups">Startups</option>
+                  <option value="E-commerce Brands">E-commerce Brands</option>
+                  <option value="Coaches &amp; Consultants">Coaches &amp; Consultants</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">Describe your ideal lead</label>
+                <input type="text" id="opp-prompt" placeholder="e.g. Fitness creators under 20k followers with bad thumbnails on YouTube">
+              </div>
+              <button class="btn btn-primary" id="opp-scan-btn" onclick="scanOpportunities()" style="height:36px;gap:6px">
+                <i data-lucide="radar" style="width:13px;height:13px"></i>
+                Scan Opportunities
+              </button>
+            </div>
+            <div class="inline-loader" id="opp-loader" style="margin-top:12px">
+              <div class="spin"></div>
+              <span>Scanning the market for high-intent leads…</span>
+            </div>
+          </div>
+
+          <!-- Results area -->
+          <div id="opp-results-wrap">
+            <!-- Populated by JS -->
+            <div class="opp-results-grid">
+              <div class="opp-empty">
+                <div class="opp-empty-icon">
+                  <i data-lucide="target" style="width:20px;height:20px;color:var(--text3)"></i>
+                </div>
+                <strong style="color:var(--text-muted);font-size:13px">No scan run yet</strong>
+                <span>Describe your ideal lead above and hit Scan to find opportunities.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1930,7 +2556,7 @@ function clearAuthMessages(){ el('auth-error').style.display='none'; el('auth-su
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const titles={home:'Dashboard',coach:'Launch Coach',audit:'Audit Generator',proposal:'Proposal Writer',email:'Email Writer',gig:'Gig Finder',roadmap:'30-Day Roadmap',profile:'My Profile',pipeline:'Client Pipeline'};
+  const titles={home:'Dashboard',coach:'Launch Coach',audit:'Audit Generator',proposal:'Proposal Writer',email:'Email Writer',gig:'Gig Finder',roadmap:'30-Day Roadmap',profile:'My Profile',pipeline:'Client Pipeline',opportunity:'Opportunity Engine'};
   const pageEl=el('page-'+page);
   if(pageEl){ pageEl.classList.add('active'); el('content-scroll')?.scrollTo(0,0); }
   const navEl=document.querySelector(`[data-page="${page}"]`);
