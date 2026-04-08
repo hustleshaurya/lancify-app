@@ -77,9 +77,12 @@ html.dark {
 html { transition: background-color .2s ease, color .2s ease; }
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text-main);font-family:'Geist','Inter',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 
-/* Precise selective transitions — no blanket global transition */
-.sidebar { transition: width var(--sidebar-transition) !important; }
-.nav-item, .btn, .tool-card, .stat-card, .kanban-card, .acct-menu-item, .header-icon-btn, .sb-collapse-btn, .sb-workspace-btn { transition: background .12s, color .12s, border-color .12s, opacity .12s, transform .1s; }
+/* Precise selective transitions */
+.sidebar { transition: width 0.28s cubic-bezier(0.4,0,0.2,1) !important; }
+.nav-label { transition: opacity 0.22s ease, width 0.28s ease !important; }
+.ws-name, .ws-chevron { transition: opacity 0.2s ease !important; }
+.sb-section { transition: opacity 0.18s ease, height 0.22s ease, padding 0.22s ease !important; }
+.nav-item, .btn, .tool-card, .stat-card, .kanban-card, .acct-menu-item, .header-icon-btn, .sb-collapse-btn, .sb-workspace-btn { transition: background .15s ease, color .15s ease, border-color .12s, opacity .15s ease, transform .1s; }
 input, select, textarea { transition: border-color .15s, box-shadow .15s; }
 
 /* ─── SCROLLBAR ─── */
@@ -225,7 +228,7 @@ html.dark select{
   flex-shrink:0;gap:8px;
 }
 
-.logo-img-light,.logo-img-dark,.logo-img-icon{display:none;height:22px;width:auto;object-fit:contain;flex-shrink:0}
+.logo-img-light,.logo-img-dark,.logo-img-icon{display:none;height:26px;width:auto;object-fit:contain;flex-shrink:0}
 
 /* Logo: expanded */
 html:not(.dark) .sidebar:not(.collapsed) .logo-img-light{display:block}
@@ -234,7 +237,7 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 /* Logo: collapsed */
 .sidebar.collapsed .logo-img-light,
 .sidebar.collapsed .logo-img-dark{display:none}
-.sidebar.collapsed .logo-img-icon{display:block;height:26px;margin:0 auto}
+.sidebar.collapsed .logo-img-icon{display:block;height:20px;margin:0 auto}
 
 /* Collapse toggle */
 .sb-collapse-btn{
@@ -390,29 +393,32 @@ html.dark #theme-icon-moon{display:none}
 .tool-card{
   background:var(--bg);border:1px solid var(--border);
   border-radius:var(--radius-lg);
-  padding:22px 18px;
+  padding:24px 20px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;cursor:pointer;gap:12px;
   box-shadow:var(--shadow-sm);
 }
-.tool-card:hover{border-color:var(--border2);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+html:not(.dark) .tool-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.tool-card:hover{border-color:var(--border2);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+html:not(.dark) .tool-card:hover { border-color:#c0c0c0; box-shadow:0 6px 20px rgba(0,0,0,0.1); }
 .tool-card:active{transform:translateY(0) scale(0.98)}
 .tool-icon{
-  width:48px;height:48px;border-radius:12px;
+  width:52px;height:52px;border-radius:14px;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.tool-card h3{font-size:13.5px;font-weight:600;color:var(--text-main);margin-bottom:2px}
+.tool-card h3{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:2px}
 .tool-card p{font-size:12px;color:var(--text-muted);line-height:1.4}
 
 /* ─── STAT CARDS ─── */
 .stat-card{
   background:var(--bg);border:1px solid var(--border);
-  border-radius:var(--radius-lg);padding:16px 20px;
+  border-radius:var(--radius-lg);padding:18px 22px;
   display:flex;align-items:center;justify-content:space-between;
   box-shadow:var(--shadow-sm);
 }
-.stat-label{font-size:12px;color:var(--text-muted);font-weight:500}
-.stat-val{font-size:22px;font-weight:700;color:var(--text-main);letter-spacing:-.5px}
+html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.stat-label{font-size:12px;color:var(--text-muted);font-weight:500;letter-spacing:.01em}
+.stat-val{font-size:26px;font-weight:700;color:var(--text-main);letter-spacing:-.8px}
 
 /* ─── SECTION TITLE ─── */
 .section-title{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
@@ -619,6 +625,142 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
   .sidebar.mobile-open{transform:translateX(0)}
   .content-inner{padding:22px 18px 60px}
 }
+
+/* Light mode — stronger panel backgrounds */
+html:not(.dark) .content-scroll { background: #f7f7f7; }
+html:not(.dark) .main { background: #f7f7f7; }
+html:not(.dark) .header { background: #ffffff; }
+html:not(.dark) .page-hd h1 { font-size: 26px; font-weight: 800; letter-spacing: -.7px; }
+html:not(.dark) .card { background: #ffffff; border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; font-weight: 700; }
+
+/* ─── SETTINGS MODAL ─── */
+#settings-modal .modal {
+  max-width: 680px;
+  padding: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  height: 520px;
+}
+.settings-sidebar {
+  width: 190px;
+  flex-shrink: 0;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.settings-sidebar-header {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 4px 10px 10px;
+}
+.settings-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  transition: background .12s, color .12s;
+}
+.settings-nav-item:hover { background: var(--bg-hover); color: var(--text-main); }
+.settings-nav-item.active { background: var(--bg-hover); color: var(--text-main); font-weight: 500; }
+.settings-nav-item svg { flex-shrink: 0; }
+.settings-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 28px 24px;
+  background: var(--bg);
+}
+.settings-tab { display: none; }
+.settings-tab.active { display: block; }
+.settings-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -.3px;
+  margin-bottom: 4px;
+}
+.settings-section-sub {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+}
+.settings-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text3);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.settings-close:hover { background: var(--bg-hover); }
+
+/* Theme toggle row */
+.pref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.pref-row:last-child { border-bottom: none; }
+.pref-label { font-size: 13px; font-weight: 500; color: var(--text-main); }
+.pref-desc { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.theme-btn-group { display: flex; gap: 6px; }
+.theme-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--border2);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.theme-btn.active { background: var(--text-main); color: var(--bg); border-color: var(--text-main); }
+.theme-btn:hover:not(.active) { border-color: var(--text-muted); color: var(--text-main); }
+
+/* Billing tab */
+.billing-plan-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  background: var(--bg-panel);
+}
+.billing-plan-name { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 3px; }
+.billing-plan-desc { font-size: 12px; color: var(--text-muted); }
+.billing-credits-wrap { margin-bottom: 18px; }
+.billing-credits-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 7px; }
+.billing-credits-label strong { color: var(--text-main); font-weight: 600; }
+.billing-bar-track { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.billing-bar-fill { height: 100%; background: var(--text-main); border-radius: 99px; transition: width .4s ease; }
   /* ══════════════════════════════════════════════════════════
      ONBOARDING — Premium animated flow
      ══════════════════════════════════════════════════════════ */
@@ -1154,7 +1296,6 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
     <nav class="sb-nav">
       <div class="sb-section">Tools</div>
       <div class="nav-item active" data-page="home"     data-tooltip="Dashboard"        onclick="navigate('home')">    <i data-lucide="home"          class="icon"></i><span class="nav-label"> Dashboard</span></div>
-      <div class="nav-item"        data-page="profile"  data-tooltip="My Profile"       onclick="navigate('profile')"> <i data-lucide="user"          class="icon"></i><span class="nav-label"> My Profile</span></div>
       <div class="nav-item"        data-page="coach"    data-tooltip="Launch Coach"     onclick="navigate('coach')">   <i data-lucide="message-square" class="icon"></i><span class="nav-label"> Launch Coach</span></div>
       <div class="nav-item"        data-page="audit"    data-tooltip="Audit Generator"  onclick="navigate('audit')">   <i data-lucide="sparkles"      class="icon"></i><span class="nav-label"> Audit Generator</span><span class="pro-badge">PRO</span></div>
       <div class="nav-item"        data-page="proposal" data-tooltip="Proposal Writer"  onclick="navigate('proposal')"><i data-lucide="file-text"     class="icon"></i><span class="nav-label"> Proposal Writer</span><span class="pro-badge">PRO</span></div>
@@ -1211,7 +1352,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
         <div class="acct-ws-plan">Free plan</div>
       </div>
       <div class="acct-menu">
-        <button class="acct-menu-item" onclick="navigate('profile');toggleAccountDropdown()">Settings</button>
+        <button class="acct-menu-item" onclick="openSettings('profile');toggleAccountDropdown()">Settings</button>
         <button class="acct-menu-item" onclick="showToast('Workspace settings coming soon')">Workspace settings</button>
         <button class="acct-menu-item" onclick="showUpgradeModal();toggleAccountDropdown()">Subscription</button>
         <div class="acct-divider"></div>
@@ -1440,23 +1581,8 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
         </div>
       </div>
 
-      <div id="page-profile" class="page">
-        <div class="content-inner" style="max-width:620px">
-          <div class="page-hd"><h1>My Profile</h1><p>Set this once. Every tool uses it automatically.</p></div>
-          <div class="card" style="margin-bottom:14px">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-              <div><label class="field-label">Your Name</label><input type="text" id="prof-name" placeholder="Shaurya Abhi"></div>
-              <div><label class="field-label">Primary Skills</label><input type="text" id="prof-skills" placeholder="e.g. Video Editing, Canva"></div>
-              <div><label class="field-label">Main Niche</label><input type="text" id="prof-niche" placeholder="e.g. YouTube Thumbnails"></div>
-              <div><label class="field-label">Target Platform</label><select id="prof-platform"><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Both</option></select></div>
-              <div><label class="field-label">Experience Level</label><select id="prof-exp-level"><option>Complete Beginner</option><option>Had 1-2 clients</option><option>3-6 months experience</option><option>6+ months experience</option></select></div>
-              <div><label class="field-label">Monthly Income Goal</label><select id="prof-goal"><option>₹10,000–₹25,000</option><option>₹25,000–₹50,000</option><option>₹50,000+</option></select></div>
-            </div>
-            <div style="margin-top:12px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuber…"></textarea></div>
-          </div>
-          <button class="btn btn-primary" id="save-prof-btn" onclick="saveProfile()">Save Profile</button>
-        </div>
-      </div>
+      <!-- page-profile is now a hidden stub; profile editing moved to Settings modal -->
+      <div id="page-profile" class="page" style="display:none!important"></div>
 
       <div id="page-pipeline" class="page">
         <div class="content-inner wide">
@@ -1485,6 +1611,123 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
             </div>
           </div>
         </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SETTINGS MODAL — Claude-style left nav
+     ═══════════════════════════════════════════ -->
+<div class="modal-backdrop" id="settings-modal">
+  <div class="modal" style="position:relative">
+    <button class="settings-close" onclick="closeModal('settings-modal')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <!-- Left nav -->
+    <div class="settings-sidebar">
+      <div class="settings-sidebar-header">Settings</div>
+      <button class="settings-nav-item active" id="snav-profile" onclick="switchSettingsTab('profile')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Profile
+      </button>
+      <button class="settings-nav-item" id="snav-preferences" onclick="switchSettingsTab('preferences')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        Preferences
+      </button>
+      <button class="settings-nav-item" id="snav-billing" onclick="switchSettingsTab('billing')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Billing & Credits
+      </button>
+    </div>
+
+    <!-- Right content -->
+    <div class="settings-content">
+
+      <!-- TAB: Profile -->
+      <div class="settings-tab active" id="stab-profile">
+        <div class="settings-section-title">Profile</div>
+        <div class="settings-section-sub">Used by every AI tool to personalise your results.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div><label class="field-label">Your Name</label><input type="text" id="prof-name" placeholder="Shaurya Abhi"></div>
+          <div><label class="field-label">Primary Skills</label><input type="text" id="prof-skills" placeholder="e.g. Video Editing, Canva"></div>
+          <div><label class="field-label">Main Niche</label><input type="text" id="prof-niche" placeholder="e.g. YouTube Thumbnails"></div>
+          <div><label class="field-label">Target Platform</label>
+            <select id="prof-platform">
+              <option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Both</option>
+            </select>
+          </div>
+          <div><label class="field-label">Experience Level</label>
+            <select id="prof-exp-level">
+              <option>Complete Beginner</option><option>Had 1-2 clients</option><option>3-6 months experience</option><option>6+ months experience</option>
+            </select>
+          </div>
+          <div><label class="field-label">Monthly Income Goal</label>
+            <select id="prof-goal">
+              <option>₹5,000–₹10,000</option><option>₹10,000–₹25,000</option><option>₹25,000–₹50,000</option><option>₹50,000+</option>
+            </select>
+          </div>
+          <div><label class="field-label">Hours Available / Day</label>
+            <select id="prof-hours">
+              <option value="1 hour">1 hour/day</option><option value="2 hours" selected>2 hours/day</option><option value="3-4 hours">3–4 hours/day</option><option value="5+ hours">5+ hours/day</option>
+            </select>
+          </div>
+          <div><label class="field-label">Biggest Challenge</label>
+            <select id="prof-challenge">
+              <option>Finding clients</option><option>Writing proposals</option><option>Pricing my work</option><option>Building a portfolio</option><option>Getting first review</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:18px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuber…"></textarea></div>
+        <button class="btn btn-primary" id="save-prof-btn" onclick="saveProfile()">Save Profile</button>
+      </div>
+
+      <!-- TAB: Preferences -->
+      <div class="settings-tab" id="stab-preferences">
+        <div class="settings-section-title">Preferences</div>
+        <div class="settings-section-sub">Customise your Lancify experience.</div>
+        <div class="pref-row">
+          <div>
+            <div class="pref-label">Theme</div>
+            <div class="pref-desc">Switch between light and dark mode.</div>
+          </div>
+          <div class="theme-btn-group">
+            <button class="theme-btn" id="theme-btn-light" onclick="setThemePref('light')">Light</button>
+            <button class="theme-btn" id="theme-btn-dark"  onclick="setThemePref('dark')">Dark</button>
+          </div>
+        </div>
+        <div class="pref-row">
+          <div>
+            <div class="pref-label">Sidebar</div>
+            <div class="pref-desc">Collapse or expand the left sidebar.</div>
+          </div>
+          <button class="btn btn-secondary" onclick="toggleSidebar();closeModal('settings-modal')">Toggle Sidebar</button>
+        </div>
+      </div>
+
+      <!-- TAB: Billing & Credits -->
+      <div class="settings-tab" id="stab-billing">
+        <div class="settings-section-title">Billing &amp; Credits</div>
+        <div class="settings-section-sub">Your current plan and AI usage.</div>
+        <div class="billing-plan-card">
+          <div class="billing-plan-name">Free Plan</div>
+          <div class="billing-plan-desc">1,000 AI credits included. Resets monthly.</div>
+        </div>
+        <div class="billing-credits-wrap">
+          <div class="billing-credits-label">
+            <span>AI Credits Used</span>
+            <strong id="billing-credits-display">850 / 1,000 remaining</strong>
+          </div>
+          <div class="billing-bar-track">
+            <div class="billing-bar-fill" id="billing-credits-bar" style="width:85%"></div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" style="height:40px;font-size:14px" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeModal('settings-modal')">
+          ⚡ Upgrade to Pro — Unlimited Credits
+        </button>
+        <div style="margin-top:14px;font-size:12px;color:var(--text3);text-align:center">Pro includes: Unlimited AI credits · PDF exports · Priority support</div>
       </div>
 
     </div>
@@ -1706,6 +1949,8 @@ function applyProfileToFields(p){
   if(p.platform) setVal('prof-platform',p.platform);
   if(p.exp_level) setVal('prof-exp-level',p.exp_level);
   if(p.income_goal) setVal('prof-goal',p.income_goal);
+  if(p.hours_per_day) setVal('prof-hours',p.hours_per_day);
+  if(p.biggest_challenge) setVal('prof-challenge',p.biggest_challenge);
 }
 
 function checkProfileBanners(){
@@ -1726,16 +1971,28 @@ function applyProfileTo(tool){
 
 async function saveProfile(){
   if(!currentUser) return;
-  const p={user_id:currentUser.id,name:val('prof-name'),skills:val('prof-skills'),niche:val('prof-niche'),experience:val('prof-exp'),platform:val('prof-platform'),exp_level:val('prof-exp-level'),income_goal:val('prof-goal')};
-  el('save-prof-btn').disabled=true; el('save-prof-btn').textContent='Saving…';
+  const p={
+    user_id:currentUser.id,
+    name:val('prof-name'),
+    skills:val('prof-skills'),
+    niche:val('prof-niche'),
+    experience:val('prof-exp'),
+    platform:val('prof-platform'),
+    exp_level:val('prof-exp-level'),
+    income_goal:val('prof-goal'),
+    hours_per_day:val('prof-hours')||'2 hours',
+    biggest_challenge:val('prof-challenge')||'Finding clients'
+  };
+  const btn=el('save-prof-btn');
+  btn.disabled=true; btn.textContent='Saving…';
   try {
     await sb.from('profiles').upsert([p],{onConflict:'user_id'});
     userProfile={...userProfile,...p}; checkProfileBanners(); showToast('Profile saved!');
   } catch(e){ showToast('Error saving profile.'); }
-  el('save-prof-btn').disabled=false; el('save-prof-btn').textContent='Save Profile';
+  btn.disabled=false; btn.textContent='Save Profile';
 }
 
-/* ─── STATS ─── */
+/* ─── STATS & CREDITS ─── */
 async function loadStats(uid){
   try {
     const [kits,props,emails,gigs]=await Promise.all([
@@ -1744,15 +2001,27 @@ async function loadStats(uid){
       sb.from('emails').select('id',{count:'exact'}).eq('user_id',uid),
       sb.from('gig_searches').select('id',{count:'exact'}).eq('user_id',uid)
     ]);
-    setText('stat-kits',kits.count||0);
-    setText('stat-proposals',props.count||0);
-    setText('stat-emails',emails.count||0);
-    setText('stat-gigs',gigs.count||0);
-    const total=1000, used=((kits.count||0)*10)+((props.count||0)*5)+((emails.count||0)*3)+((gigs.count||0)*8);
+    const kc=kits.count||0, pc=props.count||0, ec=emails.count||0, gc=gigs.count||0;
+    setText('stat-kits',kc);
+    setText('stat-proposals',pc);
+    setText('stat-emails',ec);
+    setText('stat-gigs',gc);
+    // Credit costs: kits=50, proposals=30, emails=20, gig searches=25
+    const total=1000;
+    const used=(kc*50)+(pc*30)+(ec*20)+(gc*25);
     const remaining=Math.max(0,total-used);
+    const pct=Math.round((remaining/total)*100);
+    // Sidebar credits
     setText('credits-remaining',remaining.toLocaleString());
+    setText('credits-total','1,000');
+    const bar=el('credits-bar'); if(bar) bar.style.width=`${pct}%`;
+    // Header dropdown credits
     setText('acct-credits-remaining',remaining.toLocaleString());
-    const bar=el('credits-bar'); if(bar) bar.style.width=`${Math.round((remaining/total)*100)}%`;
+    // Settings billing tab
+    const billingDisp=el('billing-credits-display');
+    if(billingDisp) billingDisp.textContent=`${remaining.toLocaleString()} / 1,000 remaining`;
+    const billingBar=el('billing-credits-bar');
+    if(billingBar) billingBar.style.width=`${pct}%`;
   } catch(e){}
 }
 
@@ -2264,7 +2533,17 @@ function resetRoadmap(){ el('rm-result').style.display='none'; el('rm-form').sty
 
 /* ─── PIPELINE ─── */
 async function loadLeads(uid){
-  try { const {data}=await sb.from('leads').select('*').eq('user_id',uid); userLeads=data||[]; renderPipeline(); } catch(e){}
+  try {
+    const {data, error}=await sb.from('leads').select('*').eq('user_id',uid).order('created_at',{ascending:false});
+    if(error) throw error;
+    userLeads=data||[];
+    renderPipeline();
+  } catch(e){
+    console.error('Pipeline load error:',e);
+    // Table may not exist yet — show empty state gracefully
+    userLeads=[];
+    renderPipeline();
+  }
 }
 
 function renderPipeline(){
@@ -2291,9 +2570,12 @@ function renderPipeline(){
 async function addLead(){
   if(!currentUser) return;
   const n=val('lead-name'); if(!n) return showToast('Add a client name');
-  const lead={user_id:currentUser.id,client_name:n,service:val('lead-service'),project_value:val('lead-value'),platform:val('lead-platform'),status:'pitched'};
-  const {data}=await sb.from('leads').insert([lead]).select().single();
-  if(data){ userLeads.push(data); renderPipeline(); setVal('lead-name',''); setVal('lead-service',''); setVal('lead-value',''); showToast('Lead added!'); }
+  const lead={user_id:currentUser.id,client_name:n,service:val('lead-service'),project_value:val('lead-value')||null,platform:val('lead-platform'),status:'pitched'};
+  try {
+    const {data,error}=await sb.from('leads').insert([lead]).select().single();
+    if(error) throw error;
+    if(data){ userLeads.unshift(data); renderPipeline(); setVal('lead-name',''); setVal('lead-service',''); setVal('lead-value',''); showToast('Lead added!'); }
+  } catch(e){ console.error('addLead error:',e); showToast('Error adding lead. Check Supabase table setup.'); }
 }
 
 async function moveLead(id,status){
@@ -2720,6 +3002,41 @@ function _runQuoteScreen(goal, firstName) {
       }, 400);
     }
   }, DISPLAY_MS);
+}
+
+/* ─── SETTINGS MODAL ─── */
+function openSettings(tabId){
+  tabId = tabId || 'profile';
+  el('settings-modal').classList.add('show');
+  switchSettingsTab(tabId);
+  // Sync theme buttons
+  const isDark = document.documentElement.classList.contains('dark');
+  const btnL = el('theme-btn-light'), btnD = el('theme-btn-dark');
+  if(btnL) btnL.classList.toggle('active', !isDark);
+  if(btnD) btnD.classList.toggle('active', isDark);
+  // Sync billing bar from sidebar credits
+  const rem = el('credits-remaining')?.textContent || '1,000';
+  const remNum = parseInt(rem.replace(/,/g,'')) || 1000;
+  const pct = Math.round((remNum/1000)*100);
+  const bd = el('billing-credits-display'); if(bd) bd.textContent = `${rem} / 1,000 remaining`;
+  const bb = el('billing-credits-bar'); if(bb) bb.style.width = pct + '%';
+  lucide.createIcons();
+}
+
+function switchSettingsTab(tabId){
+  document.querySelectorAll('.settings-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.settings-nav-item').forEach(n=>n.classList.remove('active'));
+  const tab = el('stab-'+tabId); if(tab) tab.classList.add('active');
+  const nav = el('snav-'+tabId); if(nav) nav.classList.add('active');
+}
+
+function setThemePref(theme){
+  applyTheme(theme);
+  localStorage.setItem('lancify-theme', theme);
+  lucide.createIcons();
+  const btnL = el('theme-btn-light'), btnD = el('theme-btn-dark');
+  if(btnL) btnL.classList.toggle('active', theme==='light');
+  if(btnD) btnD.classList.toggle('active', theme==='dark');
 }
 
 // Legacy stubs — kept so any orphaned HTML onclick calls don't crash
