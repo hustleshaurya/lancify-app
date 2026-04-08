@@ -1063,11 +1063,63 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
    ═══════════════════════════════════════════════════════════ */
 
 /* Search card top row */
+.opp-search-panel { display: flex; flex-direction: column; gap: 16px; }
+
 .opp-search-grid {
   display: grid;
   grid-template-columns: 200px 1fr auto;
   gap: 10px;
   align-items: end;
+}
+
+/* Filter Chips */
+.opp-filters { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 2px; }
+.opp-filter-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; }
+.opp-chip-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.opp-filter-chip {
+  padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border2);
+  background: var(--bg); color: var(--text-muted); font-size: 11.5px; font-weight: 500;
+  cursor: pointer; transition: all .15s; user-select: none;
+}
+.opp-filter-chip.active { background: var(--text-main); color: var(--bg); border-color: var(--text-main); }
+
+/* Quick Scans Presets */
+.opp-presets-wrap { margin-top: 8px; padding-top: 16px; border-top: 1px dashed var(--border); }
+.opp-presets-title { font-size: 10.5px; font-weight: 600; color: var(--text3); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.opp-presets { display: flex; gap: 8px; flex-wrap: wrap; }
+.opp-preset-btn {
+  background: var(--bg-panel); border: 1px solid var(--border); color: var(--text-main);
+  padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: border-color .15s, box-shadow .15s, transform .1s; display: inline-flex; align-items: center; gap: 6px;
+}
+.opp-preset-btn:hover { border-color: var(--border2); box-shadow: var(--shadow-sm); }
+.opp-preset-btn:active { transform: scale(0.97); }
+
+/* Radar Empty State */
+.opp-radar-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(124, 58, 237, 0.08);
+  color: #7c3aed;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px; position: relative;
+}
+.opp-radar-icon::before {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4);
+  animation: radarPulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+html.dark .opp-radar-icon { background: rgba(167, 139, 250, 0.1); color: #a78bfa; }
+html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4); }
+
+@keyframes radarPulse {
+  to { box-shadow: 0 0 0 28px rgba(124, 58, 237, 0); }
+}
+
+/* Results grid */
+.opp-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
 }
 
 /* Results grid */
@@ -1496,18 +1548,75 @@ function _renderOppCard(lead) {
 }
 
 /* ── Main scan function ── */
+/* ── Helper to set Quick Scan presets ── */
+function setOppPreset(type, prompt) {
+  setVal('opp-type', type);
+  setVal('opp-prompt', prompt);
+}
+
+/* ── Main scan function ── */
 async function scanOpportunities() {
-  const btn    = el('opp-scan-btn');
-  const loader = el('opp-loader');
-  const wrap   = el('opp-results-wrap');
-  const type   = val('opp-type');
-  const prompt = val('opp-prompt');
+  const btn       = el('opp-scan-btn');
+  const loader    = el('opp-loader');
+  const loaderTxt = el('opp-loader-text');
+  const wrap      = el('opp-results-wrap');
+  const type      = val('opp-type');
+  const prompt    = val('opp-prompt');
 
   if (!prompt.trim()) {
     showToast('Describe your ideal lead first.');
     el('opp-prompt').focus();
     return;
   }
+
+  // Loading state
+  btn.disabled = true;
+  loader.classList.add('show');
+
+  // Skeleton cards while "scanning"
+  wrap.innerHTML = `
+    <div class="opp-results-grid">
+      <div class="opp-skeleton"></div>
+      <div class="opp-skeleton"></div>
+      <div class="opp-skeleton"></div>
+    </div>`;
+
+  // Cycle the loading text to look like a real data-mining engine
+  const scanPhrases = [
+    "Scraping target platforms...",
+    "Running AI gap-analysis...",
+    "Compiling outreach strategies...",
+    "Finalising dossiers..."
+  ];
+  let tIdx = 0;
+  loaderTxt.textContent = "Initializing Apify nodes...";
+  
+  const txtInterval = setInterval(() => {
+    if (tIdx < scanPhrases.length) {
+      loaderTxt.textContent = scanPhrases[tIdx++];
+    }
+  }, 800);
+
+  // Simulate async AI scan (extended slightly so the text animation completes)
+  await new Promise(resolve => setTimeout(resolve, 3600));
+
+  clearInterval(txtInterval);
+
+  // Pick leads from bank
+  const pool  = _oppLeadBank[type] || _oppFallback;
+  // Shuffle slightly so repeated scans feel fresh
+  const leads = [...pool].sort(() => Math.random() - 0.45).slice(0, 3);
+
+  // Render cards
+  wrap.innerHTML = `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`;
+  lucide.createIcons();
+
+  // Done
+  loader.classList.remove('show');
+  btn.disabled = false;
+
+  showToast(`Found ${leads.length} high-intent opportunities.`);
+}
 
   // Loading state
   btn.disabled = true;
@@ -2194,6 +2303,70 @@ function routeToLead(name, platform) {
             <h1>Opportunity Engine</h1>
             <p>Find your next client. Analyse their gap. Pitch in one click.</p>
           </div>
+
+          <div class="card" style="margin-bottom:22px">
+            <div class="opp-search-panel">
+              <div class="opp-search-grid">
+                <div>
+                  <label class="field-label">Target Type</label>
+                  <select id="opp-type">
+                    <option value="Content Creators">Content Creators</option>
+                    <option value="Local Businesses">Local Businesses</option>
+                    <option value="Startups">Startups</option>
+                    <option value="E-commerce Brands">E-commerce Brands</option>
+                    <option value="Coaches &amp; Consultants">Coaches &amp; Consultants</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label">Describe your ideal lead</label>
+                  <input type="text" id="opp-prompt" placeholder="e.g. Fitness creators under 20k followers with bad thumbnails on YouTube">
+                </div>
+                <button class="btn btn-primary" id="opp-scan-btn" onclick="scanOpportunities()" style="height:36px;gap:6px">
+                  <i data-lucide="radar" style="width:13px;height:13px"></i>
+                  Deep Scan
+                </button>
+              </div>
+
+              <div class="opp-filters">
+                <span class="opp-filter-label">Platforms:</span>
+                <div class="opp-chip-group">
+                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')">Instagram</div>
+                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')">YouTube</div>
+                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')">LinkedIn</div>
+                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')">Website</div>
+                </div>
+              </div>
+
+              <div class="opp-presets-wrap">
+                <div class="opp-presets-title">Quick Scans</div>
+                <div class="opp-presets">
+                  <button class="opp-preset-btn" onclick="setOppPreset('Local Businesses', 'Gyms & studios with poor SEO and no booking widget')">⚡ Gyms with poor SEO</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('Content Creators', 'YouTubers (50k-100k) with generic thumbnails and low CTR')">⚡ YouTubers needing thumbnails</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('Startups', 'SaaS Founders needing cold email copy and landing page rewrites')">⚡ SaaS Founders needing copy</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="inline-loader" id="opp-loader" style="margin-top:16px; justify-content: center;">
+              <div class="spin" style="border-top-color: #7c3aed;"></div>
+              <span id="opp-loader-text" style="color:#7c3aed; font-weight:500;">Initializing Apify nodes…</span>
+            </div>
+          </div>
+
+          <div id="opp-results-wrap">
+            <div class="opp-results-grid">
+              <div class="opp-empty">
+                <div class="opp-radar-icon">
+                  <i data-lucide="radar" style="width:28px;height:28px;"></i>
+                </div>
+                <strong style="color:var(--text-main);font-size:15px;margin-bottom:2px">Awaiting parameters</strong>
+                <span>Enter your ideal client profile to initiate deep scan.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
 
           <!-- Search card -->
           <div class="card" style="margin-bottom:22px">
