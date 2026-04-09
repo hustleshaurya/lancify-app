@@ -4,8 +4,10 @@ export default async function handler(req, res) {
   }
 
   const { target, platform, weakness, service, price, observation, websiteUrl } = req.body;
-  const apiKey = process.env.GEMINI_API_KEY;
-  const modelName = "gemini-1.5-flash";
+  
+  // Pivot: Using the reliable Groq API instead of Gemini
+  const groqApiKey = process.env.GROQ_API_KEY;
+  const modelName = "llama-3.3-70b-versatile";
 
   let scrapedContent = "";
   let contextSnippet = "";
@@ -16,8 +18,7 @@ export default async function handler(req, res) {
       const jinaResponse = await fetch(`https://r.jina.ai/${websiteUrl}`);
       if (jinaResponse.ok) {
         const fullText = await jinaResponse.text();
-        // Increased from 3000 to 6000 to capture more meaningful page content
-        scrapedContent = fullText.substring(0, 6000);
+        scrapedContent = fullText.substring(0, 6000); // 6k chars is perfect for Llama
         contextSnippet = `
 The client's website was scraped. Here is the actual page content:
 """${scrapedContent}"""
@@ -38,10 +39,7 @@ Additional observation: "${observation}".
 Base the entire audit on this specific issue. Do not generalise.`;
   }
 
-  const prompt = {
-    contents: [{
-      parts: [{
-        text: `You are a sharp, experienced freelance digital consultant. You write audit reports and cold emails for potential clients.
+  const systemPrompt = `You are a sharp, experienced freelance digital consultant. You write audit reports and cold emails for potential clients.
 
 You are auditing: ${target}
 Platform: ${platform}
@@ -53,7 +51,6 @@ ${contextSnippet}
 ---
 
 YOUR WRITING RULES (follow strictly):
-
 1. Sound like a real human, not a marketing tool. Write like you're sending this from your laptop on a Tuesday afternoon.
 2. Sentences must be short — under 15 words each. Easy to skim.
 3. Be specific. If you mention an issue, name exactly where on the page it is.
@@ -63,76 +60,52 @@ YOUR WRITING RULES (follow strictly):
 7. Write in first person ("I noticed", "I can fix").
 8. The cold email must NOT sound like a template. It should feel like a real person wrote it after genuinely browsing the site for 5 minutes.
 9. Before finalizing any section, ask yourself: "Does this sound like AI wrote it?" If yes, rewrite it more naturally before including it.
-10. Before finalizing the email specifically, ask yourself: "Would a real business owner actually reply to this?" If not, improve the clarity and specificity until the answer is yes.
 
 ---
 
-Return ONLY a raw JSON object. No markdown, no backticks, no explanation. Use exactly these keys:
-
-"email_subject":
-"A lowercase, specific, curiosity-driven subject line. Never generic like 'quick question' or 'I can help'. Do not include the word 'Subject:'",
-
-"email_body": 
-"The cold email body. Rules:
-- Opening: reference something real and specific from the site. NOT a generic compliment.
-- Body: mention the ONE specific issue you found and why it matters to someone ready to take action right now.
-- Keep it under 120 words total.
-- Close with a direct, low-commitment ask. Not 'worth a quick look?' — something like 'Want me to send over a before/after?' or 'Open to a 10-minute call this week?'",
-
-"sec1_assessment":
-"2 sentences. Start with something specific you noticed that is actually good about the site. Sound like you actually looked at it, not like you're filling a template slot.",
-
-"sec2_bottleneck":
-"2 sentences. Name the ONE specific friction point clearly. Mention exactly where on the page it is. No vague language.",
-
-"sec3_impact":
-"2 sentences. Explain what this costs them in plain terms. Focus on high-intent users who were ready to act but got stuck. Use a realistic number range — do not always default to '5-10 inquiries.'",
-
-"sec4_fixes":
-[
-  "Actionable, specific, free-to-implement fix 1",
-  "Actionable, specific, free-to-implement fix 2",
-  "Actionable, specific, free-to-implement fix 3"
-],
-
-"sec5_pitch":
-"2 sentences max. Tell them exactly what you'll do and what outcome they can expect. Include a timeframe and the price (${price}). End with: 'Happy to show a quick before/after so you can see the difference.'"
-
----
-
-Return only the JSON. Start with { and end with }.`
-      }]
-    }]
-  };
+Return ONLY a valid JSON object. No markdown, no backticks, no explanation. Use exactly this JSON structure:
+{
+  "email_subject": "A lowercase, specific, curiosity-driven subject line. Never generic.",
+  "email_body": "The cold email body. Keep it under 120 words total. Close with a direct, low-commitment ask.",
+  "sec1_assessment": "2 sentences. Start with something specific you noticed that is actually good about the site.",
+  "sec2_bottleneck": "2 sentences. Name the ONE specific friction point clearly. Mention exactly where on the page it is.",
+  "sec3_impact": "2 sentences. Explain what this costs them in plain terms.",
+  "sec4_fixes": [
+    "Actionable, specific, free-to-implement fix 1",
+    "Actionable, specific, free-to-implement fix 2",
+    "Actionable, specific, free-to-implement fix 3"
+  ],
+  "sec5_pitch": "2 sentences max. Tell them exactly what you'll do and what outcome they can expect. Include a timeframe and the price (${price})."
+}`;
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(prompt)
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${groqApiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: modelName,
+        messages: [
+          { role: "system", content: systemPrompt }
+        ],
+        temperature: 0.7,
+        response_format: { type: "json_object" } // Forces strict JSON
+      })
     });
 
     const data = await response.json();
 
     if (data.error) throw new Error(data.error.message);
-    if (!data.candidates || !data.candidates[0]) throw new Error("AI returned an empty response.");
+    if (!data.choices || !data.choices[0]) throw new Error("AI returned an empty response.");
 
-    let rawText = data.candidates[0].content.parts[0].text;
+    const parsedJson = JSON.parse(data.choices[0].message.content);
 
-    // Clean any accidental markdown formatting
-    const cleanJson = rawText
-      .replace(/```json/g, '')
-      .replace(/```/g, '')
-      .trim();
-
-    const parsed = JSON.parse(cleanJson);
-
-    res.status(200).json(parsed);
+    res.status(200).json(parsedJson);
 
   } catch (error) {
-    console.error("API ERROR:", error);
+    console.error("GROQ API ERROR:", error);
     res.status(500).json({ error: "Lancify Engine Error: " + error.message });
   }
 }
