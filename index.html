@@ -3156,37 +3156,11 @@ async function generateAudit(){
     const data=await res.json();
     if(data.error) throw new Error(data.error);
 
-    // Save globally for the PDF downloader
     savedAuditData = data;
 
-    const fixes = Array.isArray(data.sec4_fixes)
-      ? data.sec4_fixes.map((f,i)=>`${i+1}. ${f}`).join('\n')
-      : (data.sec4_fixes||'');
-
-    // Render the Email Part
+    // We only display the email in the UI now.
     const emailText = `SUBJECT: ${data.email_subject || ''}\n\n${data.email_body || ''}\n\n(P.S. I attached a quick PDF breakdown of the exact fixes for your site.)`;
     el('audit-email-text').textContent = emailText;
-
-    // Render the Report Preview Part
-    const reportText = [
-      "GROWTH DIAGNOSTIC & STRATEGY REPORT",
-      "--------------------------------------------------",
-      "1. WHAT'S WORKING",
-      data.sec1_assessment || '',
-      "",
-      "2. THE PRIMARY BOTTLENECK",
-      data.sec2_bottleneck || '',
-      "",
-      "3. ESTIMATED OPPORTUNITY COST",
-      data.sec3_impact || '',
-      "",
-      "4. IMMEDIATE ACTIONABLE FIXES",
-      fixes,
-      "",
-      "5. PROPOSED IMPLEMENTATION",
-      data.sec5_pitch || ''
-    ].join('\n');
-    el('audit-report-text').textContent = reportText;
 
     toggleResult('audit',true);
     lucide.createIcons();
@@ -3197,95 +3171,119 @@ async function generateAudit(){
 
 async function downloadAuditPDF() {
   if (!savedAuditData) return showToast('Generate an audit first!');
-  showToast('Preparing PDF...');
+  showToast('Preparing Premium PDF...');
   try {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF('p', 'mm', 'a4');
     const d = savedAuditData;
     const targetName = val('audit-target') || 'Client';
     const platformName = val('audit-platform') || 'Platform';
-    const priceVal = val('audit-price') || 'Custom Quote'; // Pulls the exact price you typed
+    const priceVal = val('audit-price') || 'Custom Quote';
     const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    // Premium Header
+    // Premium Agency Top Accent Line
+    doc.setFillColor(124, 58, 237); // Lancify Purple
+    doc.rect(0, 0, 210, 6, 'F');
+
+    let yOffset = 25;
+
+    // Inject the Client Logo if uploaded
+    if (auditLogoBase64) {
+       try {
+         doc.addImage(auditLogoBase64, 150, 15, 40, 20, '', 'FAST');
+       } catch (err) {
+         console.log("Logo format issue", err);
+       }
+    }
+
+    // Official Title
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(18);
-    doc.text('GROWTH DIAGNOSTIC & STRATEGY REPORT', 20, 22);
+    doc.setFontSize(22);
+    doc.setTextColor(20, 20, 20);
+    doc.text('GROWTH & UX DIAGNOSTIC', 20, yOffset);
     
-    // Clean Meta Data (Matches the old style)
-    doc.setFontSize(10);
+    yOffset += 8;
     doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100);
-    doc.text(`Prepared for: ${targetName}      Platform: ${platformName}      Date: ${dateStr}`, 20, 30);
-    
-    // Smooth separator line
-    doc.setDrawColor(200);
-    doc.line(20, 34, 190, 34);
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`PREPARED EXCLUSIVELY FOR: ${targetName.toUpperCase()}`, 20, yOffset);
 
-    let y = 46;
-    doc.setTextColor(0);
+    yOffset += 6;
+    doc.text(`DATE: ${dateStr}   |   PLATFORM: ${platformName.toUpperCase()}`, 20, yOffset);
 
-    const addSection = (title, text) => {
-      if (y > 240) { doc.addPage(); y = 20; }
+    yOffset += 12;
+    doc.setDrawColor(230, 230, 230);
+    doc.line(20, yOffset, 190, yOffset);
+    yOffset += 15;
+
+    // Shaded Premium Sections Function
+    const addPremiumSection = (title, text) => {
+      if (yOffset > 250) { doc.addPage(); yOffset = 20; }
+      
+      // Shaded Header Box
+      doc.setFillColor(248, 248, 250);
+      doc.roundedRect(20, yOffset - 6, 170, 10, 2, 2, 'F');
+      
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.text(title.toUpperCase(), 20, y);
-      y += 7;
+      doc.setFontSize(10);
+      doc.setTextColor(40, 40, 40);
+      doc.text(title.toUpperCase(), 24, yOffset);
+      yOffset += 10;
       
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(11);
-      doc.setTextColor(60);
+      doc.setTextColor(70, 70, 70);
       
-      // Split text and add perfect line spacing
-      const lines = doc.splitTextToSize(String(text || 'N/A'), 170);
-      doc.text(lines, 20, y);
-      y += (lines.length * 6) + 12; 
-      doc.setTextColor(0);
+      const lines = doc.splitTextToSize(String(text || 'N/A'), 165);
+      doc.text(lines, 24, yOffset);
+      yOffset += (lines.length * 6) + 12; 
     };
 
-    // The Core Audit Sections
-    addSection('1. Initial Brand Assessment', d.sec1_assessment);
-    addSection('2. The Primary Conversion Bottleneck', d.sec2_bottleneck);
-    addSection('3. Estimated Opportunity Cost', d.sec3_impact);
-    
-    // Clean formatting for fixes
-    const fixes = Array.isArray(d.sec4_fixes) ? d.sec4_fixes.map((f,i)=>`${f}`).join('\n') : (d.sec4_fixes||'');
-    addSection('4. Immediate Actionable Fix', fixes);
-    
-    addSection('5. Proposed Implementation Strategy', d.sec5_pitch);
+    addPremiumSection('1. Initial Brand Assessment', d.sec1_assessment);
+    addPremiumSection('2. The Primary Conversion Bottleneck', d.sec2_bottleneck);
+    addPremiumSection('3. Estimated Opportunity Cost', d.sec3_impact);
+
+    const fixes = Array.isArray(d.sec4_fixes) ? d.sec4_fixes.map(f => `✓  ${f}`).join('\n') : (d.sec4_fixes||'');
+    addPremiumSection('4. Recommended Action Plan', fixes);
+    addPremiumSection('5. Implementation Strategy', d.sec5_pitch);
 
     // 💰 THE OFFICIAL "INVOICE" BLOCK AT THE BOTTOM 💰
-    if (y > 220) { doc.addPage(); y = 20; } // Ensure it doesn't break pages
+    if (yOffset > 230) { doc.addPage(); yOffset = 20; }
     
-    y += 5;
-    doc.setDrawColor(220);
-    doc.setFillColor(250, 250, 250);
-    doc.roundedRect(20, y, 170, 35, 3, 3, 'FD'); // Draws a subtle, premium grey box
+    yOffset += 5;
+    doc.setDrawColor(220, 220, 220);
+    doc.setFillColor(252, 252, 252);
+    doc.roundedRect(20, yOffset, 170, 35, 3, 3, 'FD'); 
     
-    y += 10;
+    // Purple accent line on the left of the invoice box
+    doc.setFillColor(124, 58, 237);
+    doc.rect(20, yOffset, 4, 35, 'F');
+    
+    yOffset += 12;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
-    doc.text('Project Scope:', 25, y);
+    doc.setTextColor(20, 20, 20);
+    doc.text('Project Investment:', 30, yOffset);
     doc.setFont('helvetica', 'normal');
-    doc.text('5 - 7 Days', 70, y);
+    doc.text(String(priceVal), 80, yOffset);
     
-    y += 8;
+    yOffset += 8;
     doc.setFont('helvetica', 'bold');
-    doc.text('Total Investment:', 25, y);
+    doc.text('Estimated Timeline:', 30, yOffset);
     doc.setFont('helvetica', 'normal');
-    doc.text(String(priceVal), 70, y); // Automatically inputs the ₹5,000 or whatever you set
+    doc.text('5 - 7 Business Days', 80, yOffset);
 
-    y += 10;
+    yOffset += 10;
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text('To authorize this implementation, simply reply to my email.', 25, y);
+    doc.setTextColor(120, 120, 120);
+    doc.text('To authorize this implementation, simply reply to the email provided.', 30, yOffset);
 
     // Footer
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(9);
-    doc.setTextColor(150);
-    doc.text('Generated via Lancify OS', 20, 285);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(180, 180, 180);
+    doc.text('Confidential | Generated for client review only', 20, 285);
 
     doc.save(`Audit-Report-${targetName.replace(/\s+/g, '-')}.pdf`);
   } catch(e) {
