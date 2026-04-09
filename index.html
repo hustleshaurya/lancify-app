@@ -1633,7 +1633,7 @@ function setOppPreset(type, prompt) {
   setVal('opp-prompt', prompt);
 }
 
-/* ── Main scan function ── */
+/* ── Main scan function (LIVE API CONNECTED) ── */
 async function scanOpportunities() {
   const btn       = el('opp-scan-btn');
   const loader    = el('opp-loader');
@@ -1648,11 +1648,11 @@ async function scanOpportunities() {
     return;
   }
 
-  // Loading state
+  // UI Loading state
   btn.disabled = true;
   loader.classList.add('show');
 
-  // Skeleton cards while "scanning"
+  // Skeleton cards while waiting for Vercel
   wrap.innerHTML = `
     <div class="opp-results-grid">
       <div class="opp-skeleton"></div>
@@ -1660,7 +1660,7 @@ async function scanOpportunities() {
       <div class="opp-skeleton"></div>
     </div>`;
 
-  // Cycle the loading text to look like a real data-mining engine
+  // Cycle text to look cool while API fetches
   const scanPhrases = [
     "Scraping target platforms...",
     "Running AI gap-analysis...",
@@ -1669,63 +1669,43 @@ async function scanOpportunities() {
   ];
   let tIdx = 0;
   loaderTxt.textContent = "Initializing Apify nodes...";
-  
   const txtInterval = setInterval(() => {
-    if (tIdx < scanPhrases.length) {
-      loaderTxt.textContent = scanPhrases[tIdx++];
-    }
+    if (tIdx < scanPhrases.length) loaderTxt.textContent = scanPhrases[tIdx++];
   }, 800);
 
-  // Simulate async AI scan (extended slightly so the text animation completes)
-  await new Promise(resolve => setTimeout(resolve, 3600));
+  try {
+    // ⚡ ACTUALLY CALL YOUR BACKEND API ⚡
+    const res = await fetch('/api/opportunity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ targetType: type, prompt: prompt })
+    });
 
-  clearInterval(txtInterval);
+    clearInterval(txtInterval);
 
-  // Pick leads from bank
-  const pool  = _oppLeadBank[type] || _oppFallback;
-  // Shuffle slightly so repeated scans feel fresh
-  const leads = [...pool].sort(() => Math.random() - 0.45).slice(0, 3);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
 
-  // Render cards
-  wrap.innerHTML = `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`;
-  lucide.createIcons();
+    // Render cards using data from the server
+    wrap.innerHTML = `<div class="opp-results-grid">${data.leads.map(_renderOppCard).join('')}</div>`;
+    lucide.createIcons();
+    showToast(`Found ${data.leads.length} high-intent opportunities.`);
 
-  // Done
+  } catch (error) {
+    clearInterval(txtInterval);
+    showToast('Scan failed. Ensure API is deployed.');
+    wrap.innerHTML = `
+      <div class="opp-empty">
+        <i data-lucide="alert-triangle" style="width:28px;height:28px;color:#ef4444;margin-bottom:12px"></i>
+        <strong style="color:var(--text-main)">Connection Error</strong>
+        <span>Could not reach the scraping servers. Please try again.</span>
+      </div>`;
+    lucide.createIcons();
+  }
+
+  // Reset UI
   loader.classList.remove('show');
   btn.disabled = false;
-
-  showToast(`Found ${leads.length} high-intent opportunities.`);
-}
-
-  // Loading state
-  btn.disabled = true;
-  loader.classList.add('show');
-
-  // Skeleton cards while "scanning"
-  wrap.innerHTML = `
-    <div class="opp-results-grid">
-      <div class="opp-skeleton"></div>
-      <div class="opp-skeleton"></div>
-      <div class="opp-skeleton"></div>
-    </div>`;
-
-  // Simulate async AI scan (replace with real fetch('/api/opportunity', ...) later)
-  await new Promise(resolve => setTimeout(resolve, 2200));
-
-  // Pick leads from bank
-  const pool  = _oppLeadBank[type] || _oppFallback;
-  // Shuffle slightly so repeated scans feel fresh
-  const leads = [...pool].sort(() => Math.random() - 0.45).slice(0, 3);
-
-  // Render cards
-  wrap.innerHTML = `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`;
-  lucide.createIcons();
-
-  // Done
-  loader.classList.remove('show');
-  btn.disabled = false;
-
-  showToast(`Found ${leads.length} high-intent opportunities.`);
 }
 
 /* ── Cross-tool routing functions ── */
