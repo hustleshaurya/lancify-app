@@ -3175,49 +3175,82 @@ async function downloadAuditPDF() {
     const d = savedAuditData;
     const targetName = val('audit-target') || 'Client';
     const platformName = val('audit-platform') || 'Platform';
+    const priceVal = val('audit-price') || 'Custom Quote'; // Pulls the exact price you typed
     const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    // Header
+    // Premium Header
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.text('GROWTH DIAGNOSTIC & STRATEGY REPORT', 20, 20);
+    doc.setFontSize(18);
+    doc.text('GROWTH DIAGNOSTIC & STRATEGY REPORT', 20, 22);
     
-    // Meta Data Line
+    // Clean Meta Data (Matches the old style)
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(100);
-    doc.text(`Prepared for: ${targetName}   |   Platform: ${platformName}   |   Date: ${dateStr}`, 20, 28);
+    doc.text(`Prepared for: ${targetName}      Platform: ${platformName}      Date: ${dateStr}`, 20, 30);
     
-    // Line separator
+    // Smooth separator line
     doc.setDrawColor(200);
-    doc.line(20, 32, 190, 32);
+    doc.line(20, 34, 190, 34);
 
-    let y = 42;
+    let y = 46;
     doc.setTextColor(0);
 
     const addSection = (title, text) => {
-      if (y > 260) { doc.addPage(); y = 20; }
+      if (y > 240) { doc.addPage(); y = 20; }
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.text(title.toUpperCase(), 20, y);
       y += 7;
       
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
+      doc.setFontSize(11);
       doc.setTextColor(60);
+      
+      // Split text and add perfect line spacing
       const lines = doc.splitTextToSize(String(text || 'N/A'), 170);
       doc.text(lines, 20, y);
-      y += (lines.length * 5) + 10;
+      y += (lines.length * 6) + 12; 
       doc.setTextColor(0);
     };
 
+    // The Core Audit Sections
     addSection('1. Initial Brand Assessment', d.sec1_assessment);
     addSection('2. The Primary Conversion Bottleneck', d.sec2_bottleneck);
     addSection('3. Estimated Opportunity Cost', d.sec3_impact);
     
-    const fixes = Array.isArray(d.sec4_fixes) ? d.sec4_fixes.map((f,i)=>`• ${f}`).join('\n') : (d.sec4_fixes||'');
-    addSection('4. Immediate Actionable Fixes', fixes);
+    // Clean formatting for fixes
+    const fixes = Array.isArray(d.sec4_fixes) ? d.sec4_fixes.map((f,i)=>`${f}`).join('\n') : (d.sec4_fixes||'');
+    addSection('4. Immediate Actionable Fix', fixes);
+    
     addSection('5. Proposed Implementation Strategy', d.sec5_pitch);
+
+    // 💰 THE OFFICIAL "INVOICE" BLOCK AT THE BOTTOM 💰
+    if (y > 220) { doc.addPage(); y = 20; } // Ensure it doesn't break pages
+    
+    y += 5;
+    doc.setDrawColor(220);
+    doc.setFillColor(250, 250, 250);
+    doc.roundedRect(20, y, 170, 35, 3, 3, 'FD'); // Draws a subtle, premium grey box
+    
+    y += 10;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text('Project Scope:', 25, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text('5 - 7 Days', 70, y);
+    
+    y += 8;
+    doc.setFont('helvetica', 'bold');
+    doc.text('Total Investment:', 25, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(String(priceVal), 70, y); // Automatically inputs the ₹5,000 or whatever you set
+
+    y += 10;
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text('To authorize this implementation, simply reply to my email.', 25, y);
 
     // Footer
     doc.setFont('helvetica', 'italic');
