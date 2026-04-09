@@ -2264,18 +2264,27 @@ function routeToLead(name, platform) {
               <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
             </div>
             <div class="result-panel">
-              <div class="result-box" id="audit-result-box" style="display:none">
-                <div class="result-box-header"><span class="result-box-title">Cold Email Script</span><button class="copy-btn" onclick="copyEl('audit-result-text')">Copy</button></div>
-                <div class="result-box-body" id="audit-result-text"></div>
+             <div id="audit-result-box" style="display:none; flex-direction:column; gap:16px; height:100%;">
+                
+                <div class="result-box" style="flex:none; min-height:180px;">
+                  <div class="result-box-header">
+                    <span class="result-box-title">1. The Cold Email</span>
+                    <button class="copy-btn" onclick="copyEl('audit-email-text')">Copy Email</button>
+                  </div>
+                  <div class="result-box-body" id="audit-email-text"></div>
+                </div>
+
+                <div class="result-box">
+                  <div class="result-box-header">
+                    <span class="result-box-title">2. The Audit Dossier</span>
+                    <button class="btn btn-secondary" style="height:26px; padding:0 10px; font-size:11px;" onclick="downloadAuditPDF()">
+                      <i data-lucide="download" style="width:12px;height:12px;margin-right:4px;"></i> Download PDF
+                    </button>
+                  </div>
+                  <div class="result-box-body" id="audit-report-text" style="background:var(--bg-panel);"></div>
+                </div>
+
               </div>
-              <div class="card-dashed empty-state" id="audit-empty">
-                <i data-lucide="crosshair" style="width:26px;height:26px;color:var(--text3)"></i>
-                <p>Fill out the intelligence form to generate your cold pitch.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div id="page-proposal" class="page">
         <div class="content-inner">
@@ -2690,7 +2699,7 @@ const sb = createClient(
 
 let currentUser = null, userProfile = {is_pro:false}, userLeads = [];
 let authMode = 'signin';
-let chatStep = 0, chatAnswers = {}, savedKitData = null;
+let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
 
 /*
   The chat collects exactly the keys generate.js needs inside answers{}:
@@ -3102,14 +3111,6 @@ async function generateAudit(){
   const targetVal=val('audit-target'); if(!targetVal) return showToast('Enter a business name');
   el('audit-btn').disabled=true; loader('audit',true); toggleResult('audit',false);
   try {
-    /*
-      FIX 3 — Audit Generator
-      ────────────────────────
-      Payload key fix:  businessName  →  target
-      Added:            websiteUrl (needed for Jina scraper in audit.js)
-      audit.js expects: { target, platform, weakness, service, price, observation, websiteUrl }
-      Note: logoBase64 is NOT consumed by the backend audit.js — removed to keep payload clean.
-    */
     const res=await fetch('/api/audit',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -3126,42 +3127,109 @@ async function generateAudit(){
     const data=await res.json();
     if(data.error) throw new Error(data.error);
 
-    /*
-      FIX 3 (continued) — Audit UI Render
-      ─────────────────────────────────────
-      Backend returns:
-        email_subject, email_body,
-        sec1_assessment, sec2_bottleneck, sec3_impact,
-        sec4_fixes (array), sec5_pitch
+    // Save globally for the PDF downloader
+    savedAuditData = data;
 
-      We render the full audit report in audit-result-text,
-      structured so the user can read it and copy it cleanly.
-    */
     const fixes = Array.isArray(data.sec4_fixes)
       ? data.sec4_fixes.map((f,i)=>`${i+1}. ${f}`).join('\n')
       : (data.sec4_fixes||'');
 
-    const fullReport = [
-      data.email_subject ? `SUBJECT: ${data.email_subject}` : '',
-      '',
-      data.email_body    ? `--- COLD EMAIL ---\n${data.email_body}` : '',
-      '',
-      data.sec1_assessment ? `--- WHAT'S WORKING ---\n${data.sec1_assessment}` : '',
-      '',
-      data.sec2_bottleneck ? `--- THE BOTTLENECK ---\n${data.sec2_bottleneck}` : '',
-      '',
-      data.sec3_impact     ? `--- WHAT IT'S COSTING THEM ---\n${data.sec3_impact}` : '',
-      '',
-      fixes                ? `--- QUICK FIXES ---\n${fixes}` : '',
-      '',
-      data.sec5_pitch      ? `--- YOUR PITCH ---\n${data.sec5_pitch}` : ''
-    ].filter(line => line !== null && line !== undefined).join('\n').trim();
+    // Render the Email Part
+    const emailText = `SUBJECT: ${data.email_subject || ''}\n\n${data.email_body || ''}\n\n(P.S. I attached a quick PDF breakdown of the exact fixes for your site.)`;
+    el('audit-email-text').textContent = emailText;
 
-    el('audit-result-text').textContent = fullReport;
+    // Render the Report Preview Part
+    const reportText = [
+      "GROWTH DIAGNOSTIC & STRATEGY REPORT",
+      "--------------------------------------------------",
+      "1. WHAT'S WORKING",
+      data.sec1_assessment || '',
+      "",
+      "2. THE PRIMARY BOTTLENECK",
+      data.sec2_bottleneck || '',
+      "",
+      "3. ESTIMATED OPPORTUNITY COST",
+      data.sec3_impact || '',
+      "",
+      "4. IMMEDIATE ACTIONABLE FIXES",
+      fixes,
+      "",
+      "5. PROPOSED IMPLEMENTATION",
+      data.sec5_pitch || ''
+    ].join('\n');
+    el('audit-report-text').textContent = reportText;
+
     toggleResult('audit',true);
+    lucide.createIcons();
 
   } catch(e){ showToast('Error. Try again.'); toggleResult('audit',false,true); }
   el('audit-btn').disabled=false; loader('audit',false);
+}
+
+async function downloadAuditPDF() {
+  if (!savedAuditData) return showToast('Generate an audit first!');
+  showToast('Preparing PDF...');
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const d = savedAuditData;
+    const targetName = val('audit-target') || 'Client';
+    const platformName = val('audit-platform') || 'Platform';
+    const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    // Header
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('GROWTH DIAGNOSTIC & STRATEGY REPORT', 20, 20);
+    
+    // Meta Data Line
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100);
+    doc.text(`Prepared for: ${targetName}   |   Platform: ${platformName}   |   Date: ${dateStr}`, 20, 28);
+    
+    // Line separator
+    doc.setDrawColor(200);
+    doc.line(20, 32, 190, 32);
+
+    let y = 42;
+    doc.setTextColor(0);
+
+    const addSection = (title, text) => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(title.toUpperCase(), 20, y);
+      y += 7;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(60);
+      const lines = doc.splitTextToSize(String(text || 'N/A'), 170);
+      doc.text(lines, 20, y);
+      y += (lines.length * 5) + 10;
+      doc.setTextColor(0);
+    };
+
+    addSection('1. Initial Brand Assessment', d.sec1_assessment);
+    addSection('2. The Primary Conversion Bottleneck', d.sec2_bottleneck);
+    addSection('3. Estimated Opportunity Cost', d.sec3_impact);
+    
+    const fixes = Array.isArray(d.sec4_fixes) ? d.sec4_fixes.map((f,i)=>`• ${f}`).join('\n') : (d.sec4_fixes||'');
+    addSection('4. Immediate Actionable Fixes', fixes);
+    addSection('5. Proposed Implementation Strategy', d.sec5_pitch);
+
+    // Footer
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(9);
+    doc.setTextColor(150);
+    doc.text('Generated via Lancify OS', 20, 285);
+
+    doc.save(`Audit-Report-${targetName.replace(/\s+/g, '-')}.pdf`);
+  } catch(e) {
+    console.error(e);
+    showToast('PDF error. Try again.');
+  }
 }
 
 /* ─── PROPOSAL ─── */
