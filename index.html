@@ -2168,7 +2168,77 @@ function routeToLead(name, platform) {
         <div class="content-inner">
           <div style="margin-bottom:6px;font-size:12.5px;color:var(--text-muted)">My Workspace</div>
           <h1 id="hero-greeting" style="font-size:28px;font-weight:700;letter-spacing:-.6px;margin-bottom:26px;color:var(--text-main)">Good morning, Shaurya</h1>
+           <div class="card" style="margin-bottom: 32px; padding: 24px; position: relative; overflow: hidden; border-color: var(--text-main);">
+            <div style="display:flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h2 style="font-size:18px; font-weight:700; color:var(--text-main); letter-spacing:-.4px; margin-bottom:4px;">The "First ₹10k" Playbook</h2>
+                <p style="font-size:13px; color:var(--text-muted);">Follow these exact 4 steps to find, pitch, and close your first paying client today.</p>
+              </div>
+              <button class="btn btn-secondary" style="font-size: 12px; height: 32px; background: rgba(99, 102, 241, 0.08); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.2);" onclick="window.open('https://loom.com', '_blank')">
+                <i data-lucide="play-circle" style="width:14px; height:14px;"></i> Watch me do it (2 mins)
+              </button>
+            </div>
 
+            <div style="margin-bottom: 20px;">
+              <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.05em;">
+                <span>Execution Progress</span>
+                <span id="pb-pct">0%</span>
+              </div>
+              <div style="height:5px; background:var(--border); border-radius:99px; overflow:hidden;">
+                <div id="pb-fill" style="height:100%; width:0%; background:var(--text-main); transition: width 0.4s cubic-bezier(0.16,1,0.3,1);"></div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              
+              <div class="pb-step-card" id="pb-card-1" style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; transition:all .2s;">
+                <div class="pb-check" id="pb-check-1" onclick="togglePb(1)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s;">
+                  <i data-lucide="check" style="width:14px; height:14px; color:transparent; transition:color .2s;"></i>
+                </div>
+                <div style="flex:1; cursor:pointer;" onclick="navigate('coach')">
+                  <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">1. Lock Your Offer & Portfolio</div>
+                  <div style="font-size:12px; color:var(--text-muted);">Run the Launch Coach to get your specific niche, pricing tiers, and a bio to paste into your social profiles.</div>
+                </div>
+                <button class="btn btn-ghost" onclick="navigate('coach')" style="padding:0 6px;"><i data-lucide="arrow-right" style="width:16px; height:16px;"></i></button>
+              </div>
+
+              <div class="pb-step-card" id="pb-card-2" style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; transition:all .2s;">
+                <div class="pb-check" id="pb-check-2" onclick="togglePb(2)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s;">
+                  <i data-lucide="check" style="width:14px; height:14px; color:transparent; transition:color .2s;"></i>
+                </div>
+                <div style="flex:1; cursor:pointer;" onclick="navigate('opportunity')">
+                  <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">2. Mine 20 High-Intent Leads</div>
+                  <div style="font-size:12px; color:var(--text-muted);">Open the Opportunity Engine. Enter your niche, run a Deep Scan, and save exactly 20 targets to your Pipeline.</div>
+                </div>
+                <button class="btn btn-ghost" onclick="navigate('opportunity')" style="padding:0 6px;"><i data-lucide="arrow-right" style="width:16px; height:16px;"></i></button>
+              </div>
+
+              <div class="pb-step-card" id="pb-card-3" style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; transition:all .2s;">
+                <div class="pb-check" id="pb-check-3" onclick="togglePb(3)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s;">
+                  <i data-lucide="check" style="width:14px; height:14px; color:transparent; transition:color .2s;"></i>
+                </div>
+                <div style="flex:1; cursor:pointer;" onclick="navigate('audit')">
+                  <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">3. Fire the Trojan Horse (Copy/Paste)</div>
+                  <div style="font-size:12px; color:var(--text-muted);">Pick your top 3 leads. Generate a custom Audit PDF for each, copy the 1-click cold DM, and send it to them.</div>
+                </div>
+                <button class="btn btn-ghost" onclick="navigate('audit')" style="padding:0 6px;"><i data-lucide="arrow-right" style="width:16px; height:16px;"></i></button>
+              </div>
+
+              <div class="pb-step-card" id="pb-card-4" style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; transition:all .2s;">
+                <div class="pb-check" id="pb-check-4" onclick="togglePb(4)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s;">
+                  <i data-lucide="check" style="width:14px; height:14px; color:transparent; transition:color .2s;"></i>
+                </div>
+                <div style="flex:1; cursor:pointer;" onclick="navigate('pipeline')">
+                  <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">4. Track & Follow Up</div>
+                  <div style="font-size:12px; color:var(--text-muted);">Move them to 'In Talks' on your Pipeline. Use the Email Writer to follow up 3 days later until they pay.</div>
+                </div>
+                <button class="btn btn-ghost" onclick="navigate('pipeline')" style="padding:0 6px;"><i data-lucide="arrow-right" style="width:16px; height:16px;"></i></button>
+              </div>
+
+            </div>
+          </div>
+
+           
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px">
             <div class="stat-card"><span class="stat-label">Total Kits</span><span class="stat-val" id="stat-kits">0</span></div>
             <div class="stat-card"><span class="stat-label">Proposals</span><span class="stat-val" id="stat-proposals">0</span></div>
@@ -2648,6 +2718,43 @@ function routeToLead(name, platform) {
 <div id="toast"></div>
 
 <script>
+/* ─── PLAYBOOK GAMIFICATION ─── */
+let pbProgress = [false, false, false, false];
+
+function togglePb(step) {
+  const idx = step - 1;
+  pbProgress[idx] = !pbProgress[idx]; // Toggle state
+  
+  const card  = el('pb-card-' + step);
+  const check = el('pb-check-' + step);
+  const icon  = check.querySelector('i');
+  
+  if (pbProgress[idx]) {
+    // Checked State
+    check.style.background = 'var(--text-main)';
+    check.style.borderColor = 'var(--text-main)';
+    icon.style.color = 'var(--bg)';
+    card.style.opacity = '0.5'; // Dim it to show it's done
+  } else {
+    // Unchecked State
+    check.style.background = 'transparent';
+    check.style.borderColor = 'var(--border2)';
+    icon.style.color = 'transparent';
+    card.style.opacity = '1';
+  }
+  
+  // Update Progress Bar
+  const completed = pbProgress.filter(x => x).length;
+  const pct = Math.round((completed / 4) * 100);
+  setText('pb-pct', pct + '%');
+  el('pb-fill').style.width = pct + '%';
+  
+  if (pct === 100) {
+    setTimeout(() => {
+      showToast('Playbook complete! Now execute and collect the cash. 💰');
+    }, 400);
+  }
+}   
 /* ═══════════════════════════════════════════════════════
    THEME SYSTEM
    ═══════════════════════════════════════════════════════ */
