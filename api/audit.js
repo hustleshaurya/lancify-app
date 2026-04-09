@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   const { target, platform, weakness, service, price, observation, websiteUrl } = req.body;
   const apiKey = process.env.GEMINI_API_KEY;
-  const modelName = "gemini-2.5-flash";
+  const modelName = "gemini-1.5-flash";
 
   let scrapedContent = "";
   let contextSnippet = "";
