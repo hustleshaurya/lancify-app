@@ -1633,7 +1633,88 @@ function setOppPreset(type, prompt) {
   setVal('opp-prompt', prompt);
 }
 
-/* ── Main scan function (LOCAL DEV MODE) ── */
+/* ═══════════════════════════════════════════════════════
+   OPPORTUNITY ENGINE (V2 UNIFIED)
+   ═══════════════════════════════════════════════════════ */
+
+function setOppPreset(type, prompt) {
+  setVal('opp-type', type);
+  setVal('opp-prompt', prompt);
+}
+
+function copyDirectText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('⚡ Quick DM copied to clipboard!');
+  }).catch(() => showToast('Failed to copy.'));
+}
+
+function _renderOppCard(lead) {
+  const badgeClass = lead.match >= 90 ? 'opp-match-high' : 'opp-match-mid';
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  
+  const firstName = lead.name.split(' ')[0] || 'there';
+  const rawDmText = `Hey ${firstName}, noticed your ${lead.platform} isn't fully optimized right now. I've got a quick fix for this—mind if I send over a mockup/idea?`;
+  const loomContext = `Write a script for a 2-minute Loom video for ${lead.name}. I am auditing their ${lead.platform}. Focus on: ${lead.problem}. End with a soft pitch for my services.`;
+  const confidenceReason = lead.reason || `Based on gap-analysis of their ${lead.platform} presence`;
+
+  return `
+    <div class="opp-card">
+      <div class="opp-card-header">
+        <div class="opp-header-top">
+          <div class="opp-card-name" style="display:flex; align-items:center;">
+            ${esc(lead.name)} 
+            <a href="#" class="opp-preview-link" title="Quick Preview CTA (Opens Profile)">
+              <i data-lucide="external-link" style="width:13px;height:13px;"></i>
+            </a>
+          </div>
+          <span class="opp-match-badge ${badgeClass}">
+            ● ${lead.match}% Match
+          </span>
+        </div>
+        <div class="opp-confidence-reason">↳ ${esc(confidenceReason)}</div>
+        <div class="opp-card-platform">
+          <i data-lucide="radio" style="width:10px;height:10px"></i>
+          ${esc(lead.platform)} · ${esc(lead.followers)}
+        </div>
+      </div>
+
+      <div class="opp-card-body">
+        <div>
+          <div class="opp-field-label">Key Problem Detected</div>
+          <div class="opp-problem-wrap">
+            <div class="opp-field-value">${esc(lead.problem)}</div>
+          </div>
+        </div>
+        <div>
+          <div class="opp-field-label">Outreach Strategy</div>
+          <div class="opp-field-value">${esc(lead.strategy)}</div>
+        </div>
+      </div>
+
+      <div class="opp-card-actions">
+        <button class="opp-action-btn dm" onclick="copyDirectText('${esc(rawDmText)}')">
+          <i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM
+        </button>
+        <button class="opp-action-btn loom" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(loomContext)}')">
+          <i data-lucide="video" style="width:11px;height:11px"></i> Loom Script
+        </button>
+        <button class="opp-action-btn save" onclick="routeToLead('${esc(lead.name)}','${esc(lead.platform)}')">
+          <i data-lucide="plus" style="width:11px;height:11px"></i> Save Lead
+        </button>
+        <button class="opp-action-btn" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
+          <i data-lucide="sparkles" style="width:11px;height:11px"></i> Audit
+        </button>
+        <button class="opp-action-btn" onclick="routeToProposal('${esc(lead.jobDesc)}')">
+          <i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal
+        </button>
+        <button class="opp-action-btn" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(lead.problem)}')">
+          <i data-lucide="mail" style="width:11px;height:11px"></i> Email
+        </button>
+      </div>
+    </div>
+  `;
+}
+
 async function scanOpportunities() {
   const btn       = el('opp-scan-btn');
   const loader    = el('opp-loader');
@@ -1642,130 +1723,46 @@ async function scanOpportunities() {
   const type      = val('opp-type');
   const prompt    = val('opp-prompt');
 
-  if (!prompt.trim()) {
-    showToast('Describe your ideal lead first.');
-    el('opp-prompt').focus();
-    return;
-  }
+  if (!prompt.trim()) { showToast('Describe your ideal lead first.'); el('opp-prompt').focus(); return; }
 
-  // UI Loading state
-  btn.disabled = true;
-  loader.classList.add('show');
+  btn.disabled = true; loader.classList.add('show');
+  wrap.innerHTML = `<div class="opp-results-grid"><div class="opp-skeleton"></div><div class="opp-skeleton"></div><div class="opp-skeleton"></div></div>`;
 
-  // Skeleton cards while waiting
-  wrap.innerHTML = `
-    <div class="opp-results-grid">
-      <div class="opp-skeleton"></div>
-      <div class="opp-skeleton"></div>
-      <div class="opp-skeleton"></div>
-    </div>`;
+  const scanPhrases = ["Scraping target platforms...", "Running AI gap-analysis...", "Compiling outreach strategies...", "Finalising dossiers..."];
+  let tIdx = 0; loaderTxt.textContent = "Initializing Apify nodes...";
+  const txtInterval = setInterval(() => { if (tIdx < scanPhrases.length) loaderTxt.textContent = scanPhrases[tIdx++]; }, 800);
 
-  // Cycle text to look like a real data-mining engine
-  const scanPhrases = [
-    "Scraping target platforms...",
-    "Running AI gap-analysis...",
-    "Compiling outreach strategies...",
-    "Finalising dossiers..."
-  ];
-  let tIdx = 0;
-  loaderTxt.textContent = "Initializing Apify nodes...";
-  const txtInterval = setInterval(() => {
-    if (tIdx < scanPhrases.length) loaderTxt.textContent = scanPhrases[tIdx++];
-  }, 800);
-
-  // Simulate server processing time (3.5 seconds)
   await new Promise(resolve => setTimeout(resolve, 3500));
   clearInterval(txtInterval);
 
-  // The Premium Mock Database (Local Version)
   const localLeadBank = {
     'Content Creators': [
-      {
-        name: 'FitWithNehaa', platform: 'YouTube', followers: '14.2k subscribers',
-        problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
-        strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.',
-        match: 96, reason: 'Based on low CTR patterns + weak thumbnail design',
-        jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel.'
-      },
-      {
-        name: 'TravelDiariesByKaran', platform: 'Instagram', followers: '8.7k followers',
-        problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
-        strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement stat as the hook.',
-        match: 91, reason: 'Based on dropping engagement rates and lack of short-form video',
-        jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator.'
-      },
-      {
-        name: 'SkillsWithPriya', platform: 'LinkedIn', followers: '3.1k followers',
-        problem: 'Posts are long-form only — no carousel posts. Low reach despite solid expertise.',
-        strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting professional growth audience.',
-        match: 88, reason: 'Based on missing carousel formats which algorithm currently favors',
-        jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts.'
-      }
+      { name: 'FitWithNehaa', platform: 'YouTube', followers: '14.2k subscribers', problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.', strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.', match: 96, reason: 'Based on low CTR patterns + weak thumbnail design', jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel.' },
+      { name: 'TravelDiariesByKaran', platform: 'Instagram', followers: '8.7k followers', problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.', strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement stat as the hook.', match: 91, reason: 'Based on dropping engagement rates and lack of short-form video', jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator.' },
+      { name: 'SkillsWithPriya', platform: 'LinkedIn', followers: '3.1k followers', problem: 'Posts are long-form only — no carousel posts. Low reach despite solid expertise.', strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting professional growth audience.', match: 88, reason: 'Based on missing carousel formats which algorithm currently favors', jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts.' }
     ],
     'Local Businesses': [
-      {
-        name: 'Chai & Chapters Café', platform: 'Instagram', followers: '2.3k followers',
-        problem: 'Bio link goes to a dead page. No clear CTA in posts. Great photos but zero conversion path.',
-        strategy: 'Fix the link-in-bio → landing page first. Then pitch a social media package.',
-        match: 94, reason: 'Critical conversion bottleneck: Broken bio link',
-        jobDesc: 'A local café needs someone to manage Instagram and fix their bio link.'
-      },
-      {
-        name: 'GreenLeaf Salon', platform: 'Website', followers: 'Google: 4.1★',
-        problem: 'Website loads in 7.2s, not mobile-optimised, no booking widget. Losing walk-ins.',
-        strategy: 'Lead with the 7-second load time and lost bookings angle. Offer a website revamp + Calendly integration.',
-        match: 93, reason: 'Failed Core Web Vitals speed test + missing calendar',
-        jobDesc: 'Salon wants a faster, mobile-friendly website with an online appointment booking system.'
-      },
-      {
-        name: 'QuickFix Electronics', platform: 'Google Maps', followers: '127 reviews, 3.8★',
-        problem: 'Review score below local average of 4.2★. No response to negative reviews.',
-        strategy: 'Offer a reputation management starter: review response templates + QR code system.',
-        match: 87, reason: 'Reputation score flagged as below local competitor median',
-        jobDesc: 'Small shop needs help managing online reviews.'
-      }
+      { name: 'Chai & Chapters Café', platform: 'Instagram', followers: '2.3k followers', problem: 'Bio link goes to a dead page. No clear CTA in posts. Great photos but zero conversion path.', strategy: 'Fix the link-in-bio → landing page first. Then pitch a social media package.', match: 94, reason: 'Critical conversion bottleneck: Broken bio link', jobDesc: 'A local café needs someone to manage Instagram and fix their bio link.' },
+      { name: 'GreenLeaf Salon', platform: 'Website', followers: 'Google: 4.1★', problem: 'Website loads in 7.2s, not mobile-optimised, no booking widget. Losing walk-ins.', strategy: 'Lead with the 7-second load time and lost bookings angle. Offer a website revamp + Calendly integration.', match: 93, reason: 'Failed Core Web Vitals speed test + missing calendar', jobDesc: 'Salon wants a faster, mobile-friendly website with an online appointment booking system.' },
+      { name: 'QuickFix Electronics', platform: 'Google Maps', followers: '127 reviews, 3.8★', problem: 'Review score below local average of 4.2★. No response to negative reviews.', strategy: 'Offer a reputation management starter: review response templates + QR code system.', match: 87, reason: 'Reputation score flagged as below local competitor median', jobDesc: 'Small shop needs help managing online reviews.' }
     ],
     'Startups': [
-      {
-        name: 'Zolvr (SaaS)', platform: 'Product Hunt', followers: '312 upvotes',
-        problem: 'Landing page copy is feature-heavy, not benefit-driven. No social proof above fold.',
-        strategy: 'Offer a landing page copy audit as a free value-add, then pitch a full copy rewrite.',
-        match: 95, reason: 'Identified high bounce rate indicators on hero section',
-        jobDesc: 'Early-stage SaaS startup needs a copywriter to rewrite homepage.'
-      },
-      {
-        name: 'Mealio App', platform: 'LinkedIn', followers: '890 followers',
-        problem: 'App screenshots in Play Store are plain UI dumps. Reviews mention "confusing onboarding".',
-        strategy: 'Pitch a 60-second explainer video + redesigned app store screenshots.',
-        match: 90, reason: 'Based on negative keyword density in recent app reviews',
-        jobDesc: 'Food-tech startup needs a short explainer video.'
-      },
-      {
-        name: 'Hirrdly (HR Tool)', platform: 'Website', followers: '—',
-        problem: 'Blog has 2 posts from 6 months ago. SEO score is 34/100. Missing product-led content.',
-        strategy: 'Offer 4 long-form SEO articles/month targeting HR manager keywords.',
-        match: 85, reason: 'Ahrefs domain rating check + inactive content schedule',
-        jobDesc: 'B2B HR software company needs an SEO content writer.'
-      }
+      { name: 'Zolvr (SaaS)', platform: 'Product Hunt', followers: '312 upvotes', problem: 'Landing page copy is feature-heavy, not benefit-driven. No social proof above fold.', strategy: 'Offer a landing page copy audit as a free value-add, then pitch a full copy rewrite.', match: 95, reason: 'Identified high bounce rate indicators on hero section', jobDesc: 'Early-stage SaaS startup needs a copywriter to rewrite homepage.' }
+    ],
+    'E-commerce Brands': [
+      { name: 'ThreadCraft Co.', platform: 'Instagram', followers: '11k followers', problem: 'Product images are shot on plain white backgrounds. Competitors are using lifestyle shots.', strategy: 'Offer 10 lifestyle product photo edits as a paid trial.', match: 92, reason: 'Visual content gap compared to direct competitors', jobDesc: 'D2C clothing brand needs a product photo editor.' }
     ]
   };
 
-  // Pick leads based on the dropdown selection
   const pool = localLeadBank[type] || localLeadBank['Local Businesses'];
-  
-  // Shuffle them slightly so it feels alive
   const leads = [...pool].sort(() => Math.random() - 0.45).slice(0, 3);
 
-  // Render cards
   wrap.innerHTML = `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`;
   lucide.createIcons();
 
-  // Reset UI
-  loader.classList.remove('show');
-  btn.disabled = false;
+  loader.classList.remove('show'); btn.disabled = false;
   showToast(`Found ${leads.length} high-intent opportunities.`);
 }
-
 /* ── Cross-tool routing functions ── */
 
 /**
@@ -2484,54 +2481,6 @@ function routeToLead(name, platform) {
 
         </div>
       </div>
-
-          <!-- Search card -->
-          <div class="card" style="margin-bottom:22px">
-            <div class="opp-search-grid">
-              <div>
-                <label class="field-label">Target Type</label>
-                <select id="opp-type">
-                  <option value="Content Creators">Content Creators</option>
-                  <option value="Local Businesses">Local Businesses</option>
-                  <option value="Startups">Startups</option>
-                  <option value="E-commerce Brands">E-commerce Brands</option>
-                  <option value="Coaches &amp; Consultants">Coaches &amp; Consultants</option>
-                </select>
-              </div>
-              <div>
-                <label class="field-label">Describe your ideal lead</label>
-                <input type="text" id="opp-prompt" placeholder="e.g. Fitness creators under 20k followers with bad thumbnails on YouTube">
-              </div>
-              <button class="btn btn-primary" id="opp-scan-btn" onclick="scanOpportunities()" style="height:36px;gap:6px">
-                <i data-lucide="radar" style="width:13px;height:13px"></i>
-                Scan Opportunities
-              </button>
-            </div>
-            <div class="inline-loader" id="opp-loader" style="margin-top:12px">
-              <div class="spin"></div>
-              <span>Scanning the market for high-intent leads…</span>
-            </div>
-          </div>
-
-          <!-- Results area -->
-          <div id="opp-results-wrap">
-            <!-- Populated by JS -->
-            <div class="opp-results-grid">
-              <div class="opp-empty">
-                <div class="opp-empty-icon">
-                  <i data-lucide="target" style="width:20px;height:20px;color:var(--text3)"></i>
-                </div>
-                <strong style="color:var(--text-muted);font-size:13px">No scan run yet</strong>
-                <span>Describe your ideal lead above and hit Scan to find opportunities.</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════════════════════════════════════════
      SETTINGS MODAL — Claude-style left nav
