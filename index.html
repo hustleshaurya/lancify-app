@@ -1148,6 +1148,57 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   border-color: var(--border2);
   transform: translateY(-1px);
 }
+ /* Confidence Reason */
+.opp-confidence-reason {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+  font-style: italic;
+  letter-spacing: .02em;
+}
+
+/* Updated Header for Quick Preview CTA */
+.opp-card-header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.opp-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+.opp-preview-link {
+  color: var(--text3);
+  margin-left: 6px;
+  display: inline-flex;
+  align-items: center;
+  transition: color .15s;
+}
+.opp-preview-link:hover { color: var(--text-main); }
+
+/* Upgraded 6-Button Action Grid */
+.opp-card-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* Highlighted Action Buttons */
+.opp-action-btn.dm { color: #f59e0b; border-color: rgba(245, 158, 11, 0.25); background: rgba(245, 158, 11, 0.03); }
+.opp-action-btn.dm:hover { background: rgba(245, 158, 11, 0.1); border-color: #f59e0b; color: #f59e0b; }
+
+.opp-action-btn.loom { color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25); background: rgba(139, 92, 246, 0.03); }
+.opp-action-btn.loom:hover { background: rgba(139, 92, 246, 0.1); border-color: #8b5cf6; color: #8b5cf6; }
+
+@media (max-width: 600px) {
+  .opp-card-actions { grid-template-columns: repeat(2, 1fr); }
+}  
 
 /* Card header strip */
 .opp-card-header {
@@ -1495,25 +1546,47 @@ const _oppFallback = [
 ];
 
 /* ── Render a single opportunity card ── */
+/* ── Helper to directly copy text to clipboard ── */
+function copyDirectText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('⚡ Quick DM copied to clipboard!');
+  }).catch(() => showToast('Failed to copy.'));
+}
+
+/* ── Render a single opportunity card (V2: The Revenue Engine) ── */
 function _renderOppCard(lead) {
   const badgeClass = lead.match >= 90 ? 'opp-match-high' : 'opp-match-mid';
 
   // Escape function for safe inline HTML
   const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  
+  // Auto-generate the Quick DM and Loom Context based on the lead data
+  const firstName = lead.name.split(' ')[0] || 'there';
+  const rawDmText = `Hey ${firstName}, noticed your ${lead.platform} isn't fully optimized right now. I've got a quick fix for this—mind if I send over a mockup/idea?`;
+  const loomContext = `Write a script for a 2-minute Loom video for ${lead.name}. I am auditing their ${lead.platform}. Focus on: ${lead.problem}. End with a soft pitch for my services.`;
+  
+  // Dynamic confidence reason based on the problem
+  const confidenceReason = lead.reason || `Based on gap-analysis of their ${lead.platform} presence`;
 
   return `
     <div class="opp-card">
       <div class="opp-card-header">
-        <div>
-          <div class="opp-card-name">${esc(lead.name)}</div>
-          <div class="opp-card-platform">
-            <i data-lucide="radio" style="width:10px;height:10px"></i>
-            ${esc(lead.platform)} · ${esc(lead.followers)}
+        <div class="opp-header-top">
+          <div class="opp-card-name" style="display:flex; align-items:center;">
+            ${esc(lead.name)} 
+            <a href="#" class="opp-preview-link" title="Quick Preview CTA (Opens Profile)">
+              <i data-lucide="external-link" style="width:13px;height:13px;"></i>
+            </a>
           </div>
+          <span class="opp-match-badge ${badgeClass}">
+            ● ${lead.match}% Match
+          </span>
         </div>
-        <span class="opp-match-badge ${badgeClass}">
-          ● ${lead.match}% Match
-        </span>
+        <div class="opp-confidence-reason">↳ ${esc(confidenceReason)}</div>
+        <div class="opp-card-platform">
+          <i data-lucide="radio" style="width:10px;height:10px"></i>
+          ${esc(lead.platform)} · ${esc(lead.followers)}
+        </div>
       </div>
 
       <div class="opp-card-body">
@@ -1530,23 +1603,29 @@ function _renderOppCard(lead) {
       </div>
 
       <div class="opp-card-actions">
-        <button class="opp-action-btn" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
-          <i data-lucide="sparkles" style="width:11px;height:11px"></i> Run Audit
+        <button class="opp-action-btn dm" onclick="copyDirectText('${esc(rawDmText)}')">
+          <i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM
         </button>
-        <button class="opp-action-btn" onclick="routeToProposal('${esc(lead.jobDesc)}')">
-          <i data-lucide="file-text" style="width:11px;height:11px"></i> Write Proposal
-        </button>
-        <button class="opp-action-btn" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(lead.problem)}')">
-          <i data-lucide="mail" style="width:11px;height:11px"></i> Draft Email
+        <button class="opp-action-btn loom" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(loomContext)}')">
+          <i data-lucide="video" style="width:11px;height:11px"></i> Loom Script
         </button>
         <button class="opp-action-btn save" onclick="routeToLead('${esc(lead.name)}','${esc(lead.platform)}')">
           <i data-lucide="plus" style="width:11px;height:11px"></i> Save Lead
+        </button>
+        
+        <button class="opp-action-btn" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
+          <i data-lucide="sparkles" style="width:11px;height:11px"></i> Audit
+        </button>
+        <button class="opp-action-btn" onclick="routeToProposal('${esc(lead.jobDesc)}')">
+          <i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal
+        </button>
+        <button class="opp-action-btn" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(lead.problem)}')">
+          <i data-lucide="mail" style="width:11px;height:11px"></i> Email
         </button>
       </div>
     </div>
   `;
 }
-
 /* ── Main scan function ── */
 /* ── Helper to set Quick Scan presets ── */
 function setOppPreset(type, prompt) {
