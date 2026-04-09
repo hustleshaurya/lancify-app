@@ -2264,27 +2264,40 @@ function routeToLead(name, platform) {
               <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
             </div>
             <div class="result-panel">
-             <div id="audit-result-box" style="display:none; flex-direction:column; gap:16px; height:100%;">
+              <div id="audit-result-box" style="display:none; flex-direction:column; gap:16px; height:100%;">
                 
-                <div class="result-box" style="flex:none; min-height:180px;">
+                <div class="result-box" style="flex:1; min-height:220px;">
                   <div class="result-box-header">
-                    <span class="result-box-title">1. The Cold Email</span>
+                    <span class="result-box-title">The Trojan Horse Email</span>
                     <button class="copy-btn" onclick="copyEl('audit-email-text')">Copy Email</button>
                   </div>
-                  <div class="result-box-body" id="audit-email-text"></div>
+                  <div class="result-box-body" id="audit-email-text" style="font-size:14px; line-height:1.7;"></div>
                 </div>
 
-                <div class="result-box">
-                  <div class="result-box-header">
-                    <span class="result-box-title">2. The Audit Dossier</span>
-                    <button class="btn btn-secondary" style="height:26px; padding:0 10px; font-size:11px;" onclick="downloadAuditPDF()">
-                      <i data-lucide="download" style="width:12px;height:12px;margin-right:4px;"></i> Download PDF
-                    </button>
-                  </div>
-                  <div class="result-box-body" id="audit-report-text" style="background:var(--bg-panel);"></div>
+                <div class="result-box" style="flex:none; background: var(--bg-panel); padding: 24px; text-align: center; border-top: 1px solid var(--border);">
+                  <div style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">Client Audit Dossier Ready</div>
+                  <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">Attach this premium PDF to your email to prove your expertise.</div>
+                  <button class="btn btn-primary" style="height:42px; font-size:14px; padding:0 24px;" onclick="downloadAuditPDF()">
+                    <i data-lucide="download" style="width:16px;height:16px;margin-right:8px;"></i> Download PDF Audit
+                  </button>
                 </div>
 
               </div>
+              
+              <div class="card-dashed empty-state" id="audit-empty" style="text-align:left; padding: 40px 30px; align-items: flex-start; justify-content: flex-start;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(168, 85, 247, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                  <i data-lucide="crosshair" style="width: 24px; height: 24px; color: #a855f7;"></i>
+                </div>
+                <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Awaiting Target Intelligence</h3>
+                <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6;">Enter the client's details to initiate the Trojan Horse sequence. The AI will:</p>
+                <ul style="font-size: 13.5px; color: var(--text-muted); display: flex; flex-direction: column; gap: 14px; list-style: none; margin-left: 0;">
+                  <li style="display: flex; align-items: center; gap: 10px;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--text3);"></i> Scrape their current website</li>
+                  <li style="display: flex; align-items: center; gap: 10px;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--text3);"></i> Identify a high-friction conversion gap</li>
+                  <li style="display: flex; align-items: center; gap: 10px;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--text3);"></i> Generate a custom cold email</li>
+                  <li style="display: flex; align-items: center; gap: 10px;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--text3);"></i> Package a premium 5-point audit PDF</li>
+                </ul>
+              </div>
+            </div>
 
       <div id="page-proposal" class="page">
         <div class="content-inner">
@@ -3105,7 +3118,23 @@ async function downloadKitPDF(){
 /* ─── AUDIT ─── */
 function toggleAuditUrl(){ const v=val('audit-platform'); el('audit-url-wrap').style.display=(v==='Website')?'block':'none'; }
 
-function updateLogoText(input){ const f=input.files[0]; if(f) setText('audit-logo-text',f.name); }
+let auditLogoBase64 = null; // Global variable to hold the logo image
+
+function updateLogoText(input) { 
+  const f = input.files[0]; 
+  if (f) {
+    setText('audit-logo-text', f.name);
+    // Convert image to Base64 so jsPDF can embed it
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      auditLogoBase64 = e.target.result;
+    };
+    reader.readAsDataURL(f);
+  } else {
+    auditLogoBase64 = null;
+    setText('audit-logo-text', 'Click or drag logo to upload');
+  }
+}
 
 async function generateAudit(){
   const targetVal=val('audit-target'); if(!targetVal) return showToast('Enter a business name');
