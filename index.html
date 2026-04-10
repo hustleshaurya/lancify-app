@@ -1962,17 +1962,6 @@ html.dark .credits-warning-banner {
 <!-- Aurora canvas — z-index 9490, always below everything -->
 <canvas id="ob-aurora-canvas"></canvas>
 
-<div id="ob-logo-intro">
-  <div class="ob-intro-content" id="ob-intro-content">
-    <img
-      src="Favicon_new_logo-removebg-preview.png"
-      alt="Lancify"
-      class="ob-intro-logo-img"
-    >
-    <div class="ob-intro-wordmark">Lancify</div>
-    <div class="ob-intro-tagline">Your Freelance Operating System</div>
-  </div>
-</div>
 
 <div id="ob-quote-screen">
   <div class="ob-quote-glow"></div>
@@ -2223,7 +2212,7 @@ html.dark .credits-warning-banner {
       <div id="page-home" class="page active">
         <div class="content-inner">
           <div style="margin-bottom:6px;font-size:12.5px;color:var(--text-muted)">My Workspace</div>
-          <h1 id="hero-greeting" style="font-size:28px;font-weight:700;letter-spacing:-.6px;margin-bottom:26px;color:var(--text-main)">Good morning, Shaurya</h1>
+          <h1 id="hero-greeting" style="font-size:28px;font-weight:700;letter-spacing:-.6px;margin-bottom:26px;color:var(--text-main)">Welcome</h1>
            <div class="card" style="margin-bottom:32px; padding:0; position:relative; overflow:hidden; border:1px solid var(--border); border-radius:12px;">
 
   <!-- Header -->
@@ -3973,96 +3962,33 @@ function _startAurora() {
 }
 
 /* ──────────────────────────────────────────────────────────
-   LOGO INTRO — blur-reveal, hold, blur-fade out
-   ────────────────────────────────────────────────────────── */
-function _runIntro(onDone) {
-  const intro   = el('ob-logo-intro');
-  const content = el('ob-intro-content');
-  if (!intro || !content) { onDone(); return; }
-
-  // Phase 1: Show the container (transparent bg, pointer-events none)
-  intro.style.display = 'flex';
-  // tiny rAF pause so display:flex is painted before we add classes
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-
-      // Fade in the overlay shell
-      intro.classList.add('visible');
-
-      // Phase 2: 80ms later — blur-reveal the content
-      setTimeout(() => {
-        content.classList.add('revealed');
-
-        // Phase 3: Hold for 2.0s, then blur-fade OUT
-        setTimeout(() => {
-          content.style.transition =
-            'opacity 0.65s ease, filter 0.65s ease, transform 0.65s ease';
-          content.style.opacity   = '0';
-          content.style.filter    = 'blur(14px)';
-          content.style.transform = 'scale(1.04)';
-
-          // Phase 4: Fade the whole intro overlay out simultaneously
-          intro.classList.add('hide');
-
-          // Phase 5: After fade completes, remove from DOM flow and call back
-          setTimeout(() => {
-            intro.style.display = 'none';
-            intro.classList.remove('visible', 'hide');
-            content.classList.remove('revealed');
-            content.style.cssText = ''; // reset inline styles
-            onDone();
-          }, 680);
-
-        }, 2000); // hold duration
-      }, 80);
-
-    });
-  });
-}
-
-/* ──────────────────────────────────────────────────────────
-   ROUTING — fetches profile in parallel with animation
+   ROUTING — Instant load, no animations
    ────────────────────────────────────────────────────────── */
 async function _decideRoute(uid) {
-  // Start the aurora immediately (canvas already in DOM)
-  _startAurora();
-
-  // Prefetch profile data in parallel with the animation
   const localDone = localStorage.getItem('lancify-onboarded-' + uid) === 'yes';
   let isReturning  = false;
   let fullProfile  = null;
 
-  const profilePromise = (async () => {
-    try {
-      const { data } = await sb.from('profiles').select('skills').eq('user_id', uid).single();
-      const dbDone   = data && data.skills && data.skills !== 'Skipped';
-      if (localDone && dbDone) {
-        isReturning = true;
-        const { data: full } = await sb.from('profiles').select('*').eq('user_id', uid).single();
-        fullProfile = full;
-      }
-    } catch (_) { isReturning = false; }
-  })();
-
-  // Play intro. When it finishes, apply the route decision.
-  _runIntro(async () => {
-    await profilePromise; // ensure DB fetch is done (usually already is)
-
-    if (isReturning) {
-      if (fullProfile) {
-        userProfile = { ...userProfile, ...fullProfile };
-        applyProfileToFields(fullProfile);
-        checkProfileBanners();
-      }
-      // Fade aurora out as dashboard takes over
-      const c = el('ob-aurora-canvas');
-      if (c) { c.style.transition = 'opacity 0.8s ease'; c.style.opacity = '0'; }
-      el('app-layout').classList.add('show');
-    } else {
-      // New user → keep aurora alive under the wizard
-      _showOnboarding();
+  try {
+    const { data } = await sb.from('profiles').select('skills').eq('user_id', uid).single();
+    const dbDone   = data && data.skills && data.skills !== 'Skipped';
+    if (localDone && dbDone) {
+      isReturning = true;
+      const { data: full } = await sb.from('profiles').select('*').eq('user_id', uid).single();
+      fullProfile = full;
     }
-  });
+  } catch (_) { isReturning = false; }
+
+  if (isReturning) {
+    if (fullProfile) {
+      userProfile = { ...userProfile, ...fullProfile };
+      applyProfileToFields(fullProfile);
+      checkProfileBanners();
+    }
+    el('app-layout').classList.add('show');
+  } else {
+    _showOnboarding();
+  }
 }
 function _showOnboarding() {
   _obStep = 1;
