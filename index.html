@@ -1857,88 +1857,6 @@ function routeToLead(name, platform) {
   navigate('pipeline');
   showToast(`"${name}" pre-filled in Pipeline — review and click Add Lead.`);
 }
-/* ═══════════════════════════════════════════
-   MONETIZATION UI — Low-Credits Widget + Pro Lock
-   ═══════════════════════════════════════════ */
-
-/* ── Low-Credits Sticky Widget ── */
-#low-credits-widget {
-  position: fixed;
-  bottom: 80px; /* sits above the toast at bottom:22px */
-  right: 22px;
-  width: 272px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border2);
-  border-radius: 12px;
-  padding: 14px 16px;
-  box-shadow: var(--shadow-lg);
-  z-index: 9990;
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  animation: popIn .25s cubic-bezier(0.16,1,0.3,1);
-}
-#low-credits-widget.show { display: flex; }
-
-.lcw-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-}
-.lcw-icon {
-  width: 30px; height: 30px;
-  border-radius: 8px;
-  background: rgba(239,68,68,0.1);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.lcw-icon svg { width: 14px; height: 14px; color: #ef4444; stroke: #ef4444; }
-.lcw-text { flex: 1; }
-.lcw-title {
-  font-size: 12.5px; font-weight: 700;
-  color: var(--text-main); margin-bottom: 1px;
-}
-.lcw-sub { font-size: 11.5px; color: var(--text-muted); }
-.lcw-dismiss {
-  background: none; border: none; cursor: pointer;
-  color: var(--text3); padding: 2px; border-radius: 4px;
-  line-height: 1; font-size: 15px; flex-shrink: 0;
-}
-.lcw-dismiss:hover { color: var(--text-main); background: var(--bg-hover); }
-
-.lcw-bar-wrap {
-  height: 4px; background: var(--border);
-  border-radius: 99px; overflow: hidden;
-}
-.lcw-bar {
-  height: 100%; border-radius: 99px;
-  background: #ef4444;
-  transition: width 0.4s ease;
-}
-
-.lcw-nums {
-  display: flex; justify-content: space-between;
-  font-size: 11px; color: var(--text3);
-  margin-top: -4px;
-}
-
-.btn-lcw-upgrade {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  background: var(--btn-bg); color: var(--btn-text);
-  border: none; border-radius: var(--radius);
-  height: 34px; width: 100%;
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
-  cursor: pointer; letter-spacing: .01em;
-  box-shadow: 0 0 0 0 rgba(99,102,241,0);
-  transition: opacity .15s, box-shadow .3s;
-  animation: lcwGlow 2.4s ease-in-out infinite;
-}
-.btn-lcw-upgrade:hover { opacity: .85; animation: none; }
-@keyframes lcwGlow {
-  0%,100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); }
-  50%      { box-shadow: 0 0 12px 3px rgba(99,102,241,0.35); }
-}
 
 /* ── PRO Lock Overlay for gated features ── */
 .pro-lock-wrap {
@@ -1991,6 +1909,10 @@ html.dark .credits-warning-banner {
   background: #2d1c00; border-color: #78350f; color: #fcd34d;
 }
 .credits-warning-banner:hover { filter: brightness(0.96); }     
+     @keyframes pb-pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.4; transform:scale(0.7); }
+}
 </style>
 </head>
 <body>
@@ -2302,75 +2224,116 @@ html.dark .credits-warning-banner {
         <div class="content-inner">
           <div style="margin-bottom:6px;font-size:12.5px;color:var(--text-muted)">My Workspace</div>
           <h1 id="hero-greeting" style="font-size:28px;font-weight:700;letter-spacing:-.6px;margin-bottom:26px;color:var(--text-main)">Good morning, Shaurya</h1>
-           <div class="card" style="margin-bottom: 32px; padding: 24px; position: relative; overflow: hidden; border-color: var(--text-main);">
-            <div style="display:flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
-              <div>
-                <h2 style="font-size:18px; font-weight:700; color:var(--text-main); letter-spacing:-.4px; margin-bottom:4px;">The "First ₹10k" Playbook</h2>
-                <p style="font-size:13px; color:var(--text-muted);">Follow these exact 4 steps to find, pitch, and close your first paying client today.</p>
-              </div>
-              <button class="btn btn-secondary" style="font-size: 12px; height: 32px; background: rgba(99, 102, 241, 0.08); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.2);" onclick="window.open('https://loom.com', '_blank')">
-                <i data-lucide="play-circle" style="width:14px; height:14px;"></i> Watch me do it (2 mins)
-              </button>
-            </div>
+           <div class="card" style="margin-bottom:32px; padding:0; position:relative; overflow:hidden; border:1px solid var(--border); border-radius:12px;">
 
-            <div style="margin-bottom: 20px;">
-              <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.05em;">
-                <span>Execution Progress</span>
-                <span id="pb-pct">0%</span>
-              </div>
-              <div style="height:5px; background:var(--border); border-radius:99px; overflow:hidden;">
-                <div id="pb-fill" style="height:100%; width:0%; background:var(--text-main); transition: width 0.4s cubic-bezier(0.16,1,0.3,1);"></div>
-              </div>
-            </div>
+  <!-- Header -->
+  <div style="padding:20px 24px 16px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--border);">
+    <div>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <div style="width:6px; height:6px; border-radius:50%; background:var(--text-main); animation:pb-pulse 2s ease-in-out infinite;"></div>
+        <span style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text3);">Active Playbook</span>
+      </div>
+      <h2 style="font-size:17px; font-weight:700; color:var(--text-main); letter-spacing:-.4px; margin-bottom:3px;">The Revenue Playbook</h2>
+      <p style="font-size:12.5px; color:var(--text-muted);">Skip the setup. Follow these 4 steps to pitch and close your first client today.</p>
+    </div>
+    <button onclick="window.open('https://loom.com','_blank')" style="display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 12px; background:rgba(99,102,241,0.07); color:#6366f1; border:1px solid rgba(99,102,241,0.18); border-radius:7px; font-size:12px; font-weight:500; cursor:pointer; font-family:inherit; white-space:nowrap; transition:background .15s;" onmouseover="this.style.background='rgba(99,102,241,0.14)'" onmouseout="this.style.background='rgba(99,102,241,0.07)'">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+      Watch the walkthrough
+    </button>
+  </div>
 
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              
-              <div class="pb-step-card" id="pb-card-1" style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; transition:all .2s;">
-                <div class="pb-check" id="pb-check-1" onclick="togglePb(1)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s;">
-                  <i data-lucide="check" style="width:14px; height:14px; color:transparent; transition:color .2s;"></i>
-                </div>
-                <div style="flex:1; cursor:pointer;" onclick="navigate('coach')">
-                  <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">1. Lock Your Offer & Portfolio</div>
-                  <div style="font-size:12px; color:var(--text-muted);">Run the Launch Coach to get your specific niche, pricing tiers, and a bio to paste into your social profiles.</div>
-                </div>
-                <button class="btn btn-ghost" onclick="navigate('coach')" style="padding:0 6px;"><i data-lucide="arrow-right" style="width:16px; height:16px;"></i></button>
-              </div>
+  <!-- Progress bar -->
+  <div style="padding:12px 24px; border-bottom:1px solid var(--border); background:var(--bg-panel);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+      <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--text3);">Execution Progress</span>
+      <span id="pb-pct" style="font-size:11px; font-weight:700; color:var(--text-main);">0%</span>
+    </div>
+    <div style="height:3px; background:var(--border); border-radius:99px; overflow:hidden;">
+      <div id="pb-fill" style="height:100%; width:0%; background:var(--text-main); border-radius:99px; transition:width 0.4s cubic-bezier(0.16,1,0.3,1);"></div>
+    </div>
+  </div>
 
-              <div class="pb-step-card" id="pb-card-2" style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; transition:all .2s;">
-                <div class="pb-check" id="pb-check-2" onclick="togglePb(2)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s;">
-                  <i data-lucide="check" style="width:14px; height:14px; color:transparent; transition:color .2s;"></i>
-                </div>
-                <div style="flex:1; cursor:pointer;" onclick="navigate('opportunity')">
-                  <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">2. Mine 20 High-Intent Leads</div>
-                  <div style="font-size:12px; color:var(--text-muted);">Open the Opportunity Engine. Enter your niche, run a Deep Scan, and save exactly 20 targets to your Pipeline.</div>
-                </div>
-                <button class="btn btn-ghost" onclick="navigate('opportunity')" style="padding:0 6px;"><i data-lucide="arrow-right" style="width:16px; height:16px;"></i></button>
-              </div>
+  <!-- Steps -->
+  <div style="padding:12px 16px; display:flex; flex-direction:column; gap:8px;">
 
-              <div class="pb-step-card" id="pb-card-3" style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; transition:all .2s;">
-                <div class="pb-check" id="pb-check-3" onclick="togglePb(3)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s;">
-                  <i data-lucide="check" style="width:14px; height:14px; color:transparent; transition:color .2s;"></i>
-                </div>
-                <div style="flex:1; cursor:pointer;" onclick="navigate('audit')">
-                  <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">3. Fire the Trojan Horse (Copy/Paste)</div>
-                  <div style="font-size:12px; color:var(--text-muted);">Pick your top 3 leads. Generate a custom Audit PDF for each, copy the 1-click cold DM, and send it to them.</div>
-                </div>
-                <button class="btn btn-ghost" onclick="navigate('audit')" style="padding:0 6px;"><i data-lucide="arrow-right" style="width:16px; height:16px;"></i></button>
-              </div>
+    <!-- Step 1 -->
+    <div id="pb-card-1" onclick="navigate('opportunity')" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease;" onmouseover="this.style.borderColor='var(--border2)';this.style.boxShadow='var(--shadow-md)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+      <div id="pb-check-1" onclick="event.stopPropagation();togglePb(1)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s; background:transparent;">
+        <i data-lucide="check" style="width:13px; height:13px; color:transparent; transition:color .2s;"></i>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(99,102,241,0.08); flex-shrink:0;">
+        <i data-lucide="target" style="width:15px; height:15px; color:#6366f1;"></i>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+          <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 1</span>
+          <span style="font-size:10px; font-weight:600; color:#6366f1; background:rgba(99,102,241,0.08); padding:1px 7px; border-radius:99px;">Opportunity Engine</span>
+        </div>
+        <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">Mine Leads &amp; Quick Pitch</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Run a Deep Scan to find 5 high-intent targets. Click 'Quick DM' to instantly copy a proven outreach script and send it.</div>
+      </div>
+      <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
+    </div>
 
-              <div class="pb-step-card" id="pb-card-4" style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; transition:all .2s;">
-                <div class="pb-check" id="pb-check-4" onclick="togglePb(4)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s;">
-                  <i data-lucide="check" style="width:14px; height:14px; color:transparent; transition:color .2s;"></i>
-                </div>
-                <div style="flex:1; cursor:pointer;" onclick="navigate('pipeline')">
-                  <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">4. Track & Follow Up</div>
-                  <div style="font-size:12px; color:var(--text-muted);">Move them to 'In Talks' on your Pipeline. Use the Email Writer to follow up 3 days later until they pay.</div>
-                </div>
-                <button class="btn btn-ghost" onclick="navigate('pipeline')" style="padding:0 6px;"><i data-lucide="arrow-right" style="width:16px; height:16px;"></i></button>
-              </div>
+    <!-- Step 2 -->
+    <div id="pb-card-2" onclick="navigate('audit')" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease;" onmouseover="this.style.borderColor='var(--border2)';this.style.boxShadow='var(--shadow-md)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+      <div id="pb-check-2" onclick="event.stopPropagation();togglePb(2)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s; background:transparent;">
+        <i data-lucide="check" style="width:13px; height:13px; color:transparent; transition:color .2s;"></i>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(168,85,247,0.08); flex-shrink:0;">
+        <i data-lucide="sparkles" style="width:15px; height:15px; color:#a855f7;"></i>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+          <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 2</span>
+          <span style="font-size:10px; font-weight:600; color:#a855f7; background:rgba(168,85,247,0.08); padding:1px 7px; border-radius:99px;">Audit Generator</span>
+        </div>
+        <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">The Trojan Horse</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Don't send a generic resume. Pick your best lead and generate a custom 5-point Growth Diagnostic PDF to prove your value instantly.</div>
+      </div>
+      <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
+    </div>
 
-            </div>
-          </div>
+    <!-- Step 3 -->
+    <div id="pb-card-3" onclick="navigate('email')" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease;" onmouseover="this.style.borderColor='var(--border2)';this.style.boxShadow='var(--shadow-md)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+      <div id="pb-check-3" onclick="event.stopPropagation();togglePb(3)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s; background:transparent;">
+        <i data-lucide="check" style="width:13px; height:13px; color:transparent; transition:color .2s;"></i>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(245,158,11,0.08); flex-shrink:0;">
+        <i data-lucide="mail" style="width:15px; height:15px; color:#f59e0b;"></i>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+          <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 3</span>
+          <span style="font-size:10px; font-weight:600; color:#f59e0b; background:rgba(245,158,11,0.08); padding:1px 7px; border-radius:99px;">Email Writer</span>
+        </div>
+        <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">Lock the Follow-up</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">The money is in the follow-up. If they don't reply in 48 hours, use the Email Writer to draft a high-converting, psychology-backed nudge.</div>
+      </div>
+      <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
+    </div>
+
+    <!-- Step 4 -->
+    <div id="pb-card-4" onclick="navigate('roadmap')" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease;" onmouseover="this.style.borderColor='var(--border2)';this.style.boxShadow='var(--shadow-md)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+      <div id="pb-check-4" onclick="event.stopPropagation();togglePb(4)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s; background:transparent;">
+        <i data-lucide="check" style="width:13px; height:13px; color:transparent; transition:color .2s;"></i>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(34,197,94,0.08); flex-shrink:0;">
+        <i data-lucide="map" style="width:15px; height:15px; color:#22c55e;"></i>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+          <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 4</span>
+          <span style="font-size:10px; font-weight:600; color:#22c55e; background:rgba(34,197,94,0.08); padding:1px 7px; border-radius:99px;">Roadmap</span>
+        </div>
+        <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">Build Your Daily System</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Once you send your pitches, generate your custom 30-day execution plan. Map out exactly what to do every day to scale to ₹50k/mo.</div>
+      </div>
+      <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
+    </div>
+
+  </div>
+</div>
 
            
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px">
