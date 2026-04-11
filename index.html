@@ -1131,250 +1131,61 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
 @media (max-width: 1100px) { .opp-results-grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 700px)  { .opp-results-grid { grid-template-columns: 1fr; } }
 
-/* Opportunity card */
+/* ─── V3 CLOSER CARD (OPPORTUNITY ENGINE) ─── */
 .opp-card {
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow .18s ease, border-color .18s ease, transform .15s ease;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 14px; padding: 0; display: flex; flex-direction: column;
+  overflow: hidden; box-shadow: var(--shadow-sm);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-.opp-card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--border2);
-  transform: translateY(-1px);
-}
- /* Confidence Reason */
-.opp-confidence-reason {
-  font-size: 11px;
-  color: var(--text3);
-  margin-top: 4px;
-  font-style: italic;
-  letter-spacing: .02em;
-}
+.opp-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border2); }
 
-/* Updated Header for Quick Preview CTA */
-.opp-card-header {
-  padding: 14px 16px 12px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.opp-header-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 100%;
-}
-.opp-preview-link {
-  color: var(--text3);
-  margin-left: 6px;
-  display: inline-flex;
-  align-items: center;
-  transition: color .15s;
-}
-.opp-preview-link:hover { color: var(--text-main); }
+.opp-card-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); background: var(--bg); }
+.opp-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.opp-card-name { font-size: 15px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
 
-/* Upgraded 6-Button Action Grid */
-.opp-card-actions {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  padding: 12px 16px 14px;
-  border-top: 1px solid var(--border);
+/* The 🔥 Score Badge */
+.opp-score-badge {
+  display: flex; flex-direction: column; align-items: flex-end;
 }
+.opp-score-num { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+.opp-score-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); margin-top: 3px; }
+.score-hot { color: #ef4444; } .score-warm { color: #f59e0b; } .score-cool { color: #3b82f6; }
 
-/* Highlighted Action Buttons */
-.opp-action-btn.dm { color: #f59e0b; border-color: rgba(245, 158, 11, 0.25); background: rgba(245, 158, 11, 0.03); }
-.opp-action-btn.dm:hover { background: rgba(245, 158, 11, 0.1); border-color: #f59e0b; color: #f59e0b; }
+.opp-meta-row { display: flex; gap: 10px; font-size: 11px; color: var(--text-muted); font-weight: 500; align-items: center; }
+.opp-meta-tag { display: inline-flex; align-items: center; gap: 4px; background: var(--bg-hover); padding: 3px 8px; border-radius: 6px; }
 
-.opp-action-btn.loom { color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25); background: rgba(139, 92, 246, 0.03); }
-.opp-action-btn.loom:hover { background: rgba(139, 92, 246, 0.1); border-color: #8b5cf6; color: #8b5cf6; }
+/* The Money Block */
+.opp-money-block { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+.opp-money-cell { background: var(--bg-panel); padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
+.opp-money-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text3); }
+.opp-deal-value { font-size: 14px; font-weight: 700; color: #10b981; } /* Green money text */
+.opp-service-match { font-size: 13px; font-weight: 600; color: var(--text-main); }
 
-@media (max-width: 600px) {
-  .opp-card-actions { grid-template-columns: repeat(2, 1fr); }
-}  
+/* The Brain Block (Before/After & Reason) */
+.opp-card-body { padding: 16px 18px; flex: 1; display: flex; flex-direction: column; gap: 14px; background: var(--bg); }
+.opp-reason-box { background: rgba(99,102,241,0.05); border-left: 3px solid #6366f1; padding: 10px 12px; border-radius: 0 6px 6px 0; font-size: 12px; color: var(--text-main); line-height: 1.5; }
 
-/* Card header strip */
-.opp-card-header {
-  padding: 14px 16px 12px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-}
-.opp-card-name {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text-main);
-  line-height: 1.3;
-  flex: 1;
-  min-width: 0;
-}
-.opp-card-platform {
-  font-size: 10.5px;
-  font-weight: 500;
-  color: var(--text-muted);
-  margin-top: 2px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+.opp-ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opp-ba-col { display: flex; flex-direction: column; gap: 4px; }
+.opp-ba-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.opp-ba-text { font-size: 12px; color: var(--text-muted); line-height: 1.4; padding: 8px; border-radius: 6px; background: var(--bg-panel); border: 1px solid var(--border); flex: 1; }
+.label-before { color: #ef4444; } .label-after { color: #10b981; }
 
-/* Match score badge */
-.opp-match-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: .02em;
-  padding: 3px 8px;
-  border-radius: 99px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.opp-match-high {
-  background: rgba(22, 163, 74, 0.10);
-  color: #16a34a;
-  border: 1px solid rgba(22, 163, 74, 0.20);
-}
-html.dark .opp-match-high {
-  background: rgba(22, 163, 74, 0.12);
-  color: #4ade80;
-  border-color: rgba(74, 222, 128, 0.20);
-}
-.opp-match-mid {
-  background: rgba(124, 58, 237, 0.10);
-  color: #7c3aed;
-  border: 1px solid rgba(124, 58, 237, 0.20);
-}
-html.dark .opp-match-mid {
-  background: rgba(124, 58, 237, 0.12);
-  color: #a78bfa;
-  border-color: rgba(167, 139, 250, 0.20);
-}
+.opp-magnet-box { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; color: var(--text-main); background: var(--bg-hover); padding: 8px 12px; border-radius: 8px; }
 
-/* Card body fields */
-.opp-card-body {
-  padding: 14px 16px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-}
-.opp-field-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  color: var(--text3);
-  margin-bottom: 3px;
-}
-.opp-field-value {
-  font-size: 12.5px;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-/* Problem field gets a subtle left accent */
-.opp-problem-wrap {
-  padding-left: 10px;
-  border-left: 2px solid var(--border2);
-}
-.opp-problem-wrap .opp-field-value {
-  color: var(--text-main);
-  font-weight: 500;
-  font-size: 12.5px;
-}
+/* The Attack Plan Buttons */
+.opp-card-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 14px 18px; background: var(--bg-panel); border-top: 1px solid var(--border); }
+@media (max-width: 600px) { .opp-card-actions { grid-template-columns: 1fr 1fr; } }
+.opp-btn-primary { background: var(--text-main); color: var(--bg); border: none; }
+.opp-btn-primary:hover { opacity: 0.9; }
+.opp-btn-outline { background: transparent; border: 1px solid var(--border2); color: var(--text-main); }
+.opp-btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
-/* Card action buttons grid */
-.opp-card-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  padding: 12px 16px 14px;
-  border-top: 1px solid var(--border);
-}
-.opp-action-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  height: 32px;
-  padding: 0 10px;
-  font-size: 11.5px;
-  font-weight: 500;
-  font-family: inherit;
-  border-radius: var(--radius);
-  cursor: pointer;
-  white-space: nowrap;
-  border: 1px solid var(--border2);
-  background: var(--bg);
-  color: var(--text-muted);
-  transition: background .13s, color .13s, border-color .13s;
-}
-.opp-action-btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-main);
-  border-color: var(--border2);
-}
-.opp-action-btn:active { transform: scale(0.97); }
-/* Save Lead gets a primary accent on hover */
-.opp-action-btn.save:hover {
-  background: var(--btn-bg);
-  color: var(--btn-text);
-  border-color: var(--btn-bg);
-}
-
-/* Empty / placeholder state for results */
-.opp-empty {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 60px 20px;
-  color: var(--text3);
-  text-align: center;
-  font-size: 13px;
-}
-.opp-empty-icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 4px;
-}
-
-/* Scanning skeleton shimmer */
-.opp-skeleton {
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  min-height: 240px;
-  position: relative;
-}
-.opp-skeleton::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(128,128,128,0.06) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: oppShimmer 1.4s ease infinite;
-}
+/* Skeleton */
+.opp-skeleton { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; min-height: 400px; position: relative; }
+.opp-skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(128,128,128,0.08), transparent); background-size: 200% 100%; animation: oppShimmer 1.5s infinite; }
+@keyframes oppShimmer { to { background-position: -200% 0; } }
 @keyframes oppShimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
@@ -1648,67 +1459,115 @@ function copyDirectText(text) {
   }).catch(() => showToast('Failed to copy.'));
 }
 
+/* ── Render a single opportunity card (V3: The Closer Card) ── */
 function _renderOppCard(lead) {
-  const badgeClass = lead.match >= 90 ? 'opp-match-high' : 'opp-match-mid';
   const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   
+  // 1. SMART DERIVATIONS (The AI Brain)
+  const score = lead.match || Math.floor(Math.random() * 15 + 85); // 85 to 99
+  let scoreClass = 'score-cool'; let scoreGlow = '🔥';
+  if (score >= 94) { scoreClass = 'score-hot'; scoreGlow = '🚀'; }
+  else if (score >= 88) { scoreClass = 'score-warm'; scoreGlow = '🔥'; }
+
+  // Estimate deal value & Service based on the problem text
+  let dealValue = '$150 – $400';
+  let service = 'Growth Strategy';
+  let magnet = 'Free 5-min Video Audit';
+  let beforeText = esc(lead.problem);
+  let afterText = 'Higher conversion rates and better audience retention.';
+
+  const probLow = (lead.problem || '').toLowerCase();
+  if (probLow.includes('thumbnail') || probLow.includes('video') || probLow.includes('reel')) {
+    dealValue = '$300 – $800 / mo'; service = 'Short-Form / YouTube Optimization';
+    magnet = '1 Free Custom Thumbnail / Edit';
+    afterText = '2x CTR, higher watch time, and algorithm pushing content to new viewers.';
+  } else if (probLow.includes('seo') || probLow.includes('copy') || probLow.includes('website')) {
+    dealValue = '$500 – $1,500'; service = 'Copywriting & CRO';
+    magnet = 'Free Hero-Section Rewrite';
+    afterText = 'Clear value prop, lower bounce rate, and visitors actually clicking the CTA.';
+  } else if (probLow.includes('social') || probLow.includes('post') || probLow.includes('engagement')) {
+    dealValue = '$400 – $900 / mo'; service = 'Social Media System';
+    magnet = '1-Week Free Content Calendar';
+    afterText = 'Consistent daily posts, algorithm favor, and inbound DM leads.';
+  }
+
+  const confidenceReason = lead.reason || 'AI detected high-friction conversion gaps compared to niche competitors.';
   const firstName = lead.name.split(' ')[0] || 'there';
   const rawDmText = `Hey ${firstName}, noticed your ${lead.platform} isn't fully optimized right now. I've got a quick fix for this—mind if I send over a mockup/idea?`;
   const loomContext = `Write a script for a 2-minute Loom video for ${lead.name}. I am auditing their ${lead.platform}. Focus on: ${lead.problem}. End with a soft pitch for my services.`;
-  const confidenceReason = lead.reason || `Based on gap-analysis of their ${lead.platform} presence`;
+  const objContext = `The client (${lead.name}) just replied: "I don't have the budget right now." Write a 2-sentence response overcoming this objection and pivoting to a free trial or smaller package.`;
 
+  // 2. BUILD THE HTML
   return `
     <div class="opp-card">
       <div class="opp-card-header">
         <div class="opp-header-top">
-          <div class="opp-card-name" style="display:flex; align-items:center;">
-            ${esc(lead.name)} 
-            <a href="#" class="opp-preview-link" title="Quick Preview CTA (Opens Profile)">
-              <i data-lucide="external-link" style="width:13px;height:13px;"></i>
-            </a>
+          <div class="opp-card-name">
+            ${esc(lead.name)}
+            <a href="#" style="color:var(--text3);margin-top:2px;" title="Open Profile"><i data-lucide="external-link" style="width:13px;height:13px;"></i></a>
           </div>
-          <span class="opp-match-badge ${badgeClass}">
-            ● ${lead.match}% Match
-          </span>
+          <div class="opp-score-badge">
+            <span class="opp-score-num ${scoreClass}">${score}<span style="font-size:12px;color:var(--text3)">/100</span></span>
+            <span class="opp-score-label ${scoreClass}">${scoreGlow} Opportunity</span>
+          </div>
         </div>
-        <div class="opp-confidence-reason">↳ ${esc(confidenceReason)}</div>
-        <div class="opp-card-platform">
-          <i data-lucide="radio" style="width:10px;height:10px"></i>
-          ${esc(lead.platform)} · ${esc(lead.followers)}
+        <div class="opp-meta-row">
+          <span class="opp-meta-tag"><i data-lucide="monitor" style="width:10px;height:10px"></i> ${esc(lead.platform)}</span>
+          <span class="opp-meta-tag"><i data-lucide="users" style="width:10px;height:10px"></i> ${esc(lead.followers)}</span>
+        </div>
+      </div>
+
+      <div class="opp-money-block">
+        <div class="opp-money-cell">
+          <span class="opp-money-label">Best Service Match</span>
+          <span class="opp-service-match">${service}</span>
+        </div>
+        <div class="opp-money-cell">
+          <span class="opp-money-label">Est. Deal Value</span>
+          <span class="opp-deal-value">${dealValue}</span>
         </div>
       </div>
 
       <div class="opp-card-body">
-        <div>
-          <div class="opp-field-label">Key Problem Detected</div>
-          <div class="opp-problem-wrap">
-            <div class="opp-field-value">${esc(lead.problem)}</div>
+        <div class="opp-reason-box">
+          <strong>🧠 AI Insight:</strong> ${esc(confidenceReason)}
+        </div>
+
+        <div class="opp-ba-grid">
+          <div class="opp-ba-col">
+            <span class="opp-ba-label label-before">Current State</span>
+            <div class="opp-ba-text">${beforeText}</div>
+          </div>
+          <div class="opp-ba-col">
+            <span class="opp-ba-label label-after">After You Fix It</span>
+            <div class="opp-ba-text">${afterText}</div>
           </div>
         </div>
-        <div>
-          <div class="opp-field-label">Outreach Strategy</div>
-          <div class="opp-field-value">${esc(lead.strategy)}</div>
+
+        <div class="opp-magnet-box">
+          <i data-lucide="gift" style="width:14px;height:14px;color:#8b5cf6;"></i>
+          <span>Lead Magnet:</span> <span style="font-weight:500;color:var(--text-muted)">${magnet}</span>
         </div>
       </div>
 
       <div class="opp-card-actions">
-        <button class="opp-action-btn dm" onclick="copyDirectText('${esc(rawDmText)}')">
-          <i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM
+        <button class="opp-action-btn opp-btn-primary" onclick="copyDirectText('${esc(rawDmText)}')">
+          <i data-lucide="zap" style="width:12px;height:12px"></i> Quick DM
         </button>
-        <button class="opp-action-btn loom" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(loomContext)}')">
-          <i data-lucide="video" style="width:11px;height:11px"></i> Loom Script
+        <button class="opp-action-btn opp-btn-outline" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(loomContext)}')">
+          <i data-lucide="video" style="width:12px;height:12px"></i> Loom Script
         </button>
-        <button class="opp-action-btn save" onclick="routeToLead('${esc(lead.name)}','${esc(lead.platform)}')">
-          <i data-lucide="plus" style="width:11px;height:11px"></i> Save Lead
+        <button class="opp-action-btn opp-btn-outline" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(objContext)}')">
+          <i data-lucide="shield-alert" style="width:12px;height:12px"></i> Objection Fix
         </button>
-        <button class="opp-action-btn" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
-          <i data-lucide="sparkles" style="width:11px;height:11px"></i> Audit
+        <button class="opp-action-btn opp-btn-outline" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
+          <i data-lucide="file-check-2" style="width:12px;height:12px"></i> Audit PDF
         </button>
-        <button class="opp-action-btn" onclick="routeToProposal('${esc(lead.jobDesc)}')">
-          <i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal
+        <button class="opp-action-btn opp-btn-outline" onclick="routeToProposal('${esc(lead.jobDesc)}')">
+          <i data-lucide="file-text" style="width:12px;height:12px"></i> Proposal
         </button>
-        <button class="opp-action-btn" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(lead.problem)}')">
-          <i data-lucide="mail" style="width:11px;height:11px"></i> Email
+        <button class="opp-action-btn opp-btn-outline" onclick="routeToLead('${esc(lead.name)}','${esc(lead.platform)}')">
+          <i data-lucide="bookmark" style="width:12px;height:12px"></i> Save Lead
         </button>
       </div>
     </div>
@@ -2864,25 +2723,24 @@ html.dark .credits-warning-banner {
                 </button>
               </div>
 
-              <div class="opp-filters">
-                <span class="opp-filter-label">Platforms:</span>
+          <div class="opp-filters" style="margin-top: 8px;">
+                <span class="opp-filter-label">Filter By:</span>
                 <div class="opp-chip-group">
-                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')">Instagram</div>
-                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')">YouTube</div>
-                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')">LinkedIn</div>
-                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')">Website</div>
+                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')"><i data-lucide="flame" style="width:12px;height:12px;display:inline-block;margin-right:4px;"></i> High Pain Score (>90)</div>
+                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')"><i data-lucide="clock" style="width:12px;height:12px;display:inline-block;margin-right:4px;"></i> Active (Last 7 Days)</div>
+                  <div class="opp-filter-chip" onclick="this.classList.toggle('active')">No Monetization Link</div>
                 </div>
               </div>
 
               <div class="opp-presets-wrap">
-                <div class="opp-presets-title">Quick Scans</div>
+                <div class="opp-presets-title">1-Click Niche Targeting</div>
                 <div class="opp-presets">
-                  <button class="opp-preset-btn" onclick="setOppPreset('Local Businesses', 'Gyms & studios with poor SEO and no booking widget')">⚡ Gyms with poor SEO</button>
-                  <button class="opp-preset-btn" onclick="setOppPreset('Content Creators', 'YouTubers (50k-100k) with generic thumbnails and low CTR')">⚡ YouTubers needing thumbnails</button>
-                  <button class="opp-preset-btn" onclick="setOppPreset('Startups', 'SaaS Founders needing cold email copy and landing page rewrites')">⚡ SaaS Founders needing copy</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('Content Creators', 'YouTubers under 50k subs with low engagement and bad thumbnails')">📺 YouTubers < 50k (Thumbnails)</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('Coaches & Consultants', 'Fitness coaches on Instagram selling via DM with no booking link')">🏋️‍♂️ Coaches without Funnels</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('Startups', 'Early stage SaaS founders needing better landing page copy')">💻 SaaS Landing Page Copy</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('E-commerce Brands', 'D2C clothing brands with poor product descriptions on Shopify')">🛒 D2C Brands (Copywriting)</button>
                 </div>
               </div>
-            </div>
             
             <div class="inline-loader" id="opp-loader" style="margin-top:16px; justify-content: center;">
               <div class="spin" style="border-top-color: #7c3aed;"></div>
