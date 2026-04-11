@@ -4475,7 +4475,19 @@ function setThemePref(theme){
 function nextWizardStep() {}
 function skipOnboarding()  { obNext(); }
 function finishOnboarding(){ _obFinish(); }
+   function checkCredits(cost, callback) {
+  const remaining = parseInt(
+    el('credits-remaining')?.textContent?.replace(/,/g, '') || '1000'
+  );
+  if (remaining < cost) {
+    showToast('Not enough credits — upgrade to Pro for unlimited access.');
+    showUpgradeModal();
+    return;
+  }
+  callback();
+}
 initApp();
 </script>
+       <div id="toast"></div>
 </body>
 </html>
