@@ -1913,61 +1913,247 @@ html.dark .credits-warning-banner {
   0%,100% { opacity:1; transform:scale(1); }
   50%      { opacity:.4; transform:scale(0.7); }
 }
-    /* ─── CLAUDE-STYLE PRICING MODAL ─── */
-.modal-pricing { 
-  max-width: 1040px !important; 
-  padding: 40px 50px !important; 
-  background: #18181b !important; /* Claude Dark Background */
+/* ─── CLAUDE-STYLE PRICING MODAL ─── */
+
+/* Override the backdrop so it doesn't clip the wide modal */
+#upgrade-modal.modal-backdrop {
+  align-items: flex-start !important;
+  padding: 32px 16px !important;
+  overflow-y: auto !important;
+}
+
+/* Kill the base .modal width cap */
+.modal.modal-pricing {
+  max-width: 1060px !important;
+  width: min(1060px, 100%) !important;
+  padding: 40px 44px !important;
+  background: #18181b !important;
   border: 1px solid #27272a !important;
+  border-radius: 20px !important;
   color: #fff;
   text-align: center;
+  margin: auto; /* centres it inside the scrollable backdrop */
 }
-.pricing-header h3 { font-size: 28px; font-weight: 500; letter-spacing: -0.5px; color: #ececec; margin-bottom: 8px; font-family: 'Geist', serif; }
-.pricing-header p { font-size: 14.5px; color: #a1a1aa; margin-bottom: 36px; }
-.pricing-grid { 
-  display: grid; 
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 20px; 
-  text-align: left; 
-}
-@media(max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; } }
 
-.pricing-card { 
-  background: #27272a; 
-  border: 1px solid #3f3f46; 
-  border-radius: 16px; 
-  padding: 32px 28px; 
-  display: flex; 
-  flex-direction: column; 
-  position: relative; 
-  transition: transform .2s ease, border-color .2s ease; 
+/* Header */
+.pricing-header { margin-bottom: 36px; }
+.pricing-header h3 {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: #fafafa;
+  margin-bottom: 8px;
+  font-family: 'Geist', sans-serif;
 }
-.pricing-card:hover { border-color: #52525b; }
-.pricing-icon { margin-bottom: 20px; color: #d4d4d8; }
-.pricing-name { font-size: 18px; font-weight: 500; color: #fff; margin-bottom: 4px; }
-.pricing-sub { font-size: 13px; color: #a1a1aa; margin-bottom: 16px; min-height: 38px; }
-.pricing-price { font-size: 32px; font-weight: 500; color: #fff; margin-bottom: 4px; display:flex; align-items: baseline; gap: 4px; }
-.pricing-price span { font-size: 13px; color: #a1a1aa; font-weight: 400; }
-.pricing-btn { 
-  margin: 24px 0 32px; 
-  height: 40px; 
-  border-radius: 8px; 
-  font-size: 14px; 
-  font-weight: 500; 
-  display: flex; align-items: center; justify-content: center; 
-  cursor: pointer; transition: opacity .2s; width: 100%; border: none; 
+.pricing-header p { font-size: 14px; color: #a1a1aa; }
+
+/* Billing toggle row (optional — wires up Monthly/Yearly look) */
+.pricing-toggle-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: 99px;
+  padding: 3px;
+  margin-bottom: 36px;
 }
-.btn-free { background: transparent; border: 1px solid #52525b; color: #d4d4d8; }
-.btn-free:hover { background: #3f3f46; }
-.btn-pro { background: #ececec; color: #000; }
-.btn-pro:hover { opacity: 0.9; }
+.pricing-toggle-btn {
+  padding: 5px 18px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #a1a1aa;
+  font-family: inherit;
+  transition: background .15s, color .15s;
+}
+.pricing-toggle-btn.active {
+  background: #3f3f46;
+  color: #fff;
+}
 
-.pricing-features-title { font-size: 12.5px; font-weight: 600; color: #fff; margin-bottom: 16px; }
-.pricing-features { display: flex; flex-direction: column; gap: 14px; flex: 1; }
-.pricing-feature { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #d4d4d8; line-height: 1.4; }
-.pricing-feature svg { width: 16px; height: 16px; color: #d4d4d8; flex-shrink: 0; margin-top: 1px; }
+/* ── The 3-column grid ── */
+.pricing-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px;
+  text-align: left;
+}
+@media (max-width: 860px) {
+  .pricing-grid { grid-template-columns: 1fr !important; }
+  .modal.modal-pricing { padding: 28px 20px !important; }
+}
 
-.discount-badge { display: inline-block; background: rgba(99,102,241,0.15); color: #818cf8; font-size: 11px; padding: 3px 10px; border-radius: 99px; margin-left: 8px; vertical-align: middle; }
+/* ── Cards ── */
+.pricing-card {
+  background: #1c1c1f;
+  border: 1px solid #2e2e32;
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: border-color .2s ease, transform .15s ease;
+}
+.pricing-card:hover {
+  border-color: #52525b;
+  transform: translateY(-2px);
+}
+/* Highlighted (Pro) card */
+.pricing-card.card-featured {
+  background: #1f1f23;
+  border-color: #3f3f46;
+  box-shadow: 0 0 0 1px #3f3f46, 0 8px 32px rgba(0,0,0,0.5);
+}
+
+/* Icon */
+.pricing-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #d4d4d8;
+}
+
+/* Name, sub, price */
+.pricing-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fafafa;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pricing-sub {
+  font-size: 13px;
+  color: #71717a;
+  margin-bottom: 18px;
+  line-height: 1.45;
+  min-height: 36px;
+}
+.pricing-price {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 0;
+}
+.pricing-price-big {
+  font-size: 36px;
+  font-weight: 700;
+  color: #fafafa;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.pricing-price-meta {
+  font-size: 12px;
+  color: #71717a;
+  line-height: 1.4;
+}
+
+/* CTA buttons */
+.pricing-btn {
+  margin: 22px 0 26px;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity .15s, background .15s;
+  width: 100%;
+  border: none;
+  font-family: inherit;
+  letter-spacing: -.01em;
+}
+.btn-free {
+  background: transparent;
+  border: 1px solid #3f3f46 !important;
+  color: #a1a1aa;
+}
+.btn-free:hover { background: #27272a; color: #fafafa; }
+
+.btn-pro {
+  background: #fafafa;
+  color: #0a0a0a;
+}
+.btn-pro:hover { opacity: 0.88; }
+
+/* Divider + feature list */
+.pricing-features-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #52525b;
+  margin-bottom: 14px;
+  padding-top: 18px;
+  border-top: 1px solid #27272a;
+}
+.pricing-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.pricing-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: #d4d4d8;
+  line-height: 1.45;
+}
+.pricing-feature svg,
+.pricing-feature i {
+  width: 15px !important;
+  height: 15px !important;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #71717a;
+  stroke-width: 2.5;
+}
+
+/* Badges */
+.discount-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(99,102,241,0.14);
+  color: #a5b4fc;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 99px;
+  letter-spacing: .02em;
+  vertical-align: middle;
+}
+.popular-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #27272a;
+  color: #a1a1aa;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 99px;
+  border: 1px solid #3f3f46;
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
      
 </style>
 </head>
@@ -2839,72 +3025,89 @@ html.dark .credits-warning-banner {
 <div class="modal-backdrop" id="upgrade-modal">
   <div class="modal modal-pricing">
     <button class="modal-close" onclick="closeModal('upgrade-modal')" style="color:#a1a1aa;"><i data-lucide="x" style="width:18px;height:18px"></i></button>
-    
+
     <div class="pricing-header">
       <h3>Plans that grow with you</h3>
-      <p>Early users get a lifetime discount on all paid plans. <span style="color:#818cf8;">Lock in your rate today.</span></p>
+      <p>Early-bird pricing is live. <span style="color:#818cf8;">Rates go up after the first 200 users.</span></p>
     </div>
 
     <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="pricing-icon"><i data-lucide="user" style="width:28px;height:28px;stroke-width:1.5;"></i></div>
-        <div class="pricing-name">Free</div>
-        <div class="pricing-sub">Get your first win.</div>
-        <div class="pricing-price">$0</div>
-        
-        <button class="pricing-btn btn-free" onclick="closeModal('upgrade-modal')">Current Plan</button>
 
+      <!-- FREE -->
+      <div class="pricing-card">
+        <div class="pricing-icon">
+          <i data-lucide="user" style="width:22px;height:22px;stroke-width:1.5;"></i>
+        </div>
+        <div class="pricing-name">Free</div>
+        <div class="pricing-sub">Get your first win. No card needed.</div>
+        <div class="pricing-price">
+          <span class="pricing-price-big">$0</span>
+        </div>
+        <button class="pricing-btn btn-free" onclick="closeModal('upgrade-modal')">Current Plan</button>
+        <div class="pricing-features-title">What's included</div>
         <div class="pricing-features">
-          <div class="pricing-feature"><i data-lucide="check"></i> 1,000 AI Credits (Refills monthly)</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Limited Deep Scans (3 total)</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> 3 Audits & 3 Proposals</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Basic Email Writer</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> 1 Active Pipeline Slot</div>
-          <div class="pricing-feature" style="color:#a1a1aa; font-style:italic; margin-top:8px;">*Upgrade to unlock unlimited clients.</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> 1,000 AI Credits / month</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> 3 Opportunity Engine scans</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> 3 Audit PDFs + 3 Proposals</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Email Writer (basic templates)</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Client Pipeline (up to 5 leads)</div>
+          <div class="pricing-feature"><i data-lucide="minus" style="color:#3f3f46;"></i> <span style="color:#52525b;">Gig Finder — locked</span></div>
+          <div class="pricing-feature"><i data-lucide="minus" style="color:#3f3f46;"></i> <span style="color:#52525b;">30-Day Roadmap — locked</span></div>
         </div>
       </div>
 
-      <div class="pricing-card" style="border-color:#52525b;">
-        <div class="pricing-icon"><i data-lucide="zap" style="width:28px;height:28px;stroke-width:1.5;"></i></div>
-        <div class="pricing-name">Pro <span class="discount-badge">Most Popular</span></div>
-        <div class="pricing-sub">For freelancers serious about landing clients.</div>
-        <div class="pricing-price">$12<span> USD / month</span></div>
-        
-        <button class="pricing-btn btn-pro" onclick="window.open('https://whop.com/checkout/YOUR_PRO_LINK','_blank')">Get Pro plan</button>
-
+      <!-- PRO -->
+      <div class="pricing-card card-featured" style="position:relative;">
+        <div class="popular-badge">★ Most Popular</div>
+        <div class="pricing-icon">
+          <i data-lucide="zap" style="width:22px;height:22px;stroke-width:1.5;"></i>
+        </div>
+        <div class="pricing-name">Pro</div>
+        <div class="pricing-sub">For freelancers who are serious about landing clients every week.</div>
+        <div class="pricing-price">
+          <span class="pricing-price-big">$12</span>
+          <span class="pricing-price-meta">USD / month<br>billed monthly</span>
+        </div>
+        <button class="pricing-btn btn-pro" onclick="window.open('https://whop.com/checkout/YOUR_PRO_LINK','_blank')">Get Pro Plan →</button>
         <div class="pricing-features-title">Everything in Free, plus:</div>
         <div class="pricing-features">
-          <div class="pricing-feature"><i data-lucide="check"></i> 15,000 AI Credits (Enough to land 15+ clients)</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Unlimited Opportunity Engine Scans</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Unlimited Audits & Proposals</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Gig Finder & Roadmap Unlocked</div>
-          <div class="pricing-feature"><i data-lucide="check" style="color:#818cf8;"></i> Priority Lead Quality Boost</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Faster AI Response Times</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> 15,000 AI Credits / month</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Unlimited Opportunity Engine scans</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Unlimited Audit PDFs & Proposals</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Full Email Writer (all 8 templates)</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Gig Finder — find paying niches fast</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> 30-Day Custom Roadmap unlocked</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Unlimited Pipeline leads</div>
         </div>
       </div>
 
+      <!-- ELITE -->
       <div class="pricing-card">
-        <div class="pricing-icon"><i data-lucide="crown" style="width:28px;height:28px;stroke-width:1.5;"></i></div>
+        <div class="pricing-icon">
+          <i data-lucide="crown" style="width:22px;height:22px;stroke-width:1.5;"></i>
+        </div>
         <div class="pricing-name">Elite</div>
-        <div class="pricing-sub">For those who want to scale to ₹50k+ fast.</div>
-        <div class="pricing-price">$29<span> USD / month</span></div>
-        
-        <button class="pricing-btn btn-pro" onclick="window.open('https://whop.com/checkout/YOUR_ELITE_LINK','_blank')">Get Elite plan</button>
-
+        <div class="pricing-sub">For those scaling to ₹50k/mo who need every edge.</div>
+        <div class="pricing-price">
+          <span class="pricing-price-big">$29</span>
+          <span class="pricing-price-meta">USD / month<br>billed monthly</span>
+        </div>
+        <button class="pricing-btn btn-pro" onclick="window.open('https://whop.com/checkout/YOUR_ELITE_LINK','_blank')">Get Elite Plan →</button>
         <div class="pricing-features-title">Everything in Pro, plus:</div>
         <div class="pricing-features">
-          <div class="pricing-feature"><i data-lucide="check"></i> 50,000+ AI Credits</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Premium Opportunities (Higher quality leads)</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Advanced Audits (Deeper insights)</div>
-          <div class="pricing-feature"><i data-lucide="check" style="color:#818cf8;"></i> Done-With-You Mode (Guided scripts)</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> High-conversion proposal styles</div>
-          <div class="pricing-feature"><i data-lucide="check"></i> Priority 1-on-1 Support</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> 50,000 AI Credits / month</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Premium lead targeting (filters by budget & intent)</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Deep-dive Audits (10-point, not 5-point)</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Done-for-you cold pitch scripts per lead</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> High-conversion proposal formats (3 styles)</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Priority support (reply within 24 hrs)</div>
+          <div class="pricing-feature"><i data-lucide="check"></i> Early access to every new feature</div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
-<div id="toast"></div>
 
 <script>
 /* ─── PLAYBOOK GAMIFICATION ─── */
