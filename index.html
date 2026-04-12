@@ -3913,10 +3913,11 @@ async function scanOpportunities() {
       }),
     });
     const apiData = await apiRes.json();
-    apiLeads = apiData.leads || [];
+apiLeads = apiData.leads || [];
   } catch(e) {
     showToast('Live scan failed — showing cached results.');
   }
+  clearInterval(txtInt);
 
   if (apiLeads.length > 0) {
     wrap.innerHTML = `<div class="opp-results-grid">${apiLeads.map(_renderOppCard).join('')}</div>`;
