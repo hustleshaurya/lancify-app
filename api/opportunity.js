@@ -103,20 +103,18 @@ export default async function handler(req, res) {
       rawProfiles = JSON.parse(resultData.output || '[]').slice(0, 10);
     }
 
-    // Claude scores and analyses all raw profiles
-    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CLAUDE,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 2500,
-        messages: [{
-          role: 'user',
-          content: `You are an expert freelance opportunity analyser for a tool called Lancify.
+   const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+  },
+  body: JSON.stringify({
+    model: 'llama-3.3-70b-versatile',
+    max_tokens: 2500,
+    messages: [{
+      role: 'user',
+      content: `You are an expert freelance opportunity analyser for a tool called Lancify.
 
 Target type: ${type}
 User is looking for: ${prompt}
@@ -144,12 +142,12 @@ Each object must have EXACTLY these keys:
 }
 
 Return ONLY the raw JSON array. No explanation. No markdown. No code fences.`
-        }],
-      }),
-    });
+    }],
+  }),
+});
 
-    const claudeData = await claudeRes.json();
-    const rawText = claudeData?.content?.[0]?.text || '[]';
+const groqData = await groqRes.json();
+const rawText = groqData?.choices?.[0]?.message?.content || '[]';
     let leads = [];
     try { leads = JSON.parse(rawText); } catch { leads = []; }
 
