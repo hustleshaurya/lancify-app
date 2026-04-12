@@ -1582,1628 +1582,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
-   /* ═══════════════════════════════════════════════════════
-   OPPORTUNITY ENGINE
-   ═══════════════════════════════════════════════════════ */
-
-/* ── Mock lead database — realistic, varied, convincing ── */
-const _oppLeadBank = {
-  'Content Creators': [
-    {
-      name: 'FitWithNehaa',
-      platform: 'YouTube',
-      followers: '14.2k subscribers',
-      problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
-      strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.',
-      match: 96,
-      jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel. Current thumbnails are basic and not getting clicks.',
-    },
-    {
-      name: 'TravelDiariesByKaran',
-      platform: 'Instagram',
-      followers: '8.7k followers',
-      problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
-      strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement stat as the hook.',
-      match: 91,
-      jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator. Consistency is the main goal.',
-    },
-    {
-      name: 'SkillsWithPriya',
-      platform: 'LinkedIn',
-      followers: '3.1k followers',
-      problem: 'Posts are long-form only — no carousel posts, no short-form content. Low reach despite solid expertise.',
-      strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting professional growth audience.',
-      match: 88,
-      jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts and personal brand content for a career coach.',
-    },
-  ],
-  'Local Businesses': [
-    {
-      name: 'Chai & Chapters Café',
-      platform: 'Instagram',
-      followers: '2.3k followers',
-      problem: 'Bio link goes to a dead page. No clear CTA in posts. They have great photos but zero conversion path.',
-      strategy: 'Fix the link-in-bio → landing page first. Then pitch a social media package. The broken link is your foot in the door.',
-      match: 94,
-      jobDesc: 'A local café needs someone to manage their Instagram, fix their bio, and create a simple landing page to drive orders.',
-    },
-    {
-      name: 'GreenLeaf Salon',
-      platform: 'Website',
-      followers: 'Google Business: 4.1★',
-      problem: 'Website loads in 7.2s, not mobile-optimised, and has no booking widget. Losing walk-ins to a competitor with online booking.',
-      strategy: 'Lead with the 7-second load time and lost bookings angle. Offer a website revamp + Calendly integration for ₹8,000.',
-      match: 93,
-      jobDesc: 'A local salon wants a faster, mobile-friendly website with an online appointment booking system integrated.',
-    },
-    {
-      name: 'QuickFix Electronics',
-      platform: 'Google Maps',
-      followers: '127 reviews, 3.8★',
-      problem: 'Review score is below the local average of 4.2★. No response to any negative reviews. Missing trust signals.',
-      strategy: 'Offer a reputation management starter: review response templates + a QR code system to collect 5-star reviews from happy customers.',
-      match: 87,
-      jobDesc: 'Small electronics repair shop needs help managing online reviews and improving Google Business profile reputation.',
-    },
-  ],
-  'Startups': [
-    {
-      name: 'Zolvr (SaaS)',
-      platform: 'Product Hunt',
-      followers: '312 upvotes',
-      problem: 'Landing page copy is feature-heavy, not benefit-driven. No social proof above the fold. Trial signups likely converting below 3%.',
-      strategy: 'Offer a landing page copy audit as a free value-add, then pitch a full copy rewrite focused on ICP pain points.',
-      match: 95,
-      jobDesc: 'Early-stage SaaS startup needs a copywriter to rewrite homepage and landing page to improve trial signups and reduce bounce rate.',
-    },
-    {
-      name: 'Mealio App',
-      platform: 'LinkedIn',
-      followers: '890 followers',
-      problem: 'App screenshots in the Play Store are plain UI dumps with no context. Reviews mention "confusing onboarding". No explainer video.',
-      strategy: 'Pitch a 60-second explainer video + redesigned app store screenshots. Show a competitor example as a reference.',
-      match: 90,
-      jobDesc: 'Food-tech startup needs a short explainer video and better app store visuals to improve install conversion rates.',
-    },
-    {
-      name: 'Hirrdly (HR Tool)',
-      platform: 'Website',
-      followers: '—',
-      problem: 'Blog has 2 posts from 6 months ago. SEO score is 34/100. Missing product-led content that drives organic signups.',
-      strategy: 'Offer 4 long-form SEO articles/month targeting HR manager keywords. Frame it as pipeline-building, not just writing.',
-      match: 85,
-      jobDesc: 'B2B HR software company needs a content writer to produce SEO-optimised blog posts targeting HR managers and CHROs.',
-    },
-  ],
-  'E-commerce Brands': [
-    {
-      name: 'ThreadCraft Co.',
-      platform: 'Instagram',
-      followers: '11k followers',
-      problem: 'Product images are shot on plain white backgrounds. Competitors are using lifestyle shots. Cart abandonment likely high.',
-      strategy: 'Offer 10 lifestyle product photo edits as a paid trial. If the brand sells fashion, lifestyle imagery converts 30% better.',
-      match: 92,
-      jobDesc: 'D2C clothing brand needs a product photo editor who can create lifestyle-style edits from existing product shots.',
-    },
-    {
-      name: 'PureRoot Organics',
-      platform: 'Website',
-      followers: 'Shopify store',
-      problem: 'Email list exists (1,400 subs) but last campaign was 4 months ago. No welcome sequence, no abandoned cart flow.',
-      strategy: 'Lead with the dormant list angle — "your list is making ₹0 right now." Pitch a 3-email welcome sequence + 1 promo campaign.',
-      match: 89,
-      jobDesc: 'Organic skincare brand wants someone to set up basic email automations — welcome sequence and abandoned cart recovery.',
-    },
-    {
-      name: 'GadgetNest',
-      platform: 'Amazon',
-      followers: '4.3★ seller rating',
-      problem: 'Product descriptions are bullet-point dumps with no storytelling. Competitor products with similar specs outrank them.',
-      strategy: 'Offer a single product listing rewrite as a demo. If it ranks better, they\'ll want the full catalogue done.',
-      match: 86,
-      jobDesc: 'Amazon seller needs product listing copywriter to rewrite descriptions with better keywords and benefit-driven language.',
-    },
-  ],
-  'Coaches & Consultants': [
-    {
-      name: 'Manav Sharma — Biz Coach',
-      platform: 'LinkedIn',
-      followers: '6.4k followers',
-      problem: 'Strong personal brand but no lead magnet, no email list, no freebie to convert followers into contacts.',
-      strategy: 'Pitch building a simple lead magnet (PDF checklist or mini-guide) + a 3-step email welcome sequence for ₹5,000.',
-      match: 93,
-      jobDesc: 'Business coach needs a copywriter to create a lead magnet (PDF) and a short email welcome sequence to build their list.',
-    },
-    {
-      name: 'Ritika\'s Wellness Studio',
-      platform: 'Instagram',
-      followers: '4.8k followers',
-      problem: 'Selling 1:1 sessions via DM with no booking page. Zero automation. Spending 2+ hrs/day on manual scheduling.',
-      strategy: 'Offer a Calendly + payment page setup. Frame the ROI: 2 hrs/day saved = 60 hrs/month returned to client delivery.',
-      match: 91,
-      jobDesc: 'Wellness coach needs help setting up online booking, a simple payment page, and automating their client intake process.',
-    },
-    {
-      name: 'CareerCompass Academy',
-      platform: 'YouTube',
-      followers: '7.1k subscribers',
-      problem: 'Selling a ₹4,999 course but no sales page — just a Gumroad link. No testimonials section, no FAQ, no urgency.',
-      strategy: 'Build a dedicated course sales page. A proper page with social proof can increase conversion by 3–5x vs bare Gumroad.',
-      match: 88,
-      jobDesc: 'Online course creator needs a sales page designed and written to sell their career coaching program.',
-    },
-  ],
-};
-
-/* ── Fallback leads if type not in bank ── */
-const _oppFallback = [
-  {
-    name: 'Generic Brand Co.',
-    platform: 'Instagram',
-    followers: '5k followers',
-    problem: 'Inconsistent posting, no content strategy visible, low engagement rate.',
-    strategy: 'Offer a content audit and monthly content package as an entry point.',
-    match: 82,
-    jobDesc: 'Small brand needs a social media content creator for Instagram.',
-  },
-];
-
-/* ── Render a single opportunity card ── */
-/* ── Helper to directly copy text to clipboard ── */
-function copyDirectText(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('⚡ Quick DM copied to clipboard!');
-  }).catch(() => showToast('Failed to copy.'));
-}
-
-/* ── Render a single opportunity card (V2: The Revenue Engine) ── */
-function _renderOppCard(lead) {
-  const badgeClass = lead.match >= 90 ? 'opp-match-high' : 'opp-match-mid';
-
-  // Escape function for safe inline HTML
-  const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   
-  // Auto-generate the Quick DM and Loom Context based on the lead data
-  const firstName = lead.name.split(' ')[0] || 'there';
-  const rawDmText = `Hey ${firstName}, noticed your ${lead.platform} isn't fully optimized right now. I've got a quick fix for this—mind if I send over a mockup/idea?`;
-  const loomContext = `Write a script for a 2-minute Loom video for ${lead.name}. I am auditing their ${lead.platform}. Focus on: ${lead.problem}. End with a soft pitch for my services.`;
-  
-  // Dynamic confidence reason based on the problem
-  const confidenceReason = lead.reason || `Based on gap-analysis of their ${lead.platform} presence`;
-
-  return `
-    <div class="opp-card">
-      <div class="opp-card-header">
-        <div class="opp-header-top">
-          <div class="opp-card-name" style="display:flex; align-items:center;">
-            ${esc(lead.name)} 
-            <a href="#" class="opp-preview-link" title="Quick Preview CTA (Opens Profile)">
-              <i data-lucide="external-link" style="width:13px;height:13px;"></i>
-            </a>
-          </div>
-          <span class="opp-match-badge ${badgeClass}">
-            ● ${lead.match}% Match
-          </span>
-        </div>
-        <div class="opp-confidence-reason">↳ ${esc(confidenceReason)}</div>
-        <div class="opp-card-platform">
-          <i data-lucide="radio" style="width:10px;height:10px"></i>
-          ${esc(lead.platform)} · ${esc(lead.followers)}
-        </div>
-      </div>
-
-      <div class="opp-card-body">
-        <div>
-          <div class="opp-field-label">Key Problem Detected</div>
-          <div class="opp-problem-wrap">
-            <div class="opp-field-value">${esc(lead.problem)}</div>
-          </div>
-        </div>
-        <div>
-          <div class="opp-field-label">Outreach Strategy</div>
-          <div class="opp-field-value">${esc(lead.strategy)}</div>
-        </div>
-      </div>
-
-      <div class="opp-card-actions">
-        <button class="opp-action-btn dm" onclick="copyDirectText('${esc(rawDmText)}')">
-          <i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM
-        </button>
-        <button class="opp-action-btn loom" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(loomContext)}')">
-          <i data-lucide="video" style="width:11px;height:11px"></i> Loom Script
-        </button>
-        <button class="opp-action-btn save" onclick="routeToLead('${esc(lead.name)}','${esc(lead.platform)}')">
-          <i data-lucide="plus" style="width:11px;height:11px"></i> Save Lead
-        </button>
-        
-        <button class="opp-action-btn" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
-          <i data-lucide="sparkles" style="width:11px;height:11px"></i> Audit
-        </button>
-        <button class="opp-action-btn" onclick="routeToProposal('${esc(lead.jobDesc)}')">
-          <i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal
-        </button>
-        <button class="opp-action-btn" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(lead.problem)}')">
-          <i data-lucide="mail" style="width:11px;height:11px"></i> Email
-        </button>
-      </div>
-    </div>
-  `;
-}
-/* ── Main scan function ── */
-/* ── Helper to set Quick Scan presets ── */
-function setOppPreset(type, prompt) {
-  setVal('opp-type', type);
-  setVal('opp-prompt', prompt);
-}
-
-/* ═══════════════════════════════════════════════════════
-   OPPORTUNITY ENGINE (V2 UNIFIED)
-   ═══════════════════════════════════════════════════════ */
-
-function setOppPreset(type, prompt) {
-  setVal('opp-type', type);
-  setVal('opp-prompt', prompt);
-}
-
-function copyDirectText(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('⚡ Quick DM copied to clipboard!');
-  }).catch(() => showToast('Failed to copy.'));
-}
-
-/* ── Render a single opportunity card (V4: The Full Closer System) ── */
-function _renderOppCard(lead) {
-  const esc = s => String(s)
-    .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-  // ── 1. OPPORTUNITY SCORE ──────────────────────────────────────
-  const score = lead.match || (Math.floor(Math.random() * 15) + 85); // 85–99
-  let scoreClass = 'score-cool';
-  let scoreBadge = '📈';
-  if (score >= 95)      { scoreClass = 'score-hot';  scoreBadge = '🚀'; }
-  else if (score >= 88) { scoreClass = 'score-warm'; scoreBadge = '🔥'; }
-
-  // Hot lead flag (score ≥ 93 = "Hot Lead" badge in meta row)
-  const isHot = score >= 93;
-
-  // ── 2. SMART DERIVATIONS FROM lead.problem ───────────────────
-  const probLow = (lead.problem || '').toLowerCase();
-
-  let dealValue  = '$150 – $400';
-  let service    = 'Growth Strategy';
-  let magnet     = 'Free 5-min Video Audit';
-  let beforeText = lead.problem || 'Conversion gaps detected.';
-  let afterText  = 'Higher conversion rates and improved audience retention.';
-
-  if (probLow.includes('thumbnail') || probLow.includes('video') || probLow.includes('reel') || probLow.includes('youtube')) {
-    dealValue  = '$300 – $800 / mo';
-    service    = 'YouTube / Short-Form Optimization';
-    magnet     = '1 Free Custom Thumbnail Redesign';
-    afterText  = '2x CTR, higher watch time, algorithm pushes content to cold audiences.';
-  } else if (probLow.includes('copy') || probLow.includes('landing') || probLow.includes('website') || probLow.includes('seo')) {
-    dealValue  = '$500 – $1,500';
-    service    = 'Copywriting & CRO';
-    magnet     = 'Free Hero-Section Rewrite';
-    afterText  = 'Clear value prop above the fold, lower bounce rate, visitors actually click the CTA.';
-  } else if (probLow.includes('social') || probLow.includes('post') || probLow.includes('engagement') || probLow.includes('instagram')) {
-    dealValue  = '$400 – $900 / mo';
-    service    = 'Social Media System';
-    magnet     = '1-Week Free Content Calendar';
-    afterText  = 'Consistent daily posts, algorithm favour, inbound DM leads week-over-week.';
-  } else if (probLow.includes('booking') || probLow.includes('funnel') || probLow.includes('cta') || probLow.includes('bio')) {
-    dealValue  = '$250 – $700';
-    service    = 'Funnel & Conversion Setup';
-    magnet     = 'Free Link-in-Bio Audit PDF';
-    afterText  = 'Working booking funnel, measurable conversion path, and no more lost leads.';
-  } else if (probLow.includes('review') || probLow.includes('reputation') || probLow.includes('google')) {
-    dealValue  = '$300 – $600 / mo';
-    service    = 'Reputation Management';
-    magnet     = 'Free Competitor Review Analysis';
-    afterText  = 'Higher star rating, professional response system, more walk-ins from search.';
-  }
-
-  const confidenceReason = lead.reason || 'AI detected high-friction conversion gaps vs. niche competitors.';
-
-  // ── 3. ACTION BUTTON CONTEXT STRINGS ─────────────────────────
-  const firstName  = lead.name.split(/[\s@]/)[0] || 'there';
-  const rawDmText  = `Hey ${firstName}! Noticed your ${lead.platform} has some quick wins available — specifically around "${(lead.problem||'').slice(0,60)}…". I've helped similar accounts fix this exact thing. Mind if I send over a free mockup?`;
-  const loomCtx    = `Write a 90-second Loom video script. I'm reaching out to ${lead.name} on ${lead.platform}. Their main problem: ${lead.problem}. Start with a specific observation about their account, then show I can fix it, and end with a soft CTA ("reply if you'd like me to send the fix over"). Keep it conversational, not salesy.`;
-  const auditCtx   = `Create a 3-point growth audit for ${lead.name} (${lead.platform}). Focus on: ${lead.problem}. Format: Problem / Impact / Fix. End with a single recommended service: ${service}.`;
-  const objCtx     = `The prospect ${lead.name} replied: "I don't have the budget right now." Write a 2-sentence empathetic reply that (1) validates their concern and (2) offers a risk-free entry point — either a free audit or a small starter project at ${dealValue.split('–')[0].trim()} to prove ROI first. Keep it under 40 words.`;
-  const proposalCtx = lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${service}. Problem they have: ${lead.problem}. Offer a clear scope, 5-7 day timeline, and ${dealValue} pricing.`;
-
-  // ── 4. BUILD CARD HTML ────────────────────────────────────────
-  return `
-    <div class="opp-card">
-
-      <!-- HEADER: Name + Score -->
-      <div class="opp-card-header">
-        <div class="opp-header-top">
-          <div class="opp-card-name">
-            ${esc(lead.name)}
-            <a href="#" style="color:var(--text3);margin-top:1px;" title="Open profile">
-              <i data-lucide="external-link" style="width:12px;height:12px;"></i>
-            </a>
-          </div>
-          <div class="opp-score-badge">
-            <span class="opp-score-num ${scoreClass}">
-              ${scoreBadge} ${score}<span style="font-size:11px;color:var(--text3)">/100</span>
-            </span>
-            <span class="opp-score-label ${scoreClass}">Opportunity Score</span>
-          </div>
-        </div>
-        <div class="opp-meta-row">
-          <span class="opp-meta-tag"><i data-lucide="monitor" style="width:10px;height:10px"></i> ${esc(lead.platform)}</span>
-          <span class="opp-meta-tag"><i data-lucide="users" style="width:10px;height:10px"></i> ${esc(lead.followers)}</span>
-          ${isHot ? `<span class="opp-hot-badge"><i data-lucide="flame" style="width:9px;height:9px"></i> HOT</span>` : ''}
-        </div>
-      </div>
-
-      <!-- MONEY BLOCK: Est. Deal Value + Best Service -->
-      <div class="opp-money-block">
-        <div class="opp-money-cell">
-          <span class="opp-money-label">Est. Deal Value</span>
-          <span class="opp-deal-value">${dealValue}</span>
-        </div>
-        <div class="opp-money-cell">
-          <span class="opp-money-label">Best Service Match</span>
-          <span class="opp-service-match">${service}</span>
-        </div>
-      </div>
-
-      <!-- BODY: AI Insight + Before/After + Lead Magnet -->
-      <div class="opp-card-body">
-
-        <div class="opp-reason-box">
-          🧠 <strong>AI Insight:</strong> ${esc(confidenceReason)}
-        </div>
-
-        <div class="opp-ba-grid">
-          <div class="opp-ba-col">
-            <span class="opp-ba-label label-before">⚠ Current State</span>
-            <div class="opp-ba-text">${esc(beforeText)}</div>
-          </div>
-          <div class="opp-ba-col">
-            <span class="opp-ba-label label-after">✓ After You Fix It</span>
-            <div class="opp-ba-text">${esc(afterText)}</div>
-          </div>
-        </div>
-
-        <div class="opp-magnet-box">
-          <i data-lucide="gift" style="width:14px;height:14px;color:#8b5cf6;flex-shrink:0"></i>
-          <span style="color:var(--text3);font-weight:600">Lead Magnet:</span>
-          <span style="font-weight:500;color:var(--text-muted)">${magnet}</span>
-        </div>
-
-      </div>
-
-      <!-- ACTIONS: Grouped into Pitch / Follow-Up / Close -->
-      <div class="opp-card-actions">
-
-        <!-- GROUP 1: Pitch -->
-        <div class="opp-action-group">
-          <span class="opp-action-group-label">Pitch</span>
-          <div class="opp-action-btns">
-            <button class="opp-action-btn opp-btn-primary"
-              onclick="copyDirectText('${esc(rawDmText)}')">
-              <i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM
-            </button>
-            <button class="opp-action-btn opp-btn-outline"
-              onclick="routeToDraftEmail('${esc(lead.name)}','${esc(loomCtx)}')">
-              <i data-lucide="video" style="width:11px;height:11px"></i> Loom Script
-            </button>
-          </div>
-        </div>
-
-        <!-- GROUP 2: Follow-Up -->
-        <div class="opp-action-group">
-          <span class="opp-action-group-label">Follow-Up</span>
-          <div class="opp-action-btns">
-            <button class="opp-action-btn opp-btn-outline"
-              onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
-              <i data-lucide="file-check-2" style="width:11px;height:11px"></i> Generate Audit
-            </button>
-            <button class="opp-action-btn opp-btn-outline"
-              onclick="routeToDraftEmail('${esc(lead.name)}','${esc(objCtx)}')">
-              <i data-lucide="shield-alert" style="width:11px;height:11px"></i> Reply Coach
-            </button>
-          </div>
-        </div>
-
-        <!-- GROUP 3: Close -->
-        <div class="opp-action-group">
-          <span class="opp-action-group-label">Close</span>
-          <div class="opp-action-btns">
-            <button class="opp-action-btn opp-btn-outline"
-              onclick="routeToProposal('${esc(proposalCtx)}')">
-              <i data-lucide="file-text" style="width:11px;height:11px"></i> 1-Page Proposal
-            </button>
-            <button class="opp-action-btn opp-btn-won"
-             <button class="opp-action-btn opp-btn-won"
-  onclick="markLeadWon(this.closest('.opp-card'),'${esc(lead.name)}','${esc(lead.platform)}')">
-  <i data-lucide="trophy" style="width:11px;height:11px"></i> Mark as Won
-</button>
-          </div>
-        </div>
-
-      </div><!-- /opp-card-actions -->
-
-    </div><!-- /opp-card -->
-  `;
-}
-/* ─────────────────────────────────────────────────────────────
-   OPPORTUNITY ENGINE — FULL LEAD BANK (15 leads, 5 categories)
-   Each lead has: name, platform, followers, problem, strategy,
-   match, reason, jobDesc, signals[] (maps to checkbox values)
-───────────────────────────────────────────────────────────── */
-const _OPP_LEAD_BANK = {
-
-  'Content Creators': [
-    {
-      name: 'FitWithNehaa',
-      platform: 'YouTube',
-      followers: '14.2k subscribers',
-      problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
-      strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.',
-      match: 96,
-      reason: 'Low CTR pattern detected — no face or contrast in last 12 thumbnails.',
-      jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel.',
-      signals: ['low_ctr', 'poor_design'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'TravelDiariesByKaran',
-      platform: 'Instagram',
-      followers: '8.7k followers',
-      problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
-      strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement drop as the hook.',
-      match: 91,
-      reason: 'Engagement velocity dropped sharply — algorithm de-prioritising the account.',
-      jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'SkillsWithPriya',
-      platform: 'LinkedIn',
-      followers: '3.1k followers',
-      problem: 'Posts are long-form only — no carousel posts, no short hooks. Low reach despite solid expertise.',
-      strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting professional growth.',
-      match: 88,
-      reason: 'Missing carousel format — algorithm currently prioritises carousels 3x over plain text.',
-      jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts and grow professional reach.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'ChefRohanEats',
-      platform: 'YouTube',
-      followers: '22k subscribers',
-      problem: 'Has audience but zero monetisation link — no course, no Patreon, no link in bio. Revenue = $0.',
-      strategy: 'Pitch a simple lead magnet funnel: free recipe PDF → email list → paid course upsell.',
-      match: 90,
-      reason: 'Monetisation gap — strong audience with no conversion path detected.',
-      jobDesc: 'Food YouTube creator needs a landing page and email funnel to start monetising their 22k subscriber base.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: [],
-    },
-    {
-      name: 'MotivateWithAarav',
-      platform: 'Instagram',
-      followers: '31k followers',
-      problem: 'Running ads with no landing page — traffic goes to a plain Instagram bio. Ad spend is wasted.',
-      strategy: 'Build a 1-page landing page + lead magnet to capture the paid traffic properly.',
-      match: 94,
-      reason: 'Active ad spend detected — but no landing page means every rupee is leaking.',
-      jobDesc: 'Motivational speaker needs a landing page to convert paid Instagram traffic into email subscribers.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['running_ads', 'monetised'],
-    },
-  ],
-
-  'Local Businesses': [
-    {
-      name: 'Chai & Chapters Café',
-      platform: 'Instagram',
-      followers: '2.3k followers',
-      problem: 'Bio link goes to a dead page. No clear CTA in posts. Great photos but zero conversion path.',
-      strategy: 'Fix the link-in-bio first — it is a broken door. Then pitch a social media retainer.',
-      match: 94,
-      reason: 'Critical conversion bottleneck: broken bio link confirmed, zero CTA in last 20 posts.',
-      jobDesc: 'Local café needs someone to manage their Instagram, fix their bio link, and create a simple landing page to drive orders.',
-      signals: ['no_cta'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'GreenLeaf Salon',
-      platform: 'Website',
-      followers: 'Google Business: 4.1★',
-      problem: 'Website loads in 7.2s, not mobile-optimised, and has no booking widget. Losing walk-ins.',
-      strategy: 'Lead with the 7-second load time and lost bookings angle. Offer a revamp + Calendly integration.',
-      match: 93,
-      reason: 'Failed Core Web Vitals — load time 7.2s vs 1.8s industry average. No booking system.',
-      jobDesc: 'Local salon wants a faster, mobile-friendly website with an online appointment booking system integrated.',
-      signals: ['slow_site', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'QuickFix Electronics',
-      platform: 'Google Maps',
-      followers: '127 reviews, 3.8★',
-      problem: 'Review score is below the local average of 4.2★. No responses to negative reviews. Trust signals missing.',
-      strategy: 'Offer a reputation management starter: review response templates + a QR code system for 5-star reviews.',
-      match: 87,
-      reason: 'Review score flagged as 0.4★ below local competitor median — losing search ranking.',
-      jobDesc: 'Electronics repair shop needs help managing online reviews and improving Google Business profile.',
-      signals: ['no_cta'],
-      budget: [],
-    },
-    {
-      name: 'BiteBox Cloud Kitchen',
-      platform: 'Instagram',
-      followers: '890 followers',
-      problem: 'Posting only 2 times a week, no Reels, no stories. Swiggy/Zomato competitors are dominating search.',
-      strategy: 'Pitch a 30-day social media blitz: 5 posts/week + daily stories with UGC reposts.',
-      match: 89,
-      reason: 'Posting frequency 4x below category average — algorithm suppressing reach.',
-      jobDesc: 'Cloud kitchen brand needs a social media manager to increase Instagram presence and drive online orders.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'Flourish Fitness Studio',
-      platform: 'Website',
-      followers: 'Google: 4.4★ / 43 reviews',
-      problem: 'No online class booking — clients WhatsApp to book, owner manually confirms. Losing 3+ leads/day.',
-      strategy: 'Set up Calendly or Mindbody integration. Frame it as 3 hours/day returned to actual coaching.',
-      match: 92,
-      reason: 'Manual booking bottleneck confirmed — no scheduling widget on site, no automated confirmation.',
-      jobDesc: 'Fitness studio needs an online booking system integrated into their website to reduce manual admin.',
-      signals: ['no_cta', 'slow_site'],
-      budget: ['monetised'],
-    },
-  ],
-
-  'Startups': [
-    {
-      name: 'Zolvr (SaaS)',
-      platform: 'Product Hunt',
-      followers: '312 upvotes',
-      problem: 'Landing page copy is feature-heavy, not benefit-driven. No social proof above the fold. Signups likely below 3%.',
-      strategy: 'Offer a landing page copy audit as free value, then pitch a full rewrite focused on ICP pain points.',
-      match: 95,
-      reason: 'Hero section has zero benefit language — 100% feature list. No social proof until scroll depth 60%.',
-      jobDesc: 'Early-stage SaaS startup needs a copywriter to rewrite homepage and improve trial signup conversion.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'Mealio App',
-      platform: 'LinkedIn',
-      followers: '890 followers',
-      problem: 'App screenshots in the Play Store are plain UI dumps with no context. Reviews mention "confusing onboarding".',
-      strategy: 'Pitch a 60-second explainer video + redesigned app store screenshots with lifestyle context.',
-      match: 90,
-      reason: 'App store conversion gap — plain screenshots vs. competitor lifestyle shots showing product in use.',
-      jobDesc: 'Food-tech startup needs a short explainer video and better app store visuals to improve install conversion.',
-      signals: ['poor_design', 'no_cta'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'Hirrdly (HR Tool)',
-      platform: 'Website',
-      followers: '—',
-      problem: 'Blog has 2 posts from 6 months ago. SEO score is 34/100. Missing product-led content for organic signups.',
-      strategy: 'Offer 4 long-form SEO articles/month targeting HR manager keywords. Frame as pipeline-building.',
-      match: 85,
-      reason: 'Domain SEO score 34/100 — zero organic traffic growth in last 90 days per SimilarWeb estimate.',
-      jobDesc: 'B2B HR software company needs SEO-optimised blog posts targeting HR managers and CHROs.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'StackMind AI',
-      platform: 'Website',
-      followers: 'Beta product',
-      problem: 'No onboarding email sequence — users sign up and never hear from the company again. Churn is high.',
-      strategy: 'Build a 5-email onboarding sequence: welcome, feature spotlight, social proof, tip, and upgrade nudge.',
-      match: 93,
-      reason: 'Zero post-signup email flow detected — industry avg churn without onboarding is 65% in 7 days.',
-      jobDesc: 'AI startup needs someone to write and set up a full onboarding email sequence for new trial users.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'PocketLegal',
-      platform: 'LinkedIn',
-      followers: '1.2k followers',
-      problem: 'Posting case studies as walls of text. No visual content. Engagement rate is 0.4% — invisible to algorithm.',
-      strategy: 'Convert their top 3 case studies into carousel posts. Show engagement data from a comparable legal SaaS.',
-      match: 88,
-      reason: 'Text-only content strategy in a platform that pushes visuals — engagement 5x below niche average.',
-      jobDesc: 'LegalTech startup needs LinkedIn content designed to drive awareness and demo requests.',
-      signals: ['low_ctr', 'poor_design', 'inconsistent_posting'],
-      budget: ['monetised'],
-    },
-  ],
-
-  'E-commerce Brands': [
-    {
-      name: 'ThreadCraft Co.',
-      platform: 'Instagram',
-      followers: '11k followers',
-      problem: 'Product images are shot on plain white backgrounds. Competitors are using lifestyle shots. Cart abandonment likely high.',
-      strategy: 'Offer 10 lifestyle product photo edits as a paid trial. Lifestyle imagery converts 30% better for fashion.',
-      match: 92,
-      reason: 'Visual content gap confirmed — 100% white-bg shots vs. competitor lifestyle imagery on same audience.',
-      jobDesc: 'D2C clothing brand needs a product photo editor who can create lifestyle-style edits from existing shots.',
-      signals: ['poor_design', 'low_ctr'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'PureRoot Organics',
-      platform: 'Website',
-      followers: 'Shopify store',
-      problem: 'Email list of 1,400 subs but last campaign was 4 months ago. No welcome sequence, no abandoned cart flow.',
-      strategy: 'Lead with the dormant list angle — "your list is making ₹0 right now." Pitch 3-email welcome + 1 promo campaign.',
-      match: 89,
-      reason: 'Dormant list detected — 1,400 subscribers, last send 4 months ago, no automation flows active.',
-      jobDesc: 'Organic skincare brand wants email automations — welcome sequence and abandoned cart recovery.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'GadgetNest',
-      platform: 'Amazon',
-      followers: '4.3★ seller rating',
-      problem: 'Product descriptions are bullet-point dumps with no storytelling. Competitor products with similar specs outrank them.',
-      strategy: 'Offer a single product listing rewrite as a demo — if it ranks better, they will want the whole catalogue.',
-      match: 86,
-      reason: 'Listing keyword density 40% below top-3 competitors — organic rank suppressed.',
-      jobDesc: 'Amazon seller needs copywriter to rewrite descriptions with better keywords and benefit-driven language.',
-      signals: ['poor_design', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'LuxeNails Studio',
-      platform: 'Instagram',
-      followers: '6.4k followers',
-      problem: 'Running ads but sending traffic to their main Instagram profile, not a booking page. Spending ₹8,000/month with no measurable return.',
-      strategy: 'Build a dead-simple landing page with a Calendly booking form — redirect all ad traffic there.',
-      match: 95,
-      reason: 'Active ad spend confirmed with no conversion destination — every rupee going to a dead-end profile.',
-      jobDesc: 'Nail salon running Instagram ads needs a landing page and booking system to convert ad traffic.',
-      signals: ['no_cta', 'running_ads'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'AuraWear',
-      platform: 'Website',
-      followers: 'Shopify store',
-      problem: 'Website has no customer reviews or UGC. Trust score is near zero for cold visitors.',
-      strategy: 'Set up a post-purchase review flow (Judge.me or Loox) and design a social proof section for the homepage.',
-      match: 88,
-      reason: 'Zero social proof detected on homepage — industry data shows 63% of visitors abandon without reviews.',
-      jobDesc: 'Fashion D2C brand needs a social proof strategy: review collection system and homepage redesign section.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['running_ads', 'monetised'],
-    },
-  ],
-
-  'Coaches & Consultants': [
-    {
-      name: 'Manav Sharma — Biz Coach',
-      platform: 'LinkedIn',
-      followers: '6.4k followers',
-      problem: 'Strong personal brand but no lead magnet, no email list, no freebie to convert followers into contacts.',
-      strategy: 'Pitch a simple lead magnet (PDF checklist or mini-guide) + a 3-step email welcome sequence for ₹5,000.',
-      match: 93,
-      reason: 'Audience size strong but zero off-platform assets — entire business can disappear if LinkedIn bans account.',
-      jobDesc: 'Business coach needs a copywriter to create a lead magnet PDF and email welcome sequence to build their list.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: "Ritika's Wellness Studio",
-      platform: 'Instagram',
-      followers: '4.8k followers',
-      problem: 'Selling 1:1 sessions via DM with no booking page. Zero automation. Spending 2+ hrs/day on manual scheduling.',
-      strategy: 'Calendly + payment page setup. Frame the ROI: 2 hrs/day saved = 60 hrs/month returned to client delivery.',
-      match: 91,
-      reason: 'No booking automation — manual DM scheduling at 4.8k followers is a severe growth ceiling.',
-      jobDesc: 'Wellness coach needs online booking, a payment page, and automated client intake to scale.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'CareerCompass Academy',
-      platform: 'YouTube',
-      followers: '7.1k subscribers',
-      problem: 'Selling a ₹4,999 course but no sales page — just a Gumroad link. No testimonials, no FAQ, no urgency.',
-      strategy: 'Build a dedicated course sales page. Proper pages with social proof convert 3–5x better than bare Gumroad.',
-      match: 88,
-      reason: 'Course funnel gap — Gumroad link has no social proof, objection handling, or urgency mechanism.',
-      jobDesc: 'Online course creator needs a sales page designed and written to sell their career coaching program.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['monetised', 'running_ads'],
-    },
-    {
-      name: 'Dr. Priya Menon — Nutritionist',
-      platform: 'Instagram',
-      followers: '9.2k followers',
-      problem: 'Posts 7 days a week but all content is advice — no offer, no CTA, no sales ever. Audience is warm but untapped.',
-      strategy: 'Write a 3-post story-driven launch sequence for her online programme. Then pitch a monthly content retainer.',
-      match: 94,
-      reason: 'High posting frequency + zero commercial CTA — warm audience being trained to expect only free content.',
-      jobDesc: 'Nutritionist coach needs a copywriter to create a launch post sequence and start converting followers to clients.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'SalesEdge by Rohan',
-      platform: 'LinkedIn',
-      followers: '12.1k followers',
-      problem: 'Running a paid workshop at ₹2,999 but promoting it with a single text post. No event page, no countdown, no social proof.',
-      strategy: 'Design a simple Notion/Carrd event landing page + write a 3-post promotional sequence.',
-      match: 90,
-      reason: 'Event promotion gap — single organic post for a paid offer with 12k warm audience. Major lost revenue.',
-      jobDesc: 'Sales coach needs a landing page and promotional content sequence to fill their paid workshop seats.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['monetised', 'running_ads'],
-    },
-  ],
-};
-
-/* ── Won-state tracker (in-memory, per session) ── */
-const _wonLeads = new Set();
-
-/* ── Mark a card as won without navigating away ── */
-function markLeadWon(cardEl, leadName, platform) {
-  _wonLeads.add(leadName);
-  // Visual won state
-  cardEl.style.opacity   = '0.55';
-  cardEl.style.transform = 'scale(0.985)';
-  cardEl.style.transition = 'all .3s ease';
-  const header = cardEl.querySelector('.opp-card-header');
-  if (header) {
-    const wonBadge = document.createElement('div');
-    wonBadge.style.cssText = `
-      display:inline-flex;align-items:center;gap:5px;
-      background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
-      color:#10b981;border-radius:6px;padding:5px 10px;
-      font-size:11.5px;font-weight:700;margin-top:10px;
-    `;
-    wonBadge.innerHTML = `<i data-lucide="check-circle-2" style="width:12px;height:12px"></i> Marked as Won — added to Pipeline`;
-    header.appendChild(wonBadge);
-    lucide.createIcons();
-  }
-  // Disable all action buttons on this card
-  cardEl.querySelectorAll('.opp-action-btn').forEach(b => {
-    b.disabled = true;
-    b.style.opacity = '0.4';
-  });
-  // Route to pipeline in the background
-  routeToLead(leadName, platform);
-  showToast('🎉 Deal won! Check your Client Pipeline.');
-}
-
-/* ─────────────────────────────────────────────────────────────
-   OPPORTUNITY ENGINE — FULL LEAD BANK (15 leads, 5 categories)
-   Each lead has: name, platform, followers, problem, strategy,
-   match, reason, jobDesc, signals[] (maps to checkbox values)
-───────────────────────────────────────────────────────────── */
-const _OPP_LEAD_BANK = {
-
-  'Content Creators': [
-    {
-      name: 'FitWithNehaa',
-      platform: 'YouTube',
-      followers: '14.2k subscribers',
-      problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
-      strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.',
-      match: 96,
-      reason: 'Low CTR pattern detected — no face or contrast in last 12 thumbnails.',
-      jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel.',
-      signals: ['low_ctr', 'poor_design'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'TravelDiariesByKaran',
-      platform: 'Instagram',
-      followers: '8.7k followers',
-      problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
-      strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement drop as the hook.',
-      match: 91,
-      reason: 'Engagement velocity dropped sharply — algorithm de-prioritising the account.',
-      jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'SkillsWithPriya',
-      platform: 'LinkedIn',
-      followers: '3.1k followers',
-      problem: 'Posts are long-form only — no carousel posts, no short hooks. Low reach despite solid expertise.',
-      strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting professional growth.',
-      match: 88,
-      reason: 'Missing carousel format — algorithm currently prioritises carousels 3x over plain text.',
-      jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts and grow professional reach.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'ChefRohanEats',
-      platform: 'YouTube',
-      followers: '22k subscribers',
-      problem: 'Has audience but zero monetisation link — no course, no Patreon, no link in bio. Revenue = $0.',
-      strategy: 'Pitch a simple lead magnet funnel: free recipe PDF → email list → paid course upsell.',
-      match: 90,
-      reason: 'Monetisation gap — strong audience with no conversion path detected.',
-      jobDesc: 'Food YouTube creator needs a landing page and email funnel to start monetising their 22k subscriber base.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: [],
-    },
-    {
-      name: 'MotivateWithAarav',
-      platform: 'Instagram',
-      followers: '31k followers',
-      problem: 'Running ads with no landing page — traffic goes to a plain Instagram bio. Ad spend is wasted.',
-      strategy: 'Build a 1-page landing page + lead magnet to capture the paid traffic properly.',
-      match: 94,
-      reason: 'Active ad spend detected — but no landing page means every rupee is leaking.',
-      jobDesc: 'Motivational speaker needs a landing page to convert paid Instagram traffic into email subscribers.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['running_ads', 'monetised'],
-    },
-  ],
-
-  'Local Businesses': [
-    {
-      name: 'Chai & Chapters Café',
-      platform: 'Instagram',
-      followers: '2.3k followers',
-      problem: 'Bio link goes to a dead page. No clear CTA in posts. Great photos but zero conversion path.',
-      strategy: 'Fix the link-in-bio first — it is a broken door. Then pitch a social media retainer.',
-      match: 94,
-      reason: 'Critical conversion bottleneck: broken bio link confirmed, zero CTA in last 20 posts.',
-      jobDesc: 'Local café needs someone to manage their Instagram, fix their bio link, and create a simple landing page to drive orders.',
-      signals: ['no_cta'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'GreenLeaf Salon',
-      platform: 'Website',
-      followers: 'Google Business: 4.1★',
-      problem: 'Website loads in 7.2s, not mobile-optimised, and has no booking widget. Losing walk-ins.',
-      strategy: 'Lead with the 7-second load time and lost bookings angle. Offer a revamp + Calendly integration.',
-      match: 93,
-      reason: 'Failed Core Web Vitals — load time 7.2s vs 1.8s industry average. No booking system.',
-      jobDesc: 'Local salon wants a faster, mobile-friendly website with an online appointment booking system integrated.',
-      signals: ['slow_site', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'QuickFix Electronics',
-      platform: 'Google Maps',
-      followers: '127 reviews, 3.8★',
-      problem: 'Review score is below the local average of 4.2★. No responses to negative reviews. Trust signals missing.',
-      strategy: 'Offer a reputation management starter: review response templates + a QR code system for 5-star reviews.',
-      match: 87,
-      reason: 'Review score flagged as 0.4★ below local competitor median — losing search ranking.',
-      jobDesc: 'Electronics repair shop needs help managing online reviews and improving Google Business profile.',
-      signals: ['no_cta'],
-      budget: [],
-    },
-    {
-      name: 'BiteBox Cloud Kitchen',
-      platform: 'Instagram',
-      followers: '890 followers',
-      problem: 'Posting only 2 times a week, no Reels, no stories. Swiggy/Zomato competitors are dominating search.',
-      strategy: 'Pitch a 30-day social media blitz: 5 posts/week + daily stories with UGC reposts.',
-      match: 89,
-      reason: 'Posting frequency 4x below category average — algorithm suppressing reach.',
-      jobDesc: 'Cloud kitchen brand needs a social media manager to increase Instagram presence and drive online orders.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'Flourish Fitness Studio',
-      platform: 'Website',
-      followers: 'Google: 4.4★ / 43 reviews',
-      problem: 'No online class booking — clients WhatsApp to book, owner manually confirms. Losing 3+ leads/day.',
-      strategy: 'Set up Calendly or Mindbody integration. Frame it as 3 hours/day returned to actual coaching.',
-      match: 92,
-      reason: 'Manual booking bottleneck confirmed — no scheduling widget on site, no automated confirmation.',
-      jobDesc: 'Fitness studio needs an online booking system integrated into their website to reduce manual admin.',
-      signals: ['no_cta', 'slow_site'],
-      budget: ['monetised'],
-    },
-  ],
-
-  'Startups': [
-    {
-      name: 'Zolvr (SaaS)',
-      platform: 'Product Hunt',
-      followers: '312 upvotes',
-      problem: 'Landing page copy is feature-heavy, not benefit-driven. No social proof above the fold. Signups likely below 3%.',
-      strategy: 'Offer a landing page copy audit as free value, then pitch a full rewrite focused on ICP pain points.',
-      match: 95,
-      reason: 'Hero section has zero benefit language — 100% feature list. No social proof until scroll depth 60%.',
-      jobDesc: 'Early-stage SaaS startup needs a copywriter to rewrite homepage and improve trial signup conversion.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'Mealio App',
-      platform: 'LinkedIn',
-      followers: '890 followers',
-      problem: 'App screenshots in the Play Store are plain UI dumps with no context. Reviews mention "confusing onboarding".',
-      strategy: 'Pitch a 60-second explainer video + redesigned app store screenshots with lifestyle context.',
-      match: 90,
-      reason: 'App store conversion gap — plain screenshots vs. competitor lifestyle shots showing product in use.',
-      jobDesc: 'Food-tech startup needs a short explainer video and better app store visuals to improve install conversion.',
-      signals: ['poor_design', 'no_cta'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'Hirrdly (HR Tool)',
-      platform: 'Website',
-      followers: '—',
-      problem: 'Blog has 2 posts from 6 months ago. SEO score is 34/100. Missing product-led content for organic signups.',
-      strategy: 'Offer 4 long-form SEO articles/month targeting HR manager keywords. Frame as pipeline-building.',
-      match: 85,
-      reason: 'Domain SEO score 34/100 — zero organic traffic growth in last 90 days per SimilarWeb estimate.',
-      jobDesc: 'B2B HR software company needs SEO-optimised blog posts targeting HR managers and CHROs.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'StackMind AI',
-      platform: 'Website',
-      followers: 'Beta product',
-      problem: 'No onboarding email sequence — users sign up and never hear from the company again. Churn is high.',
-      strategy: 'Build a 5-email onboarding sequence: welcome, feature spotlight, social proof, tip, and upgrade nudge.',
-      match: 93,
-      reason: 'Zero post-signup email flow detected — industry avg churn without onboarding is 65% in 7 days.',
-      jobDesc: 'AI startup needs someone to write and set up a full onboarding email sequence for new trial users.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'PocketLegal',
-      platform: 'LinkedIn',
-      followers: '1.2k followers',
-      problem: 'Posting case studies as walls of text. No visual content. Engagement rate is 0.4% — invisible to algorithm.',
-      strategy: 'Convert their top 3 case studies into carousel posts. Show engagement data from a comparable legal SaaS.',
-      match: 88,
-      reason: 'Text-only content strategy in a platform that pushes visuals — engagement 5x below niche average.',
-      jobDesc: 'LegalTech startup needs LinkedIn content designed to drive awareness and demo requests.',
-      signals: ['low_ctr', 'poor_design', 'inconsistent_posting'],
-      budget: ['monetised'],
-    },
-  ],
-
-  'E-commerce Brands': [
-    {
-      name: 'ThreadCraft Co.',
-      platform: 'Instagram',
-      followers: '11k followers',
-      problem: 'Product images are shot on plain white backgrounds. Competitors are using lifestyle shots. Cart abandonment likely high.',
-      strategy: 'Offer 10 lifestyle product photo edits as a paid trial. Lifestyle imagery converts 30% better for fashion.',
-      match: 92,
-      reason: 'Visual content gap confirmed — 100% white-bg shots vs. competitor lifestyle imagery on same audience.',
-      jobDesc: 'D2C clothing brand needs a product photo editor who can create lifestyle-style edits from existing shots.',
-      signals: ['poor_design', 'low_ctr'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'PureRoot Organics',
-      platform: 'Website',
-      followers: 'Shopify store',
-      problem: 'Email list of 1,400 subs but last campaign was 4 months ago. No welcome sequence, no abandoned cart flow.',
-      strategy: 'Lead with the dormant list angle — "your list is making ₹0 right now." Pitch 3-email welcome + 1 promo campaign.',
-      match: 89,
-      reason: 'Dormant list detected — 1,400 subscribers, last send 4 months ago, no automation flows active.',
-      jobDesc: 'Organic skincare brand wants email automations — welcome sequence and abandoned cart recovery.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'GadgetNest',
-      platform: 'Amazon',
-      followers: '4.3★ seller rating',
-      problem: 'Product descriptions are bullet-point dumps with no storytelling. Competitor products with similar specs outrank them.',
-      strategy: 'Offer a single product listing rewrite as a demo — if it ranks better, they will want the whole catalogue.',
-      match: 86,
-      reason: 'Listing keyword density 40% below top-3 competitors — organic rank suppressed.',
-      jobDesc: 'Amazon seller needs copywriter to rewrite descriptions with better keywords and benefit-driven language.',
-      signals: ['poor_design', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'LuxeNails Studio',
-      platform: 'Instagram',
-      followers: '6.4k followers',
-      problem: 'Running ads but sending traffic to their main Instagram profile, not a booking page. Spending ₹8,000/month with no measurable return.',
-      strategy: 'Build a dead-simple landing page with a Calendly booking form — redirect all ad traffic there.',
-      match: 95,
-      reason: 'Active ad spend confirmed with no conversion destination — every rupee going to a dead-end profile.',
-      jobDesc: 'Nail salon running Instagram ads needs a landing page and booking system to convert ad traffic.',
-      signals: ['no_cta', 'running_ads'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'AuraWear',
-      platform: 'Website',
-      followers: 'Shopify store',
-      problem: 'Website has no customer reviews or UGC. Trust score is near zero for cold visitors.',
-      strategy: 'Set up a post-purchase review flow (Judge.me or Loox) and design a social proof section for the homepage.',
-      match: 88,
-      reason: 'Zero social proof detected on homepage — industry data shows 63% of visitors abandon without reviews.',
-      jobDesc: 'Fashion D2C brand needs a social proof strategy: review collection system and homepage redesign section.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['running_ads', 'monetised'],
-    },
-  ],
-
-  'Coaches & Consultants': [
-    {
-      name: 'Manav Sharma — Biz Coach',
-      platform: 'LinkedIn',
-      followers: '6.4k followers',
-      problem: 'Strong personal brand but no lead magnet, no email list, no freebie to convert followers into contacts.',
-      strategy: 'Pitch a simple lead magnet (PDF checklist or mini-guide) + a 3-step email welcome sequence for ₹5,000.',
-      match: 93,
-      reason: 'Audience size strong but zero off-platform assets — entire business can disappear if LinkedIn bans account.',
-      jobDesc: 'Business coach needs a copywriter to create a lead magnet PDF and email welcome sequence to build their list.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: "Ritika's Wellness Studio",
-      platform: 'Instagram',
-      followers: '4.8k followers',
-      problem: 'Selling 1:1 sessions via DM with no booking page. Zero automation. Spending 2+ hrs/day on manual scheduling.',
-      strategy: 'Calendly + payment page setup. Frame the ROI: 2 hrs/day saved = 60 hrs/month returned to client delivery.',
-      match: 91,
-      reason: 'No booking automation — manual DM scheduling at 4.8k followers is a severe growth ceiling.',
-      jobDesc: 'Wellness coach needs online booking, a payment page, and automated client intake to scale.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'CareerCompass Academy',
-      platform: 'YouTube',
-      followers: '7.1k subscribers',
-      problem: 'Selling a ₹4,999 course but no sales page — just a Gumroad link. No testimonials, no FAQ, no urgency.',
-      strategy: 'Build a dedicated course sales page. Proper pages with social proof convert 3–5x better than bare Gumroad.',
-      match: 88,
-      reason: 'Course funnel gap — Gumroad link has no social proof, objection handling, or urgency mechanism.',
-      jobDesc: 'Online course creator needs a sales page designed and written to sell their career coaching program.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['monetised', 'running_ads'],
-    },
-    {
-      name: 'Dr. Priya Menon — Nutritionist',
-      platform: 'Instagram',
-      followers: '9.2k followers',
-      problem: 'Posts 7 days a week but all content is advice — no offer, no CTA, no sales ever. Audience is warm but untapped.',
-      strategy: 'Write a 3-post story-driven launch sequence for her online programme. Then pitch a monthly content retainer.',
-      match: 94,
-      reason: 'High posting frequency + zero commercial CTA — warm audience being trained to expect only free content.',
-      jobDesc: 'Nutritionist coach needs a copywriter to create a launch post sequence and start converting followers to clients.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'SalesEdge by Rohan',
-      platform: 'LinkedIn',
-      followers: '12.1k followers',
-      problem: 'Running a paid workshop at ₹2,999 but promoting it with a single text post. No event page, no countdown, no social proof.',
-      strategy: 'Design a simple Notion/Carrd event landing page + write a 3-post promotional sequence.',
-      match: 90,
-      reason: 'Event promotion gap — single organic post for a paid offer with 12k warm audience. Major lost revenue.',
-      jobDesc: 'Sales coach needs a landing page and promotional content sequence to fill their paid workshop seats.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['monetised', 'running_ads'],
-    },
-  ],
-};
-
-/* ── Won-state tracker (in-memory, per session) ── */
-const _wonLeads = new Set();
-
-/* ── Mark a card as won without navigating away ── */
-function markLeadWon(cardEl, leadName, platform) {
-  _wonLeads.add(leadName);
-  // Visual won state
-  cardEl.style.opacity   = '0.55';
-  cardEl.style.transform = 'scale(0.985)';
-  cardEl.style.transition = 'all .3s ease';
-  const header = cardEl.querySelector('.opp-card-header');
-  if (header) {
-    const wonBadge = document.createElement('div');
-    wonBadge.style.cssText = `
-      display:inline-flex;align-items:center;gap:5px;
-      background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
-      color:#10b981;border-radius:6px;padding:5px 10px;
-      font-size:11.5px;font-weight:700;margin-top:10px;
-    `;
-    wonBadge.innerHTML = `<i data-lucide="check-circle-2" style="width:12px;height:12px"></i> Marked as Won — added to Pipeline`;
-    header.appendChild(wonBadge);
-    lucide.createIcons();
-  }
-  // Disable all action buttons on this card
-  cardEl.querySelectorAll('.opp-action-btn').forEach(b => {
-    b.disabled = true;
-    b.style.opacity = '0.4';
-  });
-  // Route to pipeline in the background
-  routeToLead(leadName, platform);
-  showToast('🎉 Deal won! Check your Client Pipeline.');
-}
-
-/* ─────────────────────────────────────────────────────────────
-   OPPORTUNITY ENGINE — FULL LEAD BANK (15 leads, 5 categories)
-   Each lead has: name, platform, followers, problem, strategy,
-   match, reason, jobDesc, signals[] (maps to checkbox values)
-───────────────────────────────────────────────────────────── */
-const _OPP_LEAD_BANK = {
-
-  'Content Creators': [
-    {
-      name: 'FitWithNehaa',
-      platform: 'YouTube',
-      followers: '14.2k subscribers',
-      problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
-      strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.',
-      match: 96,
-      reason: 'Low CTR pattern detected — no face or contrast in last 12 thumbnails.',
-      jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel.',
-      signals: ['low_ctr', 'poor_design'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'TravelDiariesByKaran',
-      platform: 'Instagram',
-      followers: '8.7k followers',
-      problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
-      strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement drop as the hook.',
-      match: 91,
-      reason: 'Engagement velocity dropped sharply — algorithm de-prioritising the account.',
-      jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'SkillsWithPriya',
-      platform: 'LinkedIn',
-      followers: '3.1k followers',
-      problem: 'Posts are long-form only — no carousel posts, no short hooks. Low reach despite solid expertise.',
-      strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting professional growth.',
-      match: 88,
-      reason: 'Missing carousel format — algorithm currently prioritises carousels 3x over plain text.',
-      jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts and grow professional reach.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'ChefRohanEats',
-      platform: 'YouTube',
-      followers: '22k subscribers',
-      problem: 'Has audience but zero monetisation link — no course, no Patreon, no link in bio. Revenue = $0.',
-      strategy: 'Pitch a simple lead magnet funnel: free recipe PDF → email list → paid course upsell.',
-      match: 90,
-      reason: 'Monetisation gap — strong audience with no conversion path detected.',
-      jobDesc: 'Food YouTube creator needs a landing page and email funnel to start monetising their 22k subscriber base.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: [],
-    },
-    {
-      name: 'MotivateWithAarav',
-      platform: 'Instagram',
-      followers: '31k followers',
-      problem: 'Running ads with no landing page — traffic goes to a plain Instagram bio. Ad spend is wasted.',
-      strategy: 'Build a 1-page landing page + lead magnet to capture the paid traffic properly.',
-      match: 94,
-      reason: 'Active ad spend detected — but no landing page means every rupee is leaking.',
-      jobDesc: 'Motivational speaker needs a landing page to convert paid Instagram traffic into email subscribers.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['running_ads', 'monetised'],
-    },
-  ],
-
-  'Local Businesses': [
-    {
-      name: 'Chai & Chapters Café',
-      platform: 'Instagram',
-      followers: '2.3k followers',
-      problem: 'Bio link goes to a dead page. No clear CTA in posts. Great photos but zero conversion path.',
-      strategy: 'Fix the link-in-bio first — it is a broken door. Then pitch a social media retainer.',
-      match: 94,
-      reason: 'Critical conversion bottleneck: broken bio link confirmed, zero CTA in last 20 posts.',
-      jobDesc: 'Local café needs someone to manage their Instagram, fix their bio link, and create a simple landing page to drive orders.',
-      signals: ['no_cta'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'GreenLeaf Salon',
-      platform: 'Website',
-      followers: 'Google Business: 4.1★',
-      problem: 'Website loads in 7.2s, not mobile-optimised, and has no booking widget. Losing walk-ins.',
-      strategy: 'Lead with the 7-second load time and lost bookings angle. Offer a revamp + Calendly integration.',
-      match: 93,
-      reason: 'Failed Core Web Vitals — load time 7.2s vs 1.8s industry average. No booking system.',
-      jobDesc: 'Local salon wants a faster, mobile-friendly website with an online appointment booking system integrated.',
-      signals: ['slow_site', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'QuickFix Electronics',
-      platform: 'Google Maps',
-      followers: '127 reviews, 3.8★',
-      problem: 'Review score is below the local average of 4.2★. No responses to negative reviews. Trust signals missing.',
-      strategy: 'Offer a reputation management starter: review response templates + a QR code system for 5-star reviews.',
-      match: 87,
-      reason: 'Review score flagged as 0.4★ below local competitor median — losing search ranking.',
-      jobDesc: 'Electronics repair shop needs help managing online reviews and improving Google Business profile.',
-      signals: ['no_cta'],
-      budget: [],
-    },
-    {
-      name: 'BiteBox Cloud Kitchen',
-      platform: 'Instagram',
-      followers: '890 followers',
-      problem: 'Posting only 2 times a week, no Reels, no stories. Swiggy/Zomato competitors are dominating search.',
-      strategy: 'Pitch a 30-day social media blitz: 5 posts/week + daily stories with UGC reposts.',
-      match: 89,
-      reason: 'Posting frequency 4x below category average — algorithm suppressing reach.',
-      jobDesc: 'Cloud kitchen brand needs a social media manager to increase Instagram presence and drive online orders.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'Flourish Fitness Studio',
-      platform: 'Website',
-      followers: 'Google: 4.4★ / 43 reviews',
-      problem: 'No online class booking — clients WhatsApp to book, owner manually confirms. Losing 3+ leads/day.',
-      strategy: 'Set up Calendly or Mindbody integration. Frame it as 3 hours/day returned to actual coaching.',
-      match: 92,
-      reason: 'Manual booking bottleneck confirmed — no scheduling widget on site, no automated confirmation.',
-      jobDesc: 'Fitness studio needs an online booking system integrated into their website to reduce manual admin.',
-      signals: ['no_cta', 'slow_site'],
-      budget: ['monetised'],
-    },
-  ],
-
-  'Startups': [
-    {
-      name: 'Zolvr (SaaS)',
-      platform: 'Product Hunt',
-      followers: '312 upvotes',
-      problem: 'Landing page copy is feature-heavy, not benefit-driven. No social proof above the fold. Signups likely below 3%.',
-      strategy: 'Offer a landing page copy audit as free value, then pitch a full rewrite focused on ICP pain points.',
-      match: 95,
-      reason: 'Hero section has zero benefit language — 100% feature list. No social proof until scroll depth 60%.',
-      jobDesc: 'Early-stage SaaS startup needs a copywriter to rewrite homepage and improve trial signup conversion.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'Mealio App',
-      platform: 'LinkedIn',
-      followers: '890 followers',
-      problem: 'App screenshots in the Play Store are plain UI dumps with no context. Reviews mention "confusing onboarding".',
-      strategy: 'Pitch a 60-second explainer video + redesigned app store screenshots with lifestyle context.',
-      match: 90,
-      reason: 'App store conversion gap — plain screenshots vs. competitor lifestyle shots showing product in use.',
-      jobDesc: 'Food-tech startup needs a short explainer video and better app store visuals to improve install conversion.',
-      signals: ['poor_design', 'no_cta'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'Hirrdly (HR Tool)',
-      platform: 'Website',
-      followers: '—',
-      problem: 'Blog has 2 posts from 6 months ago. SEO score is 34/100. Missing product-led content for organic signups.',
-      strategy: 'Offer 4 long-form SEO articles/month targeting HR manager keywords. Frame as pipeline-building.',
-      match: 85,
-      reason: 'Domain SEO score 34/100 — zero organic traffic growth in last 90 days per SimilarWeb estimate.',
-      jobDesc: 'B2B HR software company needs SEO-optimised blog posts targeting HR managers and CHROs.',
-      signals: ['inconsistent_posting', 'low_ctr'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'StackMind AI',
-      platform: 'Website',
-      followers: 'Beta product',
-      problem: 'No onboarding email sequence — users sign up and never hear from the company again. Churn is high.',
-      strategy: 'Build a 5-email onboarding sequence: welcome, feature spotlight, social proof, tip, and upgrade nudge.',
-      match: 93,
-      reason: 'Zero post-signup email flow detected — industry avg churn without onboarding is 65% in 7 days.',
-      jobDesc: 'AI startup needs someone to write and set up a full onboarding email sequence for new trial users.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'PocketLegal',
-      platform: 'LinkedIn',
-      followers: '1.2k followers',
-      problem: 'Posting case studies as walls of text. No visual content. Engagement rate is 0.4% — invisible to algorithm.',
-      strategy: 'Convert their top 3 case studies into carousel posts. Show engagement data from a comparable legal SaaS.',
-      match: 88,
-      reason: 'Text-only content strategy in a platform that pushes visuals — engagement 5x below niche average.',
-      jobDesc: 'LegalTech startup needs LinkedIn content designed to drive awareness and demo requests.',
-      signals: ['low_ctr', 'poor_design', 'inconsistent_posting'],
-      budget: ['monetised'],
-    },
-  ],
-
-  'E-commerce Brands': [
-    {
-      name: 'ThreadCraft Co.',
-      platform: 'Instagram',
-      followers: '11k followers',
-      problem: 'Product images are shot on plain white backgrounds. Competitors are using lifestyle shots. Cart abandonment likely high.',
-      strategy: 'Offer 10 lifestyle product photo edits as a paid trial. Lifestyle imagery converts 30% better for fashion.',
-      match: 92,
-      reason: 'Visual content gap confirmed — 100% white-bg shots vs. competitor lifestyle imagery on same audience.',
-      jobDesc: 'D2C clothing brand needs a product photo editor who can create lifestyle-style edits from existing shots.',
-      signals: ['poor_design', 'low_ctr'],
-      budget: ['running_ads', 'monetised'],
-    },
-    {
-      name: 'PureRoot Organics',
-      platform: 'Website',
-      followers: 'Shopify store',
-      problem: 'Email list of 1,400 subs but last campaign was 4 months ago. No welcome sequence, no abandoned cart flow.',
-      strategy: 'Lead with the dormant list angle — "your list is making ₹0 right now." Pitch 3-email welcome + 1 promo campaign.',
-      match: 89,
-      reason: 'Dormant list detected — 1,400 subscribers, last send 4 months ago, no automation flows active.',
-      jobDesc: 'Organic skincare brand wants email automations — welcome sequence and abandoned cart recovery.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'GadgetNest',
-      platform: 'Amazon',
-      followers: '4.3★ seller rating',
-      problem: 'Product descriptions are bullet-point dumps with no storytelling. Competitor products with similar specs outrank them.',
-      strategy: 'Offer a single product listing rewrite as a demo — if it ranks better, they will want the whole catalogue.',
-      match: 86,
-      reason: 'Listing keyword density 40% below top-3 competitors — organic rank suppressed.',
-      jobDesc: 'Amazon seller needs copywriter to rewrite descriptions with better keywords and benefit-driven language.',
-      signals: ['poor_design', 'low_ctr'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'LuxeNails Studio',
-      platform: 'Instagram',
-      followers: '6.4k followers',
-      problem: 'Running ads but sending traffic to their main Instagram profile, not a booking page. Spending ₹8,000/month with no measurable return.',
-      strategy: 'Build a dead-simple landing page with a Calendly booking form — redirect all ad traffic there.',
-      match: 95,
-      reason: 'Active ad spend confirmed with no conversion destination — every rupee going to a dead-end profile.',
-      jobDesc: 'Nail salon running Instagram ads needs a landing page and booking system to convert ad traffic.',
-      signals: ['no_cta', 'running_ads'],
-      budget: ['running_ads'],
-    },
-    {
-      name: 'AuraWear',
-      platform: 'Website',
-      followers: 'Shopify store',
-      problem: 'Website has no customer reviews or UGC. Trust score is near zero for cold visitors.',
-      strategy: 'Set up a post-purchase review flow (Judge.me or Loox) and design a social proof section for the homepage.',
-      match: 88,
-      reason: 'Zero social proof detected on homepage — industry data shows 63% of visitors abandon without reviews.',
-      jobDesc: 'Fashion D2C brand needs a social proof strategy: review collection system and homepage redesign section.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['running_ads', 'monetised'],
-    },
-  ],
-
-  'Coaches & Consultants': [
-    {
-      name: 'Manav Sharma — Biz Coach',
-      platform: 'LinkedIn',
-      followers: '6.4k followers',
-      problem: 'Strong personal brand but no lead magnet, no email list, no freebie to convert followers into contacts.',
-      strategy: 'Pitch a simple lead magnet (PDF checklist or mini-guide) + a 3-step email welcome sequence for ₹5,000.',
-      match: 93,
-      reason: 'Audience size strong but zero off-platform assets — entire business can disappear if LinkedIn bans account.',
-      jobDesc: 'Business coach needs a copywriter to create a lead magnet PDF and email welcome sequence to build their list.',
-      signals: ['no_email_list', 'no_cta'],
-      budget: ['monetised'],
-    },
-    {
-      name: "Ritika's Wellness Studio",
-      platform: 'Instagram',
-      followers: '4.8k followers',
-      problem: 'Selling 1:1 sessions via DM with no booking page. Zero automation. Spending 2+ hrs/day on manual scheduling.',
-      strategy: 'Calendly + payment page setup. Frame the ROI: 2 hrs/day saved = 60 hrs/month returned to client delivery.',
-      match: 91,
-      reason: 'No booking automation — manual DM scheduling at 4.8k followers is a severe growth ceiling.',
-      jobDesc: 'Wellness coach needs online booking, a payment page, and automated client intake to scale.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'CareerCompass Academy',
-      platform: 'YouTube',
-      followers: '7.1k subscribers',
-      problem: 'Selling a ₹4,999 course but no sales page — just a Gumroad link. No testimonials, no FAQ, no urgency.',
-      strategy: 'Build a dedicated course sales page. Proper pages with social proof convert 3–5x better than bare Gumroad.',
-      match: 88,
-      reason: 'Course funnel gap — Gumroad link has no social proof, objection handling, or urgency mechanism.',
-      jobDesc: 'Online course creator needs a sales page designed and written to sell their career coaching program.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['monetised', 'running_ads'],
-    },
-    {
-      name: 'Dr. Priya Menon — Nutritionist',
-      platform: 'Instagram',
-      followers: '9.2k followers',
-      problem: 'Posts 7 days a week but all content is advice — no offer, no CTA, no sales ever. Audience is warm but untapped.',
-      strategy: 'Write a 3-post story-driven launch sequence for her online programme. Then pitch a monthly content retainer.',
-      match: 94,
-      reason: 'High posting frequency + zero commercial CTA — warm audience being trained to expect only free content.',
-      jobDesc: 'Nutritionist coach needs a copywriter to create a launch post sequence and start converting followers to clients.',
-      signals: ['no_cta', 'no_email_list'],
-      budget: ['monetised'],
-    },
-    {
-      name: 'SalesEdge by Rohan',
-      platform: 'LinkedIn',
-      followers: '12.1k followers',
-      problem: 'Running a paid workshop at ₹2,999 but promoting it with a single text post. No event page, no countdown, no social proof.',
-      strategy: 'Design a simple Notion/Carrd event landing page + write a 3-post promotional sequence.',
-      match: 90,
-      reason: 'Event promotion gap — single organic post for a paid offer with 12k warm audience. Major lost revenue.',
-      jobDesc: 'Sales coach needs a landing page and promotional content sequence to fill their paid workshop seats.',
-      signals: ['no_cta', 'poor_design'],
-      budget: ['monetised', 'running_ads'],
-    },
-  ],
-};
-
-/* ── Won-state tracker (in-memory, per session) ── */
-const _wonLeads = new Set();
-
-/* ── Mark a card as won without navigating away ── */
-function markLeadWon(cardEl, leadName, platform) {
-  _wonLeads.add(leadName);
-  // Visual won state
-  cardEl.style.opacity   = '0.55';
-  cardEl.style.transform = 'scale(0.985)';
-  cardEl.style.transition = 'all .3s ease';
-  const header = cardEl.querySelector('.opp-card-header');
-  if (header) {
-    const wonBadge = document.createElement('div');
-    wonBadge.style.cssText = `
-      display:inline-flex;align-items:center;gap:5px;
-      background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
-      color:#10b981;border-radius:6px;padding:5px 10px;
-      font-size:11.5px;font-weight:700;margin-top:10px;
-    `;
-    wonBadge.innerHTML = `<i data-lucide="check-circle-2" style="width:12px;height:12px"></i> Marked as Won — added to Pipeline`;
-    header.appendChild(wonBadge);
-    lucide.createIcons();
-  }
-  // Disable all action buttons on this card
-  cardEl.querySelectorAll('.opp-action-btn').forEach(b => {
-    b.disabled = true;
-    b.style.opacity = '0.4';
-  });
-  // Route to pipeline in the background
-  routeToLead(leadName, platform);
-  showToast('🎉 Deal won! Check your Client Pipeline.');
-}
-
-/* ── Main scan function (Phase 2: signal-aware filtering) ── */
-async function scanOpportunities() {
-  const btn       = el('opp-scan-btn');
-  const loader    = el('opp-loader');
-  const loaderTxt = el('opp-loader-text');
-  const wrap      = el('opp-results-wrap');
-  const type      = val('opp-type');
-  const prompt    = val('opp-prompt');
-
-  if (!prompt.trim()) {
-    showToast('Describe your ideal lead first.');
-    el('opp-prompt').focus();
-    return;
-  }
-
-  // ── Read checked pain signals + budget qualifiers ──
-  const checkedSignals = [...document.querySelectorAll('input[name="ps-signal"]:checked')]
-    .map(cb => cb.value);
-  const checkedBudget  = [...document.querySelectorAll('input[name="ps-budget"]:checked')]
-    .map(cb => cb.value);
-
-  btn.disabled = true;
-  loader.classList.add('show');
-  wrap.innerHTML = `
-    <div class="opp-results-grid">
-      <div class="opp-skeleton"></div>
-      <div class="opp-skeleton"></div>
-      <div class="opp-skeleton"></div>
-    </div>`;
-
-  // ── Animated loader phrases ──
-  const scanPhrases = [
-    'Scanning target platforms…',
-    'Running AI gap-analysis…',
-    'Matching pain signals…',
-    'Scoring opportunities…',
-    'Compiling outreach dossiers…',
-  ];
-  let tIdx = 0;
-  loaderTxt.textContent = 'Initializing scan nodes…';
-  const txtInterval = setInterval(() => {
-    if (tIdx < scanPhrases.length) loaderTxt.textContent = scanPhrases[tIdx++];
-  }, 700);
-
-  await new Promise(resolve => setTimeout(resolve, 3500));
-  clearInterval(txtInterval);
-
-  // ── Get the pool for the selected target type ──
-  const pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
-
-  // ── Phase 2 signal filtering ──
-  // If the user has selected at least one signal, score each lead by how
-  // many of their signals the lead matches — then sort by score descending.
-  // If no signals checked, fall back to sort by match score.
-  let scored;
-  if (checkedSignals.length > 0 || checkedBudget.length > 0) {
-    scored = pool.map(lead => {
-      const signalHits  = (lead.signals || []).filter(s => checkedSignals.includes(s)).length;
-      const budgetHits  = (lead.budget  || []).filter(b => checkedBudget.includes(b)).length;
-      // Weighted: each signal hit = 2pts, each budget hit = 3pts (budget = stronger intent)
-      const filterScore = (signalHits * 2) + (budgetHits * 3);
-      return { ...lead, _filterScore: filterScore };
-    });
-    // Sort: first by filterScore DESC, then by match DESC as tiebreaker
-    scored.sort((a, b) => b._filterScore - a._filterScore || b.match - a.match);
-  } else {
-    // No filters active — sort by match score, add light shuffle for variety
-    scored = [...pool].sort((a, b) => b.match - a.match);
-  }
-
-  // Take top 3
-  const leads = scored.slice(0, 3);
-
-  // ── Also boost the match score slightly for highly-filtered leads ──
-  // This makes the score feel "earned" by the filters they set
-  leads.forEach(lead => {
-    if (lead._filterScore >= 4) lead.match = Math.min(99, lead.match + 2);
-    if (lead._filterScore >= 7) lead.match = Math.min(99, lead.match + 1);
-  });
-
-  // ── Render cards ──
-  if (leads.length === 0) {
-    wrap.innerHTML = `
-      <div style="text-align:center;padding:48px 20px;color:var(--text3)">
-        <div style="font-size:32px;margin-bottom:12px">🔍</div>
-        <div style="font-size:15px;font-weight:600;color:var(--text-main);margin-bottom:6px">No leads matched your filters</div>
-        <div style="font-size:13px">Try unchecking some pain signals or switching target type.</div>
-      </div>`;
-  } else {
-    wrap.innerHTML = `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`;
-  }
-
-  lucide.createIcons();
-  loader.classList.remove('show');
-  btn.disabled = false;
-
-  const filterSummary = checkedSignals.length > 0
-    ? ` · filtered by ${checkedSignals.length} signal${checkedSignals.length > 1 ? 's' : ''}`
-    : '';
-  showToast(`Found ${leads.length} high-intent opportunit${leads.length === 1 ? 'y' : 'ies'}${filterSummary}.`);
-}
-
-/* ── Cross-tool routing functions ── */
-
 /**
  * Pre-fills the Audit Generator and navigates to it.
  * Matches the existing #audit-target and #audit-platform fields.
@@ -4659,6 +3038,589 @@ html.dark .credits-warning-banner {
        <div id="toast"></div>
        
 <script>
+   /* ═══════════════════════════════════════════════════════════════
+   OPPORTUNITY ENGINE — COMPLETE CLEAN JS (Phase 2)
+   All duplicates removed. This is the single source of truth.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Helpers ── */
+function setOppPreset(type, prompt) {
+  setVal('opp-type', type);
+  setVal('opp-prompt', prompt);
+}
+
+function copyDirectText(text) {
+  navigator.clipboard.writeText(text)
+    .then(() => showToast('⚡ Quick DM copied!'))
+    .catch(() => showToast('Failed to copy.'));
+}
+
+/* ── Won-state tracker (session memory) ── */
+const _wonLeads = new Set();
+
+function markLeadWon(cardEl, leadName, platform) {
+  if (_wonLeads.has(leadName)) return;
+  _wonLeads.add(leadName);
+  cardEl.style.opacity    = '0.55';
+  cardEl.style.transform  = 'scale(0.985)';
+  cardEl.style.transition = 'all .3s ease';
+  const header = cardEl.querySelector('.opp-card-header');
+  if (header) {
+    const badge = document.createElement('div');
+    badge.style.cssText = `
+      display:inline-flex;align-items:center;gap:5px;
+      background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
+      color:#10b981;border-radius:6px;padding:5px 10px;
+      font-size:11.5px;font-weight:700;margin-top:10px;
+    `;
+    badge.innerHTML = `<i data-lucide="check-circle-2" style="width:12px;height:12px"></i> Marked as Won — added to Pipeline`;
+    header.appendChild(badge);
+    lucide.createIcons();
+  }
+  cardEl.querySelectorAll('.opp-action-btn').forEach(b => {
+    b.disabled = true; b.style.opacity = '0.4';
+  });
+  routeToLead(leadName, platform);
+  showToast('🎉 Deal won! Check your Client Pipeline.');
+}
+
+/* ── Full 25-lead bank (5 per category, all with signals[]) ── */
+const _OPP_LEAD_BANK = {
+
+  'Content Creators': [
+    {
+      name: 'FitWithNehaa',
+      platform: 'YouTube',
+      followers: '14.2k subscribers',
+      problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
+      strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.',
+      match: 96,
+      reason: 'Low CTR pattern detected — no face or contrast in last 12 thumbnails.',
+      jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel.',
+      signals: ['low_ctr', 'poor_design'],
+      budget: ['monetised'],
+    },
+    {
+      name: 'TravelDiariesByKaran',
+      platform: 'Instagram',
+      followers: '8.7k followers',
+      problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
+      strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement drop stat.',
+      match: 91,
+      reason: 'Engagement velocity dropped sharply — algorithm de-prioritising the account.',
+      jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator.',
+      signals: ['inconsistent_posting', 'low_ctr'],
+      budget: ['running_ads'],
+    },
+    {
+      name: 'SkillsWithPriya',
+      platform: 'LinkedIn',
+      followers: '3.1k followers',
+      problem: 'Posts are long-form only — no carousels, no short hooks. Low reach despite solid expertise.',
+      strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting growth audience.',
+      match: 88,
+      reason: 'Missing carousel format — algorithm prioritises carousels 3x over plain text posts.',
+      jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts and grow professional reach.',
+      signals: ['inconsistent_posting', 'low_ctr'],
+      budget: ['monetised'],
+    },
+    {
+      name: 'ChefRohanEats',
+      platform: 'YouTube',
+      followers: '22k subscribers',
+      problem: 'Has audience but zero monetisation — no course, no Patreon, no link in bio. Revenue = $0.',
+      strategy: 'Pitch a simple lead magnet funnel: free recipe PDF → email list → paid course upsell.',
+      match: 90,
+      reason: 'Monetisation gap — strong audience with no conversion path detected.',
+      jobDesc: 'Food YouTube creator needs a landing page and email funnel to monetise their 22k audience.',
+      signals: ['no_cta', 'no_email_list'],
+      budget: [],
+    },
+    {
+      name: 'MotivateWithAarav',
+      platform: 'Instagram',
+      followers: '31k followers',
+      problem: 'Running ads with no landing page — traffic goes to plain Instagram bio. Ad spend wasted.',
+      strategy: 'Build a 1-page landing page + lead magnet to capture the paid traffic properly.',
+      match: 94,
+      reason: 'Active ad spend detected — but no landing page means every rupee leaking.',
+      jobDesc: 'Motivational speaker needs a landing page to convert paid Instagram traffic into email subscribers.',
+      signals: ['no_cta', 'no_email_list'],
+      budget: ['running_ads', 'monetised'],
+    },
+  ],
+
+  'Local Businesses': [
+    {
+      name: 'Chai & Chapters Café',
+      platform: 'Instagram',
+      followers: '2.3k followers',
+      problem: 'Bio link goes to a dead page. No clear CTA in posts. Great photos but zero conversion path.',
+      strategy: 'Fix the link-in-bio first — broken door. Then pitch a social media retainer.',
+      match: 94,
+      reason: 'Critical conversion bottleneck: broken bio link confirmed, zero CTA in last 20 posts.',
+      jobDesc: 'Local café needs someone to manage Instagram, fix their bio, and create a landing page to drive orders.',
+      signals: ['no_cta'],
+      budget: ['running_ads'],
+    },
+    {
+      name: 'GreenLeaf Salon',
+      platform: 'Website',
+      followers: 'Google Business: 4.1★',
+      problem: 'Website loads in 7.2s, not mobile-optimised, and has no booking widget. Losing walk-ins.',
+      strategy: 'Lead with the 7-second load time. Offer website revamp + Calendly integration for ₹8,000.',
+      match: 93,
+      reason: 'Failed Core Web Vitals — load time 7.2s vs 1.8s industry average. No booking system.',
+      jobDesc: 'Local salon wants a faster, mobile-friendly website with online appointment booking integrated.',
+      signals: ['slow_site', 'no_cta'],
+      budget: ['monetised'],
+    },
+    {
+      name: 'QuickFix Electronics',
+      platform: 'Google Maps',
+      followers: '127 reviews, 3.8★',
+      problem: 'Review score below local average of 4.2★. No response to negative reviews. Trust signals missing.',
+      strategy: 'Offer reputation management starter: review response templates + QR code system.',
+      match: 87,
+      reason: 'Review score 0.4★ below local competitor median — losing search ranking.',
+      jobDesc: 'Electronics repair shop needs help managing online reviews and improving Google Business profile.',
+      signals: ['no_cta'],
+      budget: [],
+    },
+    {
+      name: 'BiteBox Cloud Kitchen',
+      platform: 'Instagram',
+      followers: '890 followers',
+      problem: 'Posting only 2x per week, no Reels, no stories. Competitors dominating search.',
+      strategy: 'Pitch a 30-day social media blitz: 5 posts/week + daily stories with UGC reposts.',
+      match: 89,
+      reason: 'Posting frequency 4x below category average — algorithm suppressing reach.',
+      jobDesc: 'Cloud kitchen brand needs a social media manager to increase Instagram presence and drive orders.',
+      signals: ['inconsistent_posting', 'low_ctr'],
+      budget: ['running_ads'],
+    },
+    {
+      name: 'Flourish Fitness Studio',
+      platform: 'Website',
+      followers: 'Google: 4.4★ / 43 reviews',
+      problem: 'No online class booking — clients WhatsApp to book, owner manually confirms. Losing 3+ leads/day.',
+      strategy: 'Set up Calendly. Frame it as 3 hours/day returned to actual coaching.',
+      match: 92,
+      reason: 'Manual booking bottleneck — no scheduling widget, no automated confirmation.',
+      jobDesc: 'Fitness studio needs an online booking system integrated into their website.',
+      signals: ['no_cta', 'slow_site'],
+      budget: ['monetised'],
+    },
+  ],
+
+  'Startups': [
+    {
+      name: 'Zolvr (SaaS)',
+      platform: 'Product Hunt',
+      followers: '312 upvotes',
+      problem: 'Landing page copy is feature-heavy, not benefit-driven. No social proof above fold. Signups below 3%.',
+      strategy: 'Offer a landing page copy audit as free value, then pitch full rewrite focused on ICP pain.',
+      match: 95,
+      reason: 'Hero section 100% feature list. No social proof until scroll depth 60%.',
+      jobDesc: 'Early-stage SaaS startup needs copywriter to rewrite homepage and improve trial signup conversion.',
+      signals: ['no_cta', 'poor_design'],
+      budget: ['running_ads', 'monetised'],
+    },
+    {
+      name: 'Mealio App',
+      platform: 'LinkedIn',
+      followers: '890 followers',
+      problem: 'App screenshots in Play Store are plain UI dumps. Reviews mention "confusing onboarding". No explainer video.',
+      strategy: 'Pitch a 60-second explainer video + redesigned app store screenshots with lifestyle context.',
+      match: 90,
+      reason: 'App store conversion gap — plain screenshots vs competitor lifestyle shots on same audience.',
+      jobDesc: 'Food-tech startup needs a short explainer video and better app store visuals to improve installs.',
+      signals: ['poor_design', 'no_cta'],
+      budget: ['running_ads'],
+    },
+    {
+      name: 'Hirrdly (HR Tool)',
+      platform: 'Website',
+      followers: '—',
+      problem: 'Blog has 2 posts from 6 months ago. SEO score is 34/100. Missing product-led content.',
+      strategy: 'Offer 4 long-form SEO articles/month targeting HR manager keywords. Frame as pipeline-building.',
+      match: 85,
+      reason: 'Domain SEO score 34/100 — zero organic traffic growth in last 90 days.',
+      jobDesc: 'B2B HR software company needs SEO-optimised blog posts targeting HR managers and CHROs.',
+      signals: ['inconsistent_posting', 'low_ctr'],
+      budget: ['monetised'],
+    },
+    {
+      name: 'StackMind AI',
+      platform: 'Website',
+      followers: 'Beta product',
+      problem: 'No onboarding email sequence — users sign up and never hear from company again. Churn is high.',
+      strategy: 'Build a 5-email onboarding sequence: welcome, feature spotlight, social proof, tip, upgrade nudge.',
+      match: 93,
+      reason: 'Zero post-signup email flow — industry avg churn without onboarding is 65% in 7 days.',
+      jobDesc: 'AI startup needs someone to write and set up a full onboarding email sequence for trial users.',
+      signals: ['no_email_list', 'no_cta'],
+      budget: ['running_ads', 'monetised'],
+    },
+    {
+      name: 'PocketLegal',
+      platform: 'LinkedIn',
+      followers: '1.2k followers',
+      problem: 'Posting case studies as walls of text. No visual content. Engagement rate 0.4% — invisible to algorithm.',
+      strategy: 'Convert top 3 case studies into carousel posts. Show engagement data from comparable legal SaaS.',
+      match: 88,
+      reason: 'Text-only content on a platform that pushes visuals — engagement 5x below niche average.',
+      jobDesc: 'LegalTech startup needs LinkedIn content designed to drive awareness and demo requests.',
+      signals: ['low_ctr', 'poor_design', 'inconsistent_posting'],
+      budget: ['monetised'],
+    },
+  ],
+
+  'E-commerce Brands': [
+    {
+      name: 'ThreadCraft Co.',
+      platform: 'Instagram',
+      followers: '11k followers',
+      problem: 'Product images on plain white backgrounds. Competitors using lifestyle shots. Cart abandonment likely high.',
+      strategy: 'Offer 10 lifestyle product photo edits as paid trial. Lifestyle imagery converts 30% better for fashion.',
+      match: 92,
+      reason: 'Visual content gap — 100% white-bg shots vs competitor lifestyle imagery on same audience.',
+      jobDesc: 'D2C clothing brand needs a product photo editor to create lifestyle-style edits from existing shots.',
+      signals: ['poor_design', 'low_ctr'],
+      budget: ['running_ads', 'monetised'],
+    },
+    {
+      name: 'PureRoot Organics',
+      platform: 'Website',
+      followers: 'Shopify store',
+      problem: 'Email list of 1,400 subs but last campaign was 4 months ago. No welcome sequence, no abandoned cart flow.',
+      strategy: 'Lead with the dormant list angle — "your list is making ₹0 right now." Pitch welcome + promo campaign.',
+      match: 89,
+      reason: 'Dormant list detected — 1,400 subscribers, last send 4 months ago, no automation flows.',
+      jobDesc: 'Organic skincare brand wants email automations — welcome sequence and abandoned cart recovery.',
+      signals: ['no_email_list', 'no_cta'],
+      budget: ['monetised'],
+    },
+    {
+      name: 'GadgetNest',
+      platform: 'Amazon',
+      followers: '4.3★ seller rating',
+      problem: 'Product descriptions are bullet-point dumps. Competitor products with similar specs outrank them.',
+      strategy: 'Offer a single listing rewrite as a demo — if it ranks better, they\'ll want the full catalogue.',
+      match: 86,
+      reason: 'Listing keyword density 40% below top-3 competitors — organic rank suppressed.',
+      jobDesc: 'Amazon seller needs copywriter to rewrite descriptions with better keywords and benefit-driven language.',
+      signals: ['poor_design', 'low_ctr'],
+      budget: ['running_ads'],
+    },
+    {
+      name: 'LuxeNails Studio',
+      platform: 'Instagram',
+      followers: '6.4k followers',
+      problem: 'Running ads but sending traffic to main Instagram profile, not a booking page. ₹8,000/month with no return.',
+      strategy: 'Build a simple landing page with Calendly booking form — redirect all ad traffic there.',
+      match: 95,
+      reason: 'Active ad spend confirmed with no conversion destination — every rupee going to dead-end profile.',
+      jobDesc: 'Nail salon running Instagram ads needs a landing page and booking system to convert ad traffic.',
+      signals: ['no_cta'],
+      budget: ['running_ads'],
+    },
+    {
+      name: 'AuraWear',
+      platform: 'Website',
+      followers: 'Shopify store',
+      problem: 'Website has no customer reviews or UGC. Trust score near zero for cold visitors.',
+      strategy: 'Set up post-purchase review flow (Judge.me or Loox) and design social proof section for homepage.',
+      match: 88,
+      reason: 'Zero social proof on homepage — 63% of visitors abandon without reviews.',
+      jobDesc: 'Fashion D2C brand needs a social proof strategy: review collection system and homepage redesign.',
+      signals: ['no_cta', 'poor_design'],
+      budget: ['running_ads', 'monetised'],
+    },
+  ],
+
+  'Coaches & Consultants': [
+    {
+      name: 'Manav Sharma — Biz Coach',
+      platform: 'LinkedIn',
+      followers: '6.4k followers',
+      problem: 'Strong personal brand but no lead magnet, no email list, no freebie to convert followers.',
+      strategy: 'Pitch a simple lead magnet (PDF checklist) + 3-step email welcome sequence for ₹5,000.',
+      match: 93,
+      reason: 'Audience strong but zero off-platform assets — entire business disappears if LinkedIn bans account.',
+      jobDesc: 'Business coach needs copywriter to create a lead magnet PDF and email welcome sequence.',
+      signals: ['no_email_list', 'no_cta'],
+      budget: ['monetised'],
+    },
+    {
+      name: "Ritika's Wellness Studio",
+      platform: 'Instagram',
+      followers: '4.8k followers',
+      problem: 'Selling 1:1 sessions via DM with no booking page. Zero automation. 2+ hrs/day on manual scheduling.',
+      strategy: 'Calendly + payment page setup. Frame ROI: 2 hrs/day saved = 60 hrs/month returned to coaching.',
+      match: 91,
+      reason: 'Manual DM scheduling at 4.8k followers is a severe growth ceiling.',
+      jobDesc: 'Wellness coach needs online booking, payment page, and automated client intake to scale.',
+      signals: ['no_cta', 'no_email_list'],
+      budget: ['monetised'],
+    },
+    {
+      name: 'CareerCompass Academy',
+      platform: 'YouTube',
+      followers: '7.1k subscribers',
+      problem: 'Selling a ₹4,999 course but no sales page — just a Gumroad link. No testimonials, no FAQ, no urgency.',
+      strategy: 'Build a dedicated course sales page. Proper pages with social proof convert 3–5x better than bare Gumroad.',
+      match: 88,
+      reason: 'Course funnel gap — Gumroad link has no social proof, objection handling, or urgency.',
+      jobDesc: 'Online course creator needs a sales page to sell their career coaching program.',
+      signals: ['no_cta', 'poor_design'],
+      budget: ['monetised', 'running_ads'],
+    },
+    {
+      name: 'Dr. Priya Menon — Nutritionist',
+      platform: 'Instagram',
+      followers: '9.2k followers',
+      problem: 'Posts 7 days a week but all content is advice — no offer, no CTA, no sales ever. Warm audience untapped.',
+      strategy: 'Write a 3-post story-driven launch sequence for her online programme. Then pitch a monthly retainer.',
+      match: 94,
+      reason: 'High posting frequency + zero commercial CTA — audience trained to expect only free content.',
+      jobDesc: 'Nutritionist coach needs copywriter to create a launch post sequence and convert followers to clients.',
+      signals: ['no_cta', 'no_email_list'],
+      budget: ['monetised'],
+    },
+    {
+      name: 'SalesEdge by Rohan',
+      platform: 'LinkedIn',
+      followers: '12.1k followers',
+      problem: 'Running a paid workshop at ₹2,999 but promoting with a single text post. No event page, no countdown.',
+      strategy: 'Design a simple Carrd event landing page + write a 3-post promotional sequence.',
+      match: 90,
+      reason: 'Event promotion gap — single organic post for a paid offer with 12k warm audience.',
+      jobDesc: 'Sales coach needs a landing page and promotional content to fill their paid workshop seats.',
+      signals: ['no_cta', 'poor_design'],
+      budget: ['monetised', 'running_ads'],
+    },
+  ],
+};
+
+/* ── V4 Card Renderer ── */
+function _renderOppCard(lead) {
+  const esc = s => String(s)
+    .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  const score = lead.match || (Math.floor(Math.random() * 15) + 85);
+  let scoreClass = 'score-cool', scoreBadge = '📈';
+  if (score >= 95)      { scoreClass = 'score-hot';  scoreBadge = '🚀'; }
+  else if (score >= 88) { scoreClass = 'score-warm'; scoreBadge = '🔥'; }
+  const isHot = score >= 93;
+
+  const probLow = (lead.problem || '').toLowerCase();
+  let dealValue = '$150 – $400', service = 'Growth Strategy';
+  let magnet    = 'Free 5-min Video Audit';
+  let afterText = 'Higher conversion rates and improved audience retention.';
+
+  if (probLow.includes('thumbnail') || probLow.includes('video') || probLow.includes('reel') || probLow.includes('youtube')) {
+    dealValue = '$300 – $800 / mo'; service = 'YouTube / Short-Form Optimization';
+    magnet = '1 Free Custom Thumbnail Redesign';
+    afterText = '2x CTR, higher watch time, algorithm pushes content to cold audiences.';
+  } else if (probLow.includes('copy') || probLow.includes('landing') || probLow.includes('website') || probLow.includes('seo')) {
+    dealValue = '$500 – $1,500'; service = 'Copywriting & CRO';
+    magnet = 'Free Hero-Section Rewrite';
+    afterText = 'Clear value prop above fold, lower bounce rate, visitors click the CTA.';
+  } else if (probLow.includes('social') || probLow.includes('post') || probLow.includes('engagement') || probLow.includes('instagram')) {
+    dealValue = '$400 – $900 / mo'; service = 'Social Media System';
+    magnet = '1-Week Free Content Calendar';
+    afterText = 'Consistent daily posts, algorithm favour, inbound DM leads week-over-week.';
+  } else if (probLow.includes('booking') || probLow.includes('funnel') || probLow.includes('cta') || probLow.includes('bio') || probLow.includes('link')) {
+    dealValue = '$250 – $700'; service = 'Funnel & Conversion Setup';
+    magnet = 'Free Link-in-Bio Audit PDF';
+    afterText = 'Working booking funnel, measurable conversion path, no more lost leads.';
+  } else if (probLow.includes('review') || probLow.includes('reputation') || probLow.includes('google')) {
+    dealValue = '$300 – $600 / mo'; service = 'Reputation Management';
+    magnet = 'Free Competitor Review Analysis';
+    afterText = 'Higher star rating, professional response system, more walk-ins from search.';
+  } else if (probLow.includes('email') || probLow.includes('list') || probLow.includes('sequence') || probLow.includes('campaign')) {
+    dealValue = '$400 – $1,200'; service = 'Email Marketing Setup';
+    magnet = 'Free Email Audit + Subject Line Pack';
+    afterText = 'Automated welcome flow, abandoned cart recovery, and regular revenue from list.';
+  }
+
+  const reason      = lead.reason || 'AI detected high-friction conversion gaps vs. niche competitors.';
+  const firstName   = lead.name.split(/[\s@]/)[0] || 'there';
+  const beforeText  = lead.problem || 'Conversion gaps detected.';
+  const rawDmText   = `Hey ${firstName}! Noticed your ${lead.platform} has some quick wins — specifically: "${(lead.problem||'').slice(0,55)}…". I\'ve fixed this exact issue for similar accounts. Mind if I send a free mockup?`;
+  const loomCtx     = `Write a 90-second Loom video script. Reaching out to ${lead.name} on ${lead.platform}. Their main problem: ${lead.problem}. Start with a specific observation, show you can fix it, end with soft CTA. Conversational, not salesy.`;
+  const objCtx      = `The prospect ${lead.name} replied: "I don\'t have the budget right now." Write a 2-sentence empathetic reply that validates their concern and offers a risk-free entry point — free audit or small starter project at ${dealValue.split('–')[0].trim()} to prove ROI first. Under 40 words.`;
+  const proposalCtx = lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${service}. Problem: ${lead.problem}. Clear scope, 5-7 day timeline, ${dealValue} pricing.`;
+
+  return `
+  <div class="opp-card">
+    <div class="opp-card-header">
+      <div class="opp-header-top">
+        <div class="opp-card-name">
+          ${esc(lead.name)}
+          <a href="#" style="color:var(--text3)" title="Open profile">
+            <i data-lucide="external-link" style="width:12px;height:12px"></i>
+          </a>
+        </div>
+        <div class="opp-score-badge">
+          <span class="opp-score-num ${scoreClass}">
+            ${scoreBadge} ${score}<span style="font-size:11px;color:var(--text3)">/100</span>
+          </span>
+          <span class="opp-score-label ${scoreClass}">Opportunity Score</span>
+        </div>
+      </div>
+      <div class="opp-meta-row">
+        <span class="opp-meta-tag"><i data-lucide="monitor" style="width:10px;height:10px"></i> ${esc(lead.platform)}</span>
+        <span class="opp-meta-tag"><i data-lucide="users" style="width:10px;height:10px"></i> ${esc(lead.followers)}</span>
+        ${isHot ? `<span class="opp-hot-badge"><i data-lucide="flame" style="width:9px;height:9px"></i> HOT</span>` : ''}
+      </div>
+    </div>
+
+    <div class="opp-money-block">
+      <div class="opp-money-cell">
+        <span class="opp-money-label">Est. Deal Value</span>
+        <span class="opp-deal-value">${dealValue}</span>
+      </div>
+      <div class="opp-money-cell">
+        <span class="opp-money-label">Best Service Match</span>
+        <span class="opp-service-match">${service}</span>
+      </div>
+    </div>
+
+    <div class="opp-card-body">
+      <div class="opp-reason-box">
+        🧠 <strong>AI Insight:</strong> ${esc(reason)}
+      </div>
+      <div class="opp-ba-grid">
+        <div class="opp-ba-col">
+          <span class="opp-ba-label label-before">⚠ Current State</span>
+          <div class="opp-ba-text">${esc(beforeText)}</div>
+        </div>
+        <div class="opp-ba-col">
+          <span class="opp-ba-label label-after">✓ After You Fix It</span>
+          <div class="opp-ba-text">${esc(afterText)}</div>
+        </div>
+      </div>
+      <div class="opp-magnet-box">
+        <i data-lucide="gift" style="width:14px;height:14px;color:#8b5cf6;flex-shrink:0"></i>
+        <span style="color:var(--text3);font-weight:600">Lead Magnet:</span>
+        <span style="font-weight:500;color:var(--text-muted)">${magnet}</span>
+      </div>
+    </div>
+
+    <div class="opp-card-actions">
+      <div class="opp-action-group">
+        <span class="opp-action-group-label">Pitch</span>
+        <div class="opp-action-btns">
+          <button class="opp-action-btn opp-btn-primary" onclick="copyDirectText('${esc(rawDmText)}')">
+            <i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM
+          </button>
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(loomCtx)}')">
+            <i data-lucide="video" style="width:11px;height:11px"></i> Loom Script
+          </button>
+        </div>
+      </div>
+      <div class="opp-action-group">
+        <span class="opp-action-group-label">Follow-Up</span>
+        <div class="opp-action-btns">
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
+            <i data-lucide="file-check-2" style="width:11px;height:11px"></i> Generate Audit
+          </button>
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(objCtx)}')">
+            <i data-lucide="shield-alert" style="width:11px;height:11px"></i> Reply Coach
+          </button>
+        </div>
+      </div>
+      <div class="opp-action-group">
+        <span class="opp-action-group-label">Close</span>
+        <div class="opp-action-btns">
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToProposal('${esc(proposalCtx)}')">
+            <i data-lucide="file-text" style="width:11px;height:11px"></i> 1-Page Proposal
+          </button>
+          <button class="opp-action-btn opp-btn-won" onclick="markLeadWon(this.closest('.opp-card'),'${esc(lead.name)}','${esc(lead.platform)}')">
+            <i data-lucide="trophy" style="width:11px;height:11px"></i> Mark as Won
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── Main scan function ── */
+async function scanOpportunities() {
+  const btn       = el('opp-scan-btn');
+  const loader    = el('opp-loader');
+  const loaderTxt = el('opp-loader-text');
+  const wrap      = el('opp-results-wrap');
+  const type      = val('opp-type');
+  const prompt    = val('opp-prompt');
+
+  if (!prompt.trim()) {
+    showToast('Describe your ideal lead first.');
+    el('opp-prompt').focus();
+    return;
+  }
+
+  const checkedSignals = [...document.querySelectorAll('input[name="ps-signal"]:checked')].map(cb => cb.value);
+  const checkedBudget  = [...document.querySelectorAll('input[name="ps-budget"]:checked')].map(cb => cb.value);
+
+  btn.disabled = true;
+  loader.classList.add('show');
+  wrap.innerHTML = `
+    <div class="opp-results-grid">
+      <div class="opp-skeleton"></div>
+      <div class="opp-skeleton"></div>
+      <div class="opp-skeleton"></div>
+    </div>`;
+
+  const scanPhrases = ['Scanning target platforms…','Running AI gap-analysis…','Matching pain signals…','Scoring opportunities…','Compiling outreach dossiers…'];
+  let tIdx = 0;
+  loaderTxt.textContent = 'Initializing scan nodes…';
+  const txtInterval = setInterval(() => { if (tIdx < scanPhrases.length) loaderTxt.textContent = scanPhrases[tIdx++]; }, 700);
+
+  await new Promise(r => setTimeout(r, 3500));
+  clearInterval(txtInterval);
+
+  const pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
+
+  let scored;
+  if (checkedSignals.length > 0 || checkedBudget.length > 0) {
+    scored = pool.map(lead => {
+      const signalHits = (lead.signals || []).filter(s => checkedSignals.includes(s)).length;
+      const budgetHits = (lead.budget  || []).filter(b => checkedBudget.includes(b)).length;
+      return { ...lead, _fs: (signalHits * 2) + (budgetHits * 3) };
+    });
+    scored.sort((a, b) => b._fs - a._fs || b.match - a.match);
+  } else {
+    scored = [...pool].sort((a, b) => b.match - a.match);
+  }
+
+  const leads = scored.slice(0, 3);
+  leads.forEach(lead => {
+    if ((lead._fs || 0) >= 4) lead.match = Math.min(99, lead.match + 2);
+    if ((lead._fs || 0) >= 7) lead.match = Math.min(99, lead.match + 1);
+  });
+
+  wrap.innerHTML = leads.length
+    ? `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`
+    : `<div style="text-align:center;padding:48px 20px;color:var(--text3)">
+         <div style="font-size:32px;margin-bottom:12px">🔍</div>
+         <div style="font-size:15px;font-weight:600;color:var(--text-main);margin-bottom:6px">No leads matched your filters</div>
+         <div style="font-size:13px">Try unchecking some signals or switching target type.</div>
+       </div>`;
+
+  lucide.createIcons();
+  loader.classList.remove('show');
+  btn.disabled = false;
+  const fs = checkedSignals.length > 0 ? ` · filtered by ${checkedSignals.length} signal${checkedSignals.length > 1 ? 's' : ''}` : '';
+  showToast(`Found ${leads.length} high-intent opportunit${leads.length === 1 ? 'y' : 'ies'}${fs}.`);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   END OPPORTUNITY ENGINE JS
+═══════════════════════════════════════════════════════════════ */
 /* ─── PLAYBOOK GAMIFICATION ─── */
 let pbProgress = [false, false, false, false];
 
