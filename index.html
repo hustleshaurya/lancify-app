@@ -1972,7 +1972,188 @@ html.dark .credits-warning-banner {
   transform: translateX(-50%);
   white-space: nowrap;
 }
-     
+    /* ─── V5 CARD ADDITIONS ─── */
+
+/* Why Now row */
+.opp-why-now {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(245,158,11,0.06);
+  border-left: 3px solid #f59e0b;
+  padding: 9px 12px;
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+.opp-why-now-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+
+/* Stats row — Reply % + Effort tag + Red Flag */
+.opp-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+/* Reply probability pill */
+.opp-reply-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid;
+}
+.reply-high  { color: #10b981; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); }
+.reply-mid   { color: #f59e0b; background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); }
+.reply-low   { color: #6366f1; background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.2); }
+
+/* Effort tag */
+.opp-effort-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+.effort-easy   { background: rgba(16,185,129,0.08);  color: #10b981; }
+.effort-medium { background: rgba(245,158,11,0.08);  color: #f59e0b; }
+.effort-hard   { background: rgba(239,68,68,0.08);   color: #ef4444; }
+
+/* Red flag alert */
+.opp-red-flag {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  background: rgba(239,68,68,0.05);
+  border: 1px solid rgba(239,68,68,0.15);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 11px;
+  color: #ef4444;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+.opp-red-flag-icon { flex-shrink: 0; font-size: 12px; margin-top: 1px; }
+
+/* Closing strategy hint */
+.opp-close-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  background: var(--bg-hover);
+  border-radius: 7px;
+  padding: 8px 11px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+.opp-close-hint strong { color: var(--text-main); font-weight: 600; }
+
+/* ─── V5 PRE-SCAN ADDITIONS ─── */
+
+/* Audience size toggle group */
+.ps-size-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ps-size-btn {
+  padding: 5px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--border2);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+  user-select: none;
+}
+.ps-size-btn.active {
+  background: var(--text-main);
+  color: var(--bg);
+  border-color: var(--text-main);
+}
+.ps-size-btn:hover:not(.active) {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+
+/* Service match chips */
+.ps-service-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ps-service-chip {
+  padding: 5px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--border2);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+  user-select: none;
+}
+.ps-service-chip.active {
+  background: var(--text-main);
+  color: var(--bg);
+  border-color: var(--text-main);
+}
+.ps-service-chip:hover:not(.active) {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+
+/* Hot lead only toggle */
+.ps-hot-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  user-select: none;
+}
+.ps-hot-toggle:has(input:checked) {
+  border-color: #ef4444;
+  background: rgba(239,68,68,0.04);
+}
+.ps-hot-toggle input { display: none; }
+.ps-hot-toggle-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+.ps-hot-toggle-sub {
+  font-size: 11px;
+  color: var(--text3);
+  display: block;
+  margin-top: 1px;
+}
+
+/* Scan CTA sub-text */
+.ps-scan-hint {
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+  margin-top: 4px;
+} 
 </style>
 </head>
 <body>
@@ -2660,9 +2841,9 @@ html.dark .credits-warning-banner {
           </div>
 
           <div class="card" style="margin-bottom:22px">
-         <div class="pre-scan-panel">
+        <div class="pre-scan-panel">
 
-  <!-- Row 1: Target Type + Ideal Lead + Scan -->
+  <!-- Row 1: Target + Lead description + Scan -->
   <div class="ps-top-row">
     <div>
       <label class="field-label">Target Type</label>
@@ -2675,16 +2856,17 @@ html.dark .credits-warning-banner {
       </select>
     </div>
     <div>
-      <label class="field-label">Describe your ideal lead</label>
+      <label class="field-label">Describe who you want to make money from</label>
       <input type="text" id="opp-prompt"
-        placeholder="e.g. Fitness creators under 20k followers with bad thumbnails on YouTube">
+        placeholder="e.g. Fitness creators under 20k followers with no monetisation link">
     </div>
-    <div style="display:flex;align-items:flex-end">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
       <button class="btn-opp-scan" id="opp-scan-btn"
         onclick="checkCredits(10, scanOpportunities)">
         <i data-lucide="radar" style="width:13px;height:13px"></i>
         Run Deep Scan
       </button>
+      <span class="ps-scan-hint">AI finds top leads based on your filters</span>
     </div>
   </div>
 
@@ -2692,87 +2874,105 @@ html.dark .credits-warning-banner {
   <div>
     <div class="ps-section-label">Pain Signals — what problems should AI look for?</div>
     <div class="ps-signals-grid">
-
       <label class="ps-toggle">
         <input type="checkbox" name="ps-signal" value="low_ctr">
         <span class="ps-check-box"></span>
-        <span class="ps-toggle-text">
-          Low CTR / Low Views
+        <span class="ps-toggle-text">Low CTR / Low Views
           <span class="ps-toggle-sub">Content not getting algorithmic push</span>
         </span>
       </label>
-
       <label class="ps-toggle">
         <input type="checkbox" name="ps-signal" value="inconsistent_posting" checked>
         <span class="ps-check-box"></span>
-        <span class="ps-toggle-text">
-          Inconsistent Posting
+        <span class="ps-toggle-text">Inconsistent Posting
           <span class="ps-toggle-sub">Gaps of 2+ weeks in content history</span>
         </span>
       </label>
-
       <label class="ps-toggle">
         <input type="checkbox" name="ps-signal" value="no_cta" checked>
         <span class="ps-check-box"></span>
-        <span class="ps-toggle-text">
-          No Clear CTA
+        <span class="ps-toggle-text">No Clear CTA
           <span class="ps-toggle-sub">Bio link missing, no product/link in posts</span>
         </span>
       </label>
-
       <label class="ps-toggle">
         <input type="checkbox" name="ps-signal" value="poor_design">
         <span class="ps-check-box"></span>
-        <span class="ps-toggle-text">
-          Poor Visual Quality
+        <span class="ps-toggle-text">Poor Visual Quality
           <span class="ps-toggle-sub">Bad thumbnails, no branding system</span>
         </span>
       </label>
-
       <label class="ps-toggle">
         <input type="checkbox" name="ps-signal" value="no_email_list">
         <span class="ps-check-box"></span>
-        <span class="ps-toggle-text">
-          No Email List / Funnel
+        <span class="ps-toggle-text">No Email List / Funnel
           <span class="ps-toggle-sub">Audience trapped on one platform</span>
         </span>
       </label>
-
       <label class="ps-toggle">
-        <input type="checkbox" name="ps-signal" value="slow_site">
+        <input type="checkbox" name="ps-signal" value="ad_spend_no_funnel">
         <span class="ps-check-box"></span>
-        <span class="ps-toggle-text">
-          Slow / Broken Website
-          <span class="ps-toggle-sub">Load time &gt;4s or non-mobile-optimised</span>
+        <span class="ps-toggle-text">Ad Spend, No Funnel
+          <span class="ps-toggle-sub">Burning money with no conversion system</span>
         </span>
       </label>
-
     </div>
   </div>
 
-  <!-- Row 3: Budget Qualifiers -->
-  <div>
-    <div class="ps-section-label">Budget Qualifiers — who actually has money to spend?</div>
-    <div class="ps-signals-grid">
+  <!-- Row 3: Audience Size + Service Match -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+    <div>
+      <div class="ps-section-label">Audience Size</div>
+      <div class="ps-size-group" id="ps-size-group">
+        <button class="ps-size-btn active" data-size="all" onclick="setSizeFilter(this)">All</button>
+        <button class="ps-size-btn" data-size="beginner" onclick="setSizeFilter(this)">Beginner &lt;10k</button>
+        <button class="ps-size-btn" data-size="growing" onclick="setSizeFilter(this)">Growing 10k–50k</button>
+        <button class="ps-size-btn" data-size="established" onclick="setSizeFilter(this)">Established 50k+</button>
+      </div>
+    </div>
+    <div>
+      <div class="ps-section-label">Service Match — show leads that need:</div>
+      <div class="ps-service-chips" id="ps-service-chips">
+        <button class="ps-service-chip active" data-service="all" onclick="setServiceFilter(this)">All</button>
+        <button class="ps-service-chip" data-service="thumbnails" onclick="setServiceFilter(this)">Thumbnails</button>
+        <button class="ps-service-chip" data-service="copywriting" onclick="setServiceFilter(this)">Copywriting</button>
+        <button class="ps-service-chip" data-service="funnel" onclick="setServiceFilter(this)">Funnel</button>
+        <button class="ps-service-chip" data-service="social" onclick="setServiceFilter(this)">Social Media</button>
+        <button class="ps-service-chip" data-service="email" onclick="setServiceFilter(this)">Email</button>
+      </div>
+    </div>
+  </div>
 
-      <label class="ps-toggle">
-        <input type="checkbox" name="ps-budget" value="running_ads" checked>
-        <span class="ps-check-box"></span>
-        <span class="ps-toggle-text">
-          Running Paid Ads
-          <span class="ps-toggle-sub">Already spending — higher budget intent</span>
-        </span>
+  <!-- Row 4: Budget Qualifiers + Hot Lead toggle -->
+  <div style="display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start">
+    <div>
+      <div class="ps-section-label">Budget Qualifiers — who has money to spend?</div>
+      <div class="ps-signals-grid">
+        <label class="ps-toggle">
+          <input type="checkbox" name="ps-budget" value="running_ads" checked>
+          <span class="ps-check-box"></span>
+          <span class="ps-toggle-text">Running Paid Ads
+            <span class="ps-toggle-sub">Already spending — higher budget intent</span>
+          </span>
+        </label>
+        <label class="ps-toggle">
+          <input type="checkbox" name="ps-budget" value="monetised" checked>
+          <span class="ps-check-box"></span>
+          <span class="ps-toggle-text">Monetised Audience
+            <span class="ps-toggle-sub">Has product, course, or brand deals</span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <div>
+      <div class="ps-section-label">Quick Mode</div>
+      <label class="ps-hot-toggle" id="ps-hot-toggle">
+        <input type="checkbox" id="ps-hot-only">
+        <div>
+          <span class="ps-hot-toggle-label">🔥 Hot Leads Only</span>
+          <span class="ps-hot-toggle-sub">Active · High pain · Trying to monetise</span>
+        </div>
       </label>
-
-      <label class="ps-toggle">
-        <input type="checkbox" name="ps-budget" value="monetised" checked>
-        <span class="ps-check-box"></span>
-        <span class="ps-toggle-text">
-          Monetised Audience
-          <span class="ps-toggle-sub">Has product, course, or brand deals</span>
-        </span>
-      </label>
-
     </div>
   </div>
 
@@ -3042,7 +3242,21 @@ html.dark .credits-warning-banner {
    OPPORTUNITY ENGINE — COMPLETE CLEAN JS (Phase 2)
    All duplicates removed. This is the single source of truth.
 ═══════════════════════════════════════════════════════════════ */
+/* ── Audience size filter ── */
+let _activeSizeFilter = 'all';
+function setSizeFilter(btn) {
+  document.querySelectorAll('.ps-size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _activeSizeFilter = btn.dataset.size;
+}
 
+/* ── Service match filter ── */
+let _activeServiceFilter = 'all';
+function setServiceFilter(btn) {
+  document.querySelectorAll('.ps-service-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _activeServiceFilter = btn.dataset.service;
+}
 /* ── Helpers ── */
 function setOppPreset(type, prompt) {
   setVal('opp-type', type);
@@ -3403,59 +3617,97 @@ const _OPP_LEAD_BANK = {
   ],
 };
 
-/* ── V4 Card Renderer ── */
 function _renderOppCard(lead) {
   const esc = s => String(s)
     .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
     .replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
+  // ── Score ──
   const score = lead.match || (Math.floor(Math.random() * 15) + 85);
   let scoreClass = 'score-cool', scoreBadge = '📈';
   if (score >= 95)      { scoreClass = 'score-hot';  scoreBadge = '🚀'; }
   else if (score >= 88) { scoreClass = 'score-warm'; scoreBadge = '🔥'; }
   const isHot = score >= 93;
 
+  // ── Service + deal derivation ──
   const probLow = (lead.problem || '').toLowerCase();
   let dealValue = '$150 – $400', service = 'Growth Strategy';
   let magnet    = 'Free 5-min Video Audit';
   let afterText = 'Higher conversion rates and improved audience retention.';
+  let effortClass = 'effort-medium', effortLabel = '🟡 Medium effort';
+  let closingHint = 'Start with a free audit, then pitch the monthly retainer.';
+  let serviceKey  = 'general';
 
-  if (probLow.includes('thumbnail') || probLow.includes('video') || probLow.includes('reel') || probLow.includes('youtube')) {
+  if (probLow.includes('thumbnail') || probLow.includes('youtube') || probLow.includes('reel') || probLow.includes('video')) {
     dealValue = '$300 – $800 / mo'; service = 'YouTube / Short-Form Optimization';
-    magnet = '1 Free Custom Thumbnail Redesign';
+    magnet = '1 Free Custom Thumbnail Redesign'; serviceKey = 'thumbnails';
     afterText = '2x CTR, higher watch time, algorithm pushes content to cold audiences.';
+    effortClass = 'effort-easy'; effortLabel = '🟢 Easy win';
+    closingHint = 'Send a free thumbnail mockup first — let the work speak. Then pitch 5-pack.';
   } else if (probLow.includes('copy') || probLow.includes('landing') || probLow.includes('website') || probLow.includes('seo')) {
-    dealValue = '$500 – $1,500'; service = 'Copywriting & CRO';
+    dealValue = '$500 – $1,500'; service = 'Copywriting & CRO'; serviceKey = 'copywriting';
     magnet = 'Free Hero-Section Rewrite';
     afterText = 'Clear value prop above fold, lower bounce rate, visitors click the CTA.';
-  } else if (probLow.includes('social') || probLow.includes('post') || probLow.includes('engagement') || probLow.includes('instagram')) {
-    dealValue = '$400 – $900 / mo'; service = 'Social Media System';
+    effortClass = 'effort-medium'; effortLabel = '🟡 Medium effort';
+    closingHint = 'Rewrite their hero section for free, then show the before/after. Upsell the full page.';
+  } else if (probLow.includes('social') || probLow.includes('post') || probLow.includes('engagement') || probLow.includes('reel') || probLow.includes('instagram')) {
+    dealValue = '$400 – $900 / mo'; service = 'Social Media System'; serviceKey = 'social';
     magnet = '1-Week Free Content Calendar';
     afterText = 'Consistent daily posts, algorithm favour, inbound DM leads week-over-week.';
+    effortClass = 'effort-medium'; effortLabel = '🟡 Medium effort';
+    closingHint = 'Offer a 7-day free calendar as bait. If they see engagement lift, close the retainer.';
   } else if (probLow.includes('booking') || probLow.includes('funnel') || probLow.includes('cta') || probLow.includes('bio') || probLow.includes('link')) {
-    dealValue = '$250 – $700'; service = 'Funnel & Conversion Setup';
+    dealValue = '$250 – $700'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
     magnet = 'Free Link-in-Bio Audit PDF';
     afterText = 'Working booking funnel, measurable conversion path, no more lost leads.';
+    effortClass = 'effort-easy'; effortLabel = '🟢 Easy win';
+    closingHint = 'Fix their broken link-in-bio for free. Frame the upsell as "the full funnel behind it."';
   } else if (probLow.includes('review') || probLow.includes('reputation') || probLow.includes('google')) {
-    dealValue = '$300 – $600 / mo'; service = 'Reputation Management';
+    dealValue = '$300 – $600 / mo'; service = 'Reputation Management'; serviceKey = 'general';
     magnet = 'Free Competitor Review Analysis';
     afterText = 'Higher star rating, professional response system, more walk-ins from search.';
+    effortClass = 'effort-hard'; effortLabel = '🔴 Hard sell';
+    closingHint = 'Lead with the competitor star-rating gap. Offer to write 5 review responses for free.';
   } else if (probLow.includes('email') || probLow.includes('list') || probLow.includes('sequence') || probLow.includes('campaign')) {
-    dealValue = '$400 – $1,200'; service = 'Email Marketing Setup';
+    dealValue = '$400 – $1,200'; service = 'Email Marketing Setup'; serviceKey = 'email';
     magnet = 'Free Email Audit + Subject Line Pack';
-    afterText = 'Automated welcome flow, abandoned cart recovery, and regular revenue from list.';
+    afterText = 'Automated welcome flow, abandoned cart recovery, regular revenue from dormant list.';
+    effortClass = 'effort-medium'; effortLabel = '🟡 Medium effort';
+    closingHint = 'Show them the $ value of their inactive list. One recovered campaign pays for your service.';
+  } else if (probLow.includes('ad') || probLow.includes('funnel') || probLow.includes('landing')) {
+    dealValue = '$400 – $900'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
+    magnet = 'Free Landing Page Audit';
+    afterText = 'Every ad rupee goes to a page that converts, not a dead Instagram bio.';
+    effortClass = 'effort-easy'; effortLabel = '🟢 Easy win';
+    closingHint = 'Show them their ad spend is leaking. Offer to build the landing page on a performance basis.';
   }
 
-  const reason      = lead.reason || 'AI detected high-friction conversion gaps vs. niche competitors.';
+  // ── Reply probability ──
+  const replyScore  = lead.replyChance || Math.min(92, Math.max(38, score - 10 + Math.floor(Math.random() * 20)));
+  const replyClass  = replyScore >= 65 ? 'reply-high' : replyScore >= 45 ? 'reply-mid' : 'reply-low';
+  const replyEmoji  = replyScore >= 65 ? '✦' : replyScore >= 45 ? '◈' : '◇';
+
+  // ── Why now ──
+  const whyNow = lead.whyNow || _deriveWhyNow(lead);
+
+  // ── Red flag ──
+  const redFlag = lead.redFlag || _deriveRedFlag(lead);
+
+  // ── Closing hint from lead data or derived ──
+  const closeHintText = lead.closingHint || closingHint;
+
+  // ── Action context strings ──
   const firstName   = lead.name.split(/[\s@]/)[0] || 'there';
   const beforeText  = lead.problem || 'Conversion gaps detected.';
-  const rawDmText   = `Hey ${firstName}! Noticed your ${lead.platform} has some quick wins — specifically: "${(lead.problem||'').slice(0,55)}…". I\'ve fixed this exact issue for similar accounts. Mind if I send a free mockup?`;
-  const loomCtx     = `Write a 90-second Loom video script. Reaching out to ${lead.name} on ${lead.platform}. Their main problem: ${lead.problem}. Start with a specific observation, show you can fix it, end with soft CTA. Conversational, not salesy.`;
-  const objCtx      = `The prospect ${lead.name} replied: "I don\'t have the budget right now." Write a 2-sentence empathetic reply that validates their concern and offers a risk-free entry point — free audit or small starter project at ${dealValue.split('–')[0].trim()} to prove ROI first. Under 40 words.`;
-  const proposalCtx = lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${service}. Problem: ${lead.problem}. Clear scope, 5-7 day timeline, ${dealValue} pricing.`;
+  const rawDmText   = `Hey ${firstName}! I noticed your ${lead.platform} has a specific gap — "${(lead.problem||'').slice(0,55)}…" — that I\'ve fixed for similar accounts. Mind if I send a free mockup to show you what\'s possible?`;
+  const loomCtx     = `Write a 90-second Loom video script reaching out to ${lead.name} on ${lead.platform}. Their main problem: ${lead.problem}. Why now: ${whyNow}. Start with a specific observation about their account, show you can fix it, end with soft CTA. Conversational tone, under 200 words.`;
+  const objCtx      = `The prospect ${lead.name} replied: "I don\'t have the budget right now." Write a 2-sentence empathetic response that validates their concern and offers a risk-free entry point — a free audit or small starter project at ${dealValue.split('–')[0].trim()} to prove ROI first. Under 40 words.`;
+  const proposalCtx = lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${service}. Problem: ${lead.problem}. Clear scope, 5-7 day timeline, ${dealValue} pricing. Include the ROI case.`;
 
   return `
   <div class="opp-card">
+
+    <!-- HEADER -->
     <div class="opp-card-header">
       <div class="opp-header-top">
         <div class="opp-card-name">
@@ -3478,6 +3730,7 @@ function _renderOppCard(lead) {
       </div>
     </div>
 
+    <!-- MONEY BLOCK -->
     <div class="opp-money-block">
       <div class="opp-money-cell">
         <span class="opp-money-label">Est. Deal Value</span>
@@ -3489,10 +3742,29 @@ function _renderOppCard(lead) {
       </div>
     </div>
 
+    <!-- BODY -->
     <div class="opp-card-body">
-      <div class="opp-reason-box">
-        🧠 <strong>AI Insight:</strong> ${esc(reason)}
+
+      <!-- Stats row: reply % + effort tag -->
+      <div class="opp-stats-row">
+        <span class="opp-reply-pill ${replyClass}">
+          ${replyEmoji} ${replyScore}% Reply Chance
+        </span>
+        <span class="opp-effort-tag ${effortClass}">${effortLabel}</span>
       </div>
+
+      <!-- AI Insight -->
+      <div class="opp-reason-box">
+        🧠 <strong>AI Insight:</strong> ${esc(lead.reason || 'High-friction conversion gaps detected vs. niche competitors.')}
+      </div>
+
+      <!-- Why This Lead NOW -->
+      <div class="opp-why-now">
+        <span class="opp-why-now-icon">⚡</span>
+        <div><strong>Why now:</strong> ${esc(whyNow)}</div>
+      </div>
+
+      <!-- Before / After -->
       <div class="opp-ba-grid">
         <div class="opp-ba-col">
           <span class="opp-ba-label label-before">⚠ Current State</span>
@@ -3503,13 +3775,30 @@ function _renderOppCard(lead) {
           <div class="opp-ba-text">${esc(afterText)}</div>
         </div>
       </div>
+
+      <!-- Red Flag (only if exists) -->
+      ${redFlag ? `
+      <div class="opp-red-flag">
+        <span class="opp-red-flag-icon">⚠</span>
+        <div><strong>Red flag:</strong> ${esc(redFlag)}</div>
+      </div>` : ''}
+
+      <!-- Lead Magnet -->
       <div class="opp-magnet-box">
         <i data-lucide="gift" style="width:14px;height:14px;color:#8b5cf6;flex-shrink:0"></i>
         <span style="color:var(--text3);font-weight:600">Lead Magnet:</span>
         <span style="font-weight:500;color:var(--text-muted)">${magnet}</span>
       </div>
+
+      <!-- Closing Strategy Hint -->
+      <div class="opp-close-hint">
+        <i data-lucide="target" style="width:13px;height:13px;flex-shrink:0;color:#8b5cf6;margin-top:1px"></i>
+        <div><strong>Closing strategy:</strong> ${esc(closeHintText)}</div>
+      </div>
+
     </div>
 
+    <!-- ACTION BUTTONS -->
     <div class="opp-card-actions">
       <div class="opp-action-group">
         <span class="opp-action-group-label">Pitch</span>
@@ -3548,6 +3837,32 @@ function _renderOppCard(lead) {
   </div>`;
 }
 
+/* ── Derive "Why Now" from lead data ── */
+function _deriveWhyNow(lead) {
+  const p = (lead.problem || '').toLowerCase();
+  if (p.includes('ad') || p.includes('spend'))      return 'They\'re actively spending on ads with no return — every day costs them money. They need a fix now.';
+  if (p.includes('drop') || p.includes('declin'))    return 'Engagement is falling fast — algorithm window closing. They\'re in panic mode and open to solutions.';
+  if (p.includes('launch') || p.includes('course'))  return 'They just launched or are about to — conversion window is open right now.';
+  if (p.includes('booking') || p.includes('manual')) return 'Manual booking is draining hours daily. They\'re at capacity pain — perfect moment to pitch automation.';
+  if (p.includes('bio') || p.includes('link'))        return 'Broken funnel is leaking warm traffic every hour. This is a bleeding wound, not a future problem.';
+  if (p.includes('email') || p.includes('list'))      return 'They have an audience but zero email revenue. Every day the list goes cold is money left on the table.';
+  return 'Recently active and growing — in a mindset to invest in tools that help them move faster.';
+}
+
+/* ── Derive red flag from lead data ── */
+function _deriveRedFlag(lead) {
+  const p  = (lead.problem || '').toLowerCase();
+  const f  = (lead.followers || '').toLowerCase();
+  const m  = lead.match || 0;
+  if (f.includes('50k') || f.includes('100k')) {
+    if (!p.includes('monetis') && !p.includes('ad') && !p.includes('product')) {
+      return 'Large audience but zero monetisation signal — may have low budget intent despite follower count.';
+    }
+  }
+  if (p.includes('review') && !p.includes('monetis')) return 'No revenue signal detected — lead may not have budget for ongoing services.';
+  if (m < 88) return 'Signal match below threshold — approach with a lower-risk free offer first.';
+  return null; // No red flag
+}
 /* ── Main scan function ── */
 async function scanOpportunities() {
   const btn       = el('opp-scan-btn');
@@ -3558,13 +3873,17 @@ async function scanOpportunities() {
   const prompt    = val('opp-prompt');
 
   if (!prompt.trim()) {
-    showToast('Describe your ideal lead first.');
+    showToast('Describe who you want to make money from.');
     el('opp-prompt').focus();
     return;
   }
 
-  const checkedSignals = [...document.querySelectorAll('input[name="ps-signal"]:checked')].map(cb => cb.value);
-  const checkedBudget  = [...document.querySelectorAll('input[name="ps-budget"]:checked')].map(cb => cb.value);
+  // Read all filters
+  const checkedSignals  = [...document.querySelectorAll('input[name="ps-signal"]:checked')].map(cb => cb.value);
+  const checkedBudget   = [...document.querySelectorAll('input[name="ps-budget"]:checked')].map(cb => cb.value);
+  const sizeFilter      = _activeSizeFilter  || 'all';
+  const serviceFilter   = _activeServiceFilter || 'all';
+  const hotOnly         = el('ps-hot-only')?.checked || false;
 
   btn.disabled = true;
   loader.classList.add('show');
@@ -3575,22 +3894,59 @@ async function scanOpportunities() {
       <div class="opp-skeleton"></div>
     </div>`;
 
-  const scanPhrases = ['Scanning target platforms…','Running AI gap-analysis…','Matching pain signals…','Scoring opportunities…','Compiling outreach dossiers…'];
+  const phrases = ['Scanning target platforms…','Running AI gap-analysis…','Matching pain signals…','Scoring opportunities…','Compiling outreach dossiers…'];
   let tIdx = 0;
   loaderTxt.textContent = 'Initializing scan nodes…';
-  const txtInterval = setInterval(() => { if (tIdx < scanPhrases.length) loaderTxt.textContent = scanPhrases[tIdx++]; }, 700);
+  const txtInt = setInterval(() => { if (tIdx < phrases.length) loaderTxt.textContent = phrases[tIdx++]; }, 700);
 
   await new Promise(r => setTimeout(r, 3500));
-  clearInterval(txtInterval);
+  clearInterval(txtInt);
 
-  const pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
+  let pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
 
+  // ── Hot-only filter ──
+  if (hotOnly) {
+    pool = pool.filter(l => (l.match || 0) >= 90 && ((l.budget||[]).length > 0));
+  }
+
+  // ── Service match filter ──
+  const serviceMap = {
+    thumbnails:  ['thumbnail','video','reel','youtube','short-form'],
+    copywriting: ['copy','landing','website','seo','description'],
+    funnel:      ['booking','funnel','cta','bio','link','ad'],
+    social:      ['social','post','engagement','instagram','reel'],
+    email:       ['email','list','sequence','campaign','welcome'],
+  };
+  if (serviceFilter !== 'all') {
+    const keywords = serviceMap[serviceFilter] || [];
+    pool = pool.filter(l => keywords.some(kw => (l.problem||'').toLowerCase().includes(kw)));
+    if (pool.length === 0) pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
+  }
+
+  // ── Audience size filter ──
+  const sizeMap = {
+    beginner:    [0, 10000],
+    growing:     [10000, 50000],
+    established: [50000, Infinity],
+  };
+  if (sizeFilter !== 'all') {
+    const [min, max] = sizeMap[sizeFilter];
+    pool = pool.filter(l => {
+      const numStr = (l.followers || '').replace(/[^0-9.k]/gi, '');
+      let num = parseFloat(numStr);
+      if (numStr.toLowerCase().includes('k')) num *= 1000;
+      return !isNaN(num) ? (num >= min && num < max) : true;
+    });
+    if (pool.length === 0) pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
+  }
+
+  // ── Signal scoring ──
   let scored;
   if (checkedSignals.length > 0 || checkedBudget.length > 0) {
     scored = pool.map(lead => {
-      const signalHits = (lead.signals || []).filter(s => checkedSignals.includes(s)).length;
-      const budgetHits = (lead.budget  || []).filter(b => checkedBudget.includes(b)).length;
-      return { ...lead, _fs: (signalHits * 2) + (budgetHits * 3) };
+      const sHits = (lead.signals||[]).filter(s => checkedSignals.includes(s)).length;
+      const bHits = (lead.budget ||[]).filter(b => checkedBudget.includes(b)).length;
+      return { ...lead, _fs: (sHits * 2) + (bHits * 3) };
     });
     scored.sort((a, b) => b._fs - a._fs || b.match - a.match);
   } else {
@@ -3598,24 +3954,24 @@ async function scanOpportunities() {
   }
 
   const leads = scored.slice(0, 3);
-  leads.forEach(lead => {
-    if ((lead._fs || 0) >= 4) lead.match = Math.min(99, lead.match + 2);
-    if ((lead._fs || 0) >= 7) lead.match = Math.min(99, lead.match + 1);
+  leads.forEach(l => {
+    if ((l._fs||0) >= 4) l.match = Math.min(99, l.match + 2);
+    if ((l._fs||0) >= 7) l.match = Math.min(99, l.match + 1);
   });
 
   wrap.innerHTML = leads.length
     ? `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`
     : `<div style="text-align:center;padding:48px 20px;color:var(--text3)">
-         <div style="font-size:32px;margin-bottom:12px">🔍</div>
-         <div style="font-size:15px;font-weight:600;color:var(--text-main);margin-bottom:6px">No leads matched your filters</div>
-         <div style="font-size:13px">Try unchecking some signals or switching target type.</div>
+        <div style="font-size:32px;margin-bottom:12px">🔍</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text-main);margin-bottom:6px">No leads matched your filters</div>
+        <div style="font-size:13px">Try "All" on audience size or service, or uncheck some signals.</div>
        </div>`;
 
   lucide.createIcons();
   loader.classList.remove('show');
   btn.disabled = false;
-  const fs = checkedSignals.length > 0 ? ` · filtered by ${checkedSignals.length} signal${checkedSignals.length > 1 ? 's' : ''}` : '';
-  showToast(`Found ${leads.length} high-intent opportunit${leads.length === 1 ? 'y' : 'ies'}${fs}.`);
+  const fs = checkedSignals.length > 0 ? ` · ${checkedSignals.length} signal filter${checkedSignals.length > 1 ? 's' : ''}` : '';
+  showToast(`Found ${leads.length} lead${leads.length !== 1 ? 's' : ''}${fs}.`);
 }
 
 /* ═══════════════════════════════════════════════════════════════
