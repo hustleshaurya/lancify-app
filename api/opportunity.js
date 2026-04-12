@@ -4,7 +4,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { type, prompt, signals = [], budget = [] } = req.body;
+ const { type, prompt, signals = [], budget = [], platform = 'all' } = req.body;
   if (!prompt) return res.status(400).json({ error: 'No prompt provided' });
 
   const APIFY   = process.env.APIFY_API_TOKEN;
@@ -117,6 +117,7 @@ export default async function handler(req, res) {
       content: `You are an expert freelance opportunity analyser for a tool called Lancify.
 
 Target type: ${type}
+Platform focus: ${platform === 'all' ? 'any platform' : platform}
 User is looking for: ${prompt}
 Pain signals to check: ${signals.join(', ') || 'any problem signals'}
 Budget signals to check: ${budget.join(', ') || 'any budget signals'}
@@ -140,7 +141,8 @@ Each object must have EXACTLY these keys:
   "redFlag": "one sentence warning if there is a concern, or null if clean lead",
   "closingHint": "one sentence closing strategy advice for this specific lead",
   "replyChance": <integer 35-90 estimated reply probability>,
-  "jobDesc": "a job description as if they posted it on Upwork seeking exactly the freelancer's service"
+ "jobDesc": "a job description as if they posted it on Upwork seeking exactly the freelancer's service",
+  "profileUrl": "construct a real working profile URL based on their name and platform — e.g. https://instagram.com/username or https://youtube.com/@handle or https://linkedin.com/in/name or https://tiktok.com/@username"
 }
 
 Return ONLY the raw JSON array. No explanation. No markdown. No code fences.`
