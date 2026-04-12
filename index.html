@@ -3899,8 +3899,33 @@ async function scanOpportunities() {
   loaderTxt.textContent = 'Initializing scan nodes…';
   const txtInt = setInterval(() => { if (tIdx < phrases.length) loaderTxt.textContent = phrases[tIdx++]; }, 700);
 
-  await new Promise(r => setTimeout(r, 3500));
-  clearInterval(txtInt);
+ clearInterval(txtInt);
+
+  let apiLeads = [];
+  try {
+    const apiRes = await fetch('/api/opportunity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type, prompt,
+        signals: checkedSignals,
+        budget: checkedBudget
+      }),
+    });
+    const apiData = await apiRes.json();
+    apiLeads = apiData.leads || [];
+  } catch(e) {
+    showToast('Live scan failed — showing cached results.');
+  }
+
+  if (apiLeads.length > 0) {
+    wrap.innerHTML = `<div class="opp-results-grid">${apiLeads.map(_renderOppCard).join('')}</div>`;
+    lucide.createIcons();
+    loader.classList.remove('show');
+    btn.disabled = false;
+    showToast(`Found ${apiLeads.length} live leads.`);
+    return;
+  }
 
   let pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
 
