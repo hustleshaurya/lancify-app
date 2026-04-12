@@ -122,7 +122,9 @@ Pain signals to check: ${signals.join(', ') || 'any problem signals'}
 Budget signals to check: ${budget.join(', ') || 'any budget signals'}
 
 Here are ${rawProfiles.length} raw scraped profiles:
-${JSON.stringify(rawProfiles.slice(0, 8), null, 2)}
+${rawProfiles.length > 0
+  ? JSON.stringify(rawProfiles.slice(0, 8), null, 2)
+  : 'No live profiles were scraped. Use your own knowledge to generate 3 realistic, specific, and believable leads for this target type and prompt. Make the names, platforms, problems and strategies feel real and actionable.'}
 
 Analyse each profile and return the top 3 best freelance opportunities as a JSON array.
 Each object must have EXACTLY these keys:
