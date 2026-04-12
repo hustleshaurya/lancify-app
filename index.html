@@ -2869,7 +2869,17 @@ html.dark .credits-warning-banner {
       <span class="ps-scan-hint">AI finds top leads based on your filters</span>
     </div>
   </div>
-
+<!-- Platform Filter -->
+  <div>
+    <div class="ps-section-label">Find leads from</div>
+    <div class="ps-size-group" id="ps-platform-group">
+      <button class="ps-size-btn active" data-platform="all" onclick="setPlatformFilter(this)">All Platforms</button>
+      <button class="ps-size-btn" data-platform="instagram" onclick="setPlatformFilter(this)">Instagram</button>
+      <button class="ps-size-btn" data-platform="youtube" onclick="setPlatformFilter(this)">YouTube</button>
+      <button class="ps-size-btn" data-platform="linkedin" onclick="setPlatformFilter(this)">LinkedIn</button>
+      <button class="ps-size-btn" data-platform="tiktok" onclick="setPlatformFilter(this)">TikTok</button>
+    </div>
+  </div>
   <!-- Row 2: Pain Signals -->
   <div>
     <div class="ps-section-label">Pain Signals — what problems should AI look for?</div>
@@ -3243,6 +3253,13 @@ html.dark .credits-warning-banner {
    All duplicates removed. This is the single source of truth.
 ═══════════════════════════════════════════════════════════════ */
 /* ── Audience size filter ── */
+   /* ── Platform filter ── */
+let _activePlatformFilter = 'all';
+function setPlatformFilter(btn) {
+  document.querySelectorAll('#ps-platform-group .ps-size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _activePlatformFilter = btn.dataset.platform;
+}
 let _activeSizeFilter = 'all';
 function setSizeFilter(btn) {
   document.querySelectorAll('.ps-size-btn').forEach(b => b.classList.remove('active'));
@@ -3710,11 +3727,11 @@ function _renderOppCard(lead) {
     <!-- HEADER -->
     <div class="opp-card-header">
       <div class="opp-header-top">
-        <div class="opp-card-name">
-          ${esc(lead.name)}
-          <a href="#" style="color:var(--text3)" title="Open profile">
-            <i data-lucide="external-link" style="width:12px;height:12px"></i>
-          </a>
+ <div class="opp-card-name">
+          ${lead.profileUrl
+            ? `<a href="${lead.profileUrl}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:5px">${esc(lead.name)} <i data-lucide="external-link" style="width:12px;height:12px;opacity:0.4"></i></a>`
+            : esc(lead.name)
+          }
         </div>
         <div class="opp-score-badge">
           <span class="opp-score-num ${scoreClass}">
@@ -3883,7 +3900,8 @@ async function scanOpportunities() {
   const checkedBudget   = [...document.querySelectorAll('input[name="ps-budget"]:checked')].map(cb => cb.value);
   const sizeFilter      = _activeSizeFilter  || 'all';
   const serviceFilter   = _activeServiceFilter || 'all';
-  const hotOnly         = el('ps-hot-only')?.checked || false;
+ const hotOnly         = el('ps-hot-only')?.checked || false;
+  const platformFilter  = _activePlatformFilter || 'all';
 
   btn.disabled = true;
   loader.classList.add('show');
@@ -3906,10 +3924,11 @@ async function scanOpportunities() {
     const apiRes = await fetch('/api/opportunity', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+     body: JSON.stringify({
         type, prompt,
         signals: checkedSignals,
-        budget: checkedBudget
+        budget: checkedBudget,
+        platform: platformFilter
       }),
     });
     const apiData = await apiRes.json();
