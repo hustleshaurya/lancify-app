@@ -1,5 +1,5 @@
 // api/opportunity.js
-// Opportunity Engine backend — Apify (all scrapers) + Groq scoring
+// Opportunity Engine — SerpApi (real data) + Groq (AI scoring)
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -7,107 +7,95 @@ export default async function handler(req, res) {
   const { type, prompt, signals = [], budget = [], platform = 'all' } = req.body;
   if (!prompt) return res.status(400).json({ error: 'No prompt provided' });
 
-  const APIFY = process.env.APIFY_API_TOKEN;
+  const SERP  = process.env.SERPAPI_KEY;
+  const GROQ  = process.env.GROQ_API_KEY;
 
   let rawProfiles = [];
 
   try {
 
     // ─────────────────────────────────────────────
-    // ROUTING: pick the right Apify actor per type
+    // REAL DATA: SerpApi scraping per target type
     // ─────────────────────────────────────────────
 
     if (type === 'Content Creators') {
-      // Apify: Instagram Hashtag Scraper
-      const hashtag = prompt.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '');
-      const runRes = await fetch(
-        `https://api.apify.com/v2/acts/apify~instagram-hashtag-scraper/runs?token=${APIFY}&waitForFinish=60`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            hashtags: [hashtag],
-            resultsLimit: 15,
-          }),
-        }
-      );
-      const runData = await runRes.json();
-      const dsRes = await fetch(
-        `https://api.apify.com/v2/datasets/${runData?.data?.defaultDatasetId}/items?token=${APIFY}&limit=10`
-      );
-      rawProfiles = await dsRes.json();
+      // Search Instagram/YouTube creators via Google
+      const query = `${prompt} instagram OR youtube creator site:instagram.com OR site:youtube.com`;
+      const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&num=10&api_key=${SERP}`;
+      const serpRes = await fetch(url);
+      const serpData = await serpRes.json();
+      rawProfiles = (serpData.organic_results || []).map(r => ({
+        title: r.title,
+        link: r.link,
+        snippet: r.snippet,
+        displayed_link: r.displayed_link,
+      }));
 
     } else if (type === 'Local Businesses') {
-      // Apify: Google Maps Scraper
-      const runRes = await fetch(
-        `https://api.apify.com/v2/acts/apify~google-maps-scraper/runs?token=${APIFY}&waitForFinish=90`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            searchStringsArray: [prompt],
-            maxCrawledPlaces: 15,
-            language: 'en',
-          }),
-        }
-      );
-      const runData = await runRes.json();
-      const dsRes = await fetch(
-        `https://api.apify.com/v2/datasets/${runData?.data?.defaultDatasetId}/items?token=${APIFY}&limit=15`
-      );
-      rawProfiles = await dsRes.json();
+      // Google Maps local search
+      const url = `https://serpapi.com/search.json?engine=google_maps&q=${encodeURIComponent(prompt)}&type=search&api_key=${SERP}`;
+      const serpRes = await fetch(url);
+      const serpData = await serpRes.json();
+      rawProfiles = (serpData.local_results || []).slice(0, 10).map(r => ({
+        title: r.title,
+        rating: r.rating,
+        reviews: r.reviews,
+        type: r.type,
+        address: r.address,
+        phone: r.phone,
+        website: r.website,
+        hours: r.hours,
+      }));
 
-    } else if (type === 'Startups' || type === 'E-commerce Brands') {
-      // Apify: Web Scraper — Product Hunt / Shopify
-      const searchQuery = type === 'Startups'
-        ? `site:producthunt.com ${prompt}`
-        : `site:myshopify.com ${prompt}`;
-      const runRes = await fetch(
-        `https://api.apify.com/v2/acts/apify~web-scraper/runs?token=${APIFY}&waitForFinish=60`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            startUrls: [{ url: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}` }],
-            maxPagesPerCrawl: 3,
-          }),
-        }
-      );
-      const runData = await runRes.json();
-      const dsRes = await fetch(
-        `https://api.apify.com/v2/datasets/${runData?.data?.defaultDatasetId}/items?token=${APIFY}&limit=10`
-      );
-      rawProfiles = await dsRes.json();
+    } else if (type === 'Startups') {
+      // Product Hunt startups via Google
+      const query = `${prompt} site:producthunt.com`;
+      const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&num=10&api_key=${SERP}`;
+      const serpRes = await fetch(url);
+      const serpData = await serpRes.json();
+      rawProfiles = (serpData.organic_results || []).map(r => ({
+        title: r.title,
+        link: r.link,
+        snippet: r.snippet,
+        displayed_link: r.displayed_link,
+      }));
+
+    } else if (type === 'E-commerce Brands') {
+      // Shopify stores via Google
+      const query = `${prompt} site:myshopify.com OR shopify store`;
+      const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&num=10&api_key=${SERP}`;
+      const serpRes = await fetch(url);
+      const serpData = await serpRes.json();
+      rawProfiles = (serpData.organic_results || []).map(r => ({
+        title: r.title,
+        link: r.link,
+        snippet: r.snippet,
+        displayed_link: r.displayed_link,
+      }));
 
     } else if (type === 'Coaches & Consultants') {
-      // Apify: LinkedIn Profile Scraper
-      const runRes = await fetch(
-        `https://api.apify.com/v2/acts/apify~linkedin-profile-scraper/runs?token=${APIFY}&waitForFinish=60`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            searchUrl: `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(prompt)}`,
-            maxResults: 15,
-          }),
-        }
-      );
-      const runData = await runRes.json();
-      const dsRes = await fetch(
-        `https://api.apify.com/v2/datasets/${runData?.data?.defaultDatasetId}/items?token=${APIFY}&limit=10`
-      );
-      rawProfiles = await dsRes.json();
+      // LinkedIn coaches via Google
+      const query = `${prompt} site:linkedin.com/in`;
+      const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&num=10&api_key=${SERP}`;
+      const serpRes = await fetch(url);
+      const serpData = await serpRes.json();
+      rawProfiles = (serpData.organic_results || []).map(r => ({
+        title: r.title,
+        link: r.link,
+        snippet: r.snippet,
+        displayed_link: r.displayed_link,
+      }));
     }
 
     // ─────────────────────────────────────────────
-    // GROQ: Score and analyse each raw profile
+    // GROQ: Analyse real profiles + return leads
     // ─────────────────────────────────────────────
 
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+        'Authorization': `Bearer ${GROQ}`,
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
@@ -122,27 +110,34 @@ User is looking for: ${prompt}
 Pain signals to check: ${signals.join(', ') || 'any problem signals'}
 Budget signals to check: ${budget.join(', ') || 'any budget signals'}
 
-Here are ${rawProfiles.length} raw scraped profiles:
+Here are ${rawProfiles.length} REAL profiles/businesses found from live search:
 ${rawProfiles.length > 0
   ? JSON.stringify(rawProfiles.slice(0, 8), null, 2)
-  : 'No live profiles were scraped. Use your own knowledge to generate 3 realistic, specific, and believable leads for this target type and prompt. Make the names, platforms, problems and strategies feel real and actionable.'}
+  : 'No live profiles found. Generate 3 realistic leads based on your knowledge of this niche.'}
 
-Analyse each profile and return the top 3 best freelance opportunities as a JSON array.
-Each object must have EXACTLY these keys:
+Your job:
+- Analyse each real profile from the data above
+- Identify their specific freelance opportunity gap
+- Score and rank the top 3 as actionable leads
+- Use the REAL name, REAL link, REAL platform from the data
+- Extract follower/audience size from the snippet if visible
+- The "profileUrl" must be the REAL link from the search result, not made up
+
+Return the top 3 as a JSON array. Each object must have EXACTLY these keys:
 {
-  "name": "account or business name",
-  "platform": "platform they are on",
-  "followers": "their audience size as a human string e.g. '8.4k followers'",
-  "problem": "the SPECIFIC problem you detected — be concrete, cite real evidence from the profile data",
-  "strategy": "the exact outreach strategy for this lead",
+  "name": "real account or business name from search results",
+  "platform": "platform they are on e.g. Instagram, YouTube, LinkedIn, Google Maps",
+  "followers": "audience size if visible in snippet, else estimate from context e.g. '12k followers'",
+  "problem": "the SPECIFIC problem you detected from their snippet/description — be concrete",
+  "strategy": "exact outreach strategy for this specific lead",
   "match": <integer 80-99 based on signal match quality>,
   "reason": "one sentence explaining why this score",
-  "whyNow": "one sentence timing urgency — why the user should reach out THIS WEEK specifically",
-  "redFlag": "one sentence warning if there is a concern, or null if clean lead",
-  "closingHint": "one sentence closing strategy advice for this specific lead",
+  "whyNow": "one sentence timing urgency — why reach out THIS WEEK",
+  "redFlag": "one sentence warning if concern exists, or null if clean",
+  "closingHint": "one sentence closing strategy for this specific lead",
   "replyChance": <integer 35-90 estimated reply probability>,
-  "jobDesc": "a job description as if they posted it on Upwork seeking exactly the freelancer's service",
-  "profileUrl": "construct a real working profile URL based on their name and platform — e.g. https://instagram.com/username or https://youtube.com/@handle or https://linkedin.com/in/name or https://tiktok.com/@username"
+  "jobDesc": "job description as if they posted on Upwork seeking this freelancer's service",
+  "profileUrl": "the REAL URL from the search result data above — do not make this up"
 }
 
 Return ONLY the raw JSON array. No explanation. No markdown. No code fences.`
@@ -153,7 +148,11 @@ Return ONLY the raw JSON array. No explanation. No markdown. No code fences.`
     const groqData = await groqRes.json();
     const rawText = groqData?.choices?.[0]?.message?.content || '[]';
     let leads = [];
-    try { leads = JSON.parse(rawText); } catch { leads = []; }
+    try {
+      leads = JSON.parse(rawText);
+    } catch {
+      leads = [];
+    }
 
     return res.status(200).json({ leads, source: 'live' });
 
