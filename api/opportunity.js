@@ -11,7 +11,15 @@ export default async function handler(req, res) {
   const GROQ    = process.env.GROQ_API_KEY;
   const YOUTUBE = process.env.YOUTUBE_API_KEY;
 
-  let rawProfiles = [];
+ rawProfiles = (detailData.items || [])
+  .filter(ch => {
+    const title = ch.snippet?.title || '';
+    // Remove auto-generated music Topic channels
+    return !title.includes('- Topic') &&
+           !title.includes('- topic') &&
+           parseInt(ch.statistics?.subscriberCount || 0) > 500;
+  })
+  .map(ch => {
 
   try {
 
@@ -19,7 +27,9 @@ export default async function handler(req, res) {
 
       if (platform === 'youtube' || platform === 'all') {
         // ── YouTube Data API v3 ──
-        const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(prompt)}&type=channel&maxResults=10&key=${YOUTUBE}`;
+       // Add "channel" keyword + exclude Topic channels
+const ytQuery = `${prompt} channel -topic -music -rapper -singer`;
+const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(ytQuery)}&type=channel&maxResults=15&regionCode=US&relevanceLanguage=en&key=${YOUTUBE}`;
         const searchRes = await fetch(searchUrl);
         const searchData = await searchRes.json();
 
