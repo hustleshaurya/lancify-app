@@ -5109,8 +5109,7 @@ function showLogin() {
 }
 
 /* ─── AUTH ─── */
-async function signInGoogle() { await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}}); }
-
+async function signInGoogle() { await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}}); }
 function toggleAuthMode() {
   authMode = authMode==='signin'?'signup':'signin';
   const su = authMode==='signup';
