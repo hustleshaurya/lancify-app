@@ -2540,7 +2540,6 @@ html.dark .credits-warning-banner {
     <nav class="sb-nav">
       <div class="sb-section">Tools</div>
       <div class="nav-item active" data-page="home"     data-tooltip="Dashboard"        onclick="navigate('home')">    <i data-lucide="home"          class="icon"></i><span class="nav-label"> Dashboard</span></div>
-      <div class="nav-item"        data-page="coach"    data-tooltip="Launch Coach"     onclick="navigate('coach')">   <i data-lucide="message-square" class="icon"></i><span class="nav-label"> Launch Coach</span></div>
       <div class="nav-item"        data-page="audit"    data-tooltip="Audit Generator"  onclick="navigate('audit')">   <i data-lucide="sparkles"      class="icon"></i><span class="nav-label"> Audit Generator</span><span class="pro-badge">PRO</span></div>
       <div class="nav-item"        data-page="proposal" data-tooltip="Proposal Writer"  onclick="navigate('proposal')"><i data-lucide="file-text"     class="icon"></i><span class="nav-label"> Proposal Writer</span><span class="pro-badge">PRO</span></div>
       <div class="nav-item"        data-page="email"    data-tooltip="Email Writer"     onclick="navigate('email')">   <i data-lucide="mail"          class="icon"></i><span class="nav-label"> Email Writer</span><span class="pro-badge">PRO</span></div>
@@ -2735,10 +2734,7 @@ html.dark .credits-warning-banner {
 
           <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text-main)">Get started</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px">
-            <div class="tool-card" onclick="navigate('coach')">
-              <div class="tool-icon" style="background:rgba(59,130,246,0.08)"><i data-lucide="message-square" style="width:22px;height:22px;color:#3b82f6;stroke-width:1.75"></i></div>
-              <div><h3>Launch Coach</h3><p>Generate your complete freelance kit</p></div>
-            </div>
+            
             <div class="tool-card" onclick="navigate('proposal')">
               <div class="tool-icon" style="background:rgba(34,197,94,0.08)"><i data-lucide="file-text" style="width:22px;height:22px;color:#22c55e;stroke-width:1.75"></i></div>
               <div><h3>Proposal Writer</h3><p>Tailored cold pitch generator</p></div>
@@ -2763,32 +2759,6 @@ html.dark .credits-warning-banner {
 
           <div class="section-title">Recent activity</div>
           <div id="recent-activity" style="color:var(--text3);font-size:13.5px;padding:18px 0;text-align:center">No activity yet. Start by creating your first freelance kit!</div>
-        </div>
-      </div>
-
-      <div id="page-coach" class="page">
-        <div class="content-inner">
-          <div class="page-hd"><h1>Launch Coach</h1><p>5 quick questions. Your complete freelance kit in 20 minutes.</p></div>
-          <div class="chat-wrap">
-            <div class="chat-progress" id="chat-progress-wrap">
-              <div class="chat-progress-labels"><span id="prog-label">Step 1 of 5</span><span id="prog-pct">0%</span></div>
-              <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-            </div>
-            <div class="chat-msgs" id="chat-msgs"></div>
-            <div class="chat-gen-bar" id="gen-bar"><div class="spin"></div><span id="gen-text">Analysing your skills…</span></div>
-            <div id="input-zone" class="chat-input-row">
-              <textarea class="chat-textarea" id="chat-input" placeholder="Type your answer…" onkeydown="handleChatKey(event)" oninput="autoResize(this)" rows="1"></textarea>
-              <button class="send-btn" onclick="sendChatMsg()"><i data-lucide="arrow-right" style="width:17px;height:17px"></i></button>
-            </div>
-          </div>
-          <div id="kit-result" style="display:none;margin-top:28px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-              <h2 style="font-size:18px;font-weight:700;letter-spacing:-.4px;color:var(--text-main)">Your Freelance Kit</h2>
-              <button class="btn btn-secondary" onclick="downloadKitPDF()" style="gap:6px"><i data-lucide="download" style="width:13px;height:13px"></i> Download PDF</button>
-            </div>
-            <div id="kit-blocks"></div>
-            <button class="btn btn-secondary" onclick="resetCoach()" style="margin-top:10px">Start Over</button>
-          </div>
         </div>
       </div>
 
