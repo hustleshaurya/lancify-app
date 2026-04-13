@@ -19,17 +19,21 @@ export default async function handler(req, res) {
     // ─────────────────────────────────────────────
 
     if (type === 'Content Creators') {
-      // Search Instagram/YouTube creators via Google
-      const query = `${prompt} instagram OR youtube creator site:instagram.com OR site:youtube.com`;
-      const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&num=10&api_key=${SERP}`;
-      const serpRes = await fetch(url);
-      const serpData = await serpRes.json();
-      rawProfiles = (serpData.organic_results || []).map(r => ({
-        title: r.title,
-        link: r.link,
-        snippet: r.snippet,
-        displayed_link: r.displayed_link,
-      }));
+  const platformTarget = platform === 'youtube' ? 'site:youtube.com/@'
+    : platform === 'linkedin' ? 'site:linkedin.com/in'
+    : platform === 'tiktok' ? 'site:tiktok.com/@'
+    : 'site:instagram.com';
+
+  const query = `${prompt} -agency -brand -marketing -hire -collaboration ${platformTarget}`;
+  const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&num=10&api_key=${SERP}`;
+  const serpRes = await fetch(url);
+  const serpData = await serpRes.json();
+  rawProfiles = (serpData.organic_results || []).map(r => ({
+    title: r.title,
+    link: r.link,
+    snippet: r.snippet,
+    displayed_link: r.displayed_link,
+  }));
 
     } else if (type === 'Local Businesses') {
       // Google Maps local search
@@ -116,15 +120,12 @@ ${rawProfiles.length > 0
   : 'No live profiles found. Generate 3 realistic leads based on your knowledge of this niche.'}
 
 Your job:
-- Analyse each real profile from the data above
-- Identify their specific freelance opportunity gap
-- Score and rank the top 3 as actionable leads
-- Use the REAL name, REAL link, REAL platform from the data
-- Extract follower/audience size from the snippet if visible
-- The "profileUrl" must be the REAL link from the search result, not made up
-
-Return the top 3 as a JSON array. Each object must have EXACTLY these keys:
-{
+- ONLY pick profiles that are INDIVIDUAL creators/people who need freelance help
+- IGNORE agencies, brands, marketing companies, or platforms
+- IGNORE any result that is selling services TO creators
+- Pick results where the person clearly has a problem: no funnel, inconsistent posting, poor design, no CTA
+- Use the REAL name, REAL link from the data above
+- The profileUrl must be their actual Instagram/YouTube/LinkedIn profile URL
   "name": "real account or business name from search results",
   "platform": "platform they are on e.g. Instagram, YouTube, LinkedIn, Google Maps",
   "followers": "audience size if visible in snippet, else estimate from context e.g. '12k followers'",
