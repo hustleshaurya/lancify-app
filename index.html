@@ -2154,6 +2154,111 @@ html.dark .credits-warning-banner {
   text-align: center;
   margin-top: 4px;
 } 
+     /* ─── QUICK FIND MODE ─── */
+.opp-mode-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  background: var(--bg-hover);
+  padding: 4px;
+  border-radius: 10px;
+  width: fit-content;
+}
+.opp-mode-tab {
+  padding: 7px 18px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.opp-mode-tab.active {
+  background: var(--bg);
+  color: var(--text-main);
+  box-shadow: var(--shadow-sm);
+}
+.opp-quick-panel { display: block; }
+.opp-deep-panel  { display: none;  }
+.opp-quick-panel.hidden { display: none; }
+.opp-deep-panel.visible { display: block; }
+
+/* Skill grid */
+.qf-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.qf-skill-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 10px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+  text-align: center;
+}
+.qf-skill-card:hover {
+  border-color: var(--border2);
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+.qf-skill-card.active {
+  border-color: var(--text-main);
+  background: var(--text-main);
+  color: var(--bg);
+}
+.qf-skill-card.active .qf-skill-icon { filter: invert(1); }
+.qf-skill-icon { font-size: 22px; line-height: 1; }
+.qf-skill-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+.qf-skill-card.active .qf-skill-name { color: var(--bg); }
+.qf-skill-sub {
+  font-size: 10px;
+  color: var(--text3);
+  line-height: 1.3;
+}
+.qf-skill-card.active .qf-skill-sub { color: rgba(255,255,255,0.6); }
+
+/* Location row */
+.qf-location-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 6px;
+}
+.qf-location-row > div { flex: 1; }
+.qf-find-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: opacity .15s;
+}
+.qf-find-btn:hover { opacity: .85; }
+.qf-find-btn:disabled { opacity: .5; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -2840,6 +2945,105 @@ html.dark .credits-warning-banner {
             <p>Find your next client. Analyse their gap. Pitch in one click.</p>
           </div>
 
+          <!-- MODE TABS -->
+          <div class="opp-mode-tabs">
+            <button class="opp-mode-tab active" id="tab-quick" onclick="switchOppMode('quick')">
+              ⚡ Quick Find
+            </button>
+            <button class="opp-mode-tab" id="tab-deep" onclick="switchOppMode('deep')">
+              🔍 Deep Scan
+            </button>
+          </div>
+
+          <!-- ══ QUICK FIND PANEL ══ -->
+          <div class="card opp-quick-panel" id="opp-quick-panel" style="margin-bottom:22px">
+            <div style="padding:20px 22px">
+
+              <div class="ps-section-label" style="margin-bottom:12px">What's your freelance skill?</div>
+              <div class="qf-skill-grid" id="qf-skill-grid">
+                <button class="qf-skill-card" data-skill="Thumbnail Design" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">🖼️</span>
+                  <span class="qf-skill-name">Thumbnail Design</span>
+                  <span class="qf-skill-sub">YouTube creators</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Video Editing" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">🎬</span>
+                  <span class="qf-skill-name">Video Editing</span>
+                  <span class="qf-skill-sub">Content creators</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Copywriting" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">✍️</span>
+                  <span class="qf-skill-name">Copywriting</span>
+                  <span class="qf-skill-sub">Stores & startups</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Email Marketing" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">📧</span>
+                  <span class="qf-skill-name">Email Marketing</span>
+                  <span class="qf-skill-sub">Brands & coaches</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Social Media Management" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">📱</span>
+                  <span class="qf-skill-name">Social Media</span>
+                  <span class="qf-skill-sub">Local businesses</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Web Design" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">🌐</span>
+                  <span class="qf-skill-name">Web Design</span>
+                  <span class="qf-skill-sub">Small businesses</span>
+                </button>
+                <button class="qf-skill-card" data-skill="SEO" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">📈</span>
+                  <span class="qf-skill-name">SEO</span>
+                  <span class="qf-skill-sub">Blogs & brands</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Funnel Building" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">🔧</span>
+                  <span class="qf-skill-name">Funnel Building</span>
+                  <span class="qf-skill-sub">Coaches & creators</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Graphic Design" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">🎨</span>
+                  <span class="qf-skill-name">Graphic Design</span>
+                  <span class="qf-skill-sub">Brands & startups</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Voice Over" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">🎙️</span>
+                  <span class="qf-skill-name">Voice Over</span>
+                  <span class="qf-skill-sub">YouTube & ads</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Paid Ads" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">💰</span>
+                  <span class="qf-skill-name">Paid Ads</span>
+                  <span class="qf-skill-sub">E-commerce brands</span>
+                </button>
+                <button class="qf-skill-card" data-skill="Content Writing" onclick="selectSkill(this)">
+                  <span class="qf-skill-icon">📝</span>
+                  <span class="qf-skill-name">Content Writing</span>
+                  <span class="qf-skill-sub">SaaS & blogs</span>
+                </button>
+              </div>
+
+              <div class="qf-location-row">
+                <div>
+                  <label class="field-label">Your location / target market <span style="color:var(--text3)">(optional)</span></label>
+                  <input type="text" id="qf-location" placeholder="e.g. Mumbai, India or leave blank for worldwide">
+                </div>
+                <button class="qf-find-btn" id="qf-find-btn" onclick="checkCredits(10, quickFindClients)">
+                  <i data-lucide="target" style="width:14px;height:14px"></i>
+                  Find My Clients
+                </button>
+              </div>
+              <div style="font-size:11px;color:var(--text3);margin-top:6px">
+                AI finds real clients who need your exact skill right now
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ══ DEEP SCAN PANEL ══ -->
+          <div class="card opp-deep-panel" id="opp-deep-panel" style="margin-bottom:22px">
+        <div class="pre-scan-panel">
+
           <div class="card" style="margin-bottom:22px">
         <div class="pre-scan-panel">
 
@@ -2987,6 +3191,7 @@ html.dark .credits-warning-banner {
   </div>
 
 </div><!-- /pre-scan-panel -->
+          </div><!-- /opp-deep-panel -->
 
           <div class="opp-filters" style="margin-top: 8px;">
                 <span class="opp-filter-label">Filter By:</span>
@@ -3259,6 +3464,194 @@ function setPlatformFilter(btn) {
   document.querySelectorAll('#ps-platform-group .ps-size-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   _activePlatformFilter = btn.dataset.platform;
+}
+   /* ══ OPPORTUNITY ENGINE — MODE SWITCHING ══ */
+
+let _activeSkill = null;
+
+function switchOppMode(mode) {
+  const quickPanel = el('opp-quick-panel');
+  const deepPanel  = el('opp-deep-panel');
+  const tabQuick   = el('tab-quick');
+  const tabDeep    = el('tab-deep');
+
+  if (mode === 'quick') {
+    quickPanel.classList.remove('hidden');
+    deepPanel.classList.remove('visible');
+    tabQuick.classList.add('active');
+    tabDeep.classList.remove('active');
+  } else {
+    quickPanel.classList.add('hidden');
+    deepPanel.classList.add('visible');
+    tabQuick.classList.remove('active');
+    tabDeep.classList.add('active');
+  }
+}
+
+function selectSkill(btn) {
+  document.querySelectorAll('.qf-skill-card').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _activeSkill = btn.dataset.skill;
+}
+
+/* Skill → search config map */
+const _skillMap = {
+  'Thumbnail Design': {
+    type: 'Content Creators', platform: 'youtube',
+    prompt: 'YouTube creators with bad thumbnails low CTR under 100k subscribers',
+    signals: ['low_ctr', 'poor_design']
+  },
+  'Video Editing': {
+    type: 'Content Creators', platform: 'youtube',
+    prompt: 'YouTube creators with inconsistent uploads poor video quality under 50k subscribers',
+    signals: ['inconsistent_posting', 'poor_design']
+  },
+  'Copywriting': {
+    type: 'E-commerce Brands', platform: 'all',
+    prompt: 'Shopify stores with weak product descriptions no clear value proposition',
+    signals: ['no_cta', 'low_ctr']
+  },
+  'Email Marketing': {
+    type: 'Coaches & Consultants', platform: 'all',
+    prompt: 'coaches consultants with no email list or newsletter',
+    signals: ['no_email_list']
+  },
+  'Social Media Management': {
+    type: 'Local Businesses', platform: 'all',
+    prompt: 'local businesses with inactive social media no Instagram presence',
+    signals: ['inconsistent_posting', 'no_cta']
+  },
+  'Web Design': {
+    type: 'Local Businesses', platform: 'all',
+    prompt: 'local businesses with outdated website or no website',
+    signals: ['poor_design', 'no_cta']
+  },
+  'SEO': {
+    type: 'Startups', platform: 'all',
+    prompt: 'SaaS startups with no blog or poor search engine presence',
+    signals: ['low_ctr']
+  },
+  'Funnel Building': {
+    type: 'Coaches & Consultants', platform: 'all',
+    prompt: 'coaches consultants with no booking funnel or sales page',
+    signals: ['no_cta', 'ad_spend_no_funnel']
+  },
+  'Graphic Design': {
+    type: 'E-commerce Brands', platform: 'all',
+    prompt: 'e-commerce brands with poor product images and no brand identity',
+    signals: ['poor_design']
+  },
+  'Voice Over': {
+    type: 'Content Creators', platform: 'youtube',
+    prompt: 'YouTube educational or explainer channels needing voice over',
+    signals: ['poor_design', 'low_ctr']
+  },
+  'Paid Ads': {
+    type: 'E-commerce Brands', platform: 'all',
+    prompt: 'e-commerce brands running ads with no proper landing page or funnel',
+    signals: ['ad_spend_no_funnel']
+  },
+  'Content Writing': {
+    type: 'Startups', platform: 'all',
+    prompt: 'SaaS startups with no content marketing blog or case studies',
+    signals: ['no_email_list', 'low_ctr']
+  },
+};
+
+async function quickFindClients() {
+  if (!_activeSkill) {
+    showToast('Please select your skill first.');
+    return;
+  }
+
+  const config   = _skillMap[_activeSkill];
+  const location = val('qf-location').trim();
+  const prompt   = location
+    ? `${config.prompt} in ${location}`
+    : config.prompt;
+
+  const btn     = el('qf-find-btn');
+  const loader  = el('opp-loader');
+  const loaderTxt = el('opp-loader-text');
+  const wrap    = el('opp-results-wrap');
+
+  btn.disabled = true;
+  loader.classList.add('show');
+  wrap.innerHTML = `
+    <div class="opp-results-grid">
+      <div class="opp-skeleton"></div>
+      <div class="opp-skeleton"></div>
+      <div class="opp-skeleton"></div>
+    </div>`;
+
+  const phrases = [
+    `Finding clients who need ${_activeSkill}…`,
+    'Scanning real businesses…',
+    'Detecting pain points…',
+    'Scoring opportunities…',
+    'Preparing your leads…'
+  ];
+  let tIdx = 0;
+  loaderTxt.textContent = phrases[0];
+  const txtInt = setInterval(() => {
+    if (tIdx < phrases.length - 1) loaderTxt.textContent = phrases[++tIdx];
+  }, 800);
+
+  let apiLeads = [];
+  let apiData  = null;
+  let apiError = false;
+
+  try {
+    const apiRes = await fetch('/api/opportunity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type:     config.type,
+        prompt,
+        signals:  config.signals,
+        budget:   ['monetised'],
+        platform: config.platform,
+        skill:    _activeSkill,
+        mode:     'quick',
+      }),
+    });
+    apiData  = await apiRes.json();
+    apiLeads = apiData.leads || [];
+  } catch(e) {
+    apiError = true;
+    showToast('Scan failed — please try again.');
+  }
+
+  clearInterval(txtInt);
+  loader.classList.remove('show');
+  btn.disabled = false;
+
+  if (apiLeads.length > 0) {
+    wrap.innerHTML = `<div class="opp-results-grid">${apiLeads.map(_renderOppCard).join('')}</div>`;
+    lucide.createIcons();
+    showToast(`Found ${apiLeads.length} clients who need ${_activeSkill}!`);
+    return;
+  }
+
+  // Nothing found
+  wrap.innerHTML = `
+    <div style="text-align:center;padding:60px 20px;color:var(--text3)">
+      <div style="font-size:40px;margin-bottom:16px">🔍</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text-main);margin-bottom:8px">
+        No clients found right now
+      </div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto;line-height:1.6">
+        Try changing your location, or switch to <strong>Deep Scan</strong> to customise your search further.
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button onclick="quickFindClients()" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
+          🔄 Try Again
+        </button>
+        <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
+          🔍 Switch to Deep Scan
+        </button>
+      </div>
+    </div>`;
 }
 let _activeSizeFilter = 'all';
 function setSizeFilter(btn) {
