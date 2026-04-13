@@ -258,7 +258,56 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 .ws-dot{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);flex-shrink:0}
 .ws-name{font-size:13px;font-weight:500;color:var(--text-main);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .ws-chevron{color:var(--text3);flex-shrink:0}
+/* Collapsed workspace */
+.sidebar.collapsed .sb-workspace-btn { justify-content: center; padding: 6px 0; }
+.sidebar.collapsed .ws-name, .sidebar.collapsed .ws-chevron { 
+  opacity: 0; width: 0; overflow: hidden; pointer-events: none; 
+  flex: none !important; margin: 0 !important; 
+}
 
+/* Nav */
+.sb-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 8px}
+.sb-section{
+  font-size:10px;font-weight:600;color:var(--text3);
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:14px 8px 4px;user-select:none;
+  white-space:nowrap;overflow:hidden;
+  height:auto;opacity:1;
+}
+.sidebar.collapsed .sb-section{height:0;padding:0;opacity:0;pointer-events:none;overflow:hidden}
+
+.nav-item{
+  display:flex;align-items:center;gap:9px;padding:7px 9px;
+  border-radius:7px;cursor:pointer;
+  font-size:13px;font-weight:400;color:var(--text-muted);
+  margin-bottom:1px;user-select:none;position:relative;
+  white-space:nowrap;overflow:hidden;
+}
+.nav-item:hover{background:var(--bg-hover);color:var(--text-main)}
+.nav-item.active{background:var(--bg-hover);color:var(--text-main);font-weight:500}
+.nav-item .icon{width:15px;height:15px;flex-shrink:0;stroke-width:1.75;min-width:15px}
+.nav-item.active .icon{stroke-width:2}
+.nav-label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .15s}
+.pro-badge{
+  margin-left:auto;
+  background:transparent;
+  color:var(--text3);
+  font-size:9.5px;font-weight:500;
+  letter-spacing:.03em;
+  padding:1px 0;
+  border-radius:99px;
+  line-height:1.5;flex-shrink:0;
+  white-space:nowrap;
+  transition:opacity .15s;
+}
+
+/* Collapsed nav */
+.sidebar.collapsed .nav-item { justify-content: center; padding: 9px 0; gap: 0; }
+.sidebar.collapsed .nav-label { 
+  opacity: 0; width: 0; overflow: hidden; pointer-events: none; 
+  flex: none !important; margin: 0 !important; 
+}
+.sidebar.collapsed .pro-badge { display: none; }
 /* Collapsed workspace */
 .sidebar.collapsed .sb-workspace-btn{justify-content:center;padding:6px 0}
 .sidebar.collapsed .ws-name,.sidebar.collapsed .ws-chevron{opacity:0;width:0;overflow:hidden;pointer-events:none}
