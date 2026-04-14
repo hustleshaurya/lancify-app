@@ -111,20 +111,32 @@ const SKILL_CONFIG = {
     ],
     minSubs: 3000,
     maxSubs: 50000,
+    maxInactiveDays: 90,
+    minAvgViews: 180,
+    minViewSubRatio: 0.007,
+    searchOrder: 'relevance',
+    publishedAfterDays: 180,
+    minLeadCount: 3,
     allowWebFallback: false,
   },
   'Video Editing': {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'vlog youtube channel',
-      'travel youtube channel',
-      'podcast clips youtube',
-      'business youtube channel',
-      'fitness youtube channel',
+      'small youtube channel vlog',
+      'small youtube channel podcast',
+      'education youtube creator',
+      'faceless youtube channel',
+      'gaming youtube channel',
     ],
-    minSubs: 3000,
-    maxSubs: 70000,
+    minSubs: 1200,
+    maxSubs: 90000,
+    maxInactiveDays: 120,
+    minAvgViews: 120,
+    minViewSubRatio: 0.004,
+    searchOrder: 'relevance',
+    publishedAfterDays: 240,
+    minLeadCount: 3,
     allowWebFallback: false,
   },
   'Voice Over': {
@@ -153,6 +165,7 @@ const SKILL_CONFIG = {
     apifyMaps: 'local business clinic dentist lawyer accountant',
     serpQuery: 'local business clinic dentist lawyer accountant',
     exclude: ['agency', 'web design company', 'wix', 'squarespace', 'template'],
+    quickSkipSiteSignals: true,
   },
   'Copywriting': {
     method: 'serp',
@@ -171,9 +184,9 @@ const SKILL_CONFIG = {
   'SEO': {
     method: 'serp',
     targetType: 'business',
-    serpQuery: 'site:producthunt.com/products saas startup launched',
-    allowDomains: ['producthunt.com'],
-    exclude: ['agency', 'tool', 'platform', 'semrush', 'ahrefs'],
+    serpQuery: '(small business website OR local business website OR ecommerce store) (slow website OR weak SEO OR not ranking OR low traffic) -agency -\"seo services\"',
+    allowDomains: [],
+    exclude: ['agency', 'seo agency', 'digital marketing agency', 'fiverr', 'upwork', 'list', 'top 10', 'semrush', 'ahrefs', 'producthunt.com', 'linkedin.com'],
   },
   'Funnel Building': {
     method: 'serp',
@@ -199,9 +212,9 @@ const SKILL_CONFIG = {
   'Content Writing': {
     method: 'serp',
     targetType: 'business',
-    serpQuery: 'site:producthunt.com/products saas OR software startup',
-    allowDomains: ['producthunt.com'],
-    exclude: ['fiverr', 'upwork', 'agency', 'tool', 'platform', 'jasper', 'copy.ai'],
+    serpQuery: '(saas website OR startup website OR ecommerce brand) (blog OR resources OR knowledge base) -\"content writing services\" -agency',
+    allowDomains: [],
+    exclude: ['fiverr', 'upwork', 'agency', 'copywriting agency', 'content writing services', 'jasper', 'copy.ai', 'list', 'top 10', 'producthunt.com'],
   },
 };
 
@@ -273,8 +286,8 @@ function normalizeBudgetTokens(budget = []) {
 function normalizeAudienceBucket(v) {
   const s = lower(v || 'all');
   if (!s || s === 'all') return 'all';
-  if (s.includes('beginner') || s.includes('<10') || s.includes('under 10') || s.includes('10k')) return 'beginner';
   if (s.includes('growing') || s.includes('10k-50') || s.includes('10k to 50')) return 'growing';
+  if (s.includes('beginner') || s.includes('<10') || s.includes('under 10')) return 'beginner';
   if (s.includes('established') || s.includes('50k+')) return 'established';
   return 'all';
 }
@@ -502,19 +515,37 @@ async function fetchJson(url, opts = {}, timeoutMs = 15000) {
   }
 }
 
-async function searchYouTubeCreators({ YOUTUBE, queries, location, minSubs, maxSubs }) {
+async function searchYouTubeCreators({
+  YOUTUBE,
+  queries,
+  location,
+  minSubs,
+  maxSubs,
+  maxInactiveDays = 60,
+  minAvgViews = 250,
+  minViewSubRatio = 0.01,
+  searchOrder = 'date',
+  publishedAfterDays = 90,
+}) {
   if (!YOUTUBE) return [];
 
-  const publishedAfter = new Date(Date.now() - 90 * DAY_MS).toISOString();
-  const searchQueries = (queries || []).slice(0, 5);
+  const safeMaxInactiveDays = Number(maxInactiveDays || 60);
+  const safeMinAvgViews = Number(minAvgViews || 250);
+  const safeMinViewSubRatio = Number(minViewSubRatio || 0.01);
+  const safeSearchOrder = cleanText(searchOrder || 'date').toLowerCase() === 'relevance' ? 'relevance' : 'date';
+  const safePublishedAfterDays = Number(publishedAfterDays || 90);
+
+  const publishedAfter = new Date(Date.now() - safePublishedAfterDays * DAY_MS).toISOString();
+  const searchQueries = (queries || []).slice(0, 6);
+  const randomizedQueries = [...searchQueries].sort(() => Math.random() - 0.5);
   const rawSearchItems = [];
 
-  for (const q of searchQueries) {
+  for (const q of randomizedQueries) {
     const fullQ = cleanText(location ? `${q} ${location}` : q);
     const searchUrl =
       `https://www.googleapis.com/youtube/v3/search?part=snippet` +
       `&q=${encodeURIComponent(fullQ)}` +
-      `&type=video&order=date&maxResults=25&relevanceLanguage=en` +
+      `&type=video&order=${safeSearchOrder}&maxResults=25&relevanceLanguage=en` +
       `&publishedAfter=${encodeURIComponent(publishedAfter)}` +
       `&key=${YOUTUBE}`;
 
@@ -617,10 +648,10 @@ async function searchYouTubeCreators({ YOUTUBE, queries, location, minSubs, maxS
     const lastUploadDays = daysSince(lastUploadAt);
     const viewSubRatio = subs > 0 ? avgRecentViews / subs : 0;
 
-    // Strict quality gate for creator leads: small + active + real view activity
-    if (lastUploadDays > 60) continue;
-    if (avgRecentViews < 250) continue;
-    if (viewSubRatio < 0.01) continue;
+    // Skill-tunable quality gate for creator leads.
+    if (lastUploadDays > safeMaxInactiveDays) continue;
+    if (avgRecentViews < safeMinAvgViews) continue;
+    if (viewSubRatio < safeMinViewSubRatio) continue;
 
     const custom = cleanText(ch.snippet?.customUrl);
     const profileUrl = custom
@@ -728,8 +759,8 @@ async function runSerpGoogle(query, { SERP, excludeTerms = [], allowDomains = []
   if (!SERP) return [];
 
   const globalBad = [
-    'fiverr', 'upwork', 'freelancer.com', 'veed', 'canva', 'agency', 'tool',
-    'software', 'platform', 'hire', 'blog', 'list', 'top 10', 'best ', 'template',
+    'fiverr', 'upwork', 'freelancer.com', 'veed', 'canva', 'agency',
+    'hire', 'list', 'top 10', 'best ', 'template',
     'theme', 'how to', 'reddit', 'quora', 'youtube.com/watch', 'facebook.com/groups'
   ];
 
@@ -792,9 +823,9 @@ function qualityGate(profiles, cfg) {
       if (!Number.isFinite(Number(p.subscriberCount))) return false;
       if (Number(p.subscriberCount) < Number(cfg?.minSubs || 0)) return false;
       if (Number(p.subscriberCount) > Number(cfg?.maxSubs || 1_000_000)) return false;
-      if (Number(p.lastUploadDays || 999) > 60) return false;
-      if (Number(p.avgRecentViews || 0) < 250) return false;
-      if (Number(p.viewSubRatio || 0) < 0.01) return false;
+      if (Number(p.lastUploadDays || 999) > Number(cfg?.maxInactiveDays || 60)) return false;
+      if (Number(p.avgRecentViews || 0) < Number(cfg?.minAvgViews || 250)) return false;
+      if (Number(p.viewSubRatio || 0) < Number(cfg?.minViewSubRatio || 0.01)) return false;
       return true;
     }
 
@@ -904,8 +935,11 @@ async function readSiteSignals(profileUrl) {
   const root = getRootDomain(profileUrl);
   if (!root) return null;
 
+  let timer = null;
   try {
-    const text = await fetch(`https://r.jina.ai/http://${root}`).then((r) => r.text());
+    const controller = new AbortController();
+    timer = setTimeout(() => controller.abort(), 2200);
+    const text = await fetch(`https://r.jina.ai/http://${root}`, { signal: controller.signal }).then((r) => r.text());
     const page = lower(text).slice(0, 9000);
 
     const signals = {
@@ -927,17 +961,27 @@ async function readSiteSignals(profileUrl) {
     };
   } catch {
     return null;
+  } finally {
+    if (timer) clearTimeout(timer);
   }
 }
 
-async function enrichSiteSignalsForProfiles(profiles, cfg) {
+async function enrichSiteSignalsForProfiles(profiles, cfg, opts = {}) {
   if ((cfg?.targetType === 'creator')) return profiles;
-  const out = [];
-  for (const p of profiles) {
-    const siteSignal = await readSiteSignals(p.profileUrl);
-    out.push({ ...p, siteSignal });
-  }
-  return out;
+  if (!opts?.enabled) return profiles;
+
+  const maxProfiles = Number(opts?.maxProfiles || 6);
+  const head = (profiles || []).slice(0, maxProfiles);
+  const tail = (profiles || []).slice(maxProfiles);
+
+  const enrichedHead = await Promise.all(
+    head.map(async (p) => {
+      const siteSignal = await readSiteSignals(p.profileUrl);
+      return { ...p, siteSignal };
+    })
+  );
+
+  return [...enrichedHead, ...tail];
 }
 
 const SERVICE_RULES = {
@@ -1304,7 +1348,9 @@ export default async function handler(req, res) {
     budget = [],
   } = body;
 
-  if (!cleanText(prompt)) {
+  const effectivePrompt = cleanText(prompt) || ((mode === 'quick' && skill) ? `${cleanText(skill)} leads` : '');
+
+  if (!effectivePrompt) {
     return res.status(400).json({ error: 'No prompt provided' });
   }
 
@@ -1317,7 +1363,7 @@ export default async function handler(req, res) {
 
   try {
     const cfg = skill ? SKILL_CONFIG[skill] : null;
-    const location = extractLocation(prompt);
+    const location = extractLocation(effectivePrompt);
     const advanced = normalizeAdvancedControls(body);
     const normalizedSignals = normalizeSignalTokens(signals);
     const normalizedBudget = normalizeBudgetTokens(budget);
@@ -1330,7 +1376,37 @@ export default async function handler(req, res) {
           location,
           minSubs: cfg.minSubs,
           maxSubs: cfg.maxSubs,
+          maxInactiveDays: cfg.maxInactiveDays || 60,
+          minAvgViews: cfg.minAvgViews || 250,
+          minViewSubRatio: cfg.minViewSubRatio || 0.01,
+          searchOrder: cfg.searchOrder || 'date',
+          publishedAfterDays: cfg.publishedAfterDays || 90,
         });
+
+        // Retry with broader creator discovery if strict pass returns too few leads.
+        if (rawProfiles.length < Number(cfg.minLeadCount || 3)) {
+          const broaderQueries = [
+            ...(cfg.ytQueries || []),
+            `${cleanText(skill)} youtube channel`,
+            `${cleanText(skill)} creator`,
+            cleanText(effectivePrompt).replace(/\bin [^,]+$/i, ''),
+          ].filter(Boolean);
+
+          const retryProfiles = await searchYouTubeCreators({
+            YOUTUBE,
+            queries: broaderQueries,
+            location,
+            minSubs: Math.max(500, Number(cfg.minSubs || 2000) - 1500),
+            maxSubs: Number(cfg.maxSubs || 70000) + 40000,
+            maxInactiveDays: Math.max(120, Number(cfg.maxInactiveDays || 60)),
+            minAvgViews: Math.max(80, Number(cfg.minAvgViews || 250) - 120),
+            minViewSubRatio: Math.max(0.003, Number(cfg.minViewSubRatio || 0.01) - 0.004),
+            searchOrder: 'relevance',
+            publishedAfterDays: Math.max(270, Number(cfg.publishedAfterDays || 90)),
+          });
+
+          rawProfiles = dedupeProfiles([...rawProfiles, ...retryProfiles]);
+        }
 
         // Important: for creator skills we avoid generic web fallback by default.
         if (!rawProfiles.length && cfg.allowWebFallback) {
@@ -1342,10 +1418,8 @@ export default async function handler(req, res) {
         }
       } else if (cfg.method === 'maps') {
         const mapsQ = location ? `${cfg.apifyMaps} in ${location}` : cfg.apifyMaps;
-        rawProfiles = await runApifyMaps(mapsQ, APIFY);
-        if (!rawProfiles.length) {
-          rawProfiles = await runSerpMaps(cfg.serpQuery + (location ? ` in ${location}` : ''), SERP);
-        }
+        rawProfiles = await runSerpMaps(cfg.serpQuery + (location ? ` in ${location}` : ''), SERP);
+        if (!rawProfiles.length) rawProfiles = await runApifyMaps(mapsQ, APIFY);
       } else if (cfg.method === 'serp') {
         const serpQ = location ? `${cfg.serpQuery} ${location}` : cfg.serpQuery;
         rawProfiles = await runSerpGoogle(serpQ, {
@@ -1353,42 +1427,79 @@ export default async function handler(req, res) {
           excludeTerms: cfg.exclude || [],
           allowDomains: cfg.allowDomains || [],
         });
+
+        // Quick-find resilience for SEO/Content Writing: broaden to website-heavy queries when needed.
+        if ((skill === 'SEO' || skill === 'Content Writing') && rawProfiles.length < 3) {
+          const altQueries = skill === 'SEO'
+            ? [
+              `${cleanText(effectivePrompt)} website -agency -"seo services"`,
+              `small business website needs SEO -agency -fiverr -upwork`,
+            ]
+            : [
+              `${cleanText(effectivePrompt)} blog website -agency -"content writing services"`,
+              `startup website blog content gaps -agency -fiverr -upwork`,
+            ];
+
+          const extra = [];
+          for (const q of altQueries) {
+            const chunked = await runSerpGoogle(q, {
+              SERP,
+              excludeTerms: cfg.exclude || [],
+              allowDomains: [],
+            });
+            extra.push(...chunked);
+            if (extra.length >= 12) break;
+          }
+
+          rawProfiles = dedupeProfiles([...rawProfiles, ...extra]);
+        }
       }
     } else {
       // Deep mode keeps broad categories, but still passes through quality gate + ranking.
       if (type === 'Local Businesses') {
-        rawProfiles = await runApifyMaps(prompt, APIFY);
-        if (!rawProfiles.length) rawProfiles = await runSerpMaps(prompt, SERP);
+        rawProfiles = await runApifyMaps(effectivePrompt, APIFY);
+        if (!rawProfiles.length) rawProfiles = await runSerpMaps(effectivePrompt, SERP);
       } else if (type === 'Content Creators') {
         rawProfiles = await searchYouTubeCreators({
           YOUTUBE,
-          queries: [prompt],
+          queries: [effectivePrompt],
           location,
           minSubs: 2000,
           maxSubs: platform === 'youtube' ? 100000 : 70000,
         });
       } else if (type === 'Startups') {
-        rawProfiles = await runSerpGoogle(`site:producthunt.com/products ${prompt}`, {
+        rawProfiles = await runSerpGoogle(`site:producthunt.com/products ${effectivePrompt}`, {
           SERP,
           allowDomains: ['producthunt.com'],
         });
       } else if (type === 'E-commerce Brands') {
-        rawProfiles = await runSerpGoogle(`site:myshopify.com ${prompt} -blog -list -template`, {
+        rawProfiles = await runSerpGoogle(`site:myshopify.com ${effectivePrompt} -blog -list -template`, {
           SERP,
           allowDomains: ['myshopify.com'],
           excludeTerms: ['blog', 'template', 'top 10'],
         });
       } else if (type === 'Coaches & Consultants') {
-        rawProfiles = await runSerpGoogle(`site:linkedin.com/in ${prompt} coach OR consultant -recruiter`, {
+        rawProfiles = await runSerpGoogle(`site:linkedin.com/in ${effectivePrompt} coach OR consultant -recruiter`, {
           SERP,
           allowDomains: ['linkedin.com'],
         });
       } else {
-        rawProfiles = await runSerpGoogle(prompt, { SERP });
+        rawProfiles = await runSerpGoogle(effectivePrompt, { SERP });
       }
     }
 
-    const gated = qualityGate(dedupeProfiles(rawProfiles), cfg);
+    let gateCfg = cfg;
+    if (mode === 'quick' && cfg?.targetType === 'creator' && rawProfiles.length < Number(cfg?.minLeadCount || 3)) {
+      gateCfg = {
+        ...cfg,
+        minSubs: Math.max(800, Number(cfg.minSubs || 2000) - 800),
+        maxInactiveDays: Math.max(120, Number(cfg.maxInactiveDays || 60)),
+        minAvgViews: Math.max(90, Number(cfg.minAvgViews || 250) - 80),
+        minViewSubRatio: Math.max(0.003, Number(cfg.minViewSubRatio || 0.01) - 0.003),
+      };
+    }
+
+    const gated = qualityGate(dedupeProfiles(rawProfiles), gateCfg);
 
     // Keep Quick Find behavior unchanged. Advanced controls are applied only in deep/advanced mode.
     const advancedScoped = mode === 'quick'
@@ -1396,7 +1507,10 @@ export default async function handler(req, res) {
       : applyAdvancedProfileFilters(gated, cfg, advanced, skill);
 
     const prelimRanked = rankProfiles(advancedScoped, cfg, normalizedSignals, normalizedBudget).slice(0, 12);
-    const withSiteSignals = await enrichSiteSignalsForProfiles(prelimRanked, cfg);
+    const withSiteSignals = await enrichSiteSignalsForProfiles(prelimRanked, cfg, {
+      enabled: mode !== 'quick' && !cfg?.quickSkipSiteSignals,
+      maxProfiles: mode === 'quick' ? 0 : 6,
+    });
     const advancedAfterSignals = mode === 'quick'
       ? withSiteSignals
       : applyAdvancedProfileFilters(withSiteSignals, cfg, advanced, skill);
