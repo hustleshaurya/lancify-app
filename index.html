@@ -576,12 +576,13 @@ html.dark .profile-banner:hover{background:#14532d}
 /* Sidebar folders */
 .nav-folder{margin:2px 0}
 .nav-folder-head{
-  width:100%;height:34px;border:none;background:transparent;cursor:pointer;
+  width:100%;height:30px;border:none;background:transparent;cursor:pointer;
   display:flex;align-items:center;justify-content:space-between;
-  color:var(--text-muted);padding:0 10px;border-radius:8px;font-family:inherit
+  color:var(--text-muted);padding:0 8px;border-radius:8px;font-family:inherit
 }
 .nav-folder-head:hover{background:var(--bg-hover);color:var(--text-main)}
 .nav-folder-title{display:flex;align-items:center;gap:7px;min-width:0}
+.nav-folder-head .nav-label{font-size:12px;font-weight:500}
 .nav-folder-chevron{width:12px;height:12px;transition:transform .15s ease;opacity:.7}
 .nav-folder.open .nav-folder-chevron{transform:rotate(180deg)}
 .nav-folder-children{display:grid;gap:3px;padding:3px 0 6px 12px}
@@ -620,10 +621,13 @@ html.dark .profile-banner:hover{background:#14532d}
 /* Opportunity empty state alignment fix */
 .opp-results-grid .opp-empty{
   grid-column:1/-1;
+  justify-self:center;
   margin:10px auto 0;
   width:100%;
   max-width:760px;
   min-height:220px;
+  padding:24px;
+  box-sizing:border-box;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -3469,12 +3473,6 @@ html.dark .credits-warning-banner {
         </div>
       </div>
 
-<!-- ================================================================
-     STEP 2 — Replace the entire #page-opportunity div opening
-     Ctrl+F: <div id="page-opportunity" class="page">
-     Replace everything from that line down to the FIRST </div><!-- /pre-scan-panel -->
-   
-
 <div id="page-opportunity" class="page">
   <div class="content-inner wide">
     <div class="page-hd">
@@ -5956,12 +5954,23 @@ async function deleteLead(id){
 /* ─── CLIENT + INVOICE DATA (PHASE 1) ─── */
 function _storageKey(base, uid){ return `${base}-${uid || 'guest'}`; }
 
-function loadOpportunityClients(uid){
+async function loadOpportunityClients(uid){
   try {
-    const raw = localStorage.getItem(_storageKey('lancify-opportunity-clients', uid));
-    opportunityClients = raw ? JSON.parse(raw) : [];
+    const { data, error } = await sb
+      .from('opportunity_clients')
+      .select('*')
+      .eq('user_id', uid)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    opportunityClients = data || [];
+    localStorage.setItem(_storageKey('lancify-opportunity-clients', uid), JSON.stringify(opportunityClients));
   } catch {
-    opportunityClients = [];
+    try {
+      const raw = localStorage.getItem(_storageKey('lancify-opportunity-clients', uid));
+      opportunityClients = raw ? JSON.parse(raw) : [];
+    } catch {
+      opportunityClients = [];
+    }
   }
   renderManagedOpportunityClients();
 }
@@ -5971,16 +5980,27 @@ function persistOpportunityClients(){
   localStorage.setItem(_storageKey('lancify-opportunity-clients', currentUser.id), JSON.stringify(opportunityClients));
 }
 
+async function upsertOpportunityClientsRemote(rows = []){
+  if (!currentUser || !rows.length) return;
+  try {
+    await sb.from('opportunity_clients').upsert(rows, { onConflict: 'id' });
+  } catch {
+    persistOpportunityClients();
+  }
+}
+
 function ingestOpportunityClients(leads = [], skill = ''){
   if (!currentUser || !Array.isArray(leads) || !leads.length) return;
   const existing = new Set(opportunityClients.map(c => `${(c.profileUrl||'').toLowerCase()}|${(c.name||'').toLowerCase()}`));
+  const insertedRows = [];
   let added = 0;
   for (const l of leads) {
     const key = `${(l.profileUrl||'').toLowerCase()}|${(l.name||'').toLowerCase()}`;
     if (!l?.name || existing.has(key)) continue;
     existing.add(key);
-    opportunityClients.unshift({
+    const row = {
       id: `opp-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,
+      user_id: currentUser.id,
       name: l.name,
       platform: l.platform || 'Website',
       service: skill || 'Freelance service',
@@ -5988,11 +6008,14 @@ function ingestOpportunityClients(leads = [], skill = ''){
       profileUrl: l.profileUrl || '',
       quickDm: l.quickDm || l.assets?.quickDm || '',
       created_at: new Date().toISOString(),
-    });
+    };
+    opportunityClients.unshift(row);
+    insertedRows.push(row);
     added++;
   }
   if (opportunityClients.length > 80) opportunityClients = opportunityClients.slice(0, 80);
   persistOpportunityClients();
+  upsertOpportunityClientsRemote(insertedRows);
   renderManagedOpportunityClients();
   renderBusinessDashboard();
   if (added > 0) showToast(`${added} lead${added>1?'s':''} saved to Manage Clients.`);
@@ -6037,6 +6060,13 @@ function removeOpportunityClient(id){
   persistOpportunityClients();
   renderManagedOpportunityClients();
   renderBusinessDashboard();
+  if (currentUser) {
+    sb.from('opportunity_clients')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', currentUser.id)
+      .catch(() => persistOpportunityClients());
+  }
 }
 
 async function addOpportunityClientToPipeline(id){
@@ -6234,7 +6264,14 @@ function injectBusinessDashboardWidgets(){
       </div>
     </div>
   `;
-  home.appendChild(section);
+  const greeting = home.querySelector('#hero-greeting');
+  if (greeting?.nextElementSibling) {
+    home.insertBefore(section, greeting.nextElementSibling);
+  } else if (greeting) {
+    greeting.insertAdjacentElement('afterend', section);
+  } else {
+    home.prepend(section);
+  }
 }
 
 function _monthlyEarningsBuckets(){
@@ -6271,6 +6308,7 @@ function _renderEarningsBars(barId, labelId){
 }
 
 function renderBusinessDashboard(){
+  injectBusinessDashboardWidgets();
   const wonRevenue = userLeads
     .filter(l => (l.status || '').toLowerCase() === 'won')
     .reduce((sum, l) => sum + Number(l.project_value || 0), 0);
@@ -6402,12 +6440,12 @@ function onLogin(user) {
 
   if (el('ob-name')) el('ob-name').value = firstName !== 'User' ? name : '';
 
+  injectBusinessDashboardWidgets();
+  renderBusinessDashboard();
   loadStats(user.id);
   loadLeads(user.id);
   loadInvoices(user.id);
   loadOpportunityClients(user.id);
-  injectBusinessDashboardWidgets();
-  renderBusinessDashboard();
   lucide.createIcons();
 
   _decideRoute(user.id);
