@@ -26,6 +26,146 @@ const PRICE_HINTS = {
   default: '$150 - $450',
 };
 
+const PLAN_CONFIG = {
+  free: {
+    maxLeadCount: 8,
+    maxCandidates: 16,
+    baseQuickCredits: 1,
+    baseDeepCredits: 3,
+    perLeadCredits: 1,
+    aiMultiplier: 1.1,
+  },
+  pro: {
+    maxLeadCount: 20,
+    maxCandidates: 30,
+    baseQuickCredits: 1,
+    baseDeepCredits: 2,
+    perLeadCredits: 0.65,
+    aiMultiplier: 1.0,
+  },
+};
+
+function parseUsdNumber(v) {
+  const raw = String(v ?? '').replace(/,/g, '').trim();
+  if (!raw) return null;
+  const num = Number(raw.replace(/[^\d.]/g, ''));
+  if (!Number.isFinite(num) || num <= 0) return null;
+  return num;
+}
+
+function parseUsdRange(rangeText) {
+  const s = String(rangeText || '');
+  const nums = s.match(/(\d+(?:\.\d+)?)/g) || [];
+  if (!nums.length) return { min: 150, max: 450, avg: 300 };
+  if (nums.length === 1) {
+    const n = Number(nums[0]);
+    return { min: n, max: n, avg: n };
+  }
+  const min = Number(nums[0]);
+  const max = Number(nums[1]);
+  const avg = Math.round((min + max) / 2);
+  return { min, max, avg };
+}
+
+function resolvePlanTier(body = {}) {
+  const raw = lower(body.plan || body.planTier || body.subscription || body.userPlan || 'free');
+  if (raw.includes('pro') || raw.includes('plus') || raw.includes('go') || raw.includes('premium')) return 'pro';
+  return 'free';
+}
+
+function computeLeadTarget({ incomeGoal, skill, planTier }) {
+  const plan = PLAN_CONFIG[planTier] || PLAN_CONFIG.free;
+  const parsedIncome = parseUsdNumber(incomeGoal);
+  const incomeGoalUsd = clamp(Math.round(parsedIncome || 500), 100, 10000);
+  const deal = parseUsdRange(PRICE_HINTS[skill] || PRICE_HINTS.default);
+  const avgDealUsd = Math.max(80, Number(deal.avg || 300));
+
+  const desiredClients = Math.ceil(incomeGoalUsd / avgDealUsd);
+  const requestedLeadCount = clamp(Math.max(3, desiredClients + 1), 3, plan.maxLeadCount);
+
+  return {
+    incomeGoalUsd,
+    avgDealUsd,
+    requestedLeadCount,
+    minLeadCount: 3,
+    planMaxLeadCount: plan.maxLeadCount,
+    planMaxCandidates: plan.maxCandidates,
+  };
+}
+
+function estimateScanCredits({ isQuickMode, leadCount, planTier, usedAi }) {
+  const plan = PLAN_CONFIG[planTier] || PLAN_CONFIG.free;
+  const base = isQuickMode ? plan.baseQuickCredits : plan.baseDeepCredits;
+  const raw = base + (Number(leadCount || 0) * plan.perLeadCredits);
+  const withAi = usedAi ? raw * plan.aiMultiplier : raw;
+  return Math.max(1, Math.ceil(withAi));
+}
+
+function buildOutreachAssets(lead, skill) {
+  const name = cleanText(lead?.name || 'there');
+  const problem = cleanText(lead?.problem || `I found a clear ${skill || 'growth'} gap`);
+  const strategy = cleanText(lead?.strategy || 'I can share a quick fix plan and implement fast.');
+  const deal = cleanText(lead?.dealValue || PRICE_HINTS[skill] || PRICE_HINTS.default);
+  const profileUrl = cleanText(lead?.profileUrl || '');
+
+  const quickDm = [
+    `Hey ${name},`,
+    `I noticed one thing: ${problem}`,
+    `I help with ${skill || 'this exact issue'} and can send a quick 2-step fix today.`,
+    `If useful, I can do a small starter sprint (${deal}) so you can test risk-free.`,
+  ].join('\n');
+
+  const loomScript = [
+    `Hi ${name}, quick teardown for your ${lead?.platform || 'business'}.`,
+    `1) What I noticed: ${problem}`,
+    `2) Why it matters now: ${cleanText(lead?.whyNow || 'you are active and this affects current growth')}`,
+    `3) What I would do first: ${strategy}`,
+    `4) Simple next step: I can deliver one starter asset this week (${deal}).`,
+  ].join('\n');
+
+  const audit = [
+    `Lead: ${name}`,
+    `URL: ${profileUrl || 'N/A'}`,
+    `Skill: ${skill || 'General'}`,
+    `Main gap: ${problem}`,
+    `First fix: ${strategy}`,
+    `Offer range: ${deal}`,
+    `Reply angle: ${cleanText(lead?.closingHint || 'Offer a tiny first deliverable')}`,
+  ].join('\n');
+
+  const proposal = [
+    `Subject: Quick ${skill || 'Growth'} Improvement Plan for ${name}`,
+    ``,
+    `Hi ${name},`,
+    `I reviewed your current setup and found: ${problem}`,
+    `My plan: ${strategy}`,
+    ``,
+    `Deliverables (starter):`,
+    `- 1 focused implementation sprint`,
+    `- clear before/after comparison`,
+    `- feedback iteration`,
+    ``,
+    `Investment: ${deal}`,
+    `If you want, I can start with a small first deliverable this week.`,
+  ].join('\n');
+
+  return { quickDm, loomScript, audit, proposal };
+}
+
+function attachOutreachAssets(leads, skill) {
+  return (leads || []).map((lead) => {
+    const assets = buildOutreachAssets(lead, skill);
+    return {
+      ...lead,
+      assets,
+      quickDm: assets.quickDm,
+      loomScript: assets.loomScript,
+      audit: assets.audit,
+      proposal: assets.proposal,
+    };
+  });
+}
+
 const SKILL_INTENT_RULES = {
   'Thumbnail Design': {
     requiredAny: ['thumbnail', 'ctr', 'click-through', 'packaging', 'title'],
@@ -1255,18 +1395,20 @@ function fallbackLeadFromProfile(profile, skill, cfg) {
   };
 }
 
-async function enrichWithGroq({ GROQ, profiles, skill, incomeGoal, cfg }) {
-  const candidates = profiles.slice(0, 8);
+async function enrichWithGroq({ GROQ, profiles, skill, incomeGoal, cfg, leadLimit = 3, candidateLimit = 12 }) {
+  const safeLeadLimit = clamp(Number(leadLimit || 3), 3, 20);
+  const safeCandidateLimit = clamp(Number(candidateLimit || 12), 8, 40);
+  const candidates = profiles.slice(0, safeCandidateLimit);
   if (!candidates.length) return [];
   const byId = new Map(candidates.map((p) => [p.sourceId, p]));
   const rules = SKILL_INTENT_RULES[skill] || null;
 
   if (!GROQ) {
-    const leads = candidates.slice(0, 6).map((p) => {
+    const leads = candidates.slice(0, Math.max(6, safeLeadLimit * 2)).map((p) => {
       const base = fallbackLeadFromProfile(p, skill, cfg);
       return applyIntentRules(base, p, skill, cfg, p.siteSignal || null);
     });
-    return pickDiverseTopLeads(leads, byId, skill, 3);
+    return pickDiverseTopLeads(leads, byId, skill, safeLeadLimit);
   }
 
   const candidatesPayload = candidates.map((p) => ({
@@ -1306,7 +1448,7 @@ Rules:
   - Forbidden keywords: ${JSON.stringify(rules?.forbiddenAny || [])}
 - redFlag must be null or one concise warning.
 
-Return JSON array with max 3 items:
+Return JSON array with max ${safeLeadLimit} items:
 [
   {
     "sourceId": "candidate sourceId",
@@ -1382,16 +1524,16 @@ Return raw JSON only.`;
       .filter(Boolean)
       .sort((a, b) => b.match - a.match);
 
-    if (leads.length) return pickDiverseTopLeads(leads, byId, skill, 3);
+    if (leads.length) return pickDiverseTopLeads(leads, byId, skill, safeLeadLimit);
   } catch (e) {
     console.error('Groq enrichment failed:', e.message || e);
   }
 
-  const fallbackLeads = candidates.slice(0, 6).map((p) => {
+  const fallbackLeads = candidates.slice(0, Math.max(6, safeLeadLimit * 2)).map((p) => {
     const base = fallbackLeadFromProfile(p, skill, cfg);
     return applyIntentRules(base, p, skill, cfg, p.siteSignal || null);
   });
-  return pickDiverseTopLeads(fallbackLeads, byId, skill, 3);
+  return pickDiverseTopLeads(fallbackLeads, byId, skill, safeLeadLimit);
 }
 
 function ensureQuickMinimumLeads(leads, rankedProfiles, skill, cfg, minCount = 3) {
@@ -1453,6 +1595,9 @@ export default async function handler(req, res) {
     const advanced = normalizeAdvancedControls(body);
     const normalizedSignals = normalizeSignalTokens(signals);
     const normalizedBudget = normalizeBudgetTokens(budget);
+    const planTier = resolvePlanTier(body);
+    const leadTarget = computeLeadTarget({ incomeGoal, skill, planTier });
+    const rankWindow = clamp(Math.max(12, leadTarget.requestedLeadCount * 4), 12, leadTarget.planMaxCandidates);
 
     if (isQuickMode && skill && cfg) {
       if (cfg.method === 'youtube') {
@@ -1632,7 +1777,7 @@ export default async function handler(req, res) {
       ? gated
       : applyAdvancedProfileFilters(gated, cfg, advanced, skill);
 
-    const prelimRanked = rankProfiles(advancedScoped, cfg, normalizedSignals, normalizedBudget).slice(0, 12);
+    const prelimRanked = rankProfiles(advancedScoped, cfg, normalizedSignals, normalizedBudget).slice(0, rankWindow);
     const withSiteSignals = await enrichSiteSignalsForProfiles(prelimRanked, cfg, {
       enabled: !isQuickMode && !cfg?.quickSkipSiteSignals,
       maxProfiles: isQuickMode ? 0 : 6,
@@ -1640,7 +1785,7 @@ export default async function handler(req, res) {
     const advancedAfterSignals = isQuickMode
       ? withSiteSignals
       : applyAdvancedProfileFilters(withSiteSignals, cfg, advanced, skill);
-    let ranked = rankProfiles(advancedAfterSignals, cfg, normalizedSignals, normalizedBudget).slice(0, 12);
+    let ranked = rankProfiles(advancedAfterSignals, cfg, normalizedSignals, normalizedBudget).slice(0, rankWindow);
 
     if (!ranked.length && isQuickMode && dedupedRaw.length) {
       const emergencyCfg = {
@@ -1652,7 +1797,7 @@ export default async function handler(req, res) {
         minViewSubRatio: 0.001,
       };
       const emergencyPool = buildQuickCandidatePool(dedupedRaw, emergencyCfg);
-      ranked = rankProfiles(emergencyPool, emergencyCfg, normalizedSignals, normalizedBudget).slice(0, 12);
+      ranked = rankProfiles(emergencyPool, emergencyCfg, normalizedSignals, normalizedBudget).slice(0, rankWindow);
     }
 
     console.log(`[OppEngine v2] mode=${mode} skill=${skill} raw=${rawProfiles.length} gated=${gated.length} advanced=${advancedScoped.length} ranked=${ranked.length}`);
@@ -1670,15 +1815,43 @@ export default async function handler(req, res) {
       });
     }
 
-    let leads = await enrichWithGroq({ GROQ, profiles: ranked, skill, incomeGoal, cfg });
+    let leads = await enrichWithGroq({
+      GROQ,
+      profiles: ranked,
+      skill,
+      incomeGoal: leadTarget.incomeGoalUsd,
+      cfg,
+      leadLimit: leadTarget.requestedLeadCount,
+      candidateLimit: leadTarget.planMaxCandidates,
+    });
     if (isQuickMode) {
-      leads = ensureQuickMinimumLeads(leads, ranked, skill, cfg, 3);
+      leads = ensureQuickMinimumLeads(leads, ranked, skill, cfg, leadTarget.requestedLeadCount);
     }
+
+    leads = attachOutreachAssets(leads, skill);
+
+    const estimatedCredits = estimateScanCredits({
+      isQuickMode,
+      leadCount: leads.length,
+      planTier,
+      usedAi: Boolean(GROQ),
+    });
 
     return res.status(200).json({
       leads,
       source: 'live',
       count: leads.length,
+      targeting: {
+        incomeGoalUsd: leadTarget.incomeGoalUsd,
+        avgDealUsd: leadTarget.avgDealUsd,
+        requestedLeadCount: leadTarget.requestedLeadCount,
+        returnedLeadCount: leads.length,
+      },
+      usage: {
+        planTier,
+        estimatedCredits,
+        billingModel: 'base + per-lead credits (plan-aware)',
+      },
     });
   } catch (err) {
     console.error('Opportunity Engine fatal error:', err);
