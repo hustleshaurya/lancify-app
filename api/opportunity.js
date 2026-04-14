@@ -223,6 +223,98 @@ function lower(v) {
   return cleanText(v).toLowerCase();
 }
 
+function asArray(v) {
+  if (Array.isArray(v)) return v;
+  if (v === null || v === undefined) return [];
+  return [v];
+}
+
+function normalizeSignalTokens(signals = []) {
+  const out = new Set();
+  for (const raw of asArray(signals)) {
+    const s = lower(raw);
+    if (!s) continue;
+    if (s.includes('inconsistent posting') || s.includes('active posting') || s.includes('active-posting')) {
+      out.add('active-posting');
+    }
+    if (s.includes('low ctr') || s.includes('low views') || s.includes('poor visual quality') || s.includes('high engagement')) {
+      out.add('high-engagement');
+    }
+    if (
+      s.includes('no clear cta') ||
+      s.includes('no email list') ||
+      s.includes('funnel') ||
+      s.includes('ad spend') ||
+      s.includes('high intent') ||
+      s.includes('high-intent')
+    ) {
+      out.add('high-intent');
+    }
+    if (s.includes('active-posting') || s.includes('high-engagement') || s.includes('high-intent')) {
+      out.add(s);
+    }
+  }
+  return [...out];
+}
+
+function normalizeBudgetTokens(budget = []) {
+  const out = new Set();
+  for (const raw of asArray(budget)) {
+    const b = lower(raw);
+    if (!b) continue;
+    if (b.includes('running paid ads') || b.includes('ad spend') || b.includes('mid-ticket')) out.add('mid-ticket');
+    if (b.includes('monetised audience') || b.includes('monetized audience') || b.includes('high-ticket')) out.add('mid-ticket');
+    if (b.includes('low-ticket')) out.add('low-ticket');
+    if (b.includes('mid-ticket')) out.add('mid-ticket');
+  }
+  return [...out];
+}
+
+function normalizeAudienceBucket(v) {
+  const s = lower(v || 'all');
+  if (!s || s === 'all') return 'all';
+  if (s.includes('beginner') || s.includes('<10') || s.includes('under 10') || s.includes('10k')) return 'beginner';
+  if (s.includes('growing') || s.includes('10k-50') || s.includes('10k to 50')) return 'growing';
+  if (s.includes('established') || s.includes('50k+')) return 'established';
+  return 'all';
+}
+
+function normalizeServiceTag(v) {
+  const s = lower(v);
+  if (!s || s === 'all') return 'all';
+  if (s.includes('thumb')) return 'thumbnails';
+  if (s.includes('copy')) return 'copywriting';
+  if (s.includes('funnel')) return 'funnel';
+  if (s.includes('social')) return 'social-media';
+  if (s.includes('email')) return 'email';
+  return s.replace(/\s+/g, '-');
+}
+
+function normalizeAdvancedControls(body = {}) {
+  const audienceRaw =
+    body.audienceSize ?? body.audience ?? body.audienceFilter ?? body.audienceBucket ?? body.audienceTier ?? 'all';
+  const serviceRaw =
+    body.serviceMatch ?? body.serviceNeed ?? body.service ?? body.services ?? body.serviceFilter ?? 'all';
+  const filtersRaw = body.filters ?? body.filterBy ?? body.filter ?? [];
+  const hotRaw = body.hotLeadsOnly ?? body.quickMode ?? body.quick_mode ?? body.hotOnly ?? false;
+
+  const serviceFilters = asArray(serviceRaw)
+    .map(normalizeServiceTag)
+    .filter((x) => x && x !== 'all');
+
+  const filterSet = new Set(asArray(filtersRaw).map((f) => lower(f)));
+  const hotLeadsOnly = hotRaw === true || lower(hotRaw).includes('hot');
+
+  return {
+    audienceBucket: normalizeAudienceBucket(audienceRaw),
+    serviceFilters,
+    hotLeadsOnly,
+    filterHighPain: [...filterSet].some((f) => f.includes('high pain') || f.includes('pain>90') || f.includes('pain >90')),
+    filterActive7d: [...filterSet].some((f) => f.includes('active') && f.includes('7')),
+    filterNoMonetization: [...filterSet].some((f) => f.includes('no monetization')),
+  };
+}
+
 function formatSubs(subs) {
   if (!Number.isFinite(subs) || subs <= 0) return 'Not listed';
   if (subs >= 1_000_000) return `${(subs / 1_000_000).toFixed(1)}M subscribers`;
@@ -848,6 +940,159 @@ async function enrichSiteSignalsForProfiles(profiles, cfg) {
   return out;
 }
 
+const SERVICE_RULES = {
+  thumbnails: ['thumbnail', 'ctr', 'title', 'packaging', 'youtube'],
+  copywriting: ['copy', 'sales page', 'product description', 'ad copy', 'landing page'],
+  funnel: ['funnel', 'lead', 'booking', 'pipeline', 'conversion', 'cta'],
+  'social-media': ['social', 'instagram', 'tiktok', 'reels', 'posting', 'engagement'],
+  email: ['email', 'newsletter', 'sequence', 'klaviyo', 'mailchimp', 'list'],
+};
+
+const SKILL_TO_SERVICE = {
+  'Thumbnail Design': 'thumbnails',
+  'Copywriting': 'copywriting',
+  'Funnel Building': 'funnel',
+  'Social Media Management': 'social-media',
+  'Email Marketing': 'email',
+};
+
+function hasMonetizationLink(profile) {
+  const text = lower(`${profile?.description || ''} ${profile?.profileUrl || ''}`);
+  const tokens = ['patreon', 'sponsor', 'affiliate', 'course', 'shop', 'store', 'pricing', 'book', 'consult', 'membership', 'buy'];
+  return tokens.some((t) => text.includes(t));
+}
+
+function inferPainScore(profile, cfg) {
+  let pain = 58;
+  const isCreator = (cfg?.targetType === 'creator') || profile.platform === 'YouTube';
+
+  if (isCreator) {
+    const d = Number(profile.lastUploadDays || 999);
+    const ratio = Number(profile.viewSubRatio || 0);
+    const views = Number(profile.avgRecentViews || 0);
+
+    if (d <= 7) pain += 12;
+    else if (d <= 14) pain += 9;
+    else if (d <= 30) pain += 5;
+
+    if (ratio < 0.03) pain += 18;
+    else if (ratio < 0.05) pain += 13;
+    else if (ratio < 0.08) pain += 7;
+
+    if (views < 800) pain += 10;
+    else if (views < 1800) pain += 5;
+
+    if (!hasMonetizationLink(profile)) pain += 8;
+  } else {
+    const sig = profile.siteSignal || {};
+    if (sig && !sig.hasBooking) pain += 10;
+    if (sig && !sig.hasPricing) pain += 10;
+    if (sig && !sig.hasSocialProof) pain += 8;
+    if (sig && !sig.hasLeadMagnet) pain += 6;
+
+    if (!profile.website && !profile.phone) pain += 7;
+    if (Number(profile.rating || 0) > 0 && Number(profile.rating || 0) < 4.2) pain += 6;
+    if (Number(profile.reviews || 0) > 0 && Number(profile.reviews || 0) < 35) pain += 5;
+  }
+
+  return clamp(Math.round(pain), 55, 99);
+}
+
+function profileAudiencePass(profile, cfg, audienceBucket) {
+  if (!audienceBucket || audienceBucket === 'all') return true;
+  const isCreator = (cfg?.targetType === 'creator') || profile.platform === 'YouTube';
+
+  if (isCreator) {
+    const subs = Number(profile.subscriberCount || 0);
+    if (!Number.isFinite(subs) || subs <= 0) return true;
+    if (audienceBucket === 'beginner') return subs < 10000;
+    if (audienceBucket === 'growing') return subs >= 10000 && subs <= 50000;
+    if (audienceBucket === 'established') return subs > 50000;
+    return true;
+  }
+
+  const reviews = Number(profile.reviews || 0);
+  if (!Number.isFinite(reviews) || reviews <= 0) return true;
+  if (audienceBucket === 'beginner') return reviews < 30;
+  if (audienceBucket === 'growing') return reviews >= 30 && reviews <= 150;
+  if (audienceBucket === 'established') return reviews > 150;
+  return true;
+}
+
+function detectServiceTags(profile, skill) {
+  const text = lower(`${profile.name || ''} ${profile.description || ''} ${profile.platform || ''}`);
+  const tags = new Set();
+
+  for (const [tag, keywords] of Object.entries(SERVICE_RULES)) {
+    if (keywords.some((k) => text.includes(k))) tags.add(tag);
+  }
+
+  const skillTag = SKILL_TO_SERVICE[skill];
+  if (skillTag) tags.add(skillTag);
+
+  if (profile.platform === 'YouTube') tags.add('thumbnails');
+  if (profile.platform === 'LinkedIn') {
+    tags.add('copywriting');
+    tags.add('email');
+  }
+  if (profile.platform === 'Instagram' || profile.platform === 'TikTok') tags.add('social-media');
+
+  return [...tags];
+}
+
+function profileServicePass(profile, selectedServices = [], skill = null) {
+  if (!selectedServices.length) return true;
+  const tags = new Set(detectServiceTags(profile, skill));
+  return selectedServices.some((s) => tags.has(s));
+}
+
+function applyAdvancedProfileFilters(profiles, cfg, advanced = {}, skill = null) {
+  const {
+    audienceBucket = 'all',
+    serviceFilters = [],
+    hotLeadsOnly = false,
+    filterHighPain = false,
+    filterActive7d = false,
+    filterNoMonetization = false,
+  } = advanced || {};
+
+  const isCreatorMode = (cfg?.targetType === 'creator');
+
+  return (profiles || []).filter((p) => {
+    const painScore = inferPainScore(p, cfg);
+    p.painScore = painScore;
+    p.serviceTags = detectServiceTags(p, skill);
+
+    if (!profileAudiencePass(p, cfg, audienceBucket)) return false;
+    if (!profileServicePass(p, serviceFilters, skill)) return false;
+
+    if (hotLeadsOnly) {
+      if (Number(p.qualityScore || 0) < 80) return false;
+      if (painScore < 78) return false;
+      if (!p.profileUrl) return false;
+      if (isCreatorMode || p.platform === 'YouTube') {
+        if (Number(p.lastUploadDays || 999) > 30) return false;
+      }
+    }
+
+    if (filterHighPain && painScore < 90) return false;
+
+    if (filterActive7d && ((isCreatorMode || p.platform === 'YouTube'))) {
+      if (Number(p.lastUploadDays || 999) > 7) return false;
+    }
+
+    if (filterNoMonetization) {
+      if ((isCreatorMode || p.platform === 'YouTube') && hasMonetizationLink(p)) return false;
+      if (!(isCreatorMode || p.platform === 'YouTube')) {
+        const sig = p.siteSignal || null;
+        if (sig && (sig.hasPricing || sig.hasBooking)) return false;
+      }
+    }
+
+    return true;
+  });
+}
+
 function rankProfiles(profiles, cfg, signals = [], budget = []) {
   const signalSet = new Set((signals || []).map((s) => lower(s)));
   const budgetSet = new Set((budget || []).map((b) => lower(b)));
@@ -1047,6 +1292,7 @@ Return raw JSON only.`;
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  const body = req.body || {};
   const {
     type = 'Local Businesses',
     prompt = '',
@@ -1056,7 +1302,7 @@ export default async function handler(req, res) {
     incomeGoal = null,
     signals = [],
     budget = [],
-  } = req.body || {};
+  } = body;
 
   if (!cleanText(prompt)) {
     return res.status(400).json({ error: 'No prompt provided' });
@@ -1072,6 +1318,9 @@ export default async function handler(req, res) {
   try {
     const cfg = skill ? SKILL_CONFIG[skill] : null;
     const location = extractLocation(prompt);
+    const advanced = normalizeAdvancedControls(body);
+    const normalizedSignals = normalizeSignalTokens(signals);
+    const normalizedBudget = normalizeBudgetTokens(budget);
 
     if (mode === 'quick' && skill && cfg) {
       if (cfg.method === 'youtube') {
@@ -1140,11 +1389,20 @@ export default async function handler(req, res) {
     }
 
     const gated = qualityGate(dedupeProfiles(rawProfiles), cfg);
-    const prelimRanked = rankProfiles(gated, cfg, signals, budget).slice(0, 12);
-    const withSiteSignals = await enrichSiteSignalsForProfiles(prelimRanked, cfg);
-    const ranked = rankProfiles(withSiteSignals, cfg, signals, budget).slice(0, 12);
 
-    console.log(`[OppEngine v2] mode=${mode} skill=${skill} raw=${rawProfiles.length} gated=${gated.length} ranked=${ranked.length}`);
+    // Keep Quick Find behavior unchanged. Advanced controls are applied only in deep/advanced mode.
+    const advancedScoped = mode === 'quick'
+      ? gated
+      : applyAdvancedProfileFilters(gated, cfg, advanced, skill);
+
+    const prelimRanked = rankProfiles(advancedScoped, cfg, normalizedSignals, normalizedBudget).slice(0, 12);
+    const withSiteSignals = await enrichSiteSignalsForProfiles(prelimRanked, cfg);
+    const advancedAfterSignals = mode === 'quick'
+      ? withSiteSignals
+      : applyAdvancedProfileFilters(withSiteSignals, cfg, advanced, skill);
+    const ranked = rankProfiles(advancedAfterSignals, cfg, normalizedSignals, normalizedBudget).slice(0, 12);
+
+    console.log(`[OppEngine v2] mode=${mode} skill=${skill} raw=${rawProfiles.length} gated=${gated.length} advanced=${advancedScoped.length} ranked=${ranked.length}`);
 
     if (!ranked.length) {
       const warning = cfg?.targetType === 'creator'
