@@ -586,8 +586,21 @@ html.dark .profile-banner:hover{background:#14532d}
 .nav-folder-head .nav-label{font-size:12px;font-weight:500}
 .nav-folder-chevron{width:12px;height:12px;transition:transform .15s ease;opacity:.7}
 .nav-folder.open .nav-folder-chevron{transform:rotate(180deg)}
-.nav-folder-children{display:grid;gap:3px;padding:3px 0 6px 12px}
-.nav-folder:not(.open) .nav-folder-children{display:none}
+.nav-folder-children{
+  display:grid;gap:3px;
+  padding:0 0 0 12px;
+  max-height:0;
+  opacity:0;
+  transform:translateY(-4px);
+  overflow:hidden;
+  transition:max-height .26s cubic-bezier(.22,.61,.36,1),opacity .2s ease,transform .2s ease,padding .2s ease;
+  will-change:max-height,opacity,transform;
+}
+.nav-folder.open .nav-folder-children{
+  padding:3px 0 6px 12px;
+  opacity:1;
+  transform:translateY(0);
+}
 .sidebar.collapsed .nav-folder-head{justify-content:center;padding:0}
 .sidebar.collapsed .nav-folder-title .nav-label,
 .sidebar.collapsed .nav-folder-chevron{display:none}
@@ -2941,10 +2954,10 @@ html.dark .credits-warning-banner {
           <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
         </button>
         <div class="nav-folder-children" id="folder-ai-tools">
-          <div class="nav-item" data-page="audit" data-tooltip="Audit Generator" onclick="navigate('audit')"><i data-lucide="sparkles" class="icon"></i><span class="nav-label"> Audit Generator</span><span class="pro-badge">PRO</span></div>
-          <div class="nav-item" data-page="proposal" data-tooltip="Proposal Writer" onclick="navigate('proposal')"><i data-lucide="file-text" class="icon"></i><span class="nav-label"> Proposal Writer</span><span class="pro-badge">PRO</span></div>
-          <div class="nav-item" data-page="email" data-tooltip="Email Writer" onclick="navigate('email')"><i data-lucide="mail" class="icon"></i><span class="nav-label"> Email Writer</span><span class="pro-badge">PRO</span></div>
-          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span><span class="pro-badge">PRO</span></div>
+          <div class="nav-item" data-page="audit" data-tooltip="Audit Generator" onclick="navigate('audit')"><i data-lucide="sparkles" class="icon"></i><span class="nav-label"> Audit Generator</span></div>
+          <div class="nav-item" data-page="proposal" data-tooltip="Proposal Writer" onclick="navigate('proposal')"><i data-lucide="file-text" class="icon"></i><span class="nav-label"> Proposal Writer</span></div>
+          <div class="nav-item" data-page="email" data-tooltip="Email Writer" onclick="navigate('email')"><i data-lucide="mail" class="icon"></i><span class="nav-label"> Email Writer</span></div>
+          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span></div>
         </div>
       </div>
 
@@ -2954,8 +2967,8 @@ html.dark .credits-warning-banner {
           <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
         </button>
         <div class="nav-folder-children" id="folder-clients">
-          <div class="nav-item" data-page="opportunity" data-tooltip="Find Clients" onclick="navigate('opportunity')"><i data-lucide="target" class="icon"></i><span class="nav-label"> Find Clients</span><span class="pro-badge">PRO</span></div>
-          <div class="nav-item" data-page="pipeline" data-tooltip="Manage Clients" onclick="navigate('pipeline')"><i data-lucide="bar-chart-2" class="icon"></i><span class="nav-label"> Manage Clients</span><span class="pro-badge">PRO</span></div>
+          <div class="nav-item" data-page="opportunity" data-tooltip="Find Clients" onclick="navigate('opportunity')"><i data-lucide="target" class="icon"></i><span class="nav-label"> Find Clients</span></div>
+          <div class="nav-item" data-page="pipeline" data-tooltip="Manage Clients" onclick="navigate('pipeline')"><i data-lucide="bar-chart-2" class="icon"></i><span class="nav-label"> Manage Clients</span></div>
         </div>
       </div>
 
@@ -2976,7 +2989,7 @@ html.dark .credits-warning-banner {
           <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
         </button>
         <div class="nav-folder-children" id="folder-growth">
-          <div class="nav-item" data-page="roadmap" data-tooltip="Roadmap" onclick="navigate('roadmap')"><i data-lucide="map" class="icon"></i><span class="nav-label"> Roadmap</span><span class="pro-badge">PRO</span></div>
+          <div class="nav-item" data-page="roadmap" data-tooltip="Roadmap" onclick="navigate('roadmap')"><i data-lucide="map" class="icon"></i><span class="nav-label"> Roadmap</span></div>
         </div>
       </div>
     </nav>
@@ -3217,7 +3230,7 @@ html.dark .credits-warning-banner {
               </div>
               <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="₹2,500"></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(50, generateAudit)">Generate Audit Dossier</button>
+              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(120, generateAudit)">Generate Audit Dossier</button>
               <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
             </div>
             <div class="result-panel">
@@ -3522,7 +3535,7 @@ html.dark .credits-warning-banner {
           <label class="field-label">Target location <span style="color:var(--text3)">(optional)</span></label>
           <input type="text" id="qf-location" placeholder="e.g. Mumbai, India or worldwide">
         </div>
-        <button class="qf-find-btn" id="qf-find-btn" onclick="checkCredits(10, quickFindClients)">
+        <button class="qf-find-btn" id="qf-find-btn" onclick="checkCredits(300, quickFindClients)">
           <i data-lucide="target" style="width:14px;height:14px"></i>
           Find Clients
         </button>
@@ -3556,7 +3569,7 @@ html.dark .credits-warning-banner {
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
       <button class="btn-opp-scan" id="opp-scan-btn"
-        onclick="checkCredits(10, scanOpportunities)">
+        onclick="checkCredits(300, scanOpportunities)">
         <i data-lucide="radar" style="width:13px;height:13px"></i>
         Run Deep Scan
       </button>
@@ -4132,7 +4145,7 @@ async function quickFindClients() {
         Try changing your location, or switch to <strong>Deep Scan</strong> to customise your search further.
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="checkCredits(10, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
+        <button onclick="checkCredits(300, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
           🔄 Try Again
         </button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
@@ -4363,7 +4376,7 @@ async function quickFindClients() {
         ${apiError ? 'Something went wrong. Please try again.' : 'Try adding a location like "Mumbai" or "New York", or switch to Advanced mode.'}
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="checkCredits(10, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">🔄 Try Again</button>
+        <button onclick="checkCredits(300, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">🔄 Try Again</button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">🔍 Try Advanced</button>
       </div>
     </div>`;
@@ -5225,6 +5238,7 @@ function applySidebarState() {
     if (collapseBtn) collapseBtn.style.display = 'flex';
     if (expandBtn)   expandBtn.style.display   = 'none';
   }
+  requestAnimationFrame(_syncNavFolderHeights);
 }
 
 function toggleSidebar() {
@@ -5232,6 +5246,59 @@ function toggleSidebar() {
   localStorage.setItem('lancify-sidebar', sidebarCollapsed ? 'collapsed' : 'expanded');
   applySidebarState();
 }
+
+function _syncNavFolderHeights() {
+  document.querySelectorAll('.nav-folder').forEach(folder => {
+    const children = folder.querySelector('.nav-folder-children');
+    if (!children) return;
+    if (sidebarCollapsed) {
+      children.style.maxHeight = '0px';
+      return;
+    }
+    children.style.maxHeight = folder.classList.contains('open')
+      ? `${children.scrollHeight}px`
+      : '0px';
+  });
+}
+
+function _setNavFolderOpen(folder, shouldOpen) {
+  if (!folder) return;
+  const children = folder.querySelector('.nav-folder-children');
+  if (!children) {
+    folder.classList.toggle('open', shouldOpen);
+    return;
+  }
+
+  if (sidebarCollapsed) {
+    folder.classList.toggle('open', shouldOpen);
+    children.style.maxHeight = '0px';
+    return;
+  }
+
+  const wasOpen = folder.classList.contains('open');
+  if (wasOpen === shouldOpen) {
+    if (shouldOpen) children.style.maxHeight = `${children.scrollHeight}px`;
+    return;
+  }
+
+  if (shouldOpen) {
+    folder.classList.add('open');
+    children.style.maxHeight = '0px';
+    requestAnimationFrame(() => {
+      children.style.maxHeight = `${children.scrollHeight}px`;
+    });
+  } else {
+    children.style.maxHeight = `${children.scrollHeight}px`;
+    requestAnimationFrame(() => {
+      children.style.maxHeight = '0px';
+    });
+    folder.classList.remove('open');
+  }
+}
+
+window.addEventListener('resize', () => {
+  if (!sidebarCollapsed) _syncNavFolderHeights();
+});
 
 // ── Supabase + App State ──
 lucide.createIcons();
@@ -5617,7 +5684,7 @@ function navigate(page) {
   const navEl=document.querySelector(`[data-page="${page}"]`);
   if(navEl) navEl.classList.add('active');
   const parentFolder = navEl?.closest('.nav-folder');
-  if (parentFolder) parentFolder.classList.add('open');
+  if (parentFolder) _setNavFolderOpen(parentFolder, true);
   setText('header-title', titles[page]||'Dashboard');
   if (page === 'invoices') renderInvoices();
   if (page === 'accounting' || page === 'home') renderBusinessDashboard();
@@ -5629,7 +5696,7 @@ function navigate(page) {
 function toggleNavFolder(folderKey){
   const folder = document.querySelector(`.nav-folder[data-folder="${folderKey}"]`);
   if (!folder) return;
-  folder.classList.toggle('open');
+  _setNavFolderOpen(folder, !folder.classList.contains('open'));
 }
 
 /* ─── PROFILE ─── */
@@ -7021,6 +7088,7 @@ initApp();
        <div id="toast"></div>
 </body>
 </html>
+
 
 
 
