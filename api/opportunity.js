@@ -837,6 +837,67 @@ function qualityGate(profiles, cfg) {
   });
 }
 
+function basicProfileGate(profiles, cfg) {
+  return (profiles || []).filter((p) => {
+    if (!p || !p.name || !p.profileUrl) return false;
+    if (!p.profileUrl.startsWith('http')) return false;
+    if (isBadMarketplaceName(p.name)) return false;
+
+    const title = lower(p.name);
+    const desc = lower(p.description);
+    if (MARKETPLACE_BLOCKLIST.some((k) => title.includes(k) || desc.includes(k))) return false;
+
+    if ((cfg?.targetType === 'creator') || p.platform === 'YouTube') {
+      if (p.platform !== 'YouTube') return false;
+      if (!Number.isFinite(Number(p.subscriberCount || 0))) return false;
+      if (Number(p.subscriberCount || 0) <= 0) return false;
+    }
+
+    return true;
+  });
+}
+
+function quickRecoveryGate(profiles, cfg) {
+  return (profiles || []).filter((p) => {
+    if (!p || !p.name || !p.profileUrl) return false;
+    if (!p.profileUrl.startsWith('http')) return false;
+    if (isBadMarketplaceName(p.name)) return false;
+
+    if ((cfg?.targetType === 'creator') || p.platform === 'YouTube') {
+      if (p.platform !== 'YouTube') return false;
+
+      const subs = Number(p.subscriberCount || 0);
+      if (!Number.isFinite(subs) || subs <= 0) return false;
+      if (subs < Math.max(300, Number(cfg?.minSubs || 2000) - 2500)) return false;
+      if (subs > Number(cfg?.maxSubs || 100000) + 150000) return false;
+
+      if (Number(p.lastUploadDays || 999) > Math.max(150, Number(cfg?.maxInactiveDays || 60))) return false;
+      if (Number(p.avgRecentViews || 0) < Math.max(60, Number(cfg?.minAvgViews || 250) - 180)) return false;
+      if (Number(p.viewSubRatio || 0) < Math.max(0.002, Number(cfg?.minViewSubRatio || 0.01) - 0.007)) return false;
+      return true;
+    }
+
+    if (p.platform === 'Google Maps') {
+      return !!(p.website || p.phone || p.profileUrl);
+    }
+
+    return true;
+  });
+}
+
+function buildQuickCandidatePool(rawProfiles, cfg) {
+  const base = dedupeProfiles(rawProfiles);
+  const strict = qualityGate(base, cfg);
+  if (strict.length >= 3) return strict;
+
+  const soft = quickRecoveryGate(base, cfg);
+  const merged = dedupeProfiles([...strict, ...soft]);
+  if (merged.length >= 3) return merged;
+
+  const basic = basicProfileGate(base, cfg);
+  return dedupeProfiles([...merged, ...basic]);
+}
+
 function buildSkillFallbackText(profile, skill, cfg, siteSignal = null) {
   const rule = SKILL_INTENT_RULES[skill] || null;
   const requiredWord = rule?.requiredAny?.[0] || 'conversion';
@@ -1333,6 +1394,28 @@ Return raw JSON only.`;
   return pickDiverseTopLeads(fallbackLeads, byId, skill, 3);
 }
 
+function ensureQuickMinimumLeads(leads, rankedProfiles, skill, cfg, minCount = 3) {
+  const ranked = Array.isArray(rankedProfiles) ? rankedProfiles : [];
+  const byId = new Map(ranked.map((p) => [p.sourceId, p]));
+
+  const safeLeads = (Array.isArray(leads) ? leads : [])
+    .filter((l) => l && l.sourceId && byId.has(l.sourceId));
+
+  const usedIds = new Set(safeLeads.map((l) => l.sourceId));
+  const fallbackAdds = [];
+
+  for (const p of ranked) {
+    if (usedIds.has(p.sourceId)) continue;
+    const base = fallbackLeadFromProfile(p, skill, cfg);
+    fallbackAdds.push(applyIntentRules(base, p, skill, cfg, p.siteSignal || null));
+    usedIds.add(p.sourceId);
+    if (safeLeads.length + fallbackAdds.length >= Math.max(1, minCount)) break;
+  }
+
+  const merged = [...safeLeads, ...fallbackAdds];
+  return pickDiverseTopLeads(merged, byId, skill, minCount);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
@@ -1348,7 +1431,10 @@ export default async function handler(req, res) {
     budget = [],
   } = body;
 
-  const effectivePrompt = cleanText(prompt) || ((mode === 'quick' && skill) ? `${cleanText(skill)} leads` : '');
+  const isQuickMode = lower(mode).includes('quick');
+  const effectivePrompt = cleanText(prompt)
+    || (cleanText(skill) ? `${cleanText(skill)} leads` : '')
+    || (isQuickMode ? `${cleanText(type)} leads` : '');
 
   if (!effectivePrompt) {
     return res.status(400).json({ error: 'No prompt provided' });
@@ -1368,7 +1454,7 @@ export default async function handler(req, res) {
     const normalizedSignals = normalizeSignalTokens(signals);
     const normalizedBudget = normalizeBudgetTokens(budget);
 
-    if (mode === 'quick' && skill && cfg) {
+    if (isQuickMode && skill && cfg) {
       if (cfg.method === 'youtube') {
         rawProfiles = await searchYouTubeCreators({
           YOUTUBE,
@@ -1454,6 +1540,43 @@ export default async function handler(req, res) {
           rawProfiles = dedupeProfiles([...rawProfiles, ...extra]);
         }
       }
+
+      // Last quick fallback: one broad pass so skill-only quick mode doesn't go empty too easily.
+      if (!rawProfiles.length) {
+        if (cfg.targetType === 'creator') {
+          rawProfiles = await searchYouTubeCreators({
+            YOUTUBE,
+            queries: [
+              `${cleanText(skill)} youtube`,
+              `small youtube creator ${cleanText(skill)}`,
+              'youtube creator channel',
+            ],
+            location: '',
+            minSubs: 600,
+            maxSubs: 180000,
+            maxInactiveDays: 180,
+            minAvgViews: 60,
+            minViewSubRatio: 0.002,
+            searchOrder: 'relevance',
+            publishedAfterDays: 365,
+          });
+        } else if (cfg.method === 'maps') {
+          rawProfiles = await runSerpMaps(`${cleanText(skill)} services ${location || ''}`.trim(), SERP);
+          if (!rawProfiles.length) {
+            rawProfiles = await runSerpGoogle(`${cleanText(skill)} business website ${location || ''}`.trim(), {
+              SERP,
+              excludeTerms: cfg.exclude || [],
+              allowDomains: [],
+            });
+          }
+        } else {
+          rawProfiles = await runSerpGoogle(`${cleanText(skill)} business website ${location || ''}`.trim(), {
+            SERP,
+            excludeTerms: cfg.exclude || [],
+            allowDomains: [],
+          });
+        }
+      }
     } else {
       // Deep mode keeps broad categories, but still passes through quality gate + ranking.
       if (type === 'Local Businesses') {
@@ -1489,7 +1612,7 @@ export default async function handler(req, res) {
     }
 
     let gateCfg = cfg;
-    if (mode === 'quick' && cfg?.targetType === 'creator' && rawProfiles.length < Number(cfg?.minLeadCount || 3)) {
+    if (isQuickMode && cfg?.targetType === 'creator' && rawProfiles.length < Number(cfg?.minLeadCount || 3)) {
       gateCfg = {
         ...cfg,
         minSubs: Math.max(800, Number(cfg.minSubs || 2000) - 800),
@@ -1499,22 +1622,38 @@ export default async function handler(req, res) {
       };
     }
 
-    const gated = qualityGate(dedupeProfiles(rawProfiles), gateCfg);
+    const dedupedRaw = dedupeProfiles(rawProfiles);
+    const gated = isQuickMode
+      ? buildQuickCandidatePool(dedupedRaw, gateCfg)
+      : qualityGate(dedupedRaw, gateCfg);
 
     // Keep Quick Find behavior unchanged. Advanced controls are applied only in deep/advanced mode.
-    const advancedScoped = mode === 'quick'
+    const advancedScoped = isQuickMode
       ? gated
       : applyAdvancedProfileFilters(gated, cfg, advanced, skill);
 
     const prelimRanked = rankProfiles(advancedScoped, cfg, normalizedSignals, normalizedBudget).slice(0, 12);
     const withSiteSignals = await enrichSiteSignalsForProfiles(prelimRanked, cfg, {
-      enabled: mode !== 'quick' && !cfg?.quickSkipSiteSignals,
-      maxProfiles: mode === 'quick' ? 0 : 6,
+      enabled: !isQuickMode && !cfg?.quickSkipSiteSignals,
+      maxProfiles: isQuickMode ? 0 : 6,
     });
-    const advancedAfterSignals = mode === 'quick'
+    const advancedAfterSignals = isQuickMode
       ? withSiteSignals
       : applyAdvancedProfileFilters(withSiteSignals, cfg, advanced, skill);
-    const ranked = rankProfiles(advancedAfterSignals, cfg, normalizedSignals, normalizedBudget).slice(0, 12);
+    let ranked = rankProfiles(advancedAfterSignals, cfg, normalizedSignals, normalizedBudget).slice(0, 12);
+
+    if (!ranked.length && isQuickMode && dedupedRaw.length) {
+      const emergencyCfg = {
+        ...(gateCfg || {}),
+        minSubs: 0,
+        maxSubs: Math.max(250000, Number(gateCfg?.maxSubs || 100000)),
+        maxInactiveDays: Math.max(180, Number(gateCfg?.maxInactiveDays || 60)),
+        minAvgViews: 40,
+        minViewSubRatio: 0.001,
+      };
+      const emergencyPool = buildQuickCandidatePool(dedupedRaw, emergencyCfg);
+      ranked = rankProfiles(emergencyPool, emergencyCfg, normalizedSignals, normalizedBudget).slice(0, 12);
+    }
 
     console.log(`[OppEngine v2] mode=${mode} skill=${skill} raw=${rawProfiles.length} gated=${gated.length} advanced=${advancedScoped.length} ranked=${ranked.length}`);
 
@@ -1531,7 +1670,10 @@ export default async function handler(req, res) {
       });
     }
 
-    const leads = await enrichWithGroq({ GROQ, profiles: ranked, skill, incomeGoal, cfg });
+    let leads = await enrichWithGroq({ GROQ, profiles: ranked, skill, incomeGoal, cfg });
+    if (isQuickMode) {
+      leads = ensureQuickMinimumLeads(leads, ranked, skill, cfg, 3);
+    }
 
     return res.status(200).json({
       leads,
