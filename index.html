@@ -573,6 +573,69 @@ html.dark .profile-banner:hover{background:#14532d}
 }
 .stage-btn:hover{background:var(--bg-hover);color:var(--text-main)}
 
+/* Sidebar folders */
+.nav-folder{margin:2px 0}
+.nav-folder-head{
+  width:100%;height:34px;border:none;background:transparent;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  color:var(--text-muted);padding:0 10px;border-radius:8px;font-family:inherit
+}
+.nav-folder-head:hover{background:var(--bg-hover);color:var(--text-main)}
+.nav-folder-title{display:flex;align-items:center;gap:7px;min-width:0}
+.nav-folder-chevron{width:12px;height:12px;transition:transform .15s ease;opacity:.7}
+.nav-folder.open .nav-folder-chevron{transform:rotate(180deg)}
+.nav-folder-children{display:grid;gap:3px;padding:3px 0 6px 12px}
+.nav-folder:not(.open) .nav-folder-children{display:none}
+.sidebar.collapsed .nav-folder-head{justify-content:center;padding:0}
+.sidebar.collapsed .nav-folder-title .nav-label,
+.sidebar.collapsed .nav-folder-chevron{display:none}
+.sidebar.collapsed .nav-folder-children{display:none!important}
+
+/* Dashboard business panel */
+.biz-metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.biz-metric-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.biz-metric-label{font-size:11px;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.biz-metric-value{font-size:23px;font-weight:700;color:var(--text-main)}
+.biz-metric-sub{font-size:11px;color:var(--text-muted)}
+.biz-panel-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.biz-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
+.biz-bar-row{display:flex;align-items:flex-end;gap:6px;height:180px;margin-top:8px}
+.biz-bar{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,rgba(99,102,241,.6),rgba(99,102,241,.15));min-height:10px}
+.biz-bar-label{font-size:10px;color:var(--text3);text-align:center;margin-top:4px}
+
+/* Finance pages */
+.fin-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+.fin-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
+.fin-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fin-table{width:100%;border-collapse:collapse}
+.fin-table th,.fin-table td{padding:10px 8px;border-bottom:1px solid var(--border);font-size:12.5px;text-align:left}
+.fin-table th{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.badge-pill{padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid var(--border)}
+.badge-paid{background:rgba(16,185,129,.08);color:#10b981;border-color:rgba(16,185,129,.26)}
+.badge-sent{background:rgba(59,130,246,.08);color:#3b82f6;border-color:rgba(59,130,246,.26)}
+.badge-overdue{background:rgba(239,68,68,.08);color:#ef4444;border-color:rgba(239,68,68,.24)}
+.opp-managed-list{display:grid;gap:9px}
+.opp-managed-item{display:flex;justify-content:space-between;gap:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+
+/* Opportunity empty state alignment fix */
+.opp-results-grid .opp-empty{
+  grid-column:1/-1;
+  margin:10px auto 0;
+  width:100%;
+  max-width:760px;
+  min-height:220px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+@media(max-width:1100px){
+  .biz-metrics-grid{grid-template-columns:repeat(2,1fr)}
+  .biz-panel-grid,.fin-grid{grid-template-columns:1fr}
+}
+
 /* ─── MODALS ─── */
 .modal-backdrop{
   position:fixed;inset:0;
@@ -2861,18 +2924,56 @@ html.dark .credits-warning-banner {
       </button>
     </div>
 
-    <nav class="sb-nav">
-      <div class="sb-section">Tools</div>
-      <div class="nav-item active" data-page="home"     data-tooltip="Dashboard"        onclick="navigate('home')">    <i data-lucide="home"          class="icon"></i><span class="nav-label"> Dashboard</span></div>
-      <div class="nav-item"        data-page="audit"    data-tooltip="Audit Generator"  onclick="navigate('audit')">   <i data-lucide="sparkles"      class="icon"></i><span class="nav-label"> Audit Generator</span><span class="pro-badge">PRO</span></div>
-      <div class="nav-item"        data-page="proposal" data-tooltip="Proposal Writer"  onclick="navigate('proposal')"><i data-lucide="file-text"     class="icon"></i><span class="nav-label"> Proposal Writer</span><span class="pro-badge">PRO</span></div>
-      <div class="nav-item"        data-page="email"    data-tooltip="Email Writer"     onclick="navigate('email')">   <i data-lucide="mail"          class="icon"></i><span class="nav-label"> Email Writer</span><span class="pro-badge">PRO</span></div>
+    <nav class="sb-nav" id="sidebar-nav">
+      <div class="nav-item active" data-page="home" data-tooltip="Dashboard" onclick="navigate('home')">
+        <i data-lucide="home" class="icon"></i><span class="nav-label"> Dashboard</span>
+      </div>
 
-      <div class="sb-section">Insights</div>
-      <div class="nav-item" data-page="gig"      data-tooltip="Gig Finder"      onclick="navigate('gig')">      <i data-lucide="search"      class="icon"></i><span class="nav-label"> Gig Finder</span><span class="pro-badge">PRO</span></div>
-      <div class="nav-item" data-page="roadmap"  data-tooltip="Roadmap"         onclick="navigate('roadmap')">  <i data-lucide="map"         class="icon"></i><span class="nav-label"> Roadmap</span><span class="pro-badge">PRO</span></div>
-      <div class="nav-item" data-page="pipeline" data-tooltip="Client Pipeline" onclick="navigate('pipeline')"> <i data-lucide="bar-chart-2" class="icon"></i><span class="nav-label"> Client Pipeline</span><span class="pro-badge">PRO</span></div>
-       <div class="nav-item" data-page="opportunity" data-tooltip="Opportunity Engine" onclick="navigate('opportunity')"><i data-lucide="target" class="icon"></i><span class="nav-label"> Opportunity Engine</span><span class="pro-badge">PRO</span></div>
+      <div class="sb-section">Features</div>
+      <div class="nav-folder open" data-folder="ai-tools">
+        <button class="nav-folder-head" onclick="toggleNavFolder('ai-tools')">
+          <span class="nav-folder-title"><i data-lucide="sparkles" class="icon"></i><span class="nav-label">AI Tools</span></span>
+          <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
+        </button>
+        <div class="nav-folder-children" id="folder-ai-tools">
+          <div class="nav-item" data-page="audit" data-tooltip="Audit Generator" onclick="navigate('audit')"><i data-lucide="sparkles" class="icon"></i><span class="nav-label"> Audit Generator</span><span class="pro-badge">PRO</span></div>
+          <div class="nav-item" data-page="proposal" data-tooltip="Proposal Writer" onclick="navigate('proposal')"><i data-lucide="file-text" class="icon"></i><span class="nav-label"> Proposal Writer</span><span class="pro-badge">PRO</span></div>
+          <div class="nav-item" data-page="email" data-tooltip="Email Writer" onclick="navigate('email')"><i data-lucide="mail" class="icon"></i><span class="nav-label"> Email Writer</span><span class="pro-badge">PRO</span></div>
+          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span><span class="pro-badge">PRO</span></div>
+        </div>
+      </div>
+
+      <div class="nav-folder open" data-folder="clients">
+        <button class="nav-folder-head" onclick="toggleNavFolder('clients')">
+          <span class="nav-folder-title"><i data-lucide="users" class="icon"></i><span class="nav-label">Clients</span></span>
+          <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
+        </button>
+        <div class="nav-folder-children" id="folder-clients">
+          <div class="nav-item" data-page="opportunity" data-tooltip="Find Clients" onclick="navigate('opportunity')"><i data-lucide="target" class="icon"></i><span class="nav-label"> Find Clients</span><span class="pro-badge">PRO</span></div>
+          <div class="nav-item" data-page="pipeline" data-tooltip="Manage Clients" onclick="navigate('pipeline')"><i data-lucide="bar-chart-2" class="icon"></i><span class="nav-label"> Manage Clients</span><span class="pro-badge">PRO</span></div>
+        </div>
+      </div>
+
+      <div class="nav-folder open" data-folder="finance">
+        <button class="nav-folder-head" onclick="toggleNavFolder('finance')">
+          <span class="nav-folder-title"><i data-lucide="wallet" class="icon"></i><span class="nav-label">Finance</span></span>
+          <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
+        </button>
+        <div class="nav-folder-children" id="folder-finance">
+          <div class="nav-item" data-page="invoices" data-tooltip="Invoices" onclick="navigate('invoices')"><i data-lucide="receipt-text" class="icon"></i><span class="nav-label"> Invoices</span></div>
+          <div class="nav-item" data-page="accounting" data-tooltip="Accounting" onclick="navigate('accounting')"><i data-lucide="line-chart" class="icon"></i><span class="nav-label"> Accounting</span></div>
+        </div>
+      </div>
+
+      <div class="nav-folder" data-folder="growth">
+        <button class="nav-folder-head" onclick="toggleNavFolder('growth')">
+          <span class="nav-folder-title"><i data-lucide="map" class="icon"></i><span class="nav-label">Growth</span></span>
+          <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
+        </button>
+        <div class="nav-folder-children" id="folder-growth">
+          <div class="nav-item" data-page="roadmap" data-tooltip="Roadmap" onclick="navigate('roadmap')"><i data-lucide="map" class="icon"></i><span class="nav-label"> Roadmap</span><span class="pro-badge">PRO</span></div>
+        </div>
+      </div>
     </nav>
 
     <div class="sb-bottom">
@@ -3261,12 +3362,17 @@ html.dark .credits-warning-banner {
 
       <div id="page-pipeline" class="page">
         <div class="content-inner wide">
-          <div class="page-hd"><h1>Client Pipeline</h1><p>Track every lead from first pitch to paid.</p></div>
+          <div class="page-hd"><h1>Manage Clients</h1><p>Track every lead from first pitch to paid, including leads saved from Opportunity Engine.</p></div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="section-title" style="margin-bottom:10px">Saved From Opportunity Engine</div>
+            <div id="opp-managed-empty" style="font-size:12px;color:var(--text3);padding:4px 0 2px">No AI leads saved yet. Run Find Clients and we will auto-save them here.</div>
+            <div class="opp-managed-list" id="opp-managed-list"></div>
+          </div>
           <div class="card" style="margin-bottom:20px">
             <div style="display:grid;grid-template-columns:1fr 1fr 150px 150px auto;gap:10px;align-items:end">
               <div><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Riya's Bakery"></div>
               <div><label class="field-label">Service / Project</label><input type="text" id="lead-service" placeholder="e.g. Instagram posts"></div>
-              <div><label class="field-label">Value (₹)</label><input type="number" id="lead-value" placeholder="3500"></div>
+              <div><label class="field-label">Value ($)</label><input type="number" id="lead-value" placeholder="350"></div>
               <div><label class="field-label">Platform</label><select id="lead-platform"><option>Instagram</option><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option></select></div>
               <button class="btn btn-primary" onclick="addLead()" style="height:36px">Add Lead</button>
             </div>
@@ -3285,8 +3391,84 @@ html.dark .credits-warning-banner {
               <div id="col-won"></div>
             </div>
           </div>
+      </div>
+      </div>
+
+      <div id="page-invoices" class="page">
+        <div class="content-inner wide">
+          <div class="page-hd"><h1>Invoices</h1><p>Create invoices in seconds and keep payment tracking clean.</p></div>
+          <div class="fin-grid">
+            <div class="fin-card">
+              <div class="section-title" style="margin-bottom:10px">Create Invoice</div>
+              <div class="fin-row" style="margin-bottom:10px">
+                <div><label class="field-label">Client Name</label><input type="text" id="inv-client-name" placeholder="e.g. MilkTea Emma"></div>
+                <div><label class="field-label">Client Email</label><input type="email" id="inv-client-email" placeholder="client@email.com"></div>
+                <div><label class="field-label">Service</label><input type="text" id="inv-service" placeholder="e.g. 5 Thumbnail Designs"></div>
+                <div><label class="field-label">Amount ($)</label><input type="number" id="inv-amount" placeholder="300"></div>
+                <div><label class="field-label">Due Date</label><input type="date" id="inv-due-date"></div>
+                <div><label class="field-label">Status</label><select id="inv-status"><option value="sent">Sent</option><option value="paid">Paid</option><option value="overdue">Overdue</option></select></div>
+              </div>
+              <div style="margin-bottom:10px">
+                <label class="field-label">Notes</label>
+                <textarea id="inv-notes" rows="3" placeholder="Optional: payment terms, revision policy, etc."></textarea>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-primary" onclick="createInvoice()">Create Invoice</button>
+                <button class="btn btn-secondary" onclick="copyInvoiceDraft()">Copy Invoice Draft</button>
+              </div>
+            </div>
+            <div class="fin-card">
+              <div class="section-title" style="margin-bottom:10px">Invoice Snapshot</div>
+              <div class="biz-metrics-grid" style="grid-template-columns:1fr 1fr;margin-bottom:0">
+                <div class="biz-metric-card"><div class="biz-metric-label">Total</div><div class="biz-metric-value" id="inv-stat-total">0</div></div>
+                <div class="biz-metric-card"><div class="biz-metric-label">Paid</div><div class="biz-metric-value" id="inv-stat-paid">0</div></div>
+                <div class="biz-metric-card"><div class="biz-metric-label">Pending</div><div class="biz-metric-value" id="inv-stat-pending">0</div></div>
+                <div class="biz-metric-card"><div class="biz-metric-label">Outstanding</div><div class="biz-metric-value" id="inv-stat-outstanding">$0</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="fin-card" style="margin-top:14px">
+            <div class="section-title" style="margin-bottom:10px">Recent Invoices</div>
+            <div style="overflow:auto">
+              <table class="fin-table">
+                <thead>
+                  <tr><th>Client</th><th>Service</th><th>Amount</th><th>Due</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="invoice-table-body"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
+
+      <div id="page-accounting" class="page">
+        <div class="content-inner wide">
+          <div class="page-hd"><h1>Accounting & Analytics</h1><p>Track earnings, conversion and client performance in one place.</p></div>
+          <div class="biz-metrics-grid">
+            <div class="biz-metric-card"><div class="biz-metric-label">Total Clients</div><div class="biz-metric-value" id="acc-total-clients">0</div><div class="biz-metric-sub">All leads in CRM</div></div>
+            <div class="biz-metric-card"><div class="biz-metric-label">Active Deals</div><div class="biz-metric-value" id="acc-active-deals">0</div><div class="biz-metric-sub">Pitched + in talks</div></div>
+            <div class="biz-metric-card"><div class="biz-metric-label">Won Revenue</div><div class="biz-metric-value" id="acc-won-revenue">$0</div><div class="biz-metric-sub">From won clients</div></div>
+            <div class="biz-metric-card"><div class="biz-metric-label">Outstanding</div><div class="biz-metric-value" id="acc-outstanding">$0</div><div class="biz-metric-sub">Unpaid invoices</div></div>
+          </div>
+          <div class="biz-panel-grid">
+            <div class="biz-card">
+              <div class="section-title" style="margin-bottom:8px">Earnings Over Time</div>
+              <div class="biz-bar-row" id="acc-earnings-bars"></div>
+              <div id="acc-bar-labels" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:4px"></div>
+            </div>
+            <div class="biz-card">
+              <div class="section-title" style="margin-bottom:8px">Quick Actions</div>
+              <div style="display:grid;gap:8px">
+                <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('invoices')"><i data-lucide="receipt-text" style="width:14px;height:14px"></i> Send an invoice</button>
+                <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('proposal')"><i data-lucide="file-text" style="width:14px;height:14px"></i> Draft a proposal</button>
+                <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('pipeline')"><i data-lucide="users" style="width:14px;height:14px"></i> Review clients</button>
+                <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('opportunity')"><i data-lucide="target" style="width:14px;height:14px"></i> Find clients</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
 <!-- ================================================================
      STEP 2 — Replace the entire #page-opportunity div opening
      Ctrl+F: <div id="page-opportunity" class="page">
@@ -4046,12 +4228,14 @@ function _startQfLoader(wrap) {
 /* ══ RENDER A SIMPLE QUICK FIND LEAD CARD ══ */
 function _renderQfCard(lead) {
   const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const jsEsc = s => String(s || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n').replace(/\r/g,'');
   const skill = _activeSkill === 'other' ? (val('qf-other-skill') || 'your skill') : (_activeSkill || 'your skill');
 
   const firstName  = (lead.name || '').split(/[\s@]/)[0] || 'there';
-  const dmText     = `Hey ${firstName}! I checked out your ${lead.platform} and noticed ${(lead.problem || '').slice(0, 60)}… I specialize in ${skill} and think I can help. Can I send you a quick example?`;
-  const loomCtx    = `Write a 90-second Loom video script reaching out to ${lead.name} on ${lead.platform}. Problem: ${lead.problem}. Skill offered: ${skill}. Keep it friendly and under 200 words.`;
-  const proposalCtx = lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${skill}. Problem: ${lead.problem}. Price: ${lead.dealValue || '$200 – $500'}.`;
+  const dmText = lead.quickDm || lead.assets?.quickDm || `Hey ${firstName}! I checked out your ${lead.platform} and noticed ${(lead.problem || '').slice(0, 60)}… I specialize in ${skill} and think I can help. Can I send you a quick example?`;
+  const loomCtx = lead.loomScript || lead.assets?.loomScript || `Write a 90-second Loom video script reaching out to ${lead.name} on ${lead.platform}. Problem: ${lead.problem}. Skill offered: ${skill}. Keep it friendly and under 200 words.`;
+  const auditCtx = lead.audit || lead.assets?.audit || `Client: ${lead.name}\nPlatform: ${lead.platform}\nGap: ${lead.problem}\nFix direction: ${lead.strategy}\nOffer range: ${lead.dealValue || '$150 - $450'}`;
+  const proposalCtx = lead.proposal || lead.assets?.proposal || lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${skill}. Problem: ${lead.problem}. Price: ${lead.dealValue || '$200 - $500'}.`;
 
   const platformIcon = lead.platform === 'YouTube'    ? '▶️'
                      : lead.platform === 'Instagram'  ? '📸'
@@ -4088,16 +4272,16 @@ function _renderQfCard(lead) {
       ${lead.redFlag ? `<div style="font-size:11.5px;color:#ef4444;background:rgba(239,68,68,0.06);border-radius:6px;padding:7px 10px">⚠️ ${esc(lead.redFlag)}</div>` : ''}
     </div>
     <div class="qf-lead-actions">
-      <button class="qf-action-btn primary" onclick="copyDirectText('${esc(dmText)}')">
+      <button class="qf-action-btn primary" onclick="copyDirectText('${jsEsc(dmText)}')">
         <i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM
       </button>
-      <button class="qf-action-btn" onclick="routeToDraftEmail('${esc(lead.name)}','${esc(loomCtx)}')">
+      <button class="qf-action-btn" onclick="copyDirectText('${jsEsc(loomCtx)}')">
         <i data-lucide="video" style="width:11px;height:11px"></i> Loom Script
       </button>
-      <button class="qf-action-btn" onclick="routeToAudit('${esc(lead.name)}','${esc(lead.platform)}')">
+      <button class="qf-action-btn" onclick="copyDirectText('${jsEsc(auditCtx)}')">
         <i data-lucide="file-check-2" style="width:11px;height:11px"></i> Audit
       </button>
-      <button class="qf-action-btn" onclick="routeToProposal('${esc(proposalCtx)}')">
+      <button class="qf-action-btn" onclick="copyDirectText('${jsEsc(proposalCtx)}')">
         <i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal
       </button>
     </div>
@@ -4141,6 +4325,7 @@ async function quickFindClients() {
         skill:      skillRaw,
         mode:       'quick',
         incomeGoal: income ? parseInt(income) : null,
+        plan:       userProfile?.is_pro ? 'pro' : 'free',
       }),
     });
     apiData  = await apiRes.json();
@@ -4159,10 +4344,13 @@ async function quickFindClients() {
         <div style="font-size:13px;color:var(--text-muted)">
           Found <strong style="color:var(--text-main)">${apiLeads.length} clients</strong> who need <strong style="color:var(--text-main)">${skillRaw}</strong>
           ${income ? ` · Target: <strong style="color:#10b981">$${income}/mo</strong>` : ''}
+          ${apiData?.usage?.estimatedCredits ? ` · Estimated credits: <strong style="color:#f59e0b">${apiData.usage.estimatedCredits}</strong>` : ''}
         </div>
       </div>
       <div class="qf-results-grid">${apiLeads.map(_renderQfCard).join('')}</div>`;
     lucide.createIcons();
+    ingestOpportunityClients(apiLeads, skillRaw);
+    renderManagedOpportunityClients();
     showToast(`Found ${apiLeads.length} real clients for you! 🎯`);
     return;
   }
@@ -4819,6 +5007,7 @@ async function scanOpportunities() {
   // Read all filters
   const checkedSignals  = [...document.querySelectorAll('input[name="ps-signal"]:checked')].map(cb => cb.value);
   const checkedBudget   = [...document.querySelectorAll('input[name="ps-budget"]:checked')].map(cb => cb.value);
+  const activeFilters   = [...document.querySelectorAll('.opp-filter-chip.active')].map(ch => ch.textContent.replace(/\s+/g,' ').trim());
   const sizeFilter      = _activeSizeFilter  || 'all';
   const serviceFilter   = _activeServiceFilter || 'all';
  const hotOnly         = el('ps-hot-only')?.checked || false;
@@ -4838,22 +5027,26 @@ async function scanOpportunities() {
   loaderTxt.textContent = 'Initializing scan nodes…';
   const txtInt = setInterval(() => { if (tIdx < phrases.length) loaderTxt.textContent = phrases[tIdx++]; }, 700);
 
- clearInterval(txtInt);
-
   let apiLeads = [];
   try {
     const apiRes = await fetch('/api/opportunity', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-     body: JSON.stringify({
+      body: JSON.stringify({
         type, prompt,
         signals: checkedSignals,
         budget: checkedBudget,
-        platform: platformFilter
+        platform: platformFilter,
+        mode: 'deep',
+        audienceSize: sizeFilter,
+        serviceMatch: serviceFilter,
+        hotLeadsOnly: hotOnly,
+        filters: activeFilters,
+        plan: userProfile?.is_pro ? 'pro' : 'free'
       }),
     });
     const apiData = await apiRes.json();
-apiLeads = apiData.leads || [];
+    apiLeads = apiData.leads || [];
   } catch(e) {
     showToast('Live scan failed — showing cached results.');
   }
@@ -4862,6 +5055,8 @@ apiLeads = apiData.leads || [];
   if (apiLeads.length > 0) {
     wrap.innerHTML = `<div class="opp-results-grid">${apiLeads.map(_renderOppCard).join('')}</div>`;
     lucide.createIcons();
+    ingestOpportunityClients(apiLeads, serviceFilter === 'all' ? 'Deep Scan Lead' : serviceFilter);
+    renderManagedOpportunityClients();
     loader.classList.remove('show');
     btn.disabled = false;
     showToast(`Found ${apiLeads.length} live leads.`);
@@ -5045,7 +5240,7 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY'
 );
 
-let currentUser = null, userProfile = {is_pro:false}, userLeads = [];
+let currentUser = null, userProfile = {is_pro:false}, userLeads = [], userInvoices = [], opportunityClients = [];
 let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
 
@@ -5151,13 +5346,38 @@ function clearAuthMessages(){ el('auth-error').style.display='none'; el('auth-su
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const titles={home:'Dashboard',coach:'Launch Coach',audit:'Audit Generator',proposal:'Proposal Writer',email:'Email Writer',gig:'Gig Finder',roadmap:'30-Day Roadmap',profile:'My Profile',pipeline:'Client Pipeline',opportunity:'Opportunity Engine'};
+  const titles={
+    home:'Dashboard',
+    coach:'Launch Coach',
+    audit:'Audit Generator',
+    proposal:'Proposal Writer',
+    email:'Email Writer',
+    gig:'Gig Finder',
+    roadmap:'30-Day Roadmap',
+    profile:'My Profile',
+    pipeline:'Manage Clients',
+    opportunity:'Find Clients',
+    invoices:'Invoices',
+    accounting:'Accounting & Analytics'
+  };
   const pageEl=el('page-'+page);
   if(pageEl){ pageEl.classList.add('active'); el('content-scroll')?.scrollTo(0,0); }
   const navEl=document.querySelector(`[data-page="${page}"]`);
   if(navEl) navEl.classList.add('active');
+  const parentFolder = navEl?.closest('.nav-folder');
+  if (parentFolder) parentFolder.classList.add('open');
   setText('header-title', titles[page]||'Dashboard');
+  if (page === 'invoices') renderInvoices();
+  if (page === 'accounting' || page === 'home') renderBusinessDashboard();
+  if (page === 'pipeline') renderManagedOpportunityClients();
+  lucide.createIcons();
   closeAccountDropdown();
+}
+
+function toggleNavFolder(folderKey){
+  const folder = document.querySelector(`.nav-folder[data-folder="${folderKey}"]`);
+  if (!folder) return;
+  folder.classList.toggle('open');
 }
 
 /* ─── PROFILE ─── */
@@ -5664,8 +5884,12 @@ async function loadLeads(uid){
     renderPipeline();
   } catch(e){
     console.error('Pipeline load error:',e);
-    // Table may not exist yet — show empty state gracefully
-    userLeads=[];
+    try {
+      const raw = localStorage.getItem(_storageKey('lancify-leads', uid));
+      userLeads = raw ? JSON.parse(raw) : [];
+    } catch {
+      userLeads = [];
+    }
     renderPipeline();
   }
 }
@@ -5679,7 +5903,7 @@ function renderPipeline(){
       ? buckets[s].map(l=>`
         <div class="kanban-card">
           <div class="kanban-card-name">${l.client_name}</div>
-          <div class="kanban-card-val">${l.project_value?'₹'+Number(l.project_value).toLocaleString('en-IN'):''} ${l.service||''}</div>
+          <div class="kanban-card-val">${l.project_value?'$'+Number(l.project_value).toLocaleString('en-US'):''} ${l.service||''}</div>
           <div class="kanban-card-actions">
             ${s!=='pitched'?`<button class="stage-btn" onclick="moveLead('${l.id}','pitched')">Pitched</button>`:''}
             ${s!=='replied'?`<button class="stage-btn" onclick="moveLead('${l.id}','replied')">In Talks</button>`:''}
@@ -5689,6 +5913,7 @@ function renderPipeline(){
         </div>`).join('')
       : `<div style="font-size:12px;color:var(--text3);text-align:center;padding:18px 0">No leads here</div>`;
   });
+  renderBusinessDashboard();
 }
 
 async function addLead(){
@@ -5699,17 +5924,374 @@ async function addLead(){
     const {data,error}=await sb.from('leads').insert([lead]).select().single();
     if(error) throw error;
     if(data){ userLeads.unshift(data); renderPipeline(); setVal('lead-name',''); setVal('lead-service',''); setVal('lead-value',''); showToast('Lead added!'); }
-  } catch(e){ console.error('addLead error:',e); showToast('Error adding lead. Check Supabase table setup.'); }
+  } catch(e){
+    console.error('addLead error:',e);
+    const localLead = { ...lead, id: `local-lead-${Date.now()}`, created_at: new Date().toISOString() };
+    userLeads.unshift(localLead);
+    localStorage.setItem(_storageKey('lancify-leads', currentUser.id), JSON.stringify(userLeads));
+    renderPipeline();
+    setVal('lead-name',''); setVal('lead-service',''); setVal('lead-value','');
+    showToast('Lead added locally.');
+  }
 }
 
 async function moveLead(id,status){
   const i=userLeads.findIndex(l=>l.id===id); if(i>-1) userLeads[i].status=status; renderPipeline();
-  await sb.from('leads').update({status}).eq('id',id);
+  try {
+    await sb.from('leads').update({status}).eq('id',id);
+  } catch {
+    if (currentUser) localStorage.setItem(_storageKey('lancify-leads', currentUser.id), JSON.stringify(userLeads));
+  }
 }
 
 async function deleteLead(id){
   userLeads=userLeads.filter(l=>l.id!==id); renderPipeline();
-  await sb.from('leads').delete().eq('id',id);
+  try {
+    await sb.from('leads').delete().eq('id',id);
+  } catch {
+    if (currentUser) localStorage.setItem(_storageKey('lancify-leads', currentUser.id), JSON.stringify(userLeads));
+  }
+}
+
+/* ─── CLIENT + INVOICE DATA (PHASE 1) ─── */
+function _storageKey(base, uid){ return `${base}-${uid || 'guest'}`; }
+
+function loadOpportunityClients(uid){
+  try {
+    const raw = localStorage.getItem(_storageKey('lancify-opportunity-clients', uid));
+    opportunityClients = raw ? JSON.parse(raw) : [];
+  } catch {
+    opportunityClients = [];
+  }
+  renderManagedOpportunityClients();
+}
+
+function persistOpportunityClients(){
+  if (!currentUser) return;
+  localStorage.setItem(_storageKey('lancify-opportunity-clients', currentUser.id), JSON.stringify(opportunityClients));
+}
+
+function ingestOpportunityClients(leads = [], skill = ''){
+  if (!currentUser || !Array.isArray(leads) || !leads.length) return;
+  const existing = new Set(opportunityClients.map(c => `${(c.profileUrl||'').toLowerCase()}|${(c.name||'').toLowerCase()}`));
+  let added = 0;
+  for (const l of leads) {
+    const key = `${(l.profileUrl||'').toLowerCase()}|${(l.name||'').toLowerCase()}`;
+    if (!l?.name || existing.has(key)) continue;
+    existing.add(key);
+    opportunityClients.unshift({
+      id: `opp-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,
+      name: l.name,
+      platform: l.platform || 'Website',
+      service: skill || 'Freelance service',
+      potentialValue: l.dealValue || '$150 - $450',
+      profileUrl: l.profileUrl || '',
+      quickDm: l.quickDm || l.assets?.quickDm || '',
+      created_at: new Date().toISOString(),
+    });
+    added++;
+  }
+  if (opportunityClients.length > 80) opportunityClients = opportunityClients.slice(0, 80);
+  persistOpportunityClients();
+  renderManagedOpportunityClients();
+  renderBusinessDashboard();
+  if (added > 0) showToast(`${added} lead${added>1?'s':''} saved to Manage Clients.`);
+}
+
+function renderManagedOpportunityClients(){
+  const list = el('opp-managed-list');
+  const empty = el('opp-managed-empty');
+  if (!list || !empty) return;
+
+  if (!opportunityClients.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = opportunityClients.slice(0, 20).map(c => `
+    <div class="opp-managed-item">
+      <div style="min-width:0">
+        <div style="font-size:13px;font-weight:600;color:var(--text-main)">${c.name}</div>
+        <div style="font-size:11.5px;color:var(--text-muted)">${c.platform} · ${c.service} · ${c.potentialValue}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        ${c.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(c.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
+        ${c.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${c.id}')">Copy DM</button>` : ''}
+        <button class="stage-btn" onclick="addOpportunityClientToPipeline('${c.id}')">Add to Pipeline</button>
+        <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="removeOpportunityClient('${c.id}')">Remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function copyOpportunityClientDm(id){
+  const lead = opportunityClients.find(c => c.id === id);
+  if (!lead?.quickDm) return;
+  copyDirectText(lead.quickDm);
+}
+
+function removeOpportunityClient(id){
+  opportunityClients = opportunityClients.filter(c => c.id !== id);
+  persistOpportunityClients();
+  renderManagedOpportunityClients();
+  renderBusinessDashboard();
+}
+
+async function addOpportunityClientToPipeline(id){
+  const c = opportunityClients.find(x => x.id === id);
+  if (!c) return;
+  setVal('lead-name', c.name || '');
+  setVal('lead-service', c.service || '');
+  const amount = parseInt(String(c.potentialValue || '').replace(/[^\d]/g,''), 10);
+  if (Number.isFinite(amount)) setVal('lead-value', amount);
+  setVal('lead-platform', ['Instagram','Upwork','Fiverr','LinkedIn'].includes(c.platform) ? c.platform : 'LinkedIn');
+  await addLead();
+  showToast('Lead moved to pipeline.');
+}
+
+async function loadInvoices(uid){
+  try {
+    const { data, error } = await sb.from('invoices').select('*').eq('user_id', uid).order('created_at', { ascending: false });
+    if (error) throw error;
+    userInvoices = data || [];
+  } catch {
+    try {
+      const raw = localStorage.getItem(_storageKey('lancify-invoices', uid));
+      userInvoices = raw ? JSON.parse(raw) : [];
+    } catch {
+      userInvoices = [];
+    }
+  }
+  renderInvoices();
+  renderBusinessDashboard();
+}
+
+function persistInvoicesLocal(){
+  if (!currentUser) return;
+  localStorage.setItem(_storageKey('lancify-invoices', currentUser.id), JSON.stringify(userInvoices));
+}
+
+function _invoiceStatusBadge(status){
+  const s = String(status || 'sent').toLowerCase();
+  if (s === 'paid') return '<span class="badge-pill badge-paid">Paid</span>';
+  if (s === 'overdue') return '<span class="badge-pill badge-overdue">Overdue</span>';
+  return '<span class="badge-pill badge-sent">Sent</span>';
+}
+
+function renderInvoices(){
+  const body = el('invoice-table-body');
+  if (!body) return;
+
+  const total = userInvoices.length;
+  const paid = userInvoices.filter(i => (i.status || '').toLowerCase() === 'paid').length;
+  const pending = userInvoices.filter(i => (i.status || '').toLowerCase() !== 'paid').length;
+  const outstanding = userInvoices
+    .filter(i => (i.status || '').toLowerCase() !== 'paid')
+    .reduce((sum, i) => sum + Number(i.amount || 0), 0);
+
+  setText('inv-stat-total', String(total));
+  setText('inv-stat-paid', String(paid));
+  setText('inv-stat-pending', String(pending));
+  setText('inv-stat-outstanding', `$${Number(outstanding || 0).toLocaleString()}`);
+
+  if (!userInvoices.length) {
+    body.innerHTML = '<tr><td colspan="6" style="color:var(--text3);text-align:center;padding:20px 8px">No invoices yet</td></tr>';
+    return;
+  }
+
+  body.innerHTML = userInvoices.map(inv => `
+    <tr>
+      <td>${inv.client_name || '-'}</td>
+      <td>${inv.service || '-'}</td>
+      <td>$${Number(inv.amount || 0).toLocaleString()}</td>
+      <td>${inv.due_date || '-'}</td>
+      <td>${_invoiceStatusBadge(inv.status)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="stage-btn" onclick="setInvoiceStatus('${inv.id}','paid')">Paid</button>
+        <button class="stage-btn" onclick="setInvoiceStatus('${inv.id}','sent')">Sent</button>
+        <button class="stage-btn" onclick="setInvoiceStatus('${inv.id}','overdue')">Overdue</button>
+        <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="deleteInvoice('${inv.id}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function createInvoice(){
+  if (!currentUser) return;
+  const clientName = val('inv-client-name').trim();
+  const clientEmail = val('inv-client-email').trim();
+  const service = val('inv-service').trim();
+  const amount = Number(val('inv-amount') || 0);
+  const dueDate = val('inv-due-date');
+  const status = val('inv-status') || 'sent';
+  const notes = val('inv-notes').trim();
+
+  if (!clientName || !service || !amount) {
+    showToast('Add client, service, and amount.');
+    return;
+  }
+
+  const payload = {
+    id: `inv-${Date.now()}`,
+    user_id: currentUser.id,
+    client_name: clientName,
+    client_email: clientEmail,
+    service,
+    amount,
+    due_date: dueDate || null,
+    status,
+    notes,
+    created_at: new Date().toISOString(),
+  };
+
+  try {
+    const { data, error } = await sb.from('invoices').insert([payload]).select().single();
+    if (error) throw error;
+    userInvoices.unshift(data || payload);
+  } catch {
+    userInvoices.unshift(payload);
+    persistInvoicesLocal();
+  }
+
+  ['inv-client-name','inv-client-email','inv-service','inv-amount','inv-due-date','inv-notes'].forEach(id => setVal(id,''));
+  setVal('inv-status', 'sent');
+  renderInvoices();
+  renderBusinessDashboard();
+  showToast('Invoice created.');
+}
+
+async function setInvoiceStatus(id, status){
+  const idx = userInvoices.findIndex(i => i.id === id);
+  if (idx === -1) return;
+  userInvoices[idx].status = status;
+  renderInvoices();
+  renderBusinessDashboard();
+
+  try {
+    await sb.from('invoices').update({ status }).eq('id', id);
+  } catch {
+    persistInvoicesLocal();
+  }
+}
+
+async function deleteInvoice(id){
+  userInvoices = userInvoices.filter(i => i.id !== id);
+  renderInvoices();
+  renderBusinessDashboard();
+  try {
+    await sb.from('invoices').delete().eq('id', id);
+  } catch {
+    persistInvoicesLocal();
+  }
+}
+
+function copyInvoiceDraft(){
+  const txt = [
+    `Invoice To: ${val('inv-client-name') || 'Client'}`,
+    `Email: ${val('inv-client-email') || '-'}`,
+    `Service: ${val('inv-service') || '-'}`,
+    `Amount: $${val('inv-amount') || '0'}`,
+    `Due Date: ${val('inv-due-date') || '-'}`,
+    `Notes: ${val('inv-notes') || '-'}`,
+  ].join('\n');
+  copyDirectText(txt);
+}
+
+function injectBusinessDashboardWidgets(){
+  const home = document.querySelector('#page-home .content-inner');
+  if (!home || el('home-biz-dashboard')) return;
+  const section = document.createElement('div');
+  section.id = 'home-biz-dashboard';
+  section.className = 'card';
+  section.style.marginBottom = '22px';
+  section.innerHTML = `
+    <div class="section-title" style="margin-bottom:12px">Business Pulse</div>
+    <div class="biz-metrics-grid" style="margin-bottom:10px">
+      <div class="biz-metric-card"><div class="biz-metric-label">Total Clients</div><div class="biz-metric-value" id="home-total-clients">0</div><div class="biz-metric-sub">Pipeline + saved leads</div></div>
+      <div class="biz-metric-card"><div class="biz-metric-label">Active Deals</div><div class="biz-metric-value" id="home-active-deals">0</div><div class="biz-metric-sub">Needs follow-up</div></div>
+      <div class="biz-metric-card"><div class="biz-metric-label">Won Revenue</div><div class="biz-metric-value" id="home-won-revenue">$0</div><div class="biz-metric-sub">From closed deals</div></div>
+      <div class="biz-metric-card"><div class="biz-metric-label">Outstanding</div><div class="biz-metric-value" id="home-outstanding">$0</div><div class="biz-metric-sub">Pending invoices</div></div>
+    </div>
+    <div class="biz-panel-grid">
+      <div class="biz-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="section-title" style="margin:0;border:0;padding:0">Earnings Over Time</div>
+          <button class="btn btn-ghost" onclick="navigate('accounting')">Open Analytics</button>
+        </div>
+        <div class="biz-bar-row" id="home-earnings-bars"></div>
+        <div id="home-bar-labels" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:4px"></div>
+      </div>
+      <div class="biz-card">
+        <div class="section-title" style="margin-bottom:8px">Quick Actions</div>
+        <div style="display:grid;gap:8px">
+          <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('invoices')"><i data-lucide="receipt-text" style="width:14px;height:14px"></i> Send an invoice</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('proposal')"><i data-lucide="file-text" style="width:14px;height:14px"></i> Draft a proposal</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('pipeline')"><i data-lucide="users" style="width:14px;height:14px"></i> Manage clients</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('opportunity')"><i data-lucide="target" style="width:14px;height:14px"></i> Find clients</button>
+        </div>
+      </div>
+    </div>
+  `;
+  home.appendChild(section);
+}
+
+function _monthlyEarningsBuckets(){
+  const now = new Date();
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({ key: `${d.getFullYear()}-${d.getMonth()+1}`, label: d.toLocaleString('en-US',{month:'short'}), value: 0 });
+  }
+  const idx = new Map(months.map((m,i) => [m.key, i]));
+
+  userInvoices.forEach(inv => {
+    if ((inv.status || '').toLowerCase() !== 'paid') return;
+    const d = new Date(inv.created_at || inv.due_date || Date.now());
+    const key = `${d.getFullYear()}-${d.getMonth()+1}`;
+    if (idx.has(key)) months[idx.get(key)].value += Number(inv.amount || 0);
+  });
+  userLeads.forEach(lead => {
+    if ((lead.status || '').toLowerCase() !== 'won') return;
+    const d = new Date(lead.created_at || Date.now());
+    const key = `${d.getFullYear()}-${d.getMonth()+1}`;
+    if (idx.has(key)) months[idx.get(key)].value += Number(lead.project_value || 0);
+  });
+  return months;
+}
+
+function _renderEarningsBars(barId, labelId){
+  const barsEl = el(barId), labelsEl = el(labelId);
+  if (!barsEl || !labelsEl) return;
+  const data = _monthlyEarningsBuckets();
+  const maxVal = Math.max(...data.map(d => d.value), 1);
+  barsEl.innerHTML = data.map(d => `<div class="biz-bar" style="height:${Math.max(10, Math.round((d.value / maxVal) * 100))}%"></div>`).join('');
+  labelsEl.innerHTML = data.map(d => `<div class="biz-bar-label">${d.label}</div>`).join('');
+}
+
+function renderBusinessDashboard(){
+  const wonRevenue = userLeads
+    .filter(l => (l.status || '').toLowerCase() === 'won')
+    .reduce((sum, l) => sum + Number(l.project_value || 0), 0);
+  const activeDeals = userLeads.filter(l => ['pitched','replied'].includes((l.status || '').toLowerCase())).length;
+  const outstanding = userInvoices
+    .filter(i => (i.status || '').toLowerCase() !== 'paid')
+    .reduce((sum, i) => sum + Number(i.amount || 0), 0);
+  const totalClients = userLeads.length + opportunityClients.length;
+
+  setText('home-total-clients', String(totalClients));
+  setText('home-active-deals', String(activeDeals));
+  setText('home-won-revenue', `$${Number(wonRevenue || 0).toLocaleString()}`);
+  setText('home-outstanding', `$${Number(outstanding || 0).toLocaleString()}`);
+
+  setText('acc-total-clients', String(totalClients));
+  setText('acc-active-deals', String(activeDeals));
+  setText('acc-won-revenue', `$${Number(wonRevenue || 0).toLocaleString()}`);
+  setText('acc-outstanding', `$${Number(outstanding || 0).toLocaleString()}`);
+
+  _renderEarningsBars('home-earnings-bars','home-bar-labels');
+  _renderEarningsBars('acc-earnings-bars','acc-bar-labels');
 }
 
 /* ─── UI HELPERS ─── */
@@ -5822,6 +6404,10 @@ function onLogin(user) {
 
   loadStats(user.id);
   loadLeads(user.id);
+  loadInvoices(user.id);
+  loadOpportunityClients(user.id);
+  injectBusinessDashboardWidgets();
+  renderBusinessDashboard();
   lucide.createIcons();
 
   _decideRoute(user.id);
