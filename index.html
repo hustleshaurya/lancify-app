@@ -291,6 +291,7 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 }
 .nav-item:hover{background:var(--bg-hover);color:var(--text-main)}
 .nav-item.active{background:var(--bg-hover);color:var(--text-main);font-weight:500}
+.nav-item.plan-locked{opacity:.55}
 .nav-item .icon{width:15px;height:15px;flex-shrink:0;stroke-width:1.75;min-width:15px}
 .nav-item.active .icon{stroke-width:2}
 .nav-label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .15s}
@@ -3022,7 +3023,7 @@ html.dark .credits-warning-banner {
       <div class="acct-ws">
         <div class="acct-ws-label">Current workspace</div>
         <div class="acct-ws-name" id="acct-ws-name">My Workspace</div>
-        <div class="acct-ws-plan">Free plan</div>
+        <div class="acct-ws-plan" id="acct-plan-label">Free plan</div>
       </div>
       <div class="acct-menu">
         <button class="acct-menu-item" onclick="openSettings('profile');toggleAccountDropdown()">Settings</button>
@@ -3817,8 +3818,8 @@ html.dark .credits-warning-banner {
         <div class="settings-section-title">Billing &amp; Credits</div>
         <div class="settings-section-sub">Your current plan and AI usage.</div>
         <div class="billing-plan-card">
-          <div class="billing-plan-name">Free Plan</div>
-          <div class="billing-plan-desc">1,000 AI credits included. Resets monthly.</div>
+          <div class="billing-plan-name" id="billing-plan-name">Free Plan</div>
+          <div class="billing-plan-desc" id="billing-plan-desc">1,000 AI credits included. Resets monthly.</div>
         </div>
         <div class="billing-credits-wrap">
           <div class="billing-credits-label">
@@ -4131,7 +4132,7 @@ async function quickFindClients() {
         Try changing your location, or switch to <strong>Deep Scan</strong> to customise your search further.
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="quickFindClients()" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
+        <button onclick="checkCredits(10, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
           🔄 Try Again
         </button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
@@ -4294,7 +4295,7 @@ async function quickFindClients() {
 
   if (!skillRaw) {
     showToast('Please select your skill first.');
-    return;
+    return false;
   }
 
   const prompt = location ? `${skillRaw} clients in ${location}` : `${skillRaw} clients`;
@@ -4349,8 +4350,8 @@ async function quickFindClients() {
     lucide.createIcons();
     ingestOpportunityClients(apiLeads, skillRaw);
     renderManagedOpportunityClients();
-    showToast(`Found ${apiLeads.length} real clients for you! 🎯`);
-    return;
+    showToast(`Found ${apiLeads.length} real clients for you!`);
+    return true;
   }
 
   // Nothing found
@@ -4362,10 +4363,11 @@ async function quickFindClients() {
         ${apiError ? 'Something went wrong. Please try again.' : 'Try adding a location like "Mumbai" or "New York", or switch to Advanced mode.'}
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="quickFindClients()" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">🔄 Try Again</button>
+        <button onclick="checkCredits(10, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">🔄 Try Again</button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">🔍 Try Advanced</button>
       </div>
     </div>`;
+  return !apiError;
 }
 let _activeSizeFilter = 'all';
 function setSizeFilter(btn) {
@@ -4999,7 +5001,7 @@ async function scanOpportunities() {
   if (!prompt.trim()) {
     showToast('Describe who you want to make money from.');
     el('opp-prompt').focus();
-    return;
+    return false;
   }
 
   // Read all filters
@@ -5058,7 +5060,7 @@ async function scanOpportunities() {
     loader.classList.remove('show');
     btn.disabled = false;
     showToast(`Found ${apiLeads.length} live leads.`);
-    return;
+    return true;
   }
 
   let pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
@@ -5131,6 +5133,7 @@ async function scanOpportunities() {
   btn.disabled = false;
   const fs = checkedSignals.length > 0 ? ` · ${checkedSignals.length} signal filter${checkedSignals.length > 1 ? 's' : ''}` : '';
   showToast(`Found ${leads.length} lead${leads.length !== 1 ? 's' : ''}${fs}.`);
+  return true;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -5241,6 +5244,251 @@ const sb = createClient(
 let currentUser = null, userProfile = {is_pro:false}, userLeads = [], userInvoices = [], opportunityClients = [];
 let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
+let billingState = { total: 1000, remaining: 1000, cycleStart: null, usage: {} };
+
+const PLAN_RULES = {
+  free: {
+    name: 'Free Plan',
+    monthlyCredits: 1000,
+    lockedPages: ['gig', 'roadmap'],
+    usageLimits: {
+      opportunity_scan: 3,
+      audit_generate: 3,
+      proposal_generate: 3,
+      pipeline_leads: 5
+    }
+  },
+  pro: {
+    name: 'Pro Plan',
+    monthlyCredits: 15000,
+    lockedPages: [],
+    usageLimits: {}
+  }
+};
+
+function _currentPlanKey(){
+  return userProfile?.is_pro ? 'pro' : 'free';
+}
+
+function _planRules(){
+  return PLAN_RULES[_currentPlanKey()] || PLAN_RULES.free;
+}
+
+function _monthStartIso(){
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+}
+
+function _sameBillingCycle(a, b){
+  if (!a || !b) return false;
+  const da = new Date(a), db = new Date(b);
+  return da.getFullYear() === db.getFullYear() && da.getMonth() === db.getMonth();
+}
+
+function _billingLocalKey(uid){
+  return `lancify-billing-${uid || 'guest'}`;
+}
+
+function _featureFromCallbackName(name){
+  const map = {
+    quickFindClients: 'opportunity_scan',
+    scanOpportunities: 'opportunity_scan',
+    generateAudit: 'audit_generate',
+    generateProposal: 'proposal_generate',
+    generateEmail: 'email_generate',
+    findGigs: 'gig_scan',
+    generateRoadmap: 'roadmap_generate'
+  };
+  return map[name] || '';
+}
+
+function _creditWarningThreshold(total){
+  return Math.max(50, Math.round(total * 0.15));
+}
+
+function _usageCount(feature){
+  return Number(billingState?.usage?.[feature] || 0);
+}
+
+function _featureLimit(feature){
+  const limits = _planRules().usageLimits || {};
+  const val = limits[feature];
+  return Number.isFinite(val) ? val : Infinity;
+}
+
+function _setPlanUi(){
+  const rules = _planRules();
+  const total = Number(billingState.total || rules.monthlyCredits || 1000);
+  const remaining = Math.max(0, Number(billingState.remaining || 0));
+  const pct = Math.max(0, Math.min(100, Math.round((remaining / Math.max(total, 1)) * 100)));
+
+  setText('credits-remaining', remaining.toLocaleString());
+  setText('credits-total', total.toLocaleString());
+  setText('acct-credits-remaining', remaining.toLocaleString());
+
+  const bar = el('credits-bar');
+  if (bar) bar.style.width = `${pct}%`;
+
+  const billingDisp = el('billing-credits-display');
+  if (billingDisp) billingDisp.textContent = `${remaining.toLocaleString()} / ${total.toLocaleString()} remaining`;
+  const billingBar = el('billing-credits-bar');
+  if (billingBar) billingBar.style.width = `${pct}%`;
+
+  setText('acct-plan-label', rules.name);
+  setText('billing-plan-name', rules.name);
+  setText(
+    'billing-plan-desc',
+    rules.name === 'Pro Plan'
+      ? `${total.toLocaleString()} AI credits included. Premium feature limits unlocked.`
+      : `${total.toLocaleString()} AI credits included. Resets monthly.`
+  );
+}
+
+function _applyPlanLocks(){
+  const lockedPages = new Set(_planRules().lockedPages || []);
+  document.querySelectorAll('.nav-item[data-page]').forEach(node => {
+    const page = node.getAttribute('data-page') || '';
+    node.classList.toggle('plan-locked', lockedPages.has(page));
+  });
+}
+
+function _isPageLocked(page){
+  return (_planRules().lockedPages || []).includes(page);
+}
+
+function _canUseFeature(feature, showFeedback = true){
+  if (!feature) return true;
+  const limit = _featureLimit(feature);
+  const used = _usageCount(feature);
+  if (used < limit) return true;
+  if (showFeedback) {
+    showToast(`Free limit reached for this feature (${used}/${limit}). Upgrade to Pro to continue.`);
+    showUpgradeModal();
+  }
+  return false;
+}
+
+function _canAddPipelineLead(showFeedback = true){
+  const limit = _featureLimit('pipeline_leads');
+  if (!Number.isFinite(limit)) return true;
+  if ((userLeads || []).length < limit) return true;
+  if (showFeedback) {
+    showToast(`Free plan limit reached (${limit} pipeline leads). Upgrade to add more.`);
+    showUpgradeModal();
+  }
+  return false;
+}
+
+async function _persistBillingState(){
+  if (!currentUser) return;
+  const payload = {
+    user_id: currentUser.id,
+    credits_total: Number(billingState.total || _planRules().monthlyCredits),
+    credits_remaining: Number(billingState.remaining || 0),
+    credits_cycle_start: billingState.cycleStart || _monthStartIso(),
+    billing_usage: billingState.usage || {}
+  };
+  localStorage.setItem(_billingLocalKey(currentUser.id), JSON.stringify(payload));
+  try {
+    await sb.from('profiles').upsert([payload], { onConflict: 'user_id' });
+  } catch {}
+}
+
+async function loadBillingState(uid){
+  if (!uid) return;
+
+  const plan = _planRules();
+  let total = plan.monthlyCredits;
+  let remaining = plan.monthlyCredits;
+  let cycleStart = _monthStartIso();
+  let usage = {};
+
+  try {
+    const localRaw = localStorage.getItem(_billingLocalKey(uid));
+    if (localRaw) {
+      const local = JSON.parse(localRaw);
+      if (Number.isFinite(Number(local.credits_total))) total = Number(local.credits_total);
+      if (Number.isFinite(Number(local.credits_remaining))) remaining = Number(local.credits_remaining);
+      if (local.credits_cycle_start) cycleStart = local.credits_cycle_start;
+      if (local.billing_usage && typeof local.billing_usage === 'object') usage = local.billing_usage;
+    }
+  } catch {}
+
+  try {
+    const { data, error } = await sb
+      .from('profiles')
+      .select('is_pro,credits_total,credits_remaining,credits_cycle_start,billing_usage')
+      .eq('user_id', uid)
+      .single();
+    if (!error && data) {
+      if (typeof data.is_pro === 'boolean') userProfile.is_pro = data.is_pro;
+      const planFromDb = _planRules();
+      total = planFromDb.monthlyCredits;
+      if (Number.isFinite(Number(data.credits_remaining))) remaining = Number(data.credits_remaining);
+      if (data.credits_cycle_start) cycleStart = data.credits_cycle_start;
+      if (data.billing_usage && typeof data.billing_usage === 'object') usage = data.billing_usage;
+    }
+  } catch {}
+
+  const freshPlan = _planRules();
+  total = freshPlan.monthlyCredits;
+  if (!_sameBillingCycle(cycleStart, _monthStartIso())) {
+    cycleStart = _monthStartIso();
+    remaining = total;
+    usage = {};
+  }
+  remaining = Math.max(0, Math.min(total, Number(remaining || 0)));
+
+  billingState = { total, remaining, cycleStart, usage };
+  _setPlanUi();
+  _applyPlanLocks();
+  await _persistBillingState();
+}
+
+async function _consumeCredits(cost, featureKey = ''){
+  const numericCost = Math.max(0, Number(cost || 0));
+  if (!currentUser) return false;
+  await loadBillingState(currentUser.id);
+
+  const featurePageMap = { gig_scan: 'gig', roadmap_generate: 'roadmap' };
+  const targetPage = featurePageMap[featureKey];
+  if (targetPage && _isPageLocked(targetPage)) {
+    showToast('This feature is available on Pro plan.');
+    showUpgradeModal();
+    return false;
+  }
+
+  if (featureKey && !_canUseFeature(featureKey, true)) return false;
+  if (numericCost <= 0) return true;
+  if (billingState.remaining < numericCost) {
+    showToast('Not enough credits. Upgrade to Pro or wait for monthly reset.');
+    showUpgradeModal();
+    return false;
+  }
+
+  billingState.remaining -= numericCost;
+  _setPlanUi();
+  if (billingState.remaining <= _creditWarningThreshold(billingState.total)) {
+    showToast(`Low credits: ${billingState.remaining} remaining this month.`);
+  }
+  await _persistBillingState();
+  return true;
+}
+
+async function _refundCredits(cost){
+  const numericCost = Math.max(0, Number(cost || 0));
+  if (!currentUser || numericCost <= 0) return;
+  billingState.remaining = Math.min(billingState.total, billingState.remaining + numericCost);
+  _setPlanUi();
+  await _persistBillingState();
+}
+
+async function _markFeatureUsage(featureKey){
+  if (!currentUser || !featureKey) return;
+  const current = _usageCount(featureKey);
+  billingState.usage = { ...(billingState.usage || {}), [featureKey]: current + 1 };
+  await _persistBillingState();
+}
 
 /*
   The chat collects exactly the keys generate.js needs inside answers{}:
@@ -5294,6 +5542,7 @@ async function initApp() {
 }
 
 function showLogin() {
+  billingState = { total: 1000, remaining: 1000, cycleStart: null, usage: {} };
   const ls = el('login-screen');
   if(ls) ls.style.display='flex';
   const al = el('app-layout');
@@ -5342,6 +5591,11 @@ function clearAuthMessages(){ el('auth-error').style.display='none'; el('auth-su
 
 /* ─── NAVIGATION ─── */
 function navigate(page) {
+  if (_isPageLocked(page)) {
+    showToast('This feature is available on Pro plan.');
+    showUpgradeModal();
+    return;
+  }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const titles={
@@ -5445,23 +5699,8 @@ async function loadStats(uid){
     setText('stat-proposals',pc);
     setText('stat-emails',ec);
     setText('stat-gigs',gc);
-    // Credit costs: kits=50, proposals=30, emails=20, gig searches=25
-    const total=1000;
-    const used=(kc*50)+(pc*30)+(ec*20)+(gc*25);
-    const remaining=Math.max(0,total-used);
-    const pct=Math.round((remaining/total)*100);
-    // Sidebar credits
-    setText('credits-remaining',remaining.toLocaleString());
-    setText('credits-total','1,000');
-    const bar=el('credits-bar'); if(bar) bar.style.width=`${pct}%`;
-    // Header dropdown credits
-    setText('acct-credits-remaining',remaining.toLocaleString());
-    // Settings billing tab
-    const billingDisp=el('billing-credits-display');
-    if(billingDisp) billingDisp.textContent=`${remaining.toLocaleString()} / 1,000 remaining`;
-    const billingBar=el('billing-credits-bar');
-    if(billingBar) billingBar.style.width=`${pct}%`;
-  } catch(e){}
+    _setPlanUi();
+  } catch(e){ _setPlanUi(); }
 }
 
 /* ─── AUDIT ─── */
@@ -5486,7 +5725,8 @@ function updateLogoText(input) {
 }
 
 async function generateAudit(){
-  const targetVal=val('audit-target'); if(!targetVal) return showToast('Enter a business name');
+  const targetVal=val('audit-target'); if(!targetVal) { showToast('Enter a business name'); return false; }
+  let ok = false;
   el('audit-btn').disabled=true; loader('audit',true); toggleResult('audit',false);
   try {
     const res=await fetch('/api/audit',{
@@ -5513,9 +5753,10 @@ async function generateAudit(){
 
     toggleResult('audit',true);
     lucide.createIcons();
-
-  } catch(e){ showToast('Error. Try again.'); toggleResult('audit',false,true); }
+    ok = true;
+  } catch(e){ showToast('Error. Try again.'); toggleResult('audit',false,true); ok = false; }
   el('audit-btn').disabled=false; loader('audit',false);
+  return ok;
 }
 
 async function downloadAuditPDF() {
@@ -5643,7 +5884,8 @@ async function downloadAuditPDF() {
 
 /* ─── PROPOSAL ─── */
 async function generateProposal(){
-  const job=val('prop-job'); if(!job) return showToast('Paste a job description first');
+  const job=val('prop-job'); if(!job) { showToast('Paste a job description first'); return false; }
+  let ok = false;
   el('prop-btn').disabled=true; loader('prop',true); toggleResult('prop',false);
   try {
     /*
@@ -5690,13 +5932,16 @@ async function generateProposal(){
       }]);
       loadStats(currentUser.id);
     }
-  } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); }
+    ok = true;
+  } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); ok = false; }
   el('prop-btn').disabled=false; loader('prop',false);
+  return ok;
 }
 
 /* ─── EMAIL ─── */
 async function generateEmail(){
-  const ctx=val('email-context'); if(!ctx) return showToast('Add some context first');
+  const ctx=val('email-context'); if(!ctx) { showToast('Add some context first'); return false; }
+  let ok = false;
   el('email-btn').disabled=true; loader('email',true); toggleResult('email',false);
   try {
     /*
@@ -5743,13 +5988,16 @@ async function generateEmail(){
       }]);
       loadStats(currentUser.id);
     }
-  } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); }
+    ok = true;
+  } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); ok = false; }
   el('email-btn').disabled=false; loader('email',false);
+  return ok;
 }
 
 /* ─── GIG FINDER ─── */
 async function findGigs(){
-  const skills=val('gig-skills'); if(!skills) return showToast('Enter your skills first');
+  const skills=val('gig-skills'); if(!skills) { showToast('Enter your skills first'); return false; }
+  let ok = false;
   el('gig-btn').disabled=true; loader('gig',true); el('gig-results').style.display='none';
   try {
     /*
@@ -5800,13 +6048,16 @@ async function findGigs(){
       }]);
       loadStats(currentUser.id);
     }
-  } catch(e){ showToast('Error parsing results. Try again.'); }
+    ok = true;
+  } catch(e){ showToast('Error parsing results. Try again.'); ok = false; }
   el('gig-btn').disabled=false; loader('gig',false);
+  return ok;
 }
 
 /* ─── ROADMAP ─── */
 async function generateRoadmap(){
-  const skills=val('rm-skills'); if(!skills) return showToast('Enter your skills');
+  const skills=val('rm-skills'); if(!skills) { showToast('Enter your skills'); return false; }
+  let ok = false;
   el('rm-btn').disabled=true; loader('rm',true);
   try {
     /*
@@ -5867,8 +6118,10 @@ async function generateRoadmap(){
     }
 
     el('rm-form').style.display='none'; el('rm-result').style.display='block';
-  } catch(e){ showToast('Error. Try again.'); }
+    ok = true;
+  } catch(e){ showToast('Error. Try again.'); ok = false; }
   el('rm-btn').disabled=false; loader('rm',false);
+  return ok;
 }
 
 function resetRoadmap(){ el('rm-result').style.display='none'; el('rm-form').style.display='block'; el('rm-btn').disabled=false; }
@@ -5915,13 +6168,14 @@ function renderPipeline(){
 }
 
 async function addLead(){
-  if(!currentUser) return;
-  const n=val('lead-name'); if(!n) return showToast('Add a client name');
+  if(!currentUser) return false;
+  if(!_canAddPipelineLead(true)) return false;
+  const n=val('lead-name'); if(!n) { showToast('Add a client name'); return false; }
   const lead={user_id:currentUser.id,client_name:n,service:val('lead-service'),project_value:val('lead-value')||null,platform:val('lead-platform'),status:'pitched'};
   try {
     const {data,error}=await sb.from('leads').insert([lead]).select().single();
     if(error) throw error;
-    if(data){ userLeads.unshift(data); renderPipeline(); setVal('lead-name',''); setVal('lead-service',''); setVal('lead-value',''); showToast('Lead added!'); }
+    if(data){ userLeads.unshift(data); renderPipeline(); setVal('lead-name',''); setVal('lead-service',''); setVal('lead-value',''); showToast('Lead added!'); return true; }
   } catch(e){
     console.error('addLead error:',e);
     const localLead = { ...lead, id: `local-lead-${Date.now()}`, created_at: new Date().toISOString() };
@@ -5930,7 +6184,9 @@ async function addLead(){
     renderPipeline();
     setVal('lead-name',''); setVal('lead-service',''); setVal('lead-value','');
     showToast('Lead added locally.');
+    return true;
   }
+  return false;
 }
 
 async function moveLead(id,status){
@@ -6071,14 +6327,15 @@ function removeOpportunityClient(id){
 
 async function addOpportunityClientToPipeline(id){
   const c = opportunityClients.find(x => x.id === id);
-  if (!c) return;
+  if (!c) return false;
   setVal('lead-name', c.name || '');
   setVal('lead-service', c.service || '');
   const amount = parseInt(String(c.potentialValue || '').replace(/[^\d]/g,''), 10);
   if (Number.isFinite(amount)) setVal('lead-value', amount);
   setVal('lead-platform', ['Instagram','Upwork','Fiverr','LinkedIn'].includes(c.platform) ? c.platform : 'LinkedIn');
-  await addLead();
-  showToast('Lead moved to pipeline.');
+  const moved = await addLead();
+  if (moved) showToast('Lead moved to pipeline.');
+  return moved;
 }
 
 async function loadInvoices(uid){
@@ -6426,7 +6683,7 @@ const _obQuotes = {
   ]
 };
 
-function onLogin(user) {
+async function onLogin(user) {
   currentUser = user;
   el('login-screen').style.display = 'none';
 
@@ -6440,6 +6697,7 @@ function onLogin(user) {
 
   if (el('ob-name')) el('ob-name').value = firstName !== 'User' ? name : '';
 
+  await loadBillingState(user.id);
   injectBusinessDashboardWidgets();
   renderBusinessDashboard();
   loadStats(user.id);
@@ -6548,6 +6806,7 @@ async function _decideRoute(uid) {
       userProfile = { ...userProfile, ...fullProfile };
       applyProfileToFields(fullProfile);
       checkProfileBanners();
+      await loadBillingState(uid);
     }
     el('app-layout').classList.add('show');
   } else {
@@ -6709,12 +6968,7 @@ function openSettings(tabId){
   const btnL = el('theme-btn-light'), btnD = el('theme-btn-dark');
   if(btnL) btnL.classList.toggle('active', !isDark);
   if(btnD) btnD.classList.toggle('active', isDark);
-  // Sync billing bar from sidebar credits
-  const rem = el('credits-remaining')?.textContent || '1,000';
-  const remNum = parseInt(rem.replace(/,/g,'')) || 1000;
-  const pct = Math.round((remNum/1000)*100);
-  const bd = el('billing-credits-display'); if(bd) bd.textContent = `${rem} / 1,000 remaining`;
-  const bb = el('billing-credits-bar'); if(bb) bb.style.width = pct + '%';
+  _setPlanUi();
   lucide.createIcons();
 }
 
@@ -6738,19 +6992,35 @@ function setThemePref(theme){
 function nextWizardStep() {}
 function skipOnboarding()  { obNext(); }
 function finishOnboarding(){ _obFinish(); }
-   function checkCredits(cost, callback) {
-  const remaining = parseInt(
-    el('credits-remaining')?.textContent?.replace(/,/g, '') || '1000'
-  );
-  if (remaining < cost) {
-    showToast('Not enough credits — upgrade to Pro for unlimited access.');
-    showUpgradeModal();
-    return;
+
+async function checkCredits(cost, callback) {
+  const featureKey = _featureFromCallbackName(callback?.name || '');
+  const allowed = await _consumeCredits(cost, featureKey);
+  if (!allowed) return false;
+
+  try {
+    const result = await callback();
+    const success = result !== false;
+    if (success) {
+      await _markFeatureUsage(featureKey);
+    } else {
+      await _refundCredits(cost);
+    }
+    _setPlanUi();
+    _applyPlanLocks();
+    return success;
+  } catch (e) {
+    await _refundCredits(cost);
+    showToast('Action failed. Credits were refunded.');
+    return false;
   }
-  callback();
 }
+
 initApp();
 </script>
        <div id="toast"></div>
 </body>
 </html>
+
+
+
