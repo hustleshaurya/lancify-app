@@ -26,6 +26,78 @@ const PRICE_HINTS = {
   default: '$150 - $450',
 };
 
+const SKILL_INTENT_RULES = {
+  'Thumbnail Design': {
+    requiredAny: ['thumbnail', 'ctr', 'click-through', 'packaging', 'title'],
+    forbiddenAny: ['content calendar', 'retention strategy', 'bookkeeping', 'tax'],
+    niche: 'creator-visuals',
+  },
+  'Video Editing': {
+    requiredAny: ['editing', 'hook', 'retention', 'shorts', 'video'],
+    forbiddenAny: ['bookkeeping', 'tax filing', 'seo audit only'],
+    niche: 'creator-video',
+  },
+  'Voice Over': {
+    requiredAny: ['voice', 'narration', 'script read', 'audio'],
+    forbiddenAny: ['thumbnail', 'tax filing', 'shopify design'],
+    niche: 'creator-audio',
+  },
+  'Social Media Management': {
+    requiredAny: ['social', 'posting', 'content', 'reels', 'engagement'],
+    forbiddenAny: ['tax filing', 'bookkeeping', 'server migration'],
+    niche: 'local-social',
+  },
+  'Web Design': {
+    requiredAny: ['website', 'landing page', 'conversion', 'cta', 'design'],
+    forbiddenAny: ['tax filing', 'bookkeeping'],
+    niche: 'local-web',
+  },
+  'Copywriting': {
+    requiredAny: ['copy', 'product description', 'ad copy', 'landing page'],
+    forbiddenAny: ['bookkeeping', 'tax filing'],
+    niche: 'ecom-copy',
+  },
+  'Email Marketing': {
+    requiredAny: ['email', 'sequence', 'list', 'campaign', 'newsletter'],
+    forbiddenAny: ['tax filing', 'bookkeeping'],
+    niche: 'coach-email',
+  },
+  'SEO': {
+    requiredAny: ['seo', 'search', 'organic', 'ranking', 'traffic'],
+    forbiddenAny: ['bookkeeping', 'tax filing'],
+    niche: 'saas-seo',
+  },
+  'Funnel Building': {
+    requiredAny: ['funnel', 'lead', 'booking', 'conversion', 'pipeline'],
+    forbiddenAny: ['tax filing', 'bookkeeping'],
+    niche: 'coach-funnel',
+  },
+  'Graphic Design': {
+    requiredAny: ['design', 'creative', 'brand visuals', 'product creative'],
+    forbiddenAny: ['tax filing', 'bookkeeping'],
+    niche: 'ecom-design',
+  },
+  'Paid Ads': {
+    requiredAny: ['ads', 'roas', 'campaign', 'conversion', 'meta ads'],
+    forbiddenAny: ['tax filing', 'bookkeeping'],
+    niche: 'ecom-ads',
+  },
+  'Content Writing': {
+    requiredAny: ['content', 'blog', 'article', 'case study', 'newsletter'],
+    forbiddenAny: ['bookkeeping', 'tax filing'],
+    niche: 'saas-content',
+  },
+};
+
+const GENERIC_PHRASES = [
+  'improve online presence',
+  'attract more clients',
+  'grow business',
+  'reach a wider audience',
+  'help them succeed',
+  'enhance visibility',
+];
+
 const SKILL_CONFIG = {
   'Thumbnail Design': {
     method: 'youtube',
@@ -172,6 +244,14 @@ function getHost(link) {
   }
 }
 
+function getRootDomain(link) {
+  const host = getHost(link).replace(/^www\./, '');
+  if (!host) return '';
+  const parts = host.split('.');
+  if (parts.length <= 2) return host;
+  return parts.slice(-2).join('.');
+}
+
 function extractLocation(prompt) {
   const t = cleanText(prompt);
   const idx = t.toLowerCase().lastIndexOf(' in ');
@@ -196,50 +276,127 @@ function dedupeProfiles(items) {
   return out;
 }
 
+function scoreByChannel(profile, cfg) {
+  if ((cfg?.targetType === 'creator') || profile.platform === 'YouTube') {
+    return scoreCreatorProfile(profile, cfg);
+  }
+  if (profile.platform === 'Google Maps') {
+    return scoreMapsProfile(profile);
+  }
+  return scoreSerpProfile(profile, cfg);
+}
+
 function scoreCreatorProfile(p, cfg) {
   const subs = Number(p.subscriberCount || 0);
   const ratio = Number(p.viewSubRatio || 0);
   const lastUploadDays = Number(p.lastUploadDays || 999);
   const avgViews = Number(p.avgRecentViews || 0);
 
-  let score = 50;
+  const sizeFit = subs >= (cfg?.minSubs || 0) && subs <= (cfg?.maxSubs || 1000000) ? 100
+    : subs < (cfg?.minSubs || 0) ? 30 : 20;
+  const activity = lastUploadDays <= 14 ? 100
+    : lastUploadDays <= 30 ? 80
+    : lastUploadDays <= 45 ? 60
+    : lastUploadDays <= 60 ? 40 : 15;
+  const engagement = ratio >= 0.12 ? 100
+    : ratio >= 0.07 ? 82
+    : ratio >= 0.04 ? 65
+    : ratio >= 0.02 ? 48 : 20;
+  const intent = avgViews >= 5000 ? 90
+    : avgViews >= 1500 ? 72
+    : avgViews >= 700 ? 56
+    : avgViews >= 250 ? 40 : 15;
+  const contactability = p.profileUrl ? 70 : 20;
+  const offerFit = subs <= 50000 ? 85 : 55;
 
-  if (subs >= 5000 && subs <= Math.min(50000, cfg.maxSubs || 50000)) score += 12;
-  else if (subs >= cfg.minSubs && subs <= cfg.maxSubs) score += 7;
+  const score = (0.24 * intent)
+    + (0.22 * activity)
+    + (0.20 * engagement)
+    + (0.16 * sizeFit)
+    + (0.10 * contactability)
+    + (0.08 * offerFit);
 
-  if (lastUploadDays <= 14) score += 12;
-  else if (lastUploadDays <= 30) score += 8;
-  else if (lastUploadDays <= 45) score += 4;
-
-  if (ratio >= 0.12) score += 14;
-  else if (ratio >= 0.07) score += 10;
-  else if (ratio >= 0.04) score += 6;
-  else if (ratio >= 0.02) score += 2;
-
-  if (avgViews >= 5000) score += 8;
-  else if (avgViews >= 1500) score += 5;
-  else if (avgViews >= 700) score += 2;
+  p.scoreBreakdown = {
+    channel: 'creator',
+    intent: Math.round(intent),
+    activity: Math.round(activity),
+    engagement: Math.round(engagement),
+    sizeFit: Math.round(sizeFit),
+    contactability: Math.round(contactability),
+    offerFit: Math.round(offerFit),
+  };
 
   return clamp(Math.round(score), 55, 99);
 }
 
-function scoreBusinessProfile(p) {
+function scoreMapsProfile(p) {
   const reviews = Number(p.reviews || 0);
   const rating = Number(p.rating || 0);
-  let score = 58;
+  const trust = rating >= 4.6 ? 95 : rating >= 4.2 ? 80 : rating >= 3.8 ? 65 : 40;
+  const demand = reviews >= 200 ? 95 : reviews >= 70 ? 80 : reviews >= 20 ? 62 : 35;
+  const contactability = p.website || p.phone ? 92 : p.profileUrl ? 60 : 20;
+  const siteSignalPenalty = p.siteSignal
+    ? (!p.siteSignal.hasBooking ? 8 : 0) + (!p.siteSignal.hasSocialProof ? 8 : 0)
+    : 0;
+  const intent = clamp((p.description ? 68 : 35) + siteSignalPenalty, 35, 95);
+  const sizeFit = 75;
+  const offerFit = 72;
 
-  if (rating >= 4.6) score += 10;
-  else if (rating >= 4.2) score += 7;
-  else if (rating >= 3.8) score += 4;
+  const score = (0.24 * intent)
+    + (0.22 * trust)
+    + (0.20 * demand)
+    + (0.14 * contactability)
+    + (0.10 * sizeFit)
+    + (0.10 * offerFit);
 
-  if (reviews >= 200) score += 9;
-  else if (reviews >= 70) score += 6;
-  else if (reviews >= 20) score += 3;
+  p.scoreBreakdown = {
+    channel: 'maps',
+    intent: Math.round(intent),
+    trust: Math.round(trust),
+    demand: Math.round(demand),
+    contactability: Math.round(contactability),
+    sizeFit: Math.round(sizeFit),
+    offerFit: Math.round(offerFit),
+  };
 
-  if (p.website || p.phone) score += 6;
-  if (p.profileUrl) score += 4;
+  return clamp(Math.round(score), 55, 97);
+}
 
-  return clamp(Math.round(score), 55, 95);
+function scoreSerpProfile(p, cfg) {
+  const host = getHost(p.profileUrl);
+  const description = lower(p.description);
+  const name = lower(p.name);
+  const trustedDomain = (cfg?.allowDomains || []).some((d) => host.includes(d));
+  const intentSignals = ['store', 'shop', 'coach', 'saas', 'startup', 'book', 'buy', 'pricing', 'services'];
+  const intentHits = intentSignals.filter((k) => description.includes(k) || name.includes(k)).length;
+  const siteSignalPenalty = p.siteSignal
+    ? (!p.siteSignal.hasBooking ? 10 : 0) + (!p.siteSignal.hasPricing ? 8 : 0) + (!p.siteSignal.hasSocialProof ? 7 : 0)
+    : 0;
+  const intent = clamp(40 + (intentHits * 12) + siteSignalPenalty, 35, 95);
+  const contactability = p.profileUrl ? 70 : 20;
+  const domainQuality = trustedDomain ? 92 : 58;
+  const sizeFit = 72;
+  const offerFit = trustedDomain ? 84 : 65;
+  const freshness = 70;
+
+  const score = (0.24 * intent)
+    + (0.21 * domainQuality)
+    + (0.18 * offerFit)
+    + (0.15 * contactability)
+    + (0.12 * sizeFit)
+    + (0.10 * freshness);
+
+  p.scoreBreakdown = {
+    channel: 'serp',
+    intent: Math.round(intent),
+    domainQuality: Math.round(domainQuality),
+    offerFit: Math.round(offerFit),
+    contactability: Math.round(contactability),
+    sizeFit: Math.round(sizeFit),
+    freshness: Math.round(freshness),
+  };
+
+  return clamp(Math.round(score), 55, 96);
 }
 
 async function fetchJson(url, opts = {}, timeoutMs = 15000) {
@@ -439,7 +596,7 @@ async function runApifyMaps(query, APIFY) {
         profileUrl: cleanText(item.website || item.url || ''),
         platform: 'Google Maps',
       };
-      p.qualityScore = scoreBusinessProfile(p);
+      p.qualityScore = scoreMapsProfile(p);
       return p;
     });
   } catch (e) {
@@ -466,7 +623,7 @@ async function runSerpMaps(query, SERP) {
         profileUrl: cleanText(r.website || ''),
         platform: 'Google Maps',
       };
-      p.qualityScore = scoreBusinessProfile(p);
+      p.qualityScore = scoreMapsProfile(p);
       return p;
     });
   } catch (e) {
@@ -519,7 +676,7 @@ async function runSerpGoogle(query, { SERP, excludeTerms = [], allowDomains = []
           : host.includes('producthunt.com') ? 'Product Hunt'
           : 'Website',
       };
-      p.qualityScore = scoreBusinessProfile(p);
+      p.qualityScore = scoreSerpProfile(p, {});
       return p;
     });
   } catch (e) {
@@ -557,18 +714,158 @@ function qualityGate(profiles, cfg) {
   });
 }
 
+function buildSkillFallbackText(profile, skill, cfg, siteSignal = null) {
+  const rule = SKILL_INTENT_RULES[skill] || null;
+  const requiredWord = rule?.requiredAny?.[0] || 'conversion';
+  const signalText = siteSignal?.summary || null;
+
+  if ((cfg?.targetType === 'creator') || profile.platform === 'YouTube') {
+    const problem = `Their recent uploads show ${requiredWord} upside, especially across newer videos with inconsistent packaging.`;
+    const strategy = `Pitch a low-risk sprint focused on ${requiredWord} gains with 3 test deliverables and quick A/B feedback.`;
+    return { problem, strategy };
+  }
+
+  const baseProblem = signalText
+    ? `Their website likely has ${signalText}, which can hurt lead-to-client conversion.`
+    : `Their buyer journey likely has a ${requiredWord} gap that is costing qualified leads.`;
+  const strategy = `Lead with one specific fix and offer a 7-day starter implementation tied to ${requiredWord}.`;
+  return { problem: baseProblem, strategy };
+}
+
+function hasAny(text, arr = []) {
+  const t = lower(text);
+  return arr.some((v) => t.includes(lower(v)));
+}
+
+function isTooGenericText(text) {
+  const t = lower(text);
+  const genericHits = GENERIC_PHRASES.filter((p) => t.includes(p)).length;
+  return genericHits >= 1;
+}
+
+function applyIntentRules(lead, profile, skill, cfg, siteSignal = null) {
+  const rules = SKILL_INTENT_RULES[skill] || null;
+  const seed = buildSkillFallbackText(profile, skill, cfg, siteSignal);
+  const merged = { ...lead };
+
+  if (!cleanText(merged.problem)) merged.problem = seed.problem;
+  if (!cleanText(merged.strategy)) merged.strategy = seed.strategy;
+
+  const allText = `${merged.problem} ${merged.strategy} ${merged.reason || ''} ${merged.jobDesc || ''}`;
+  const hasRequired = !rules?.requiredAny?.length || hasAny(allText, rules.requiredAny);
+  const hasForbidden = !!rules?.forbiddenAny?.length && hasAny(allText, rules.forbiddenAny);
+  const generic = isTooGenericText(allText);
+
+  if (!hasRequired || hasForbidden || generic) {
+    merged.problem = seed.problem;
+    merged.strategy = seed.strategy;
+    merged.reason = `High service-to-pain fit for ${skill}.`;
+    merged.jobDesc = `Need help with ${skill} to improve ${rules?.requiredAny?.[0] || 'conversion'} and close growth gaps.`;
+  }
+
+  return merged;
+}
+
+function getNicheBucket(profile, skill) {
+  const rule = SKILL_INTENT_RULES[skill];
+  if (rule?.niche) return rule.niche;
+  if (profile.platform === 'YouTube') return 'creator';
+  if (profile.platform === 'Google Maps') return 'local-business';
+  if (profile.platform === 'LinkedIn') return 'linkedin';
+  if (profile.platform === 'Shopify') return 'shopify';
+  if (profile.platform === 'Product Hunt') return 'saas';
+  return 'web';
+}
+
+function pickDiverseTopLeads(leads, profilesById, skill, maxLeads = 3) {
+  const selected = [];
+  const usedDomains = new Set();
+  const usedBuckets = new Set();
+
+  for (const lead of leads) {
+    if (selected.length >= maxLeads) break;
+    const profile = profilesById.get(lead.sourceId);
+    if (!profile) continue;
+
+    const root = getRootDomain(profile.profileUrl);
+    const bucket = getNicheBucket(profile, skill);
+
+    if (root && usedDomains.has(root)) continue;
+    if (usedBuckets.has(bucket)) continue;
+
+    selected.push(lead);
+    if (root) usedDomains.add(root);
+    usedBuckets.add(bucket);
+  }
+
+  if (selected.length < maxLeads) {
+    for (const lead of leads) {
+      if (selected.length >= maxLeads) break;
+      if (!selected.find((x) => x.sourceId === lead.sourceId)) selected.push(lead);
+    }
+  }
+
+  return selected.slice(0, maxLeads);
+}
+
+async function readSiteSignals(profileUrl) {
+  const root = getRootDomain(profileUrl);
+  if (!root) return null;
+
+  try {
+    const text = await fetch(`https://r.jina.ai/http://${root}`).then((r) => r.text());
+    const page = lower(text).slice(0, 9000);
+
+    const signals = {
+      hasPricing: page.includes('pricing') || page.includes('plans'),
+      hasBooking: page.includes('book a call') || page.includes('schedule') || page.includes('book now'),
+      hasSocialProof: page.includes('testimonial') || page.includes('case study') || page.includes('trusted by'),
+      hasLeadMagnet: page.includes('newsletter') || page.includes('free guide') || page.includes('download'),
+    };
+
+    const missing = [];
+    if (!signals.hasPricing) missing.push('unclear pricing');
+    if (!signals.hasBooking) missing.push('weak booking CTA');
+    if (!signals.hasSocialProof) missing.push('low trust proof');
+    if (!signals.hasLeadMagnet) missing.push('no lead magnet');
+
+    return {
+      ...signals,
+      summary: missing.slice(0, 2).join(' + ') || 'basic conversion friction',
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function enrichSiteSignalsForProfiles(profiles, cfg) {
+  if ((cfg?.targetType === 'creator')) return profiles;
+  const out = [];
+  for (const p of profiles) {
+    const siteSignal = await readSiteSignals(p.profileUrl);
+    out.push({ ...p, siteSignal });
+  }
+  return out;
+}
+
 function rankProfiles(profiles, cfg, signals = [], budget = []) {
   const signalSet = new Set((signals || []).map((s) => lower(s)));
   const budgetSet = new Set((budget || []).map((b) => lower(b)));
 
   return (profiles || [])
     .map((p) => {
-      let score = Number(p.qualityScore || 60);
+      let score = Number(scoreByChannel(p, cfg) || 60);
 
       if ((cfg?.targetType === 'creator') || p.platform === 'YouTube') {
         if (signalSet.has('active-posting') && Number(p.lastUploadDays || 999) <= 14) score += 3;
         if (signalSet.has('high-engagement') && Number(p.viewSubRatio || 0) >= 0.08) score += 4;
         if (budgetSet.has('low-ticket') && Number(p.subscriberCount || 0) <= 30000) score += 2;
+      } else if (p.platform === 'Google Maps') {
+        if (signalSet.has('high-intent') && (p.website || p.phone)) score += 4;
+        if (budgetSet.has('mid-ticket') && Number(p.reviews || 0) >= 50) score += 3;
+      } else {
+        if (signalSet.has('high-intent') && p.profileUrl) score += 3;
+        if (budgetSet.has('mid-ticket')) score += 2;
       }
 
       return { ...p, qualityScore: clamp(Math.round(score), 55, 99) };
@@ -611,9 +908,15 @@ function fallbackLeadFromProfile(profile, skill, cfg) {
 async function enrichWithGroq({ GROQ, profiles, skill, incomeGoal, cfg }) {
   const candidates = profiles.slice(0, 8);
   if (!candidates.length) return [];
+  const byId = new Map(candidates.map((p) => [p.sourceId, p]));
+  const rules = SKILL_INTENT_RULES[skill] || null;
 
   if (!GROQ) {
-    return candidates.slice(0, 3).map((p) => fallbackLeadFromProfile(p, skill, cfg));
+    const leads = candidates.slice(0, 6).map((p) => {
+      const base = fallbackLeadFromProfile(p, skill, cfg);
+      return applyIntentRules(base, p, skill, cfg, p.siteSignal || null);
+    });
+    return pickDiverseTopLeads(leads, byId, skill, 3);
   }
 
   const candidatesPayload = candidates.map((p) => ({
@@ -648,6 +951,9 @@ Rules:
 - Use ONLY sourceId values from candidates.
 - Never invent URLs, names, or follower counts.
 - Avoid generic statements. Keep problem/strategy specific to each candidate.
+- Skill intent rules:
+  - Required keywords (at least one): ${JSON.stringify(rules?.requiredAny || [])}
+  - Forbidden keywords: ${JSON.stringify(rules?.forbiddenAny || [])}
 - redFlag must be null or one concise warning.
 
 Return JSON array with max 3 items:
@@ -695,8 +1001,6 @@ Return raw JSON only.`;
       ai = [];
     }
 
-    const byId = new Map(candidates.map((p) => [p.sourceId, p]));
-
     const leads = (Array.isArray(ai) ? ai : [])
       .map((x) => {
         const p = byId.get(x?.sourceId);
@@ -705,7 +1009,7 @@ Return raw JSON only.`;
         const match = clamp(Number(p.qualityScore || 82), 75, 99);
         const replyChance = clamp(Number(x?.replyChance || Math.round(35 + (match - 70) * 1.0)), 35, 90);
 
-        return {
+        const lead = {
           sourceId: p.sourceId,
           name: p.name,
           platform: p.platform,
@@ -722,16 +1026,22 @@ Return raw JSON only.`;
           profileUrl: p.profileUrl,
           dealValue: cleanText(x?.dealValue) || PRICE_HINTS[skill] || PRICE_HINTS.default,
         };
+
+        return applyIntentRules(lead, p, skill, cfg, p.siteSignal || null);
       })
       .filter(Boolean)
-      .slice(0, 3);
+      .sort((a, b) => b.match - a.match);
 
-    if (leads.length) return leads;
+    if (leads.length) return pickDiverseTopLeads(leads, byId, skill, 3);
   } catch (e) {
     console.error('Groq enrichment failed:', e.message || e);
   }
 
-  return candidates.slice(0, 3).map((p) => fallbackLeadFromProfile(p, skill, cfg));
+  const fallbackLeads = candidates.slice(0, 6).map((p) => {
+    const base = fallbackLeadFromProfile(p, skill, cfg);
+    return applyIntentRules(base, p, skill, cfg, p.siteSignal || null);
+  });
+  return pickDiverseTopLeads(fallbackLeads, byId, skill, 3);
 }
 
 export default async function handler(req, res) {
@@ -830,7 +1140,9 @@ export default async function handler(req, res) {
     }
 
     const gated = qualityGate(dedupeProfiles(rawProfiles), cfg);
-    const ranked = rankProfiles(gated, cfg, signals, budget).slice(0, 12);
+    const prelimRanked = rankProfiles(gated, cfg, signals, budget).slice(0, 12);
+    const withSiteSignals = await enrichSiteSignalsForProfiles(prelimRanked, cfg);
+    const ranked = rankProfiles(withSiteSignals, cfg, signals, budget).slice(0, 12);
 
     console.log(`[OppEngine v2] mode=${mode} skill=${skill} raw=${rawProfiles.length} gated=${gated.length} ranked=${ranked.length}`);
 
