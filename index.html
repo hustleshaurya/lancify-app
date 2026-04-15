@@ -48,6 +48,11 @@
   --text2:  var(--text-muted);
   --text3:  #9ca3af;
   --accent:  #0a0a0a;
+  --accent-primary: #5b8def;
+  --accent-secondary: #14b8a6;
+  --accent-amber: #f59e0b;
+  --page-max: min(1320px, calc(100vw - 88px));
+  --page-max-wide: min(1460px, calc(100vw - 88px));
 }
 
 /* ── Dark Theme ── */
@@ -99,21 +104,161 @@ input, select, textarea { transition: border-color .15s, box-shadow .15s; }
 /* ─── LOGIN — Always white/light ─── */
 #login-screen{
   display:none;position:fixed;inset:0;
-  background:#f5f5f5;
+  background:
+    radial-gradient(circle at top left, rgba(91,141,239,0.20), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(20,184,166,0.14), transparent 34%),
+    linear-gradient(135deg,#f6f8fb 0%,#eef2ff 46%,#f8fafc 100%);
   z-index:9000;flex-direction:column;align-items:center;justify-content:center;padding:24px;
 }
 #login-screen.show{display:flex}
+.login-shell{
+  width:min(1040px,100%);
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(360px,420px);
+  gap:24px;
+  align-items:stretch;
+}
+.login-showcase{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.6);
+  border-radius:24px;
+  padding:34px 34px 28px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.88), rgba(255,255,255,0.72)),
+    radial-gradient(circle at top right, rgba(91,141,239,0.18), transparent 34%);
+  box-shadow:0 28px 70px rgba(15,23,42,0.12);
+}
+.login-showcase::before{
+  content:'';
+  position:absolute;
+  inset:auto -120px -140px auto;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(20,184,166,0.18), transparent 68%);
+  pointer-events:none;
+}
+.login-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(15,23,42,0.05);
+  color:#334155;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+.login-kicker-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));
+  box-shadow:0 0 0 4px rgba(91,141,239,0.10);
+}
+.login-showcase h1{
+  font-size:36px;
+  line-height:1.03;
+  letter-spacing:-1.2px;
+  color:#0f172a;
+  margin-bottom:14px;
+}
+.login-showcase p{
+  font-size:15px;
+  line-height:1.7;
+  color:#475569;
+  max-width:48ch;
+}
+.login-proof-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin:28px 0 24px;
+}
+.login-proof-card{
+  border:1px solid rgba(15,23,42,0.08);
+  border-radius:18px;
+  padding:16px 16px 14px;
+  background:rgba(255,255,255,0.72);
+  backdrop-filter:blur(10px);
+}
+.login-proof-value{
+  font-size:26px;
+  font-weight:800;
+  letter-spacing:-1px;
+  color:#0f172a;
+  margin-bottom:4px;
+}
+.login-proof-label{
+  font-size:11px;
+  font-weight:700;
+  color:#64748b;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.login-proof-sub{
+  margin-top:6px;
+  font-size:12px;
+  color:#475569;
+  line-height:1.5;
+}
+.login-feature-list{
+  display:grid;
+  gap:10px;
+}
+.login-feature-item{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.62);
+  border:1px solid rgba(15,23,42,0.08);
+}
+.login-feature-icon{
+  width:28px;
+  height:28px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#0f172a;
+  background:linear-gradient(135deg, rgba(91,141,239,0.16), rgba(20,184,166,0.18));
+  flex-shrink:0;
+}
+.login-feature-title{
+  font-size:13px;
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:2px;
+}
+.login-feature-copy{
+  font-size:12.5px;
+  color:#475569;
+  line-height:1.55;
+}
+.login-form-col{
+  display:flex;
+  align-items:center;
+}
 .login-card{
-  background:#ffffff;
-  border:1px solid #e5e5e5;
-  border-radius:14px;
-  padding:40px 36px;
-  width:100%;max-width:388px;
-  box-shadow:0 4px 24px rgba(0,0,0,0.08);
+  background:rgba(255,255,255,0.92);
+  border:1px solid rgba(255,255,255,0.7);
+  border-radius:24px;
+  padding:38px 34px;
+  width:100%;max-width:420px;
+  box-shadow:0 28px 70px rgba(15,23,42,0.16);
+  backdrop-filter:blur(18px);
 }
 .login-card * { color: inherit; }
 .login-card { color: #0a0a0a; }
-.login-sub{font-size:13px;color:#6b6b6b;margin-bottom:24px;text-align:center}
+.login-sub{font-size:13.5px;color:#64748b;margin-bottom:24px;text-align:center;line-height:1.6}
+.login-heading{font-size:29px;font-weight:800;letter-spacing:-.9px;color:#0f172a;text-align:center;margin:2px 0 10px}
+.login-microcopy{font-size:12px;color:#64748b;text-align:center;margin-bottom:18px}
 .login-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:#9ca3af;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:#e5e5e5}
 .auth-msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none}
@@ -143,6 +288,12 @@ input, select, textarea { transition: border-color .15s, box-shadow .15s; }
   border:1px solid #e5e5e5;
 }
 #login-screen .btn-google:hover { background:#f5f5f5; }
+@media(max-width:900px){
+  .login-shell{grid-template-columns:1fr}
+  .login-showcase{display:none}
+  .login-form-col{justify-content:center}
+  .login-card{max-width:460px}
+}
 
 /* ─── INPUTS ─── */
 .field-label{display:block;font-size:12px;font-weight:500;color:var(--text-muted);margin-bottom:5px;letter-spacing:.01em}
@@ -417,8 +568,9 @@ html.dark #theme-icon-moon{display:none}
 
 /* ─── CONTENT ─── */
 .content-scroll{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
-.content-inner{max-width:880px;margin:0 auto;padding:36px 36px 80px}
-.content-inner.wide{max-width:1060px}
+.content-inner{width:100%;max-width:var(--page-max);margin:0 auto;padding:40px 36px 88px}
+.content-inner.wide{max-width:var(--page-max-wide)}
+.content-inner.home-shell{max-width:var(--page-max-wide)}
 
 /* ─── PAGES ─── */
 .page{display:none;animation:fadeUp .2s ease}
@@ -438,6 +590,30 @@ html.dark #theme-icon-moon{display:none}
   padding:20px 22px;
   box-shadow:var(--shadow-sm);
 }
+.premium-surface{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(148,163,184,0.16);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
+    var(--bg);
+}
+html.dark .premium-surface{
+  border-color:rgba(148,163,184,0.18);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0)),
+    var(--bg);
+}
+.premium-surface::before{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  background:
+    radial-gradient(circle at top right, rgba(91,141,239,0.14), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(20,184,166,0.10), transparent 24%);
+  pointer-events:none;
+}
+.premium-surface > *{position:relative;z-index:1}
 .card-dashed{
   background:var(--bg-panel);
   border:1px dashed var(--border2);
@@ -447,8 +623,8 @@ html.dark #theme-icon-moon{display:none}
 
 /* ─── TOOL CARDS (home grid) ─── */
 .tool-card{
-  background:var(--bg);border:1px solid var(--border);
-  border-radius:var(--radius-lg);
+  background:linear-gradient(180deg, rgba(91,141,239,0.07), transparent 34%),var(--bg);border:1px solid var(--border);
+  border-radius:18px;
   padding:24px 20px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;cursor:pointer;gap:12px;
@@ -467,8 +643,8 @@ html:not(.dark) .tool-card:hover { border-color:#c0c0c0; box-shadow:0 6px 20px r
 
 /* ─── STAT CARDS ─── */
 .stat-card{
-  background:var(--bg);border:1px solid var(--border);
-  border-radius:var(--radius-lg);padding:18px 22px;
+  background:linear-gradient(180deg, rgba(91,141,239,0.07), transparent 34%),var(--bg);border:1px solid var(--border);
+  border-radius:18px;padding:18px 22px;
   display:flex;align-items:center;justify-content:space-between;
   box-shadow:var(--shadow-sm);
 }
@@ -499,6 +675,323 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
 }
 .result-box-title{font-size:12.5px;font-weight:600;color:var(--text-main)}
 .result-box-body{padding:16px;font-size:13.5px;color:var(--text-muted);line-height:1.65;flex:1;overflow-y:auto;white-space:pre-wrap}
+.ai-result-shell{display:grid;gap:14px}
+.ai-result-hero{
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:linear-gradient(145deg, rgba(91,141,239,0.08), rgba(20,184,166,0.04) 52%, transparent 100%);
+  padding:16px 18px;
+}
+.ai-result-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:10px;
+}
+.ai-result-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));
+}
+.ai-result-title{
+  font-size:18px;
+  font-weight:800;
+  line-height:1.25;
+  color:var(--text-main);
+  letter-spacing:-.4px;
+}
+.ai-result-subject{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--text-muted);
+}
+.ai-result-subject strong{color:var(--text-main)}
+.ai-result-body-card,
+.ai-result-side-card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--bg-panel);
+  padding:16px 18px;
+}
+.ai-result-body-card{
+  background:var(--bg);
+}
+.ai-result-label{
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:12px;
+}
+.ai-result-copy{
+  display:grid;
+  gap:12px;
+  white-space:normal;
+}
+.ai-result-copy p{
+  font-size:14px;
+  line-height:1.72;
+  color:var(--text-main);
+}
+.ai-result-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(280px,0.9fr);
+  gap:14px;
+}
+.ai-result-list{
+  display:grid;
+  gap:8px;
+  list-style:none;
+}
+.ai-result-list li{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  font-size:13px;
+  line-height:1.6;
+  color:var(--text-main);
+}
+.ai-result-list li::before{
+  content:'';
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  margin-top:7px;
+  background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));
+  flex-shrink:0;
+}
+.ai-result-pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.ai-result-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  font-size:11.5px;
+  color:var(--text-muted);
+}
+.ai-result-pill strong{color:var(--text-main)}
+.gig-result-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.gig-result-card{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px 18px 16px;
+  background:
+    linear-gradient(180deg, rgba(91,141,239,0.08), transparent 36%),
+    var(--bg);
+  box-shadow:var(--shadow-sm);
+}
+.gig-result-top{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  align-items:flex-start;
+  margin-bottom:12px;
+}
+.gig-result-title{
+  font-size:16px;
+  font-weight:800;
+  color:var(--text-main);
+  line-height:1.35;
+  letter-spacing:-.3px;
+}
+.gig-result-range{
+  font-size:13px;
+  font-weight:700;
+  color:#10b981;
+  white-space:nowrap;
+}
+.gig-result-copy{
+  font-size:13px;
+  line-height:1.7;
+  color:var(--text-muted);
+}
+.gig-result-section{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--border);
+}
+.roadmap-shell{display:grid;gap:20px}
+.roadmap-goal-card{
+  padding:18px 20px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:linear-gradient(145deg, rgba(91,141,239,0.08), rgba(20,184,166,0.05) 52%, transparent 100%);
+}
+.roadmap-week-grid{
+  display:grid;
+  gap:18px;
+}
+.roadmap-week-card{
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px;
+  background:var(--bg);
+  box-shadow:var(--shadow-sm);
+}
+.roadmap-week-head{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  margin-bottom:14px;
+}
+.roadmap-week-meta{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:6px;
+}
+.roadmap-week-title{
+  font-size:20px;
+  font-weight:800;
+  color:var(--text-main);
+  letter-spacing:-.5px;
+}
+.roadmap-day-list{display:grid;gap:10px}
+.roadmap-day-card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px 14px 13px;
+  background:var(--bg-panel);
+}
+.roadmap-day-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:8px;
+  align-items:flex-start;
+}
+.roadmap-day-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  height:28px;
+  border-radius:999px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  font-size:11px;
+  font-weight:700;
+  color:var(--text-main);
+}
+.roadmap-day-title{
+  font-size:14px;
+  font-weight:700;
+  color:var(--text-main);
+  margin-bottom:4px;
+}
+.roadmap-day-task{
+  font-size:13px;
+  line-height:1.65;
+  color:var(--text-muted);
+}
+.roadmap-day-note{
+  margin-top:9px;
+  font-size:12px;
+  line-height:1.6;
+  color:var(--text3);
+}
+.roadmap-day-tip{
+  margin-top:8px;
+  padding:9px 10px;
+  border-radius:10px;
+  background:rgba(91,141,239,0.08);
+  color:var(--text-main);
+  font-size:12px;
+  line-height:1.55;
+}
+.home-hero{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:24px;
+}
+.workspace-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:12px;
+}
+.workspace-kicker::before{
+  content:'';
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));
+}
+.workspace-title{
+  font-size:38px;
+  font-weight:800;
+  letter-spacing:-1.4px;
+  color:var(--text-main);
+  margin-bottom:10px;
+}
+.workspace-sub{
+  font-size:14px;
+  line-height:1.7;
+  color:var(--text-muted);
+  max-width:54ch;
+}
+.workspace-badge-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:flex-end;
+}
+.workspace-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--bg-panel);
+  font-size:12px;
+  color:var(--text-muted);
+}
+.workspace-badge strong{color:var(--text-main)}
+.home-mini-stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:30px;
+}
+.home-tool-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:32px;
+}
+.activity-card{
+  margin-top:4px;
+  padding:18px 20px;
+}
 .copy-btn{
   font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;
   color:var(--text3);background:none;border:none;cursor:pointer;
@@ -560,7 +1053,7 @@ html.dark .profile-banner:hover{background:#14532d}
 }
 .kanban-card{
   background:var(--bg);border:1px solid var(--border);
-  border-radius:8px;padding:13px 15px;margin-bottom:8px;
+  border-radius:16px;padding:14px 15px;margin-bottom:10px;
   box-shadow:var(--shadow-sm);cursor:grab;
 }
 .kanban-card:active{cursor:grabbing}
@@ -570,7 +1063,7 @@ html.dark .profile-banner:hover{background:#14532d}
 .kanban-card-actions{display:flex;gap:5px;flex-wrap:wrap}
 .stage-btn{
   font-size:11px;background:var(--bg-panel);border:1px solid var(--border);
-  color:var(--text-muted);padding:3px 9px;border-radius:6px;cursor:pointer;font-family:inherit;
+  color:var(--text-muted);padding:5px 10px;border-radius:999px;cursor:pointer;font-family:inherit;
 }
 .stage-btn:hover{background:var(--bg-hover);color:var(--text-main)}
 
@@ -608,14 +1101,14 @@ html.dark .profile-banner:hover{background:#14532d}
 
 /* Dashboard business panel */
 .biz-metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
-.biz-metric-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.biz-metric-card{background:linear-gradient(180deg, rgba(91,141,239,0.07), transparent 36%),var(--bg);border:1px solid var(--border);border-radius:16px;padding:16px 16px 14px}
 .biz-metric-label{font-size:11px;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
-.biz-metric-value{font-size:23px;font-weight:700;color:var(--text-main)}
+.biz-metric-value{font-size:26px;font-weight:800;color:var(--text-main);letter-spacing:-.8px}
 .biz-metric-sub{font-size:11px;color:var(--text-muted)}
 .biz-panel-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}
-.biz-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
+.biz-card{background:var(--bg);border:1px solid var(--border);border-radius:18px;padding:18px}
 .biz-bar-row{display:flex;align-items:flex-end;gap:6px;height:180px;margin-top:8px}
-.biz-bar{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,rgba(99,102,241,.6),rgba(99,102,241,.15));min-height:10px}
+.biz-bar{flex:1;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,rgba(91,141,239,.88),rgba(20,184,166,.24));min-height:10px}
 .biz-bar-label{font-size:10px;color:var(--text3);text-align:center;margin-top:4px}
 
 /* Finance pages */
@@ -629,8 +1122,12 @@ html.dark .profile-banner:hover{background:#14532d}
 .badge-paid{background:rgba(16,185,129,.08);color:#10b981;border-color:rgba(16,185,129,.26)}
 .badge-sent{background:rgba(59,130,246,.08);color:#3b82f6;border-color:rgba(59,130,246,.26)}
 .badge-overdue{background:rgba(239,68,68,.08);color:#ef4444;border-color:rgba(239,68,68,.24)}
-.opp-managed-list{display:grid;gap:9px}
-.opp-managed-item{display:flex;justify-content:space-between;gap:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.opp-managed-list{display:grid;gap:12px}
+.opp-managed-item{display:flex;justify-content:space-between;gap:16px;background:linear-gradient(180deg, rgba(91,141,239,0.07), transparent 34%),var(--bg);border:1px solid var(--border);border-radius:16px;padding:16px 16px 14px;box-shadow:var(--shadow-sm)}
+.opp-managed-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.opp-managed-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--bg-panel);border:1px solid var(--border);font-size:11.5px;color:var(--text-muted)}
+.opp-managed-value{font-size:18px;font-weight:800;color:#10b981;letter-spacing:-.5px;margin-top:10px}
+.opp-managed-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-content:flex-start}
 
 /* Opportunity empty state alignment fix */
 .opp-results-grid .opp-empty{
@@ -759,7 +1256,11 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
 @media(max-width:768px){
   .sidebar{position:fixed;z-index:200;left:0;top:0;transform:translateX(-100%)}
   .sidebar.mobile-open{transform:translateX(0)}
-  .content-inner{padding:22px 18px 60px}
+  .content-inner,.content-inner.wide,.content-inner.home-shell{max-width:none;padding:22px 18px 72px}
+  .home-hero{flex-direction:column;align-items:flex-start}
+  .workspace-title{font-size:31px}
+  .workspace-badge-row{justify-content:flex-start}
+  .home-mini-stats,.home-tool-grid,.gig-result-grid,.ai-result-grid{grid-template-columns:1fr}
 }
 
 /* Light mode — stronger panel backgrounds */
@@ -2730,11 +3231,63 @@ html.dark .credits-warning-banner {
 </div>
 
 <div id="login-screen">
+  <div class="login-shell">
+    <div class="login-showcase">
+      <div class="login-kicker"><span class="login-kicker-dot"></span>Premium freelancer OS</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <img src="lightthemelogo.png" alt="Lancify" style="height:32px;width:auto;object-fit:contain">
+      </div>
+      <h1>Pitch smarter. Close faster. Run the whole freelance business from one workspace.</h1>
+      <p>Lancify gives you a sharper workflow for finding clients, writing better outreach, generating audits, and tracking money without the product feeling cramped or basic.</p>
+      <div class="login-proof-grid">
+        <div class="login-proof-card">
+          <div class="login-proof-value">10x</div>
+          <div class="login-proof-label">Sharper outreach</div>
+          <div class="login-proof-sub">AI outputs tuned for reply-worthy messages, not generic filler.</div>
+        </div>
+        <div class="login-proof-card">
+          <div class="login-proof-value">1</div>
+          <div class="login-proof-label">Operating system</div>
+          <div class="login-proof-sub">Find leads, pitch, follow up, invoice, and track deals in one place.</div>
+        </div>
+        <div class="login-proof-card">
+          <div class="login-proof-value">24/7</div>
+          <div class="login-proof-label">Momentum</div>
+          <div class="login-proof-sub">Keep a clean pipeline and revenue pulse without spreadsheet chaos.</div>
+        </div>
+      </div>
+      <div class="login-feature-list">
+        <div class="login-feature-item">
+          <div class="login-feature-icon"><i data-lucide="sparkles" style="width:14px;height:14px"></i></div>
+          <div>
+            <div class="login-feature-title">AI that sounds like a closer</div>
+            <div class="login-feature-copy">Proposal, email, audit, and opportunity outputs are structured to earn replies and move deals forward.</div>
+          </div>
+        </div>
+        <div class="login-feature-item">
+          <div class="login-feature-icon"><i data-lucide="layout-dashboard" style="width:14px;height:14px"></i></div>
+          <div>
+            <div class="login-feature-title">A real command center</div>
+            <div class="login-feature-copy">Workspace metrics, saved opportunities, invoicing, and pipeline visibility stay connected instead of scattered.</div>
+          </div>
+        </div>
+        <div class="login-feature-item">
+          <div class="login-feature-icon"><i data-lucide="shield-check" style="width:14px;height:14px"></i></div>
+          <div>
+            <div class="login-feature-title">Built for premium operators</div>
+            <div class="login-feature-copy">Cleaner spacing, stronger hierarchy, and better formatting make the product feel trustworthy before the first click.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="login-form-col">
   <div class="login-card">
     <div style="display:flex;align-items:center;justify-content:center;margin-bottom:20px">
-      <img src="lightthemelogo.png" alt="Lancify" style="height:28px;width:auto;object-fit:contain">
+      <img src="lightthemelogo.png" alt="Lancify" style="height:30px;width:auto;object-fit:contain">
     </div>
-    <div class="login-sub">Sign in to your workspace</div>
+    <div class="login-heading">Welcome back</div>
+    <div class="login-sub">Sign in to your workspace and pick up prospecting, pitching, and client management where you left off.</div>
+    <div class="login-microcopy">One login. Full workspace access.</div>
 
     <button class="btn btn-google" onclick="signInGoogle()">
       <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
@@ -2759,9 +3312,11 @@ html.dark .credits-warning-banner {
       <input type="text" id="auth-name" placeholder="Shaurya Abhi">
     </div>
 
-    <button class="btn btn-primary btn-full" id="auth-btn" style="margin-top:16px;height:38px" onclick="authSubmit()">Sign In</button>
+    <button class="btn btn-primary btn-full" id="auth-btn" style="margin-top:16px;height:42px" onclick="authSubmit()">Sign In</button>
     <div style="text-align:center;margin-top:12px;font-size:12px;color:#6b6b6b" id="auth-toggle">
       Don't have an account? <span onclick="toggleAuthMode()" style="color:#0a0a0a;font-weight:500;cursor:pointer;text-decoration:underline">Sign up</span>
+    </div>
+  </div>
     </div>
   </div>
 </div>
@@ -3053,10 +3608,20 @@ html.dark .credits-warning-banner {
     <div class="content-scroll" id="content-scroll">
 
       <div id="page-home" class="page active">
-        <div class="content-inner">
-          <div style="margin-bottom:6px;font-size:12.5px;color:var(--text-muted)">My Workspace</div>
-          <h1 id="hero-greeting" style="font-size:28px;font-weight:700;letter-spacing:-.6px;margin-bottom:26px;color:var(--text-main)">Welcome</h1>
-           <div class="card" style="margin-bottom:32px; padding:0; position:relative; overflow:hidden; border:1px solid var(--border); border-radius:12px;">
+        <div class="content-inner home-shell">
+          <div class="home-hero">
+            <div>
+              <div class="workspace-kicker">My Workspace</div>
+              <h1 id="hero-greeting" class="workspace-title">Welcome</h1>
+              <div class="workspace-sub">A cleaner command center for prospecting, pitching, following up, and tracking money without jumping between tools.</div>
+            </div>
+            <div class="workspace-badge-row">
+              <div class="workspace-badge"><i data-lucide="sparkles" style="width:14px;height:14px"></i> <strong>AI-ready</strong> premium workspace</div>
+              <div class="workspace-badge"><i data-lucide="target" style="width:14px;height:14px"></i> <strong>Reply-first</strong> deal flow</div>
+              <div class="workspace-badge"><i data-lucide="wallet" style="width:14px;height:14px"></i> <strong>Revenue</strong> always visible</div>
+            </div>
+          </div>
+           <div class="card premium-surface" style="margin-bottom:32px; padding:0; position:relative; overflow:hidden; border-radius:18px;">
 
   <!-- Header -->
   <div style="padding:20px 24px 16px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--border);">
@@ -3168,7 +3733,7 @@ html.dark .credits-warning-banner {
 </div>
 
            
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px">
+          <div class="home-mini-stats">
             <div class="stat-card"><span class="stat-label">Total Kits</span><span class="stat-val" id="stat-kits">0</span></div>
             <div class="stat-card"><span class="stat-label">Proposals</span><span class="stat-val" id="stat-proposals">0</span></div>
             <div class="stat-card"><span class="stat-label">Emails</span><span class="stat-val" id="stat-emails">0</span></div>
@@ -3176,7 +3741,7 @@ html.dark .credits-warning-banner {
           </div>
 
           <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text-main)">Get started</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px">
+          <div class="home-tool-grid">
             
             <div class="tool-card" onclick="navigate('proposal')">
               <div class="tool-icon" style="background:rgba(34,197,94,0.08)"><i data-lucide="file-text" style="width:22px;height:22px;color:#22c55e;stroke-width:1.75"></i></div>
@@ -3201,7 +3766,9 @@ html.dark .credits-warning-banner {
           </div>
 
           <div class="section-title">Recent activity</div>
-          <div id="recent-activity" style="color:var(--text3);font-size:13.5px;padding:18px 0;text-align:center">No activity yet. Start by creating your first freelance kit!</div>
+          <div class="card premium-surface activity-card">
+            <div id="recent-activity" style="color:var(--text3);font-size:13.5px;text-align:center">No activity yet. Start by creating your first freelance kit!</div>
+          </div>
         </div>
       </div>
 
@@ -3310,7 +3877,7 @@ html.dark .credits-warning-banner {
           <div class="tool-grid">
             <div class="card" style="display:flex;flex-direction:column">
               <div class="panel-title">Settings</div>
-              <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm overdue payment reminder">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review or testimonial">Request Review / Testimonial</option></select></div>
+              <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Cold outreach with a specific insight">Cold Outreach With Insight</option><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Reply to budget objection">Reply to Budget Objection</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm overdue payment reminder">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review or testimonial">Request Review / Testimonial</option></select></div>
               <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for ₹3,500 is 5 days overdue…"></textarea></div>
               <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(20, generateEmail)">Generate Draft</button>
@@ -6212,6 +6779,402 @@ async function loadLeads(uid){
   }
 }
 
+async function generateProposal(){
+  const job=val('prop-job'); if(!job) { showToast('Paste a job description first'); return false; }
+  let ok = false;
+  el('prop-btn').disabled=true; loader('prop',true); toggleResult('prop',false);
+  try {
+    const res=await fetch('/api/proposal',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        jobDesc:    job,
+        platform:   val('prop-platform'),
+        niche:      val('prop-niche'),
+        experience: val('prop-exp')
+      })
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+
+    el('prop-result-text').innerHTML = renderAiResultMarkup({
+      kicker: 'Proposal draft',
+      title: 'Built to sound sharp, specific, and worth replying to',
+      subject: data.subject || '',
+      body: data.proposal || '',
+      tips: data.tips || [],
+      pills: [
+        `<strong>Platform</strong> ${escapeHtml(val('prop-platform') || 'Custom')}`,
+        `<strong>Tone</strong> calm + confident`,
+        `<strong>Goal</strong> get the reply`
+      ]
+    });
+    toggleResult('prop',true);
+
+    if(currentUser){
+      await sb.from('proposals').insert([{
+        user_id:       currentUser.id,
+        platform:      val('prop-platform'),
+        niche:         val('prop-niche'),
+        proposal_text: data.proposal || '',
+        job_description: job
+      }]);
+      loadStats(currentUser.id);
+    }
+    ok = true;
+  } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); ok = false; }
+  el('prop-btn').disabled=false; loader('prop',false);
+  return ok;
+}
+
+async function generateEmail(){
+  const ctx=val('email-context'); if(!ctx) { showToast('Add some context first'); return false; }
+  let ok = false;
+  el('email-btn').disabled=true; loader('email',true); toggleResult('email',false);
+  try {
+    const res=await fetch('/api/email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        emailType: val('email-type'),
+        tone:      val('email-tone'),
+        context:   ctx,
+        niche:     userProfile.niche || 'Freelancer'
+      })
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+
+    el('email-result-text').innerHTML = renderAiResultMarkup({
+      kicker: 'Email draft',
+      title: 'Short enough to read, sharp enough to earn a reply',
+      subject: data.subject || '',
+      body: data.body || '',
+      tips: data.tips || [],
+      pills: [
+        `<strong>Objective</strong> ${escapeHtml(val('email-type') || 'Email')}`,
+        `<strong>Tone</strong> ${escapeHtml(val('email-tone') || 'Professional')}`
+      ]
+    });
+    toggleResult('email',true);
+
+    if(currentUser){
+      await sb.from('emails').insert([{
+        user_id:    currentUser.id,
+        email_type: val('email-type'),
+        email_text: data.body || '',
+        context:    ctx
+      }]);
+      loadStats(currentUser.id);
+    }
+    ok = true;
+  } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); ok = false; }
+  el('email-btn').disabled=false; loader('email',false);
+  return ok;
+}
+
+async function findGigs(){
+  const skills=val('gig-skills'); if(!skills) { showToast('Enter your skills first'); return false; }
+  let ok = false;
+  el('gig-btn').disabled=true; loader('gig',true); el('gig-results').style.display='none';
+  try {
+    const res=await fetch('/api/gigfinder',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        skills,
+        platform:   val('gig-platform'),
+        experience: userProfile.exp_level  || 'Beginner - no reviews yet',
+        budget:     userProfile.income_goal|| '₹10,000-₹25,000/month to start'
+      })
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+
+    el('gig-cards').innerHTML=(data.niches||[]).map(renderGigCardMarkup).join('');
+    el('gig-results').style.display='block';
+    if(currentUser){
+      await sb.from('gig_searches').insert([{
+        user_id:       currentUser.id,
+        skills,
+        platform:      val('gig-platform'),
+        results_count: (data.niches||[]).length
+      }]);
+      loadStats(currentUser.id);
+    }
+    ok = true;
+  } catch(e){ showToast('Error parsing results. Try again.'); ok = false; }
+  el('gig-btn').disabled=false; loader('gig',false);
+  return ok;
+}
+
+async function generateRoadmap(){
+  const skills=val('rm-skills'); if(!skills) { showToast('Enter your skills'); return false; }
+  let ok = false;
+  el('rm-btn').disabled=true; loader('rm',true);
+  try {
+    const res=await fetch('/api/roadmap',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name:         val('rm-name'),
+        skills,
+        platform:     val('rm-platform'),
+        hoursPerDay:  val('rm-hours'),
+        currentLevel: val('rm-level'),
+        biggestFear:  val('rm-fear')
+      })
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+
+    el('rm-content').innerHTML = renderRoadmapMarkup(data);
+    el('rm-result').style.display='block';
+    if(currentUser){
+      await sb.from('roadmaps').insert([{
+        user_id: currentUser.id,
+        skill: skills,
+        platform: val('rm-platform') || null
+      }]).catch(()=>{});
+    }
+    ok = true;
+  } catch(e){ showToast('Error parsing roadmap. Try again.'); ok = false; }
+  el('rm-btn').disabled=false; loader('rm',false);
+  return ok;
+}
+
+function routeToAudit(targetName, platform, observation = '', price = '', service = ''){
+  setVal('audit-target', targetName);
+  const platformMap = {
+    'Instagram': 'Instagram',
+    'YouTube':   'YouTube',
+    'LinkedIn':  'LinkedIn',
+    'Website':   'Website',
+    'Google Maps': 'Website',
+    'Amazon':    'Website',
+    'Product Hunt': 'Website',
+    'Shopify store': 'Website',
+  };
+  const mappedPlatform = platformMap[platform] || 'Instagram';
+  setVal('audit-platform', mappedPlatform);
+  if (observation) setVal('audit-obs', observation);
+  if (price) setVal('audit-price', normalizeDealValue(price, price));
+  if (service) {
+    const serviceMap = {
+      'Copywriting & CRO': 'Copywriting',
+      'Funnel & Conversion Setup': 'Web Design',
+      'Social Media System': 'Social Media',
+      'Email Marketing Setup': 'Copywriting',
+      'YouTube / Short-Form Optimization': 'Video Editing',
+      'SEO': 'SEO'
+    };
+    const mappedService = serviceMap[service];
+    if (mappedService) setVal('audit-service', mappedService);
+  }
+  if (typeof toggleAuditUrl === 'function') toggleAuditUrl();
+  navigate('audit');
+  showToast(`Audit pre-filled for "${targetName}".`);
+}
+
+function routeToProposal(jobDesc, platform = '', niche = ''){
+  setVal('prop-job', jobDesc);
+  if (platform) setVal('prop-platform', ['Upwork','Fiverr','LinkedIn'].includes(platform) ? platform : 'LinkedIn');
+  if (niche) setVal('prop-niche', niche);
+  const rb = el('prop-result-box');
+  const eb = el('prop-empty');
+  if (rb) rb.style.display = 'none';
+  if (eb) eb.style.display = 'flex';
+  navigate('proposal');
+  showToast('Proposal brief pre-filled.');
+}
+
+function routeToDraftEmail(leadName, contextBody, emailType = 'Cold outreach with a specific insight'){
+  setVal('email-type', emailType);
+  setVal('email-context', `Lead: ${leadName}\n\n${contextBody}`);
+  const rb = el('email-result-box');
+  const eb = el('email-empty');
+  if (rb) rb.style.display = 'none';
+  if (eb) eb.style.display = 'flex';
+  navigate('email');
+  showToast(`Email context pre-filled for "${leadName}".`);
+}
+
+function routeToLead(name, platform, service = '', dealValue = ''){
+  setVal('lead-name', name);
+  if (service) setVal('lead-service', service);
+  const amount = getDealFloor(dealValue, 0);
+  if (amount > 0) setVal('lead-value', amount);
+  const pipelineMap = {
+    'Instagram':    'Instagram',
+    'LinkedIn':     'LinkedIn',
+    'Upwork':       'Upwork',
+    'Fiverr':       'Fiverr',
+    'YouTube':      'Instagram',
+    'Website':      'Upwork',
+    'Google Maps':  'Instagram',
+    'Amazon':       'Upwork',
+    'Product Hunt': 'Upwork',
+    'Shopify store':'Upwork',
+  };
+  setVal('lead-platform', pipelineMap[platform] || 'Instagram');
+  navigate('pipeline');
+  showToast(`"${name}" pre-filled in Pipeline - review and click Add Lead.`);
+}
+
+function copyDirectText(text, message = 'Copied to clipboard.'){
+  navigator.clipboard.writeText(String(text || ''))
+    .then(() => showToast(message))
+    .catch(() => showToast('Failed to copy.'));
+}
+
+function markLeadWon(cardEl, leadName, platform, service = '', dealValue = ''){
+  if (_wonLeads.has(leadName)) return;
+  _wonLeads.add(leadName);
+  cardEl.style.opacity = '0.58';
+  cardEl.style.transform = 'scale(0.988)';
+  cardEl.querySelectorAll('.opp-action-btn').forEach(b => {
+    b.disabled = true;
+    b.style.opacity = '0.42';
+  });
+  routeToLead(leadName, platform, service, dealValue);
+  showToast('Deal won - review it in Manage Clients.');
+}
+
+function _renderQfCard(lead) {
+  const skill = _activeSkill === 'other' ? (val('qf-other-skill') || 'your skill') : (_activeSkill || 'your skill');
+  const deal = normalizeDealValue(lead.dealValue || '$200 - $500');
+  const dmText = lead.quickDm || lead.assets?.quickDm || `Lead: ${lead.name}\nSkill: ${skill}\nObservation: ${lead.problem}\nOffer: ${deal}`;
+  const loomText = lead.loomScript || lead.assets?.loomScript || `Hi ${lead.name}, quick teardown for your ${lead.platform}. I noticed ${lead.problem}. The first fix I'd make is ${lead.strategy}.`;
+  const proposalText = lead.proposal || lead.assets?.proposal || `Write a proposal for ${lead.name}. Service: ${skill}. Problem: ${lead.problem}. Price: ${deal}.`;
+  const auditObservation = lead.problem || 'Clear conversion friction detected.';
+
+  return `
+  <div class="qf-lead-card">
+    <div class="qf-lead-top">
+      <div class="qf-lead-name">
+        ${lead.profileUrl
+          ? `<a href="${escapeHtml(lead.profileUrl)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:5px">${escapeHtml(lead.name || '')} <i data-lucide="external-link" style="width:12px;height:12px;opacity:0.4"></i></a>`
+          : escapeHtml(lead.name || '')}
+      </div>
+      <div class="qf-lead-meta">
+        <span class="qf-lead-tag">${escapeHtml(lead.platform || 'Website')}</span>
+        ${lead.followers && lead.followers !== 'Not listed' ? `<span class="qf-lead-tag">${escapeHtml(lead.followers)}</span>` : ''}
+        <span class="qf-lead-tag" style="color:#f59e0b;font-weight:700">${escapeHtml(String(lead.match || 85))}/100 match</span>
+      </div>
+    </div>
+    <div class="qf-lead-body">
+      <div class="qf-lead-problem"><strong style="color:#ef4444">Gap:</strong> ${escapeHtml(lead.problem || 'No gap noted')}</div>
+      <div class="qf-lead-deal">
+        <span class="qf-deal-label">Estimated deal</span>
+        <span class="qf-deal-value">${escapeHtml(deal)}</span>
+      </div>
+      <div class="qf-lead-strategy"><strong style="color:var(--text-main)">Pitch angle:</strong> ${escapeHtml(lead.strategy || 'Lead with one clear fix and a low-risk starter offer.')}</div>
+    </div>
+    <div class="qf-lead-actions">
+      <button class="qf-action-btn primary" onclick="copyDirectText('${escapeJsAttr(dmText)}','Quick DM copied.')"><i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM</button>
+      <button class="qf-action-btn" onclick="copyDirectText('${escapeJsAttr(loomText)}','Loom script copied.')"><i data-lucide="video" style="width:11px;height:11px"></i> Loom Script</button>
+      <button class="qf-action-btn" onclick="routeToAudit('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(auditObservation)}','${escapeJsAttr(deal)}','${escapeJsAttr(skill)}')"><i data-lucide="file-check-2" style="width:11px;height:11px"></i> Audit</button>
+      <button class="qf-action-btn" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(skill)}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal</button>
+    </div>
+  </div>`;
+}
+
+function _renderOppCard(lead) {
+  const score = Number(lead.match || 86);
+  const replyScore = Number(lead.replyChance || Math.max(42, score - 12));
+  const dealValue = normalizeDealValue(lead.dealValue || '$150 - $450');
+  const reason = lead.reason || 'Strong fit between the visible problem and your service.';
+  const whyNow = lead.whyNow || 'Timing is good because the account is active and clearly trying to grow.';
+  const service = lead.serviceMatch || lead.service || 'Freelance service';
+  const problem = lead.problem || 'Conversion leak detected.';
+  const strategy = lead.strategy || 'Lead with a specific fix and a low-risk first deliverable.';
+  const closingHint = lead.closingHint || 'Show one sharp fix first, then upsell the broader implementation.';
+  const dmText = lead.quickDm || lead.assets?.quickDm || `Hey ${lead.name}, I noticed ${problem}. I can show you a simple fix and a small starter scope if you want to see it.`;
+  const loomText = lead.loomScript || lead.assets?.loomScript || `Hi ${lead.name}, quick teardown for your ${lead.platform}. I noticed ${problem}. The first move I'd make is ${strategy}.`;
+  const proposalText = lead.proposal || lead.assets?.proposal || `Write a proposal for ${lead.name}. Problem: ${problem}. Strategy: ${strategy}. Price: ${dealValue}.`;
+  const objectionReply = `The prospect ${lead.name} replied: "I don't have the budget right now." Write a short reply that lowers risk, keeps the tone calm, and offers a smaller starter scope around ${dealValue}.`;
+  const scoreTone = score >= 92 ? '#ef4444' : score >= 85 ? '#f59e0b' : '#5b8def';
+
+  return `
+  <div class="opp-card">
+    <div class="opp-card-header" style="padding-bottom:14px">
+      <div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start">
+        <div>
+          <div class="opp-card-name">
+            ${lead.profileUrl
+              ? `<a href="${escapeHtml(lead.profileUrl)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px">${escapeHtml(lead.name || '')}<i data-lucide="external-link" style="width:12px;height:12px;opacity:0.45"></i></a>`
+              : escapeHtml(lead.name || '')}
+          </div>
+          <div class="opp-meta-row" style="margin-top:8px">
+            <span class="opp-meta-tag">${escapeHtml(lead.platform || 'Website')}</span>
+            ${lead.followers ? `<span class="opp-meta-tag">${escapeHtml(lead.followers)}</span>` : ''}
+            <span class="opp-meta-tag">${replyScore}% likely reply</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:24px;font-weight:800;color:${scoreTone};letter-spacing:-.9px">${score}/100</div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">Opportunity score</div>
+        </div>
+      </div>
+    </div>
+    <div class="opp-money-block">
+      <div class="opp-money-cell">
+        <span class="opp-money-label">Deal value</span>
+        <span class="opp-deal-value">${escapeHtml(dealValue)}</span>
+      </div>
+      <div class="opp-money-cell">
+        <span class="opp-money-label">Best service match</span>
+        <span class="opp-service-match">${escapeHtml(service)}</span>
+      </div>
+    </div>
+    <div class="opp-card-body" style="gap:14px">
+      <div class="opp-reason-box"><strong style="color:var(--text-main)">Why this is promising:</strong> ${escapeHtml(reason)}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:11px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel)">
+          <div class="ai-result-label" style="margin-bottom:8px">Gap to mention</div>
+          <div style="font-size:12.5px;line-height:1.65;color:var(--text-main)">${escapeHtml(problem)}</div>
+        </div>
+        <div style="padding:11px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel)">
+          <div class="ai-result-label" style="margin-bottom:8px">Offer angle</div>
+          <div style="font-size:12.5px;line-height:1.65;color:var(--text-main)">${escapeHtml(strategy)}</div>
+        </div>
+      </div>
+      <div style="padding:11px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(20,184,166,0.07)">
+        <div class="ai-result-label" style="margin-bottom:8px">Why now</div>
+        <div style="font-size:12.5px;line-height:1.7;color:var(--text-main)">${escapeHtml(whyNow)}</div>
+      </div>
+      <div style="padding:11px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel)">
+        <div class="ai-result-label" style="margin-bottom:8px">Closing move</div>
+        <div style="font-size:12.5px;line-height:1.7;color:var(--text-main)">${escapeHtml(closingHint)}</div>
+        ${lead.redFlag ? `<div style="margin-top:10px;font-size:12px;line-height:1.6;color:#ef4444"><strong>Watch-out:</strong> ${escapeHtml(lead.redFlag)}</div>` : ''}
+      </div>
+    </div>
+    <div class="opp-card-actions">
+      <div class="opp-action-group">
+        <span class="opp-action-group-label">Pitch</span>
+        <div class="opp-action-btns">
+          <button class="opp-action-btn opp-btn-primary" onclick="copyDirectText('${escapeJsAttr(dmText)}','Quick DM copied.')"><i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM</button>
+          <button class="opp-action-btn opp-btn-outline" onclick="copyDirectText('${escapeJsAttr(loomText)}','Loom script copied.')"><i data-lucide="video" style="width:11px;height:11px"></i> Loom Script</button>
+        </div>
+      </div>
+      <div class="opp-action-group">
+        <span class="opp-action-group-label">Follow-up</span>
+        <div class="opp-action-btns">
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToAudit('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(problem)}','${escapeJsAttr(dealValue)}','${escapeJsAttr(service)}')"><i data-lucide="file-check-2" style="width:11px;height:11px"></i> Audit</button>
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToDraftEmail('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(objectionReply)}','Reply to budget objection')"><i data-lucide="mail-plus" style="width:11px;height:11px"></i> Reply Coach</button>
+        </div>
+      </div>
+      <div class="opp-action-group">
+        <span class="opp-action-group-label">Close</span>
+        <div class="opp-action-btns">
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal Brief</button>
+          <button class="opp-action-btn opp-btn-won" onclick="markLeadWon(this.closest('.opp-card'),'${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}','${escapeJsAttr(dealValue)}')"><i data-lucide="trophy" style="width:11px;height:11px"></i> Save as Won</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function renderPipeline(){
   const buckets={pitched:[],replied:[],won:[]};
   userLeads.forEach(l=>{ const s=l.status||'pitched'; if(buckets[s]) buckets[s].push(l); });
@@ -6327,7 +7290,7 @@ function ingestOpportunityClients(leads = [], skill = ''){
       name: l.name,
       platform: l.platform || 'Website',
       service: skill || 'Freelance service',
-      potentialValue: l.dealValue || '$150 - $450',
+      potentialValue: normalizeDealValue(l.dealValue || '$150 - $450'),
       profileUrl: l.profileUrl || '',
       quickDm: l.quickDm || l.assets?.quickDm || '',
       created_at: new Date().toISOString(),
@@ -6558,7 +7521,7 @@ function injectBusinessDashboardWidgets(){
   if (!home || el('home-biz-dashboard')) return;
   const section = document.createElement('div');
   section.id = 'home-biz-dashboard';
-  section.className = 'card';
+  section.className = 'card premium-surface';
   section.style.marginBottom = '22px';
   section.innerHTML = `
     <div class="section-title" style="margin-bottom:12px">Business Pulse</div>
@@ -6588,11 +7551,9 @@ function injectBusinessDashboardWidgets(){
       </div>
     </div>
   `;
-  const greeting = home.querySelector('#hero-greeting');
-  if (greeting?.nextElementSibling) {
-    home.insertBefore(section, greeting.nextElementSibling);
-  } else if (greeting) {
-    greeting.insertAdjacentElement('afterend', section);
+  const hero = home.querySelector('.home-hero');
+  if (hero) {
+    hero.insertAdjacentElement('afterend', section);
   } else {
     home.prepend(section);
   }
@@ -6657,6 +7618,147 @@ function renderBusinessDashboard(){
 }
 
 /* ─── UI HELPERS ─── */
+function renderPipeline(){
+  const buckets={pitched:[],replied:[],won:[]};
+  userLeads.forEach(l=>{ const s=l.status||'pitched'; if(buckets[s]) buckets[s].push(l); });
+  ['pitched','replied','won'].forEach(s=>{
+    setText('count-'+s, buckets[s].length);
+    el('col-'+s).innerHTML=buckets[s].length
+      ? buckets[s].map(l=>`
+        <div class="kanban-card">
+          <div class="kanban-card-name">${escapeHtml(l.client_name || '')}</div>
+          <div class="kanban-card-val">${l.project_value ? formatCurrency(l.project_value) : 'Custom quote'} ${escapeHtml(l.service || '')}</div>
+          <div class="kanban-card-actions">
+            ${s!=='pitched'?`<button class="stage-btn" onclick="moveLead('${l.id}','pitched')">Pitched</button>`:''}
+            ${s!=='replied'?`<button class="stage-btn" onclick="moveLead('${l.id}','replied')">In Talks</button>`:''}
+            ${s!=='won'?`<button class="stage-btn" onclick="moveLead('${l.id}','won')">Won</button>`:''}
+            <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="deleteLead('${l.id}')">Delete</button>
+          </div>
+        </div>`).join('')
+      : `<div style="font-size:12px;color:var(--text3);text-align:center;padding:18px 0">No leads here</div>`;
+  });
+  renderBusinessDashboard();
+}
+
+function renderManagedOpportunityClients(){
+  const list = el('opp-managed-list');
+  const empty = el('opp-managed-empty');
+  if (!list || !empty) return;
+  if (!opportunityClients.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = opportunityClients.slice(0, 20).map(c => `
+    <div class="opp-managed-item">
+      <div style="min-width:0">
+        <div style="font-size:15px;font-weight:700;color:var(--text-main)">${escapeHtml(c.name || '')}</div>
+        <div class="opp-managed-meta">
+          <span class="opp-managed-pill">${escapeHtml(c.platform || 'Website')}</span>
+          <span class="opp-managed-pill">${escapeHtml(c.service || 'Freelance service')}</span>
+          ${c.profileUrl ? '<span class="opp-managed-pill">Live profile</span>' : ''}
+        </div>
+        <div class="opp-managed-value">${escapeHtml(summarizeDealValue(c.potentialValue || ''))}</div>
+      </div>
+      <div class="opp-managed-actions">
+        ${c.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(c.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
+        ${c.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${c.id}')">Copy DM</button>` : ''}
+        <button class="stage-btn" onclick="addOpportunityClientToPipeline('${c.id}')">Add to Pipeline</button>
+        <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="removeOpportunityClient('${c.id}')">Remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function addOpportunityClientToPipeline(id){
+  const c = opportunityClients.find(x => x.id === id);
+  if (!c) return false;
+  setVal('lead-name', c.name || '');
+  setVal('lead-service', c.service || '');
+  const amount = getDealFloor(c.potentialValue || '', 0);
+  if (Number.isFinite(amount) && amount > 0) setVal('lead-value', amount);
+  setVal('lead-platform', ['Instagram','Upwork','Fiverr','LinkedIn'].includes(c.platform) ? c.platform : 'LinkedIn');
+  const moved = await addLead();
+  if (moved) showToast('Lead moved to pipeline.');
+  return moved;
+}
+
+function renderInvoices(){
+  const body = el('invoice-table-body');
+  if (!body) return;
+  const total = userInvoices.length;
+  const paid = userInvoices.filter(i => (i.status || '').toLowerCase() === 'paid').length;
+  const pending = userInvoices.filter(i => (i.status || '').toLowerCase() !== 'paid').length;
+  const outstanding = userInvoices
+    .filter(i => (i.status || '').toLowerCase() !== 'paid')
+    .reduce((sum, i) => sum + Number(i.amount || 0), 0);
+
+  setText('inv-stat-total', String(total));
+  setText('inv-stat-paid', String(paid));
+  setText('inv-stat-pending', String(pending));
+  setText('inv-stat-outstanding', formatCurrency(outstanding || 0));
+
+  if (!userInvoices.length) {
+    body.innerHTML = '<tr><td colspan="6" style="color:var(--text3);text-align:center;padding:20px 8px">No invoices yet</td></tr>';
+    return;
+  }
+
+  body.innerHTML = userInvoices.map(inv => `
+    <tr>
+      <td>${escapeHtml(inv.client_name || '-')}</td>
+      <td>${escapeHtml(inv.service || '-')}</td>
+      <td>${formatCurrency(inv.amount || 0)}</td>
+      <td>${escapeHtml(inv.due_date || '-')}</td>
+      <td>${_invoiceStatusBadge(inv.status)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="stage-btn" onclick="setInvoiceStatus('${inv.id}','paid')">Paid</button>
+        <button class="stage-btn" onclick="setInvoiceStatus('${inv.id}','sent')">Sent</button>
+        <button class="stage-btn" onclick="setInvoiceStatus('${inv.id}','overdue')">Overdue</button>
+        <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="deleteInvoice('${inv.id}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function copyInvoiceDraft(){
+  const txt = [
+    `Invoice To: ${val('inv-client-name') || 'Client'}`,
+    `Email: ${val('inv-client-email') || '-'}`,
+    `Service: ${val('inv-service') || '-'}`,
+    `Amount: ${formatCurrency(val('inv-amount') || 0)}`,
+    `Due Date: ${val('inv-due-date') || '-'}`,
+    `Notes: ${val('inv-notes') || '-'}`,
+  ].join('\n');
+  copyDirectText(txt);
+}
+
+function renderBusinessDashboard(){
+  injectBusinessDashboardWidgets();
+  const wonRevenue = userLeads
+    .filter(l => (l.status || '').toLowerCase() === 'won')
+    .reduce((sum, l) => sum + Number(l.project_value || 0), 0);
+  const activeDeals = userLeads.filter(l => ['pitched','replied'].includes((l.status || '').toLowerCase())).length;
+  const outstanding = userInvoices
+    .filter(i => (i.status || '').toLowerCase() !== 'paid')
+    .reduce((sum, i) => sum + Number(i.amount || 0), 0);
+  const totalClients = userLeads.length + opportunityClients.length;
+
+  setText('home-total-clients', String(totalClients));
+  setText('home-active-deals', String(activeDeals));
+  setText('home-won-revenue', formatCurrency(wonRevenue || 0));
+  setText('home-outstanding', formatCurrency(outstanding || 0));
+
+  setText('acc-total-clients', String(totalClients));
+  setText('acc-active-deals', String(activeDeals));
+  setText('acc-won-revenue', formatCurrency(wonRevenue || 0));
+  setText('acc-outstanding', formatCurrency(outstanding || 0));
+
+  _renderEarningsBars('home-earnings-bars','home-bar-labels');
+  _renderEarningsBars('acc-earnings-bars','acc-bar-labels');
+}
+
 function el(id){return document.getElementById(id)}
 function val(id){return el(id)?.value||''}
 function setVal(id,v){if(el(id))el(id).value=v}
@@ -6665,6 +7767,161 @@ function clearEl(id){if(el(id))el(id).innerHTML=''}
 function show(id){const e=el(id);if(e)e.style.display='block'}
 function hide(id){const e=el(id);if(e)e.style.display='none'}
 function loader(prefix,s){const e=el(prefix+'-loader');if(e)e.classList[s?'add':'remove']('show')}
+function escapeHtml(str=''){
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function escapeJsAttr(str=''){
+  return String(str)
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\\'")
+    .replace(/\r/g,'')
+    .replace(/\n/g,'\\n');
+}
+function formatCurrency(amount){
+  const num = Number(amount || 0);
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0
+  }).format(Number.isFinite(num) ? num : 0);
+}
+function normalizeDealValue(raw, fallback='$150 - $450'){
+  const text = String(raw || '').replace(/\s+/g, ' ').trim();
+  if (!text) return fallback;
+
+  const rangeMatch = text.match(/\$?\s*([\d,]+(?:\.\d+)?)\s*(?:-|–|—|to)\s*\$?\s*([\d,]+(?:\.\d+)?)(.*)$/i);
+  if (rangeMatch) {
+    const min = Number(rangeMatch[1].replace(/,/g, ''));
+    const max = Number(rangeMatch[2].replace(/,/g, ''));
+    const suffix = (rangeMatch[3] || '').trim();
+    if (Number.isFinite(min) && Number.isFinite(max)) {
+      return `${formatCurrency(min)} - ${formatCurrency(max)}${suffix ? ` ${suffix}` : ''}`;
+    }
+  }
+
+  const commaOnly = text.match(/^\$?\s*(\d{2,4})\s*,\s*(\d{2,4})(.*)$/);
+  if (commaOnly) {
+    const left = Number(commaOnly[1]);
+    const right = Number(commaOnly[2]);
+    const suffix = (commaOnly[3] || '').trim();
+    if (left >= 50 && right >= left && right <= 5000) {
+      return `${formatCurrency(left)} - ${formatCurrency(right)}${suffix ? ` ${suffix}` : ''}`;
+    }
+  }
+
+  return text
+    .replace(/\s*(?:–|—)\s*/g, ' - ')
+    .replace(/\s{2,}/g, ' ');
+}
+function getDealFloor(raw, fallback=0){
+  const normalized = normalizeDealValue(raw, '');
+  const nums = normalized.match(/\d[\d,]*/g) || [];
+  if (!nums.length) return fallback;
+  const first = Number(nums[0].replace(/,/g, ''));
+  return Number.isFinite(first) ? first : fallback;
+}
+function summarizeDealValue(raw){
+  const normalized = normalizeDealValue(raw, '');
+  if (!normalized) return 'Custom quote';
+  return normalized;
+}
+function paragraphsFromText(text=''){
+  return String(text)
+    .split(/\n{2,}/)
+    .map(chunk => chunk.trim())
+    .filter(Boolean)
+    .map(chunk => `<p>${escapeHtml(chunk).replace(/\n/g,'<br>')}</p>`)
+    .join('');
+}
+function renderAiResultMarkup({kicker,title,subject,body,tips=[],pills=[]}){
+  return `
+    <div class="ai-result-shell">
+      <div class="ai-result-hero">
+        <div class="ai-result-kicker"><span class="ai-result-dot"></span>${escapeHtml(kicker || 'AI result')}</div>
+        <div class="ai-result-title">${escapeHtml(title || 'Ready to send')}</div>
+        ${subject ? `<div class="ai-result-subject"><strong>Subject:</strong> ${escapeHtml(subject)}</div>` : ''}
+      </div>
+      <div class="ai-result-grid">
+        <div class="ai-result-body-card">
+          <div class="ai-result-label">Draft</div>
+          <div class="ai-result-copy">${paragraphsFromText(body || '')}</div>
+        </div>
+        <div class="ai-result-side-card">
+          ${pills.length ? `<div class="ai-result-label">Angle</div><div class="ai-result-pills">${pills.map(p => `<span class="ai-result-pill">${p}</span>`).join('')}</div>` : ''}
+          ${tips.length ? `<div class="ai-result-label" style="${pills.length ? 'margin-top:16px' : ''}">Why this works</div><ul class="ai-result-list">${tips.map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+function renderGigCardMarkup(niche){
+  const demand = niche.demand || 'Demand';
+  const competition = niche.competition || 'Competition';
+  const barrier = niche.entryBarrier || 'Entry';
+  const starter = niche.starterOffer || `Starter offer: ${niche.title || '1 focused deliverable'} for a defined scope.`;
+  const portfolioSeed = niche.portfolioSeed || niche.firstStep || 'Create one proof-of-work asset this week.';
+  return `
+    <div class="gig-result-card">
+      <div class="gig-result-top">
+        <div class="gig-result-title">${escapeHtml(niche.title || '')}</div>
+        <div class="gig-result-range">${escapeHtml(niche.priceRange || '')}</div>
+      </div>
+      <div class="gig-result-copy">${escapeHtml(niche.whyNow || 'High demand for this niche right now.')}</div>
+      <div class="gig-result-section">
+        <div class="ai-result-label">Positioning angle</div>
+        <div class="gig-result-copy">${escapeHtml(niche.positioningAngle || starter)}</div>
+      </div>
+      <div class="gig-result-section">
+        <div class="ai-result-label">Launch this week</div>
+        <div class="gig-result-copy">${escapeHtml(portfolioSeed)}</div>
+      </div>
+      <div class="gig-result-section">
+        <div class="ai-result-pills">
+          <span class="ai-result-pill"><strong>Demand</strong> ${escapeHtml(demand)}</span>
+          <span class="ai-result-pill"><strong>Competition</strong> ${escapeHtml(competition)}</span>
+          <span class="ai-result-pill"><strong>Entry</strong> ${escapeHtml(barrier)}</span>
+        </div>
+      </div>
+    </div>`;
+}
+function renderRoadmapMarkup(data){
+  return `
+    <div class="roadmap-shell">
+      ${data.goal ? `<div class="roadmap-goal-card"><div class="ai-result-label">Outcome</div><div style="font-size:15px;line-height:1.7;color:var(--text-main)">${escapeHtml(data.goal)}</div></div>` : ''}
+      <div class="roadmap-week-grid">
+        ${(data.weeks || []).map(w => `
+          <div class="roadmap-week-card">
+            <div class="roadmap-week-head">
+              <div>
+                <div class="roadmap-week-meta">Week ${escapeHtml(w.weekNumber || w.week || '')}</div>
+                <div class="roadmap-week-title">${escapeHtml(w.theme || '')}</div>
+              </div>
+              ${w.focus ? `<div style="max-width:360px;font-size:13px;line-height:1.7;color:var(--text-muted)">${escapeHtml(w.focus)}</div>` : ''}
+            </div>
+            <div class="roadmap-day-list">
+              ${(w.days || []).map(d => `
+                <div class="roadmap-day-card">
+                  <div class="roadmap-day-top">
+                    <div>
+                      <div class="roadmap-day-title">${escapeHtml(d.title || 'Action item')}</div>
+                      <div class="roadmap-day-task">${escapeHtml(d.task || '')}</div>
+                    </div>
+                    <div class="roadmap-day-badge">Day ${escapeHtml(d.day || '')}</div>
+                  </div>
+                  ${d.why ? `<div class="roadmap-day-note">${escapeHtml(d.why)}</div>` : ''}
+                  ${d.lancifyTip ? `<div class="roadmap-day-tip">${escapeHtml(d.lancifyTip)}</div>` : ''}
+                  ${d.timeEstimate ? `<div class="roadmap-day-note" style="margin-top:8px"><strong style="color:var(--text-main)">Time:</strong> ${escapeHtml(d.timeEstimate)}</div>` : ''}
+                </div>`).join('')}
+            </div>
+          </div>`).join('')}
+      </div>
+      ${data.finalMessage ? `<div class="roadmap-goal-card"><div class="ai-result-label">Keep going</div><div style="font-size:14px;line-height:1.75;color:var(--text-main)">${escapeHtml(data.finalMessage)}</div></div>` : ''}
+    </div>`;
+}
 
 function toggleResult(prefix,s,reset=false){
   const rb=el(prefix+'-result-box');
