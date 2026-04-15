@@ -67,6 +67,33 @@ function parseUsdRange(rangeText) {
   return { min, max, avg };
 }
 
+function normalizeDealValue(raw, fallback = PRICE_HINTS.default) {
+  const text = String(raw || '').replace(/\s+/g, ' ').trim();
+  if (!text) return fallback;
+
+  const rangeMatch = text.match(/\$?\s*([\d,]+(?:\.\d+)?)\s*(?:-|–|—|to)\s*\$?\s*([\d,]+(?:\.\d+)?)(.*)$/i);
+  if (rangeMatch) {
+    const min = Number(rangeMatch[1].replace(/,/g, ''));
+    const max = Number(rangeMatch[2].replace(/,/g, ''));
+    const suffix = (rangeMatch[3] || '').trim();
+    if (Number.isFinite(min) && Number.isFinite(max)) {
+      return `$${min.toLocaleString('en-US')} - $${max.toLocaleString('en-US')}${suffix ? ` ${suffix}` : ''}`;
+    }
+  }
+
+  const commaOnly = text.match(/^\$?\s*(\d{2,4})\s*,\s*(\d{2,4})(.*)$/);
+  if (commaOnly) {
+    const left = Number(commaOnly[1]);
+    const right = Number(commaOnly[2]);
+    const suffix = (commaOnly[3] || '').trim();
+    if (left >= 50 && right >= left && right <= 5000) {
+      return `$${left.toLocaleString('en-US')} - $${right.toLocaleString('en-US')}${suffix ? ` ${suffix}` : ''}`;
+    }
+  }
+
+  return text.replace(/\s*(?:–|—)\s*/g, ' - ');
+}
+
 function resolvePlanTier(body = {}) {
   const raw = lower(body.plan || body.planTier || body.subscription || body.userPlan || 'free');
   if (raw.includes('pro') || raw.includes('plus') || raw.includes('go') || raw.includes('premium')) return 'pro';
@@ -105,20 +132,22 @@ function buildOutreachAssets(lead, skill) {
   const name = cleanText(lead?.name || 'there');
   const problem = cleanText(lead?.problem || `I found a clear ${skill || 'growth'} gap`);
   const strategy = cleanText(lead?.strategy || 'I can share a quick fix plan and implement fast.');
-  const deal = cleanText(lead?.dealValue || PRICE_HINTS[skill] || PRICE_HINTS.default);
+  const deal = normalizeDealValue(cleanText(lead?.dealValue || PRICE_HINTS[skill] || PRICE_HINTS.default), PRICE_HINTS[skill] || PRICE_HINTS.default);
   const profileUrl = cleanText(lead?.profileUrl || '');
+  const whyNow = cleanText(lead?.whyNow || 'there is active growth momentum, so a small fix can move fast');
+  const closingHint = cleanText(lead?.closingHint || 'Start with a tiny first deliverable to reduce risk.');
 
   const quickDm = [
     `Hey ${name},`,
     `I noticed one thing: ${problem}`,
-    `I help with ${skill || 'this exact issue'} and can send a quick 2-step fix today.`,
-    `If useful, I can do a small starter sprint (${deal}) so you can test risk-free.`,
+    `The first move I would make is ${strategy}`,
+    `If useful, I can scope a small starter sprint at ${deal}.`,
   ].join('\n');
 
   const loomScript = [
     `Hi ${name}, quick teardown for your ${lead?.platform || 'business'}.`,
     `1) What I noticed: ${problem}`,
-    `2) Why it matters now: ${cleanText(lead?.whyNow || 'you are active and this affects current growth')}`,
+    `2) Why it matters now: ${whyNow}`,
     `3) What I would do first: ${strategy}`,
     `4) Simple next step: I can deliver one starter asset this week (${deal}).`,
   ].join('\n');
@@ -130,7 +159,7 @@ function buildOutreachAssets(lead, skill) {
     `Main gap: ${problem}`,
     `First fix: ${strategy}`,
     `Offer range: ${deal}`,
-    `Reply angle: ${cleanText(lead?.closingHint || 'Offer a tiny first deliverable')}`,
+    `Reply angle: ${closingHint}`,
   ].join('\n');
 
   const proposal = [
@@ -1391,7 +1420,7 @@ function fallbackLeadFromProfile(profile, skill, cfg) {
     replyChance,
     jobDesc: `Need help with ${skill || 'freelance support'} to improve results quickly.`,
     profileUrl: profile.profileUrl,
-    dealValue: PRICE_HINTS[skill] || PRICE_HINTS.default,
+    dealValue: normalizeDealValue(PRICE_HINTS[skill] || PRICE_HINTS.default, PRICE_HINTS.default),
   };
 }
 
@@ -1516,7 +1545,7 @@ Return raw JSON only.`;
           replyChance,
           jobDesc: cleanText(x?.jobDesc) || `Need help with ${skill || 'freelance support'} to improve results quickly.`,
           profileUrl: p.profileUrl,
-          dealValue: cleanText(x?.dealValue) || PRICE_HINTS[skill] || PRICE_HINTS.default,
+          dealValue: normalizeDealValue(cleanText(x?.dealValue) || PRICE_HINTS[skill] || PRICE_HINTS.default, PRICE_HINTS[skill] || PRICE_HINTS.default),
         };
 
         return applyIntentRules(lead, p, skill, cfg, p.siteSignal || null);
