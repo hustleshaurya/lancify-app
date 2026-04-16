@@ -52,7 +52,7 @@
   --accent-secondary: #14b8a6;
   --accent-amber: #f59e0b;
   --page-max: min(1320px, calc(100vw - 88px));
-  --page-max-wide: min(1460px, calc(100vw - 88px));
+  --page-max-wide: min(1700px, calc(100vw - 36px));
 }
 
 /* ── Dark Theme ── */
@@ -1044,7 +1044,7 @@ html.dark .profile-banner:hover{background:#14532d}
 /* ─── PIPELINE / KANBAN ─── */
 .page-hd-split{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
 .page-hd-note{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(20,184,166,0.04));font-size:12px;color:var(--text-muted);white-space:nowrap}
-.pipeline-layout{display:grid;grid-template-columns:minmax(320px,.92fr) minmax(0,1.4fr);gap:18px;align-items:start}
+.pipeline-layout{display:grid;grid-template-columns:minmax(320px,340px) minmax(0,1.85fr);gap:20px;align-items:start}
 .pipeline-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
 .summary-stat{position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(255,255,255,0)),var(--bg);border:1px solid var(--border);border-radius:20px;padding:18px 18px 16px;box-shadow:var(--shadow-sm)}
 .summary-stat::after{content:'';position:absolute;inset:auto -30px -70px auto;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle, rgba(91,141,239,0.14), transparent 68%);pointer-events:none}
@@ -1089,11 +1089,12 @@ html.dark .profile-banner:hover{background:#14532d}
 .pipeline-toolbar-sub{font-size:12px;color:var(--text-muted)}
 .pipeline-toolbar-controls{display:flex;flex-wrap:wrap;gap:10px}
 .pipeline-toolbar-controls input,.pipeline-toolbar-controls select{min-width:170px}
-.pipeline-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.pipeline-board{display:grid;grid-template-columns:repeat(3,minmax(300px,1fr));gap:16px}
 .kanban-board-col{
   position:relative;background:linear-gradient(180deg, rgba(148,163,184,0.08), rgba(255,255,255,0)),var(--bg-panel);
   border-radius:22px;padding:16px;border:1px solid var(--border);min-height:520px;transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease
 }
+.kanban-board-col{min-width:0}
 .kanban-board-col.drag-over{border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,0.12);transform:translateY(-2px)}
 .kanban-col-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
 .kanban-col-eyebrow{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
@@ -1142,6 +1143,8 @@ html.dark .profile-banner:hover{background:#14532d}
 .crm-modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .crm-modal-actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
 .crm-modal-actions-right{display:flex;gap:10px;justify-content:flex-end}
+#page-pipeline .content-inner.wide{max-width:min(1760px, calc(100vw - 24px));padding-left:24px;padding-right:24px}
+#page-opportunity .content-inner.wide{max-width:min(1720px, calc(100vw - 28px));padding-left:24px;padding-right:24px}
 
 /* Analytics workspace */
 .analytics-shell{display:grid;gap:16px}
@@ -2939,254 +2942,104 @@ html.dark .credits-warning-banner {
   text-align: center;
   margin-top: 4px;
 } 
-     /* ─── QUICK FIND MODE ─── */
-.opp-mode-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 20px;
-  background: var(--bg-hover);
-  padding: 4px;
-  border-radius: 10px;
-  width: fit-content;
+/* ─── Opportunity Workspace ─── */
+#page-opportunity .page-hd{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap
 }
-.opp-mode-tab {
-  padding: 7px 18px;
-  border-radius: 7px;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all .15s;
+#page-opportunity .page-hd p{max-width:56ch}
+.opp-mode-tabs{
+  display:inline-flex;gap:8px;margin-bottom:22px;padding:6px;border-radius:16px;
+  background:linear-gradient(180deg, rgba(148,163,184,0.10), rgba(255,255,255,0.02));
+  border:1px solid var(--border);box-shadow:var(--shadow-sm)
 }
-.opp-mode-tab.active {
-  background: var(--bg);
-  color: var(--text-main);
-  box-shadow: var(--shadow-sm);
+.opp-mode-tab{
+  display:inline-flex;align-items:center;gap:9px;padding:11px 18px;border-radius:12px;border:none;
+  background:transparent;color:var(--text-muted);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:background .18s ease,color .18s ease,transform .12s ease,box-shadow .18s ease
 }
-.opp-quick-panel { display: block; }
-.opp-deep-panel  { display: none;  }
-.opp-quick-panel.hidden { display: none; }
-.opp-deep-panel.visible { display: block; }
-
-/* Skill grid */
-.qf-skill-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
+.opp-mode-tab:hover{color:var(--text-main);transform:translateY(-1px)}
+.opp-mode-tab.active{
+  background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),var(--bg);
+  color:var(--text-main);box-shadow:0 10px 22px rgba(15,23,42,0.10)
 }
-.qf-skill-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 10px;
-  border-radius: 10px;
-  border: 2px solid var(--border);
-  background: var(--bg);
-  cursor: pointer;
-  font-family: inherit;
-  transition: all .15s;
-  text-align: center;
+.opp-quick-panel,.opp-deep-panel{
+  border-radius:24px;border:1px solid var(--border);
+  background:
+    radial-gradient(circle at top right, rgba(91,141,239,0.12), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0)),
+    var(--bg);
+  box-shadow:var(--shadow-sm)
 }
-.qf-skill-card:hover {
-  border-color: var(--border2);
-  background: var(--bg-hover);
-  transform: translateY(-1px);
+.opp-quick-panel{display:block}
+.opp-deep-panel{display:none}
+.opp-quick-panel.hidden{display:none}
+.opp-deep-panel.visible{display:block}
+.qf-skill-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px
 }
-.qf-skill-card.active {
-  border-color: var(--text-main);
-  background: var(--text-main);
-  color: var(--bg);
+.qf-skill-card{
+  display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;align-items:center;
+  padding:16px 16px 15px;border-radius:18px;border:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0)),var(--bg);
+  cursor:pointer;font-family:inherit;text-align:left;transition:border-color .18s ease,transform .16s ease,box-shadow .18s ease,background .18s ease
 }
-.qf-skill-card.active .qf-skill-icon { filter: invert(1); }
-.qf-skill-icon { font-size: 22px; line-height: 1; }
-.qf-skill-name {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-main);
-  line-height: 1.3;
+.qf-skill-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.qf-skill-card.active{
+  border-color:#5b8def;
+  background:linear-gradient(180deg, rgba(91,141,239,0.16), rgba(20,184,166,0.05)),var(--bg);
+  box-shadow:0 16px 34px rgba(37,99,235,0.14)
 }
-.qf-skill-card.active .qf-skill-name { color: var(--bg); }
-.qf-skill-sub {
-  font-size: 10px;
-  color: var(--text3);
-  line-height: 1.3;
+.qf-skill-icon{
+  width:44px;height:44px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);background:var(--bg-panel);color:var(--text-main)
 }
-.qf-skill-card.active .qf-skill-sub { color: rgba(255,255,255,0.6); }
-
-/* Location row */
-.qf-location-row {
-  display: flex;
-  gap: 12px;
-  align-items: flex-end;
-  margin-bottom: 6px;
+.qf-skill-card.active .qf-skill-icon{border-color:rgba(91,141,239,0.22);background:rgba(91,141,239,0.12);color:#2563eb}
+.qf-skill-copy{min-width:0}
+.qf-skill-name{font-size:13px;font-weight:700;color:var(--text-main);line-height:1.3;margin-bottom:3px}
+.qf-skill-sub{font-size:11px;color:var(--text3);line-height:1.45}
+.qf-other-input{
+  width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--border);background:var(--bg);
+  color:var(--text-main);font-size:13px;font-family:inherit;margin-bottom:18px;display:none
 }
-.qf-location-row > div { flex: 1; }
-.qf-find-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 24px;
-  background: var(--btn-bg);
-  color: var(--btn-text);
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: opacity .15s;
+.qf-other-input:focus{outline:none;border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,0.10)}
+.qf-other-input.show{display:block}
+.qf-bottom-row{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end;margin-bottom:8px
 }
-.qf-find-btn:hover { opacity: .85; }
-.qf-find-btn:disabled { opacity: .5; cursor: not-allowed; }
-     /* ================================================================
-   QUICK FIND — ADD THIS CSS just before
-   ================================================================ */
-
-/* Mode tabs */
-.opp-mode-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 20px;
-  background: var(--bg-hover);
-  padding: 4px;
-  border-radius: 10px;
-  width: fit-content;
+.qf-income-wrap{position:relative}
+.qf-income-wrap input{
+  width:100%;padding:12px 14px 12px 30px;border-radius:14px;border:1px solid var(--border2);background:var(--bg);
+  color:var(--text-main);font-size:13px;font-family:inherit
 }
-.opp-mode-tab {
-  padding: 7px 20px;
-  border-radius: 7px;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all .15s;
+.qf-income-wrap input:focus{outline:none;border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,0.10)}
+.qf-currency-symbol{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none}
+.qf-find-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 20px;height:46px;
+  background:var(--btn-bg);color:var(--btn-text);border:none;border-radius:14px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .15s,transform .12s ease,box-shadow .15s ease;
+  box-shadow:0 12px 24px rgba(15,23,42,0.14)
 }
-.opp-mode-tab.active {
-  background: var(--bg);
-  color: var(--text-main);
-  box-shadow: var(--shadow-sm);
+.qf-find-btn:hover{opacity:.92;transform:translateY(-1px)}
+.qf-find-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.ps-top-row{grid-template-columns:220px 1fr auto;gap:14px}
+.opp-deep-panel .pre-scan-panel{padding:22px}
+.ps-size-btn,.ps-service-chip,.opp-preset-btn{
+  border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--text-muted)
 }
-.opp-quick-panel { display: block; }
-.opp-deep-panel  { display: none;  }
-.opp-quick-panel.hidden { display: none; }
-.opp-deep-panel.visible { display: block; }
-
-/* Skill grid */
-.qf-skill-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 8px;
-  margin-bottom: 18px;
+.ps-size-btn.active,.ps-service-chip.active{background:var(--text-main);color:var(--bg);border-color:var(--text-main)}
+.ps-hot-toggle{
+  padding:14px 16px;border-radius:18px;border:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0)),var(--bg)
 }
-.qf-skill-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 8px;
-  border-radius: 10px;
-  border: 2px solid var(--border);
-  background: var(--bg);
-  cursor: pointer;
-  font-family: inherit;
-  transition: all .15s;
-  text-align: center;
+.ps-hot-toggle-label{display:flex;align-items:center;gap:8px}
+.opp-preset-btn{
+  padding:10px 14px;font-size:12px;font-weight:600;gap:8px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0)),var(--bg)
 }
-.qf-skill-card:hover {
-  border-color: var(--border2);
-  transform: translateY(-1px);
+.opp-preset-btn:hover{transform:translateY(-1px)}
+@media(max-width:1100px){
+  .qf-bottom-row,.ps-top-row{grid-template-columns:1fr}
 }
-.qf-skill-card.active {
-  border-color: var(--text-main);
-  background: var(--text-main);
-}
-.qf-skill-icon { font-size: 20px; line-height: 1; }
-.qf-skill-name {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-main);
-  line-height: 1.3;
-}
-.qf-skill-card.active .qf-skill-name { color: var(--bg); }
-.qf-skill-sub {
-  font-size: 10px;
-  color: var(--text3);
-}
-.qf-skill-card.active .qf-skill-sub { color: rgba(255,255,255,0.5); }
-
-/* Other skill input */
-.qf-other-input {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 2px solid var(--border);
-  background: var(--bg);
-  color: var(--text-main);
-  font-size: 13px;
-  font-family: inherit;
-  margin-bottom: 18px;
-  display: none;
-}
-.qf-other-input:focus { outline: none; border-color: var(--text-main); }
-.qf-other-input.show { display: block; }
-
-/* Income + Location row */
-.qf-bottom-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 12px;
-  align-items: flex-end;
-  margin-bottom: 6px;
-}
-.qf-income-wrap { position: relative; }
-.qf-income-wrap input {
-  width: 100%;
-  padding: 9px 14px 9px 26px;
-  border-radius: 8px;
-  border: 1px solid var(--border2);
-  background: var(--bg);
-  color: var(--text-main);
-  font-size: 13px;
-  font-family: inherit;
-}
-.qf-income-wrap input:focus { outline: none; border-color: var(--text-main); }
-.qf-currency-symbol {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  font-size: 13px;
-  pointer-events: none;
-}
-.qf-find-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 22px;
-  background: var(--btn-bg);
-  color: var(--btn-text);
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: opacity .15s;
-  height: 40px;
-}
-.qf-find-btn:hover { opacity: .85; }
-.qf-find-btn:disabled { opacity: .5; cursor: not-allowed; }
 
 /* Premium loading animation */
 .qf-loading-overlay {
@@ -3598,10 +3451,10 @@ html.dark .credits-warning-banner {
         <div class="field-group">
           <label class="field-label">Monthly income goal</label>
           <div class="ob-chips" id="ob-goal-chips">
-            <div class="ob-chip" data-val="₹5,000–₹10,000" onclick="selectChip('ob-goal-chips',this,'ob-goal')">₹5k – ₹10k</div>
-            <div class="ob-chip" data-val="₹10,000–₹25,000" onclick="selectChip('ob-goal-chips',this,'ob-goal')">₹10k – ₹25k</div>
-            <div class="ob-chip" data-val="₹25,000–₹50,000" onclick="selectChip('ob-goal-chips',this,'ob-goal')">₹25k – ₹50k</div>
-            <div class="ob-chip" data-val="₹50,000+" onclick="selectChip('ob-goal-chips',this,'ob-goal')">₹50k+</div>
+<div class="ob-chip" data-val="$500-$1,000" onclick="selectChip('ob-goal-chips',this,'ob-goal')">$500-$1k</div>
+<div class="ob-chip" data-val="$1,000-$2,500" onclick="selectChip('ob-goal-chips',this,'ob-goal')">$1k-$2.5k</div>
+<div class="ob-chip" data-val="$2,500-$5,000" onclick="selectChip('ob-goal-chips',this,'ob-goal')">$2.5k-$5k</div>
+<div class="ob-chip" data-val="$5,000+" onclick="selectChip('ob-goal-chips',this,'ob-goal')">$5k+</div>
           </div>
           <input type="hidden" id="ob-goal">
         </div>
@@ -3872,7 +3725,7 @@ html.dark .credits-warning-banner {
           <span style="font-size:10px; font-weight:600; color:#22c55e; background:rgba(34,197,94,0.08); padding:1px 7px; border-radius:99px;">Roadmap</span>
         </div>
         <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">Build Your Daily System</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Once you send your pitches, generate your custom 30-day execution plan. Map out exactly what to do every day to scale to ₹50k/mo.</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Once you send your pitches, generate your custom 30-day execution plan. Map out exactly what to do every day to scale to $5k/mo.</div>
       </div>
       <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
     </div>
@@ -3943,7 +3796,7 @@ html.dark .credits-warning-banner {
                   <div><label class="field-label">Your Service</label><select id="audit-service"><option>Web Design</option><option>Social Media</option><option>Copywriting</option><option>Video Editing</option><option>SEO</option></select></div>
                 </div>
               </div>
-              <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="₹2,500"></div>
+              <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="$250"></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
               <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(120, generateAudit)">Generate Audit Dossier</button>
               <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
@@ -4027,7 +3880,7 @@ html.dark .credits-warning-banner {
               <div class="panel-title">Settings</div>
               <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Cold outreach with a specific insight">Cold Outreach With Insight</option><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Reply to budget objection">Reply to Budget Objection</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm overdue payment reminder">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review or testimonial">Request Review / Testimonial</option></select></div>
               <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
-              <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for ₹3,500 is 5 days overdue…"></textarea></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea></div>
               <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(20, generateEmail)">Generate Draft</button>
               <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
             </div>
@@ -4414,8 +4267,8 @@ html.dark .credits-warning-banner {
 
     <!-- MODE TABS -->
     <div class="opp-mode-tabs">
-      <button class="opp-mode-tab active" id="tab-quick" onclick="switchOppMode('quick')">⚡ Quick Find</button>
-      <button class="opp-mode-tab" id="tab-deep" onclick="switchOppMode('deep')">🔍 Advanced</button>
+      <button class="opp-mode-tab active" id="tab-quick" onclick="switchOppMode('quick')"><i data-lucide="target" style="width:14px;height:14px"></i> Quick Find</button>
+      <button class="opp-mode-tab" id="tab-deep" onclick="switchOppMode('deep')"><i data-lucide="radar" style="width:14px;height:14px"></i> Advanced</button>
     </div>
 
     <!-- ══ QUICK FIND PANEL ══ -->
@@ -4423,19 +4276,19 @@ html.dark .credits-warning-banner {
 
       <div class="ps-section-label" style="margin-bottom:12px">What's your freelance skill?</div>
       <div class="qf-skill-grid" id="qf-skill-grid">
-        <button class="qf-skill-card" data-skill="Thumbnail Design"          onclick="selectSkill(this)"><span class="qf-skill-icon">🖼️</span><span class="qf-skill-name">Thumbnail Design</span><span class="qf-skill-sub">YouTube creators</span></button>
-        <button class="qf-skill-card" data-skill="Video Editing"             onclick="selectSkill(this)"><span class="qf-skill-icon">🎬</span><span class="qf-skill-name">Video Editing</span><span class="qf-skill-sub">Content creators</span></button>
-        <button class="qf-skill-card" data-skill="Copywriting"               onclick="selectSkill(this)"><span class="qf-skill-icon">✍️</span><span class="qf-skill-name">Copywriting</span><span class="qf-skill-sub">Stores & startups</span></button>
-        <button class="qf-skill-card" data-skill="Email Marketing"           onclick="selectSkill(this)"><span class="qf-skill-icon">📧</span><span class="qf-skill-name">Email Marketing</span><span class="qf-skill-sub">Brands & coaches</span></button>
-        <button class="qf-skill-card" data-skill="Social Media Management"   onclick="selectSkill(this)"><span class="qf-skill-icon">📱</span><span class="qf-skill-name">Social Media</span><span class="qf-skill-sub">Local businesses</span></button>
-        <button class="qf-skill-card" data-skill="Web Design"                onclick="selectSkill(this)"><span class="qf-skill-icon">🌐</span><span class="qf-skill-name">Web Design</span><span class="qf-skill-sub">Small businesses</span></button>
-        <button class="qf-skill-card" data-skill="SEO"                       onclick="selectSkill(this)"><span class="qf-skill-icon">📈</span><span class="qf-skill-name">SEO</span><span class="qf-skill-sub">Blogs & brands</span></button>
-        <button class="qf-skill-card" data-skill="Funnel Building"           onclick="selectSkill(this)"><span class="qf-skill-icon">🔧</span><span class="qf-skill-name">Funnel Building</span><span class="qf-skill-sub">Coaches & creators</span></button>
-        <button class="qf-skill-card" data-skill="Graphic Design"            onclick="selectSkill(this)"><span class="qf-skill-icon">🎨</span><span class="qf-skill-name">Graphic Design</span><span class="qf-skill-sub">Brands & stores</span></button>
-        <button class="qf-skill-card" data-skill="Voice Over"                onclick="selectSkill(this)"><span class="qf-skill-icon">🎙️</span><span class="qf-skill-name">Voice Over</span><span class="qf-skill-sub">YouTube & ads</span></button>
-        <button class="qf-skill-card" data-skill="Paid Ads"                  onclick="selectSkill(this)"><span class="qf-skill-icon">💰</span><span class="qf-skill-name">Paid Ads</span><span class="qf-skill-sub">E-commerce brands</span></button>
-        <button class="qf-skill-card" data-skill="Content Writing"           onclick="selectSkill(this)"><span class="qf-skill-icon">📝</span><span class="qf-skill-name">Content Writing</span><span class="qf-skill-sub">SaaS & blogs</span></button>
-        <button class="qf-skill-card" data-skill="other"                     onclick="selectSkill(this)"><span class="qf-skill-icon">✨</span><span class="qf-skill-name">Other Skill</span><span class="qf-skill-sub">Type your skill</span></button>
+        <button class="qf-skill-card" data-skill="Thumbnail Design" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="image" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Thumbnail Design</span><span class="qf-skill-sub">YouTube creators</span></span></button>
+        <button class="qf-skill-card" data-skill="Video Editing" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="clapperboard" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Video Editing</span><span class="qf-skill-sub">Content creators</span></span></button>
+        <button class="qf-skill-card" data-skill="Copywriting" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="pen-tool" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Copywriting</span><span class="qf-skill-sub">Stores & startups</span></span></button>
+        <button class="qf-skill-card" data-skill="Email Marketing" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="mail" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Email Marketing</span><span class="qf-skill-sub">Brands & coaches</span></span></button>
+        <button class="qf-skill-card" data-skill="Social Media Management" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="megaphone" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Social Media</span><span class="qf-skill-sub">Local businesses</span></span></button>
+        <button class="qf-skill-card" data-skill="Web Design" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="monitor" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Web Design</span><span class="qf-skill-sub">Small businesses</span></span></button>
+        <button class="qf-skill-card" data-skill="SEO" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="search" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">SEO</span><span class="qf-skill-sub">Blogs & brands</span></span></button>
+        <button class="qf-skill-card" data-skill="Funnel Building" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="filter" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Funnel Building</span><span class="qf-skill-sub">Coaches & creators</span></span></button>
+        <button class="qf-skill-card" data-skill="Graphic Design" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="palette" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Graphic Design</span><span class="qf-skill-sub">Brands & stores</span></span></button>
+        <button class="qf-skill-card" data-skill="Voice Over" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="mic-2" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Voice Over</span><span class="qf-skill-sub">YouTube & ads</span></span></button>
+        <button class="qf-skill-card" data-skill="Paid Ads" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="wallet" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Paid Ads</span><span class="qf-skill-sub">E-commerce brands</span></span></button>
+        <button class="qf-skill-card" data-skill="Content Writing" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="file-text" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Content Writing</span><span class="qf-skill-sub">SaaS & blogs</span></span></button>
+        <button class="qf-skill-card" data-skill="other" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="sparkles" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Other Skill</span><span class="qf-skill-sub">Type your skill</span></span></button>
       </div>
 
       <!-- Other skill input -->
@@ -4451,7 +4304,7 @@ html.dark .credits-warning-banner {
         </div>
         <div>
           <label class="field-label">Target location <span style="color:var(--text3)">(optional)</span></label>
-          <input type="text" id="qf-location" placeholder="e.g. Mumbai, India or worldwide">
+          <input type="text" id="qf-location" placeholder="e.g. New York, London, or worldwide">
         </div>
         <button class="qf-find-btn" id="qf-find-btn" onclick="checkCredits(300, quickFindClients)">
           <i data-lucide="target" style="width:14px;height:14px"></i>
@@ -4604,7 +4457,7 @@ html.dark .credits-warning-banner {
       <label class="ps-hot-toggle" id="ps-hot-toggle">
         <input type="checkbox" id="ps-hot-only">
         <div>
-          <span class="ps-hot-toggle-label">🔥 Hot Leads Only</span>
+          <span class="ps-hot-toggle-label"><i data-lucide="flame" style="width:14px;height:14px"></i> Hot Leads Only</span>
           <span class="ps-hot-toggle-sub">Active · High pain · Trying to monetise</span>
         </div>
       </label>
@@ -4626,10 +4479,10 @@ html.dark .credits-warning-banner {
               <div class="opp-presets-wrap">
                 <div class="opp-presets-title">1-Click Niche Targeting</div>
                 <div class="opp-presets">
-                  <button class="opp-preset-btn" onclick="setOppPreset('Content Creators', 'YouTubers under 50k subs with low engagement and bad thumbnails')">📺 YouTubers < 50k (Thumbnails)</button>
-                  <button class="opp-preset-btn" onclick="setOppPreset('Coaches & Consultants', 'Fitness coaches on Instagram selling via DM with no booking link')">🏋️‍♂️ Coaches without Funnels</button>
-                  <button class="opp-preset-btn" onclick="setOppPreset('Startups', 'Early stage SaaS founders needing better landing page copy')">💻 SaaS Landing Page Copy</button>
-                  <button class="opp-preset-btn" onclick="setOppPreset('E-commerce Brands', 'D2C clothing brands with poor product descriptions on Shopify')">🛒 D2C Brands (Copywriting)</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('Content Creators', 'YouTubers under 50k subs with low engagement and bad thumbnails')"><i data-lucide="monitor" style="width:14px;height:14px"></i> YouTubers under 50k</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('Coaches & Consultants', 'Fitness coaches on Instagram selling via DM with no booking link')"><i data-lucide="dumbbell" style="width:14px;height:14px"></i> Coaches without funnels</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('Startups', 'Early stage SaaS founders needing better landing page copy')"><i data-lucide="rocket" style="width:14px;height:14px"></i> SaaS landing page copy</button>
+                  <button class="opp-preset-btn" onclick="setOppPreset('E-commerce Brands', 'D2C clothing brands with poor product descriptions on Shopify')"><i data-lucide="shopping-bag" style="width:14px;height:14px"></i> D2C brand copywriting</button>
                 </div>
               </div>
             
@@ -4703,7 +4556,7 @@ html.dark .credits-warning-banner {
           </div>
           <div><label class="field-label">Monthly Income Goal</label>
             <select id="prof-goal">
-              <option>₹5,000–₹10,000</option><option>₹10,000–₹25,000</option><option>₹25,000–₹50,000</option><option>₹50,000+</option>
+              <option>$500-$1,000</option><option>$1,000-$2,500</option><option>$2,500-$5,000</option><option>$5,000+</option>
             </select>
           </div>
           <div><label class="field-label">Hours Available / Day</label>
@@ -4847,7 +4700,7 @@ html.dark .credits-warning-banner {
         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" stroke-width="1.5"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>
       </div>
       <div style="font-size:20px;font-weight:700;color:#fafafa;margin-bottom:4px;">Elite</div>
-      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">For those scaling to ₹50k/mo who need every edge.</div>
+        <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">For those scaling to $5k/mo who need every edge.</div>
       <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:24px;">
         <span style="font-size:40px;font-weight:700;color:#fafafa;letter-spacing:-1.5px;line-height:1;">$29</span>
         <div style="font-size:12px;color:#71717a;line-height:1.5;">USD / month<br>billed monthly</div>
@@ -5055,7 +4908,7 @@ async function quickFindClients() {
   // Nothing found
   wrap.innerHTML = `
     <div style="text-align:center;padding:60px 20px;color:var(--text3)">
-      <div style="font-size:40px;margin-bottom:16px">🔍</div>
+      <div style="width:54px;height:54px;margin:0 auto 16px;border-radius:16px;border:1px solid var(--border);background:var(--bg-panel);display:flex;align-items:center;justify-content:center"><i data-lucide="search" style="width:22px;height:22px;color:var(--text-main)"></i></div>
       <div style="font-size:16px;font-weight:700;color:var(--text-main);margin-bottom:8px">
         No clients found right now
       </div>
@@ -5064,10 +4917,10 @@ async function quickFindClients() {
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         <button onclick="checkCredits(300, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
-          🔄 Try Again
+          Try Again
         </button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
-          🔍 Switch to Deep Scan
+          Switch to Deep Scan
         </button>
       </div>
     </div>`;
@@ -5126,7 +4979,7 @@ function _startQfLoader(wrap) {
   wrap.innerHTML = `
     <div class="qf-loading-overlay show" id="qf-loading-overlay">
       <div class="qf-radar-pulse">
-        <div class="qf-radar-core">🎯</div>
+        <div class="qf-radar-core"><i data-lucide="target" style="width:18px;height:18px"></i></div>
       </div>
       <div class="qf-loading-text" id="qf-loading-title">Finding clients who need your skill…</div>
       <div class="qf-loading-sub" id="qf-loading-sub">This takes about 10 seconds</div>
@@ -5167,13 +5020,6 @@ function _renderQfCard(lead) {
   const auditCtx = lead.audit || lead.assets?.audit || `Client: ${lead.name}\nPlatform: ${lead.platform}\nGap: ${lead.problem}\nFix direction: ${lead.strategy}\nOffer range: ${lead.dealValue || '$150 - $450'}`;
   const proposalCtx = lead.proposal || lead.assets?.proposal || lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${skill}. Problem: ${lead.problem}. Price: ${lead.dealValue || '$200 - $500'}.`;
 
-  const platformIcon = lead.platform === 'YouTube'    ? '▶️'
-                     : lead.platform === 'Instagram'  ? '📸'
-                     : lead.platform === 'LinkedIn'   ? '💼'
-                     : lead.platform === 'Google Maps'? '📍'
-                     : lead.platform === 'TikTok'     ? '🎵'
-                     : '🌐';
-
   return `
   <div class="qf-lead-card">
     <div class="qf-lead-top">
@@ -5183,8 +5029,8 @@ function _renderQfCard(lead) {
           : esc(lead.name)}
       </div>
       <div class="qf-lead-meta">
-        <span class="qf-lead-tag">${platformIcon} ${esc(lead.platform)}</span>
-        ${lead.followers && lead.followers !== 'Not listed' ? `<span class="qf-lead-tag">👥 ${esc(lead.followers)}</span>` : ''}
+        <span class="qf-lead-tag">${esc(lead.platform)}</span>
+        ${lead.followers && lead.followers !== 'Not listed' ? `<span class="qf-lead-tag">${esc(lead.followers)}</span>` : ''}
         <span class="qf-lead-tag" style="color:#f59e0b;font-weight:700">${lead.match || 85}/100 match</span>
       </div>
     </div>
@@ -5197,9 +5043,9 @@ function _renderQfCard(lead) {
         <span class="qf-deal-value">${esc(lead.dealValue || '$200 – $500')}</span>
       </div>
       <div class="qf-lead-strategy">
-        💡 <strong>How to get them:</strong> ${esc(lead.strategy)}
+        <strong>How to get them:</strong> ${esc(lead.strategy)}
       </div>
-      ${lead.redFlag ? `<div style="font-size:11.5px;color:#ef4444;background:rgba(239,68,68,0.06);border-radius:6px;padding:7px 10px">⚠️ ${esc(lead.redFlag)}</div>` : ''}
+      ${lead.redFlag ? `<div style="font-size:11.5px;color:#ef4444;background:rgba(239,68,68,0.06);border-radius:6px;padding:7px 10px"><strong>Red flag:</strong> ${esc(lead.redFlag)}</div>` : ''}
     </div>
     <div class="qf-lead-actions">
       <button class="qf-action-btn primary" onclick="copyDirectText('${jsEsc(dmText)}')">
@@ -5288,14 +5134,14 @@ async function quickFindClients() {
   // Nothing found
   wrap.innerHTML = `
     <div style="text-align:center;padding:60px 20px">
-      <div style="font-size:40px;margin-bottom:16px">🔍</div>
+      <div style="width:54px;height:54px;margin:0 auto 16px;border-radius:16px;border:1px solid var(--border);background:var(--bg-panel);display:flex;align-items:center;justify-content:center"><i data-lucide="search" style="width:22px;height:22px;color:var(--text-main)"></i></div>
       <div style="font-size:16px;font-weight:700;color:var(--text-main);margin-bottom:8px">No clients found right now</div>
       <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto;line-height:1.6">
         ${apiError ? 'Something went wrong. Please try again.' : 'Try adding a location like "Mumbai" or "New York", or switch to Advanced mode.'}
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="checkCredits(300, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">🔄 Try Again</button>
-        <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">🔍 Try Advanced</button>
+        <button onclick="checkCredits(300, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Again</button>
+        <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Advanced</button>
       </div>
     </div>`;
   return !apiError;
@@ -5322,7 +5168,7 @@ function setOppPreset(type, prompt) {
 
 function copyDirectText(text) {
   navigator.clipboard.writeText(text)
-    .then(() => showToast('⚡ Quick DM copied!'))
+    .then(() => showToast('Quick DM copied.'))
     .catch(() => showToast('Failed to copy.'));
 }
 
@@ -5352,7 +5198,7 @@ function markLeadWon(cardEl, leadName, platform) {
     b.disabled = true; b.style.opacity = '0.4';
   });
   routeToLead(leadName, platform);
-  showToast('🎉 Deal won! Check your Client Pipeline.');
+  showToast('Deal won. Check your Client Pipeline.');
 }
 
 /* ── Full 25-lead bank (5 per category, all with signals[]) ── */
@@ -5364,7 +5210,7 @@ const _OPP_LEAD_BANK = {
       platform: 'YouTube',
       followers: '14.2k subscribers',
       problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
-      strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for ₹3,000 as a starter package.',
+    strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for $300 as a starter package.',
       match: 96,
       reason: 'Low CTR pattern detected — no face or contrast in last 12 thumbnails.',
       jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel.',
@@ -5439,7 +5285,7 @@ const _OPP_LEAD_BANK = {
       platform: 'Website',
       followers: 'Google Business: 4.1★',
       problem: 'Website loads in 7.2s, not mobile-optimised, and has no booking widget. Losing walk-ins.',
-      strategy: 'Lead with the 7-second load time. Offer website revamp + Calendly integration for ₹8,000.',
+    strategy: 'Lead with the 7-second load time. Offer website revamp + Calendly integration for $800.',
       match: 93,
       reason: 'Failed Core Web Vitals — load time 7.2s vs 1.8s industry average. No booking system.',
       jobDesc: 'Local salon wants a faster, mobile-friendly website with online appointment booking integrated.',
@@ -5565,7 +5411,7 @@ const _OPP_LEAD_BANK = {
       platform: 'Website',
       followers: 'Shopify store',
       problem: 'Email list of 1,400 subs but last campaign was 4 months ago. No welcome sequence, no abandoned cart flow.',
-      strategy: 'Lead with the dormant list angle — "your list is making ₹0 right now." Pitch welcome + promo campaign.',
+    strategy: 'Lead with the dormant list angle — "your list is making $0 right now." Pitch welcome + promo campaign.',
       match: 89,
       reason: 'Dormant list detected — 1,400 subscribers, last send 4 months ago, no automation flows.',
       jobDesc: 'Organic skincare brand wants email automations — welcome sequence and abandoned cart recovery.',
@@ -5588,7 +5434,7 @@ const _OPP_LEAD_BANK = {
       name: 'LuxeNails Studio',
       platform: 'Instagram',
       followers: '6.4k followers',
-      problem: 'Running ads but sending traffic to main Instagram profile, not a booking page. ₹8,000/month with no return.',
+    problem: 'Running ads but sending traffic to the main Instagram profile, not a booking page. $800/month with no return.',
       strategy: 'Build a simple landing page with Calendly booking form — redirect all ad traffic there.',
       match: 95,
       reason: 'Active ad spend confirmed with no conversion destination — every rupee going to dead-end profile.',
@@ -5616,7 +5462,7 @@ const _OPP_LEAD_BANK = {
       platform: 'LinkedIn',
       followers: '6.4k followers',
       problem: 'Strong personal brand but no lead magnet, no email list, no freebie to convert followers.',
-      strategy: 'Pitch a simple lead magnet (PDF checklist) + 3-step email welcome sequence for ₹5,000.',
+    strategy: 'Pitch a simple lead magnet (PDF checklist) + 3-step email welcome sequence for $500.',
       match: 93,
       reason: 'Audience strong but zero off-platform assets — entire business disappears if LinkedIn bans account.',
       jobDesc: 'Business coach needs copywriter to create a lead magnet PDF and email welcome sequence.',
@@ -5639,7 +5485,7 @@ const _OPP_LEAD_BANK = {
       name: 'CareerCompass Academy',
       platform: 'YouTube',
       followers: '7.1k subscribers',
-      problem: 'Selling a ₹4,999 course but no sales page — just a Gumroad link. No testimonials, no FAQ, no urgency.',
+    problem: 'Selling a $499 course but no sales page — just a Gumroad link. No testimonials, no FAQ, no urgency.',
       strategy: 'Build a dedicated course sales page. Proper pages with social proof convert 3–5x better than bare Gumroad.',
       match: 88,
       reason: 'Course funnel gap — Gumroad link has no social proof, objection handling, or urgency.',
@@ -5663,7 +5509,7 @@ const _OPP_LEAD_BANK = {
       name: 'SalesEdge by Rohan',
       platform: 'LinkedIn',
       followers: '12.1k followers',
-      problem: 'Running a paid workshop at ₹2,999 but promoting with a single text post. No event page, no countdown.',
+    problem: 'Running a paid workshop at $299 but promoting with a single text post. No event page, no countdown.',
       strategy: 'Design a simple Carrd event landing page + write a 3-post promotional sequence.',
       match: 90,
       reason: 'Event promotion gap — single organic post for a paid offer with 12k warm audience.',
@@ -5681,9 +5527,9 @@ function _renderOppCard(lead) {
 
   // ── Score ──
   const score = lead.match || (Math.floor(Math.random() * 15) + 85);
-  let scoreClass = 'score-cool', scoreBadge = '📈';
-  if (score >= 95)      { scoreClass = 'score-hot';  scoreBadge = '🚀'; }
-  else if (score >= 88) { scoreClass = 'score-warm'; scoreBadge = '🔥'; }
+  let scoreClass = 'score-cool', scoreBadge = 'Strong';
+  if (score >= 95)      { scoreClass = 'score-hot';  scoreBadge = 'Elite'; }
+  else if (score >= 88) { scoreClass = 'score-warm'; scoreBadge = 'High'; }
   const isHot = score >= 93;
 
   // ── Service + deal derivation ──
@@ -5691,7 +5537,7 @@ function _renderOppCard(lead) {
   let dealValue = '$150 – $400', service = 'Growth Strategy';
   let magnet    = 'Free 5-min Video Audit';
   let afterText = 'Higher conversion rates and improved audience retention.';
-  let effortClass = 'effort-medium', effortLabel = '🟡 Medium effort';
+  let effortClass = 'effort-medium', effortLabel = 'Medium effort';
   let closingHint = 'Start with a free audit, then pitch the monthly retainer.';
   let serviceKey  = 'general';
 
@@ -5699,50 +5545,50 @@ function _renderOppCard(lead) {
     dealValue = '$300 – $800 / mo'; service = 'YouTube / Short-Form Optimization';
     magnet = '1 Free Custom Thumbnail Redesign'; serviceKey = 'thumbnails';
     afterText = '2x CTR, higher watch time, algorithm pushes content to cold audiences.';
-    effortClass = 'effort-easy'; effortLabel = '🟢 Easy win';
+    effortClass = 'effort-easy'; effortLabel = 'Easy win';
     closingHint = 'Send a free thumbnail mockup first — let the work speak. Then pitch 5-pack.';
   } else if (probLow.includes('copy') || probLow.includes('landing') || probLow.includes('website') || probLow.includes('seo')) {
     dealValue = '$500 – $1,500'; service = 'Copywriting & CRO'; serviceKey = 'copywriting';
     magnet = 'Free Hero-Section Rewrite';
     afterText = 'Clear value prop above fold, lower bounce rate, visitors click the CTA.';
-    effortClass = 'effort-medium'; effortLabel = '🟡 Medium effort';
+    effortClass = 'effort-medium'; effortLabel = 'Medium effort';
     closingHint = 'Rewrite their hero section for free, then show the before/after. Upsell the full page.';
   } else if (probLow.includes('social') || probLow.includes('post') || probLow.includes('engagement') || probLow.includes('reel') || probLow.includes('instagram')) {
     dealValue = '$400 – $900 / mo'; service = 'Social Media System'; serviceKey = 'social';
     magnet = '1-Week Free Content Calendar';
     afterText = 'Consistent daily posts, algorithm favour, inbound DM leads week-over-week.';
-    effortClass = 'effort-medium'; effortLabel = '🟡 Medium effort';
+    effortClass = 'effort-medium'; effortLabel = 'Medium effort';
     closingHint = 'Offer a 7-day free calendar as bait. If they see engagement lift, close the retainer.';
   } else if (probLow.includes('booking') || probLow.includes('funnel') || probLow.includes('cta') || probLow.includes('bio') || probLow.includes('link')) {
     dealValue = '$250 – $700'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
     magnet = 'Free Link-in-Bio Audit PDF';
     afterText = 'Working booking funnel, measurable conversion path, no more lost leads.';
-    effortClass = 'effort-easy'; effortLabel = '🟢 Easy win';
+    effortClass = 'effort-easy'; effortLabel = 'Easy win';
     closingHint = 'Fix their broken link-in-bio for free. Frame the upsell as "the full funnel behind it."';
   } else if (probLow.includes('review') || probLow.includes('reputation') || probLow.includes('google')) {
     dealValue = '$300 – $600 / mo'; service = 'Reputation Management'; serviceKey = 'general';
     magnet = 'Free Competitor Review Analysis';
     afterText = 'Higher star rating, professional response system, more walk-ins from search.';
-    effortClass = 'effort-hard'; effortLabel = '🔴 Hard sell';
+    effortClass = 'effort-hard'; effortLabel = 'Hard sell';
     closingHint = 'Lead with the competitor star-rating gap. Offer to write 5 review responses for free.';
   } else if (probLow.includes('email') || probLow.includes('list') || probLow.includes('sequence') || probLow.includes('campaign')) {
     dealValue = '$400 – $1,200'; service = 'Email Marketing Setup'; serviceKey = 'email';
     magnet = 'Free Email Audit + Subject Line Pack';
     afterText = 'Automated welcome flow, abandoned cart recovery, regular revenue from dormant list.';
-    effortClass = 'effort-medium'; effortLabel = '🟡 Medium effort';
+    effortClass = 'effort-medium'; effortLabel = 'Medium effort';
     closingHint = 'Show them the $ value of their inactive list. One recovered campaign pays for your service.';
   } else if (probLow.includes('ad') || probLow.includes('funnel') || probLow.includes('landing')) {
     dealValue = '$400 – $900'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
     magnet = 'Free Landing Page Audit';
     afterText = 'Every ad rupee goes to a page that converts, not a dead Instagram bio.';
-    effortClass = 'effort-easy'; effortLabel = '🟢 Easy win';
+    effortClass = 'effort-easy'; effortLabel = 'Easy win';
     closingHint = 'Show them their ad spend is leaking. Offer to build the landing page on a performance basis.';
   }
 
   // ── Reply probability ──
   const replyScore  = lead.replyChance || Math.min(92, Math.max(38, score - 10 + Math.floor(Math.random() * 20)));
   const replyClass  = replyScore >= 65 ? 'reply-high' : replyScore >= 45 ? 'reply-mid' : 'reply-low';
-  const replyEmoji  = replyScore >= 65 ? '✦' : replyScore >= 45 ? '◈' : '◇';
+  const replyLabel  = replyScore >= 65 ? 'High' : replyScore >= 45 ? 'Medium' : 'Low';
 
   // ── Why now ──
   const whyNow = lead.whyNow || _deriveWhyNow(lead);
@@ -5805,30 +5651,30 @@ function _renderOppCard(lead) {
       <!-- Stats row: reply % + effort tag -->
       <div class="opp-stats-row">
         <span class="opp-reply-pill ${replyClass}">
-          ${replyEmoji} ${replyScore}% Reply Chance
+          ${replyLabel} · ${replyScore}% Reply Chance
         </span>
         <span class="opp-effort-tag ${effortClass}">${effortLabel}</span>
       </div>
 
       <!-- AI Insight -->
       <div class="opp-reason-box">
-        🧠 <strong>AI Insight:</strong> ${esc(lead.reason || 'High-friction conversion gaps detected vs. niche competitors.')}
+        <strong>AI Insight:</strong> ${esc(lead.reason || 'High-friction conversion gaps detected vs. niche competitors.')}
       </div>
 
       <!-- Why This Lead NOW -->
       <div class="opp-why-now">
-        <span class="opp-why-now-icon">⚡</span>
+        <span class="opp-why-now-icon"><i data-lucide="zap" style="width:12px;height:12px"></i></span>
         <div><strong>Why now:</strong> ${esc(whyNow)}</div>
       </div>
 
       <!-- Before / After -->
       <div class="opp-ba-grid">
         <div class="opp-ba-col">
-          <span class="opp-ba-label label-before">⚠ Current State</span>
+          <span class="opp-ba-label label-before">Current State</span>
           <div class="opp-ba-text">${esc(beforeText)}</div>
         </div>
         <div class="opp-ba-col">
-          <span class="opp-ba-label label-after">✓ After You Fix It</span>
+          <span class="opp-ba-label label-after">After You Fix It</span>
           <div class="opp-ba-text">${esc(afterText)}</div>
         </div>
       </div>
@@ -5836,7 +5682,7 @@ function _renderOppCard(lead) {
       <!-- Red Flag (only if exists) -->
       ${redFlag ? `
       <div class="opp-red-flag">
-        <span class="opp-red-flag-icon">⚠</span>
+        <span class="opp-red-flag-icon"><i data-lucide="alert-triangle" style="width:12px;height:12px"></i></span>
         <div><strong>Red flag:</strong> ${esc(redFlag)}</div>
       </div>` : ''}
 
@@ -6054,7 +5900,7 @@ async function scanOpportunities() {
   wrap.innerHTML = leads.length
     ? `<div class="opp-results-grid">${leads.map(_renderOppCard).join('')}</div>`
     : `<div style="text-align:center;padding:48px 20px;color:var(--text3)">
-        <div style="font-size:32px;margin-bottom:12px">🔍</div>
+        <div style="width:48px;height:48px;margin:0 auto 12px;border-radius:14px;border:1px solid var(--border);background:var(--bg-panel);display:flex;align-items:center;justify-content:center"><i data-lucide="search" style="width:18px;height:18px;color:var(--text-main)"></i></div>
         <div style="font-size:15px;font-weight:600;color:var(--text-main);margin-bottom:6px">No leads matched your filters</div>
         <div style="font-size:13px">Try "All" on audience size or service, or uncheck some signals.</div>
        </div>`;
@@ -6511,7 +6357,7 @@ const chatQuestions = [
   {
     q: 'What is your biggest goal for your first month? Be honest!',
     key: 'goal',
-    opts: ['Get my first client', 'Earn ₹10,000', 'Build a portfolio', 'Just learn the ropes']
+  opts: ['Get my first client', 'Earn $1,000', 'Build a portfolio', 'Just learn the ropes']
   },
   {
     q: 'Which platform do you want to start on?',
@@ -7003,7 +6849,7 @@ async function findGigs(){
         skills,
         platform:   val('gig-platform'),
         experience: userProfile.exp_level  || 'Beginner — no reviews yet',
-        budget:     userProfile.income_goal|| '₹10,000–₹25,000/month to start'
+        budget:     userProfile.income_goal|| '$1,000-$2,500/month to start'
       })
     });
     const data=await res.json();
@@ -7243,7 +7089,7 @@ async function findGigs(){
         skills,
         platform:   val('gig-platform'),
         experience: userProfile.exp_level  || 'Beginner - no reviews yet',
-        budget:     userProfile.income_goal|| '₹10,000-₹25,000/month to start'
+        budget:     userProfile.income_goal|| '$1,000-$2,500/month to start'
       })
     });
     const data=await res.json();
@@ -9169,22 +9015,22 @@ const _obQuotes = {
     { q: "Your first client won't come from perfection. They'll come from action.", a: "Lancify" },
     { q: "Every expert was once a beginner. Every pro was once unpaid.", a: "Lancify" },
   ],
-  "₹5,000–₹10,000": [
-    { q: "₹10,000 starts with one 'yes'. Your workspace is ready.", a: "Lancify" },
+  "$500-$1,000": [
+    { q: "$1,000 starts with one 'yes'. Your workspace is ready.", a: "Lancify" },
     { q: "Small goals, executed daily, create extraordinary results.", a: "Lancify" },
     { q: "Your first income from freelancing changes everything. Let's go get it.", a: "Lancify" },
   ],
-  "₹10,000–₹25,000": [
-    { q: "₹25,000 a month is 5 clients at ₹5,000. That's achievable starting today.", a: "Lancify" },
+  "$1,000-$2,500": [
+    { q: "$2,500 a month can come from a few strong retainers. That's achievable starting today.", a: "Lancify" },
     { q: "Consistency beats talent when talent doesn't show up.", a: "Lancify" },
     { q: "The workspace is set. The strategy is ready. The move is yours.", a: "Lancify" },
   ],
-  "₹25,000–₹50,000": [
-    { q: "₹50,000 months are built on systems, not luck. You're building yours now.", a: "Lancify" },
+  "$2,500-$5,000": [
+    { q: "$5,000 months are built on systems, not luck. You're building yours now.", a: "Lancify" },
     { q: "You don't need more skills. You need the right system to sell them.", a: "Lancify" },
     { q: "Professionals build processes. Your OS is now live.", a: "Lancify" },
   ],
-  "₹50,000+": [
+  "$5,000+": [
     { q: "Six-figure freelancers don't work harder. They work with better systems.", a: "Lancify" },
     { q: "The freelancers who win are the ones who treat it like a business.", a: "Lancify" },
     { q: "You're not just a freelancer. You're a one-person studio. Act like it.", a: "Lancify" },
@@ -9374,7 +9220,7 @@ async function _obFinish() {
     niche:       val('ob-niche').trim(),
     exp_level:   val('ob-exp')       || 'Complete Beginner',
     platform:    val('ob-platform')  || 'Upwork',
-    income_goal: val('ob-goal')      || '₹10,000–₹25,000',
+    income_goal: val('ob-goal')      || '$1,000-$2,500',
     experience:  val('ob-exp')       || 'Complete Beginner',
     hours_per_day:      val('ob-hours')     || '2 hours',
     biggest_challenge:  val('ob-challenge') || 'Finding clients',
