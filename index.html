@@ -1042,30 +1042,174 @@ html.dark .profile-banner:hover{background:#14532d}
 .send-btn:active{transform:scale(0.95)}
 
 /* ─── PIPELINE / KANBAN ─── */
-.kanban-col-header{
-  font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-  padding-bottom:10px;border-bottom:1px solid var(--border);
-  margin-bottom:10px;display:flex;justify-content:space-between;
+.page-hd-split{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
+.page-hd-note{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(20,184,166,0.04));font-size:12px;color:var(--text-muted);white-space:nowrap}
+.pipeline-layout{display:grid;grid-template-columns:minmax(320px,.92fr) minmax(0,1.4fr);gap:18px;align-items:start}
+.pipeline-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.summary-stat{position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(255,255,255,0)),var(--bg);border:1px solid var(--border);border-radius:20px;padding:18px 18px 16px;box-shadow:var(--shadow-sm)}
+.summary-stat::after{content:'';position:absolute;inset:auto -30px -70px auto;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle, rgba(91,141,239,0.14), transparent 68%);pointer-events:none}
+.summary-stat-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.summary-stat-value{font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--text-main);margin-bottom:6px}
+.summary-stat-sub{font-size:12px;color:var(--text-muted)}
+.saved-clients-panel,.pipeline-main{display:grid;gap:14px}
+.saved-clients-panel{
+  background:linear-gradient(180deg, rgba(91,141,239,0.06), rgba(255,255,255,0)),var(--bg);
+  border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:var(--shadow-sm)
 }
+.section-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.saved-opportunity-count{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2563eb}
+.saved-opportunity-sub{font-size:13px;color:var(--text-muted);line-height:1.6}
+.saved-opportunity-empty{font-size:12.5px;color:var(--text3);padding:16px;border:1px dashed var(--border2);border-radius:16px;background:var(--bg-panel)}
+.opp-managed-list{display:grid;gap:12px;max-height:780px;overflow:auto;padding-right:4px}
+.opp-managed-item{
+  display:grid;gap:14px;padding:16px;border-radius:18px;border:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(20,184,166,0.03)),var(--bg);
+  box-shadow:var(--shadow-sm);transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease
+}
+.opp-managed-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--border2)}
+.opp-managed-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.opp-managed-name{font-size:15px;font-weight:700;color:var(--text-main)}
+.opp-managed-date{font-size:11px;color:var(--text3);white-space:nowrap}
+.opp-managed-meta{display:flex;flex-wrap:wrap;gap:8px}
+.opp-managed-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--bg-panel);border:1px solid var(--border);font-size:11.5px;color:var(--text-muted)}
+.opp-managed-value{font-size:22px;font-weight:800;color:#0f766e;letter-spacing:-.7px}
+.opp-managed-actions{display:flex;gap:8px;flex-wrap:wrap}
+.pipeline-composer{
+  background:linear-gradient(145deg, rgba(91,141,239,0.12), rgba(20,184,166,0.05) 42%, transparent 90%),var(--bg);
+  border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:var(--shadow-sm)
+}
+.pipeline-composer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.pipeline-composer-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}
+.pipeline-composer-note{font-size:12.5px;color:var(--text-muted);max-width:52ch;line-height:1.6}
+.pipeline-toolbar{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:16px 18px;border:1px solid var(--border);border-radius:20px;background:var(--bg);box-shadow:var(--shadow-sm)
+}
+.pipeline-toolbar-title{display:grid;gap:4px}
+.pipeline-toolbar-sub{font-size:12px;color:var(--text-muted)}
+.pipeline-toolbar-controls{display:flex;flex-wrap:wrap;gap:10px}
+.pipeline-toolbar-controls input,.pipeline-toolbar-controls select{min-width:170px}
+.pipeline-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .kanban-board-col{
-  background:var(--bg-panel);border-radius:var(--radius-lg);
-  padding:14px;border:1px solid var(--border);min-height:380px;
+  position:relative;background:linear-gradient(180deg, rgba(148,163,184,0.08), rgba(255,255,255,0)),var(--bg-panel);
+  border-radius:22px;padding:16px;border:1px solid var(--border);min-height:520px;transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease
 }
+.kanban-board-col.drag-over{border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,0.12);transform:translateY(-2px)}
+.kanban-col-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
+.kanban-col-eyebrow{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.kanban-col-title{font-size:18px;font-weight:700;color:var(--text-main);letter-spacing:-.5px}
+.kanban-col-badge{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 10px;border-radius:999px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text-main)}
+.kanban-col-meta{font-size:12px;color:var(--text-muted);margin-bottom:12px}
+.kanban-col-dropzone{min-height:410px}
 .kanban-card{
-  background:var(--bg);border:1px solid var(--border);
-  border-radius:16px;padding:14px 15px;margin-bottom:10px;
-  box-shadow:var(--shadow-sm);cursor:grab;
+  position:relative;background:linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0)),var(--bg);
+  border:1px solid var(--border);border-radius:18px;padding:15px 15px 14px;margin-bottom:12px;
+  box-shadow:var(--shadow-sm);cursor:grab;transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, opacity .16s ease
 }
 .kanban-card:active{cursor:grabbing}
-.kanban-card:hover{border-color:var(--border2);box-shadow:var(--shadow-md)}
-.kanban-card-name{font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:2px}
-.kanban-card-val{font-size:11.5px;color:var(--text-muted);margin-bottom:9px}
-.kanban-card-actions{display:flex;gap:5px;flex-wrap:wrap}
-.stage-btn{
-  font-size:11px;background:var(--bg-panel);border:1px solid var(--border);
-  color:var(--text-muted);padding:5px 10px;border-radius:999px;cursor:pointer;font-family:inherit;
+.kanban-card:hover{border-color:var(--border2);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.kanban-card.dragging{opacity:.55;transform:rotate(1deg) scale(.985)}
+.kanban-card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.kanban-card-name{font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:3px}
+.kanban-card-val{font-size:12.5px;color:var(--text-muted)}
+.kanban-chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 10px}
+.kanban-chip{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+  background:var(--bg-panel);border:1px solid var(--border);font-size:11.5px;color:var(--text-muted)
 }
-.stage-btn:hover{background:var(--bg-hover);color:var(--text-main)}
+.kanban-chip.priority-high{background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.22);color:#b45309}
+.kanban-chip.priority-medium{background:rgba(59,130,246,0.10);border-color:rgba(59,130,246,0.18);color:#2563eb}
+.kanban-chip.priority-low{background:rgba(148,163,184,0.14);border-color:rgba(148,163,184,0.18);color:#475569}
+.kanban-chip.danger{background:rgba(239,68,68,0.10);border-color:rgba(239,68,68,0.16);color:#dc2626}
+.kanban-card-note{font-size:12.5px;line-height:1.6;color:var(--text-muted);padding:10px 12px;background:var(--bg-panel);border-radius:14px;border:1px solid var(--border);margin-bottom:10px}
+.kanban-card-actions{display:flex;gap:6px;flex-wrap:wrap}
+.stage-btn{
+  font-size:11.5px;background:var(--bg-panel);border:1px solid var(--border);
+  color:var(--text-muted);padding:6px 11px;border-radius:999px;cursor:pointer;font-family:inherit;
+  transition:background .16s ease, color .16s ease, border-color .16s ease, transform .12s ease
+}
+.stage-btn:hover{background:var(--bg-hover);color:var(--text-main);border-color:var(--border2)}
+.stage-btn:active{transform:scale(.98)}
+.icon-btn{
+  width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:10px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text-muted);cursor:pointer
+}
+.icon-btn:hover{color:var(--text-main);border-color:var(--border2);background:var(--bg-hover)}
+.crm-modal{max-width:760px}
+.crm-modal-header{display:grid;gap:4px;margin-bottom:18px}
+.crm-modal-header h3{font-size:22px;letter-spacing:-.6px}
+.crm-modal-header p{font-size:13px;color:var(--text-muted)}
+.crm-modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.crm-modal-actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.crm-modal-actions-right{display:flex;gap:10px;justify-content:flex-end}
+
+/* Analytics workspace */
+.analytics-shell{display:grid;gap:16px}
+.analytics-range-row{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.range-switcher{display:flex;gap:8px;flex-wrap:wrap}
+.range-chip{
+  padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--text-muted);
+  font-size:12px;font-weight:700;letter-spacing:.04em;cursor:pointer
+}
+.range-chip.active{background:#0f172a;color:#f8fafc;border-color:#0f172a;box-shadow:0 12px 26px rgba(15,23,42,0.16)}
+html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fafc}
+.analytics-custom-range{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.analytics-custom-range span{font-size:12px;color:var(--text3)}
+.analytics-hero-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.analytics-metric-card{
+  position:relative;overflow:hidden;padding:18px;border-radius:22px;border:1px solid var(--border);
+  background:
+    radial-gradient(circle at top right, rgba(91,141,239,0.18), transparent 38%),
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0)),
+    var(--bg);
+  box-shadow:var(--shadow-sm)
+}
+.analytics-metric-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.analytics-metric-value{font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--text-main);margin-bottom:6px}
+.analytics-metric-sub{font-size:12px;color:var(--text-muted);line-height:1.5}
+.analytics-grid{display:grid;grid-template-columns:1.45fr .95fr;gap:14px}
+.analytics-panel{
+  background:linear-gradient(180deg, rgba(91,141,239,0.07), rgba(255,255,255,0)),var(--bg);
+  border:1px solid var(--border);border-radius:24px;padding:20px;box-shadow:var(--shadow-sm)
+}
+.analytics-panel-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.analytics-panel-title{font-size:18px;font-weight:700;letter-spacing:-.5px}
+.analytics-panel-copy{font-size:12.5px;color:var(--text-muted);line-height:1.6;max-width:52ch}
+.analytics-mini-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.analytics-mini-stat{padding:12px 14px;border-radius:16px;background:var(--bg-panel);border:1px solid var(--border)}
+.analytics-mini-stat-label{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.analytics-mini-stat-value{font-size:18px;font-weight:800;letter-spacing:-.5px;color:var(--text-main)}
+.analytics-mini-stat-sub{font-size:11.5px;color:var(--text-muted)}
+.trend-bars{display:flex;align-items:flex-end;gap:10px;height:240px;padding-top:12px}
+.trend-col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;height:100%}
+.trend-bar{
+  width:100%;max-width:54px;border-radius:14px 14px 6px 6px;
+  background:linear-gradient(180deg, rgba(37,99,235,.92), rgba(14,165,233,.32));min-height:12px;
+  box-shadow:0 10px 22px rgba(37,99,235,0.18)
+}
+.trend-bar-value{font-size:11px;color:var(--text3)}
+.trend-label{font-size:11px;color:var(--text3)}
+.analytics-funnel-list,.analytics-channel-list,.analytics-collection-list,.activity-list{display:grid;gap:10px}
+.analytics-funnel-row,.analytics-channel-row,.analytics-collection-row,.activity-item{
+  display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:12px;align-items:center;padding:12px 14px;
+  border-radius:16px;border:1px solid var(--border);background:var(--bg-panel)
+}
+.analytics-channel-row,.analytics-collection-row,.activity-item{grid-template-columns:minmax(0,1fr) auto}
+.analytics-row-main{display:grid;gap:6px}
+.analytics-row-title{font-size:13px;font-weight:700;color:var(--text-main)}
+.analytics-row-sub{font-size:12px;color:var(--text-muted)}
+.analytics-track{height:8px;border-radius:999px;background:rgba(148,163,184,0.16);overflow:hidden}
+.analytics-track span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg, #2563eb, #14b8a6)}
+.analytics-row-value{font-size:13px;font-weight:700;color:var(--text-main);text-align:right}
+.analytics-table{width:100%;border-collapse:collapse}
+.analytics-table th,.analytics-table td{padding:12px 0;border-bottom:1px solid var(--border);text-align:left}
+.analytics-table th{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.analytics-table td{font-size:13px;color:var(--text-main)}
+.analytics-empty{font-size:12.5px;color:var(--text3);padding:14px;border:1px dashed var(--border2);border-radius:16px;background:var(--bg-panel)}
+.activity-item{padding:14px 16px}
+.activity-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:6px}
+.activity-date{font-size:11.5px;color:var(--text3);white-space:nowrap}
+.analytics-grid-bottom{grid-template-columns:1fr 1fr}
 
 /* Sidebar folders */
 .nav-folder{margin:2px 0}
@@ -1122,13 +1266,6 @@ html.dark .profile-banner:hover{background:#14532d}
 .badge-paid{background:rgba(16,185,129,.08);color:#10b981;border-color:rgba(16,185,129,.26)}
 .badge-sent{background:rgba(59,130,246,.08);color:#3b82f6;border-color:rgba(59,130,246,.26)}
 .badge-overdue{background:rgba(239,68,68,.08);color:#ef4444;border-color:rgba(239,68,68,.24)}
-.opp-managed-list{display:grid;gap:12px}
-.opp-managed-item{display:flex;justify-content:space-between;gap:16px;background:linear-gradient(180deg, rgba(91,141,239,0.07), transparent 34%),var(--bg);border:1px solid var(--border);border-radius:16px;padding:16px 16px 14px;box-shadow:var(--shadow-sm)}
-.opp-managed-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
-.opp-managed-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--bg-panel);border:1px solid var(--border);font-size:11.5px;color:var(--text-muted)}
-.opp-managed-value{font-size:18px;font-weight:800;color:#10b981;letter-spacing:-.5px;margin-top:10px}
-.opp-managed-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-content:flex-start}
-
 /* Opportunity empty state alignment fix */
 .opp-results-grid .opp-empty{
   grid-column:1/-1;
@@ -1148,7 +1285,18 @@ html.dark .profile-banner:hover{background:#14532d}
 
 @media(max-width:1100px){
   .biz-metrics-grid{grid-template-columns:repeat(2,1fr)}
-  .biz-panel-grid,.fin-grid{grid-template-columns:1fr}
+  .biz-panel-grid,.fin-grid,.pipeline-layout,.analytics-grid,.analytics-grid-bottom{grid-template-columns:1fr}
+  .pipeline-summary-grid,.analytics-hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pipeline-composer-grid,.pipeline-board,.crm-modal-grid{grid-template-columns:1fr}
+  .pipeline-toolbar,.analytics-range-row,.page-hd-split{flex-direction:column;align-items:stretch}
+}
+
+@media(max-width:780px){
+  .pipeline-summary-grid,.analytics-hero-grid,.analytics-mini-stats{grid-template-columns:1fr}
+  .opp-managed-top,.pipeline-composer-actions,.crm-modal-actions{grid-template-columns:1fr;display:grid}
+  .pipeline-toolbar-controls{display:grid;grid-template-columns:1fr}
+  .pipeline-toolbar-controls input,.pipeline-toolbar-controls select{min-width:0}
+  .kanban-board-col{min-height:420px}
 }
 
 /* ─── MODALS ─── */
@@ -3947,36 +4095,123 @@ html.dark .credits-warning-banner {
 
       <div id="page-pipeline" class="page">
         <div class="content-inner wide">
-          <div class="page-hd"><h1>Manage Clients</h1><p>Track every lead from first pitch to paid, including leads saved from Opportunity Engine.</p></div>
-          <div class="card" style="margin-bottom:14px">
-            <div class="section-title" style="margin-bottom:10px">Saved From Opportunity Engine</div>
-            <div id="opp-managed-empty" style="font-size:12px;color:var(--text3);padding:4px 0 2px">No AI leads saved yet. Run Find Clients and we will auto-save them here.</div>
-            <div class="opp-managed-list" id="opp-managed-list"></div>
+          <div class="page-hd page-hd-split">
+            <div>
+              <h1>Client Pipeline CRM</h1>
+              <p>Run your full client workflow with saved opportunity intake, stage-based tracking, drag-and-drop movement, and cleaner deal operations.</p>
+            </div>
+            <div class="page-hd-note"><i data-lucide="mouse-pointer-click" style="width:14px;height:14px"></i> Drag cards between stages or edit them in-place.</div>
           </div>
-          <div class="card" style="margin-bottom:20px">
-            <div style="display:grid;grid-template-columns:1fr 1fr 150px 150px auto;gap:10px;align-items:end">
-              <div><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Riya's Bakery"></div>
-              <div><label class="field-label">Service / Project</label><input type="text" id="lead-service" placeholder="e.g. Instagram posts"></div>
-              <div><label class="field-label">Value ($)</label><input type="number" id="lead-value" placeholder="350"></div>
-              <div><label class="field-label">Platform</label><select id="lead-platform"><option>Instagram</option><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option></select></div>
-              <button class="btn btn-primary" onclick="addLead()" style="height:36px">Add Lead</button>
+          <div class="pipeline-summary-grid">
+            <div class="summary-stat">
+              <div class="summary-stat-label">Open Pipeline</div>
+              <div class="summary-stat-value" id="pipe-open-value">$0</div>
+              <div class="summary-stat-sub" id="pipe-open-count">0 active deals across the board</div>
+            </div>
+            <div class="summary-stat">
+              <div class="summary-stat-label">Follow-ups Due</div>
+              <div class="summary-stat-value" id="pipe-followups">0</div>
+              <div class="summary-stat-sub">Deals that need a next touchpoint today</div>
+            </div>
+            <div class="summary-stat">
+              <div class="summary-stat-label">Win Rate</div>
+              <div class="summary-stat-value" id="pipe-win-rate">0%</div>
+              <div class="summary-stat-sub">Closed wins across your active CRM history</div>
+            </div>
+            <div class="summary-stat">
+              <div class="summary-stat-label">Avg Ticket</div>
+              <div class="summary-stat-value" id="pipe-avg-ticket">$0</div>
+              <div class="summary-stat-sub" id="pipe-saved-count">0 saved opportunities waiting</div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-            <div class="kanban-board-col">
-              <div class="kanban-col-header" style="color:var(--text-muted)">Pitched <span id="count-pitched" style="background:var(--bg-hover);border-radius:99px;padding:1px 7px;font-size:10px">0</span></div>
-              <div id="col-pitched"></div>
+          <div class="pipeline-layout">
+            <div class="saved-clients-panel">
+              <div class="section-title-row">
+                <div class="section-title" style="margin:0;border:0;padding:0">Saved Opportunities</div>
+                <div class="saved-opportunity-count" id="opp-managed-count">0 saved</div>
+              </div>
+              <div class="saved-opportunity-sub">Every lead saved from Opportunity Engine lands here first, so your CRM stays deliberate instead of messy.</div>
+              <div id="opp-managed-empty" class="saved-opportunity-empty">No AI leads saved yet. Run Find Clients and we will auto-save them here.</div>
+              <div class="opp-managed-list" id="opp-managed-list"></div>
             </div>
-            <div class="kanban-board-col">
-              <div class="kanban-col-header" style="color:#d97706">In Talks <span id="count-replied" style="background:rgba(217,119,6,0.1);border-radius:99px;padding:1px 7px;font-size:10px">0</span></div>
-              <div id="col-replied"></div>
-            </div>
-            <div class="kanban-board-col">
-              <div class="kanban-col-header" style="color:#16a34a">Won <span id="count-won" style="background:rgba(22,163,74,0.1);border-radius:99px;padding:1px 7px;font-size:10px">0</span></div>
-              <div id="col-won"></div>
+            <div class="pipeline-main">
+              <div class="pipeline-composer">
+                <div class="section-title" style="margin:0;border:0;padding:0">Add Client Manually</div>
+                <div class="pipeline-composer-grid">
+                  <div><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Northwind Studio"></div>
+                  <div><label class="field-label">Service / Project</label><input type="text" id="lead-service" placeholder="e.g. Retainer CRO sprint"></div>
+                  <div><label class="field-label">Value ($)</label><input type="number" id="lead-value" placeholder="2400"></div>
+                  <div><label class="field-label">Platform</label><select id="lead-platform"><option>Instagram</option><option>LinkedIn</option><option>Upwork</option><option>Fiverr</option><option>Website</option><option>Referral</option></select></div>
+                  <div><label class="field-label">Priority</label><select id="lead-priority"><option value="medium" selected>Medium</option><option value="high">High</option><option value="low">Low</option></select></div>
+                  <div><label class="field-label">Next Follow-up</label><input type="date" id="lead-followup"></div>
+                </div>
+                <div class="pipeline-composer-actions">
+                  <div class="pipeline-composer-note">Use this for manually discovered leads, or push saved opportunities into the CRM and then refine them with notes, contacts, and follow-up dates.</div>
+                  <button class="btn btn-primary" onclick="addLead()">Add Client</button>
+                </div>
+              </div>
+              <div class="pipeline-toolbar">
+                <div class="pipeline-toolbar-title">
+                  <div class="section-title" style="margin:0;border:0;padding:0">Pipeline Board</div>
+                  <div class="pipeline-toolbar-sub" id="pipeline-visible-count">Showing 0 of 0 clients</div>
+                </div>
+                <div class="pipeline-toolbar-controls">
+                  <input type="text" placeholder="Search client, service, notes..." oninput="setPipelineSearch(this.value)">
+                  <select onchange="setPipelinePlatformFilter(this.value)">
+                    <option value="all">All platforms</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Upwork">Upwork</option>
+                    <option value="Fiverr">Fiverr</option>
+                    <option value="Website">Website</option>
+                    <option value="Referral">Referral</option>
+                  </select>
+                  <select onchange="setPipelineSort(this.value)">
+                    <option value="newest">Newest first</option>
+                    <option value="value-high">Highest value</option>
+                    <option value="next-followup">Follow-up first</option>
+                    <option value="name">Client name</option>
+                  </select>
+                </div>
+              </div>
+              <div class="pipeline-board">
+                <div class="kanban-board-col" data-stage="pitched" ondragover="handlePipelineDragOver(event)" ondragleave="handlePipelineDragLeave(event)" ondrop="handlePipelineDrop(event,'pitched')">
+                  <div class="kanban-col-header">
+                    <div>
+                      <div class="kanban-col-eyebrow">Outreach</div>
+                      <div class="kanban-col-title">Pitched</div>
+                    </div>
+                    <div class="kanban-col-badge" id="count-pitched">0</div>
+                  </div>
+                  <div class="kanban-col-meta" id="sum-pitched">$0 in active value</div>
+                  <div class="kanban-col-dropzone" id="col-pitched"></div>
+                </div>
+                <div class="kanban-board-col" data-stage="replied" ondragover="handlePipelineDragOver(event)" ondragleave="handlePipelineDragLeave(event)" ondrop="handlePipelineDrop(event,'replied')">
+                  <div class="kanban-col-header">
+                    <div>
+                      <div class="kanban-col-eyebrow">Discovery</div>
+                      <div class="kanban-col-title">In Talks</div>
+                    </div>
+                    <div class="kanban-col-badge" id="count-replied">0</div>
+                  </div>
+                  <div class="kanban-col-meta" id="sum-replied">$0 in active value</div>
+                  <div class="kanban-col-dropzone" id="col-replied"></div>
+                </div>
+                <div class="kanban-board-col" data-stage="won" ondragover="handlePipelineDragOver(event)" ondragleave="handlePipelineDragLeave(event)" ondrop="handlePipelineDrop(event,'won')">
+                  <div class="kanban-col-header">
+                    <div>
+                      <div class="kanban-col-eyebrow">Closed</div>
+                      <div class="kanban-col-title">Won</div>
+                    </div>
+                    <div class="kanban-col-badge" id="count-won">0</div>
+                  </div>
+                  <div class="kanban-col-meta" id="sum-won">$0 closed value</div>
+                  <div class="kanban-col-dropzone" id="col-won"></div>
+                </div>
+              </div>
             </div>
           </div>
-      </div>
+        </div>
       </div>
 
       <div id="page-invoices" class="page">
@@ -4027,28 +4262,144 @@ html.dark .credits-warning-banner {
       </div>
 
       <div id="page-accounting" class="page">
-        <div class="content-inner wide">
-          <div class="page-hd"><h1>Accounting & Analytics</h1><p>Track earnings, conversion and client performance in one place.</p></div>
-          <div class="biz-metrics-grid">
-            <div class="biz-metric-card"><div class="biz-metric-label">Total Clients</div><div class="biz-metric-value" id="acc-total-clients">0</div><div class="biz-metric-sub">All leads in CRM</div></div>
-            <div class="biz-metric-card"><div class="biz-metric-label">Active Deals</div><div class="biz-metric-value" id="acc-active-deals">0</div><div class="biz-metric-sub">Pitched + in talks</div></div>
-            <div class="biz-metric-card"><div class="biz-metric-label">Won Revenue</div><div class="biz-metric-value" id="acc-won-revenue">$0</div><div class="biz-metric-sub">From won clients</div></div>
-            <div class="biz-metric-card"><div class="biz-metric-label">Outstanding</div><div class="biz-metric-value" id="acc-outstanding">$0</div><div class="biz-metric-sub">Unpaid invoices</div></div>
-          </div>
-          <div class="biz-panel-grid">
-            <div class="biz-card">
-              <div class="section-title" style="margin-bottom:8px">Earnings Over Time</div>
-              <div class="biz-bar-row" id="acc-earnings-bars"></div>
-              <div id="acc-bar-labels" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:4px"></div>
+        <div class="content-inner wide analytics-shell">
+          <div class="page-hd page-hd-split">
+            <div>
+              <h1>Accounting & Analytics</h1>
+              <p>A more serious revenue view with date ranges, pipeline performance, client concentration, invoice health, and recent business activity.</p>
             </div>
-            <div class="biz-card">
-              <div class="section-title" style="margin-bottom:8px">Quick Actions</div>
-              <div style="display:grid;gap:8px">
-                <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('invoices')"><i data-lucide="receipt-text" style="width:14px;height:14px"></i> Send an invoice</button>
-                <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('proposal')"><i data-lucide="file-text" style="width:14px;height:14px"></i> Draft a proposal</button>
-                <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('pipeline')"><i data-lucide="users" style="width:14px;height:14px"></i> Review clients</button>
-                <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('opportunity')"><i data-lucide="target" style="width:14px;height:14px"></i> Find clients</button>
+            <div class="page-hd-note"><i data-lucide="line-chart" style="width:14px;height:14px"></i> Range filters update the full workspace.</div>
+          </div>
+          <div class="analytics-range-row">
+            <div class="range-switcher">
+              <button class="range-chip" data-acc-range="7d" onclick="setAccountingRange('7d')">7D</button>
+              <button class="range-chip active" data-acc-range="30d" onclick="setAccountingRange('30d')">30D</button>
+              <button class="range-chip" data-acc-range="90d" onclick="setAccountingRange('90d')">Quarter</button>
+              <button class="range-chip" data-acc-range="365d" onclick="setAccountingRange('365d')">Year</button>
+              <button class="range-chip" data-acc-range="all" onclick="setAccountingRange('all')">All time</button>
+            </div>
+            <div class="analytics-custom-range">
+              <input type="date" id="acc-date-start" onchange="applyAccountingCustomRange()">
+              <span>to</span>
+              <input type="date" id="acc-date-end" onchange="applyAccountingCustomRange()">
+            </div>
+          </div>
+          <div class="analytics-hero-grid">
+            <div class="analytics-metric-card"><div class="analytics-metric-label">Clients In Range</div><div class="analytics-metric-value" id="acc-total-clients">0</div><div class="analytics-metric-sub" id="acc-range-copy">Showing the latest operating window.</div></div>
+            <div class="analytics-metric-card"><div class="analytics-metric-label">Open Pipeline</div><div class="analytics-metric-value" id="acc-open-pipeline">$0</div><div class="analytics-metric-sub">Open deal value still in motion.</div></div>
+            <div class="analytics-metric-card"><div class="analytics-metric-label">Booked Revenue</div><div class="analytics-metric-value" id="acc-booked-revenue">$0</div><div class="analytics-metric-sub">Closed-won value recorded in the CRM.</div></div>
+            <div class="analytics-metric-card"><div class="analytics-metric-label">Cash Collected</div><div class="analytics-metric-value" id="acc-collected-cash">$0</div><div class="analytics-metric-sub">Invoices marked paid in the selected range.</div></div>
+            <div class="analytics-metric-card"><div class="analytics-metric-label">Outstanding</div><div class="analytics-metric-value" id="acc-outstanding">$0</div><div class="analytics-metric-sub">Open invoice balance that still needs collection.</div></div>
+            <div class="analytics-metric-card"><div class="analytics-metric-label">Close Rate</div><div class="analytics-metric-value" id="acc-close-rate">0%</div><div class="analytics-metric-sub">Won deals divided by created pipeline.</div></div>
+          </div>
+          <div class="analytics-grid">
+            <div class="analytics-panel">
+              <div class="analytics-panel-header">
+                <div>
+                  <div class="analytics-panel-title">Revenue Intelligence</div>
+                  <div class="analytics-panel-copy">Track how much closed value is being created across the current period, then compare it against average ticket size and invoice volume.</div>
+                </div>
               </div>
+              <div class="trend-bars" id="acc-trend-bars"></div>
+              <div class="trend-bars" id="acc-trend-labels" style="height:auto;padding-top:0;align-items:flex-start"></div>
+              <div class="analytics-mini-stats">
+                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Active Deals</div><div class="analytics-mini-stat-value" id="acc-active-deals">0</div><div class="analytics-mini-stat-sub">Pitched plus in talks</div></div>
+                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Average Ticket</div><div class="analytics-mini-stat-value" id="acc-avg-ticket">$0</div><div class="analytics-mini-stat-sub">Won revenue divided by wins</div></div>
+                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Invoices Raised</div><div class="analytics-mini-stat-value" id="acc-period-invoices">0</div><div class="analytics-mini-stat-sub">Invoices issued in this range</div></div>
+              </div>
+            </div>
+            <div class="analytics-panel">
+              <div class="analytics-panel-header">
+                <div>
+                  <div class="analytics-panel-title">Pipeline Health</div>
+                  <div class="analytics-panel-copy">Keep response rate, follow-up debt, and source flow visible so the CRM stays operational instead of decorative.</div>
+                </div>
+              </div>
+              <div class="analytics-mini-stats" style="grid-template-columns:1fr">
+                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Response Rate</div><div class="analytics-mini-stat-value" id="acc-response-rate">0%</div><div class="analytics-mini-stat-sub">Replied plus won over created leads</div></div>
+                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Follow-ups Due</div><div class="analytics-mini-stat-value" id="acc-followups-due">0</div><div class="analytics-mini-stat-sub">Open deals with follow-ups due today</div></div>
+                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Saved Opportunities</div><div class="analytics-mini-stat-value" id="acc-saved-leads">0</div><div class="analytics-mini-stat-sub">Still waiting to be staged into CRM</div></div>
+              </div>
+              <div class="analytics-funnel-list" id="acc-funnel-list" style="margin-top:14px"></div>
+            </div>
+          </div>
+          <div class="analytics-grid">
+            <div class="analytics-panel">
+              <div class="analytics-panel-header">
+                <div>
+                  <div class="analytics-panel-title">Top Clients</div>
+                  <div class="analytics-panel-copy">See who is driving the most booked value and invoice activity across the filtered period.</div>
+                </div>
+              </div>
+              <div id="acc-top-clients-wrap">
+                <table class="analytics-table">
+                  <thead>
+                    <tr><th>Client</th><th>Booked</th><th>Collected</th><th>Open</th></tr>
+                  </thead>
+                  <tbody id="acc-top-clients"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="analytics-panel">
+              <div class="analytics-panel-header">
+                <div>
+                  <div class="analytics-panel-title">Channel Mix</div>
+                  <div class="analytics-panel-copy">Spot which channels are feeding your pipeline best so you can double down where conversion is healthiest.</div>
+                </div>
+              </div>
+              <div class="analytics-channel-list" id="acc-channel-mix"></div>
+            </div>
+          </div>
+          <div class="analytics-grid analytics-grid-bottom">
+            <div class="analytics-panel">
+              <div class="analytics-panel-header">
+                <div>
+                  <div class="analytics-panel-title">Collections Snapshot</div>
+                  <div class="analytics-panel-copy">A quick read on paid, sent, and overdue invoices keeps cash flow visible without leaving the workspace.</div>
+                </div>
+              </div>
+              <div class="analytics-collection-list" id="acc-collections-list"></div>
+            </div>
+            <div class="analytics-panel">
+              <div class="analytics-panel-header">
+                <div>
+                  <div class="analytics-panel-title">Recent Activity</div>
+                  <div class="analytics-panel-copy">The latest meaningful moves across wins, invoices, and saved opportunities.</div>
+                </div>
+              </div>
+              <div class="activity-list" id="acc-activity-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-backdrop" id="lead-editor-modal" onclick="if(event.target===this)closeModal('lead-editor-modal')">
+        <div class="modal crm-modal">
+          <button class="modal-close" onclick="closeModal('lead-editor-modal')"><i data-lucide="x" style="width:15px;height:15px"></i></button>
+          <div class="crm-modal-header">
+            <h3>Edit Client</h3>
+            <p>Update deal details, follow-up timing, and notes without leaving the board.</p>
+          </div>
+          <input type="hidden" id="lead-edit-id">
+          <div class="crm-modal-grid">
+            <div><label class="field-label">Client Name</label><input type="text" id="lead-edit-name" placeholder="Client name"></div>
+            <div><label class="field-label">Service / Project</label><input type="text" id="lead-edit-service" placeholder="Service"></div>
+            <div><label class="field-label">Value ($)</label><input type="number" id="lead-edit-value" placeholder="1200"></div>
+            <div><label class="field-label">Platform</label><select id="lead-edit-platform"><option>Instagram</option><option>LinkedIn</option><option>Upwork</option><option>Fiverr</option><option>Website</option><option>Referral</option></select></div>
+            <div><label class="field-label">Stage</label><select id="lead-edit-status"><option value="pitched">Pitched</option><option value="replied">In Talks</option><option value="won">Won</option></select></div>
+            <div><label class="field-label">Priority</label><select id="lead-edit-priority"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div>
+            <div><label class="field-label">Next Follow-up</label><input type="date" id="lead-edit-followup"></div>
+            <div><label class="field-label">Contact Email</label><input type="email" id="lead-edit-email" placeholder="contact@client.com"></div>
+          </div>
+          <div style="margin-top:12px">
+            <label class="field-label">Notes</label>
+            <textarea id="lead-edit-notes" rows="5" placeholder="Call notes, objections, pricing context, next step..."></textarea>
+          </div>
+          <div class="crm-modal-actions">
+            <button class="btn btn-secondary" onclick="deleteLeadFromEditor()" style="color:#dc2626;border-color:#fecaca">Delete Client</button>
+            <div class="crm-modal-actions-right">
+              <button class="btn btn-secondary" onclick="closeModal('lead-editor-modal')">Cancel</button>
+              <button class="btn btn-primary" onclick="saveLeadEdits()">Save Changes</button>
             </div>
           </div>
         </div>
@@ -5876,9 +6227,16 @@ const sb = createClient(
 );
 
 let currentUser = null, userProfile = {is_pro:false}, userLeads = [], userInvoices = [], opportunityClients = [];
+let leadMetaStore = {}, crmFilters = { search:'', platform:'all', sort:'newest' }, accountingState = { range:'30d', start:'', end:'' }, draggedLeadId = null;
 let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
 let billingState = { total: 1000, remaining: 1000, cycleStart: null, usage: {} };
+const CRM_STAGE_ORDER = ['pitched','replied','won'];
+const CRM_STAGE_META = {
+  pitched: { label: 'Pitched', eyebrow: 'Outreach', color: '#64748b' },
+  replied: { label: 'In Talks', eyebrow: 'Discovery', color: '#d97706' },
+  won: { label: 'Won', eyebrow: 'Closed', color: '#16a34a' }
+};
 
 const PLAN_RULES = {
   free: {
@@ -6255,7 +6613,7 @@ function navigate(page) {
   setText('header-title', titles[page]||'Dashboard');
   if (page === 'invoices') renderInvoices();
   if (page === 'accounting' || page === 'home') renderBusinessDashboard();
-  if (page === 'pipeline') renderManagedOpportunityClients();
+  if (page === 'pipeline') { renderManagedOpportunityClients(); renderPipeline(); }
   lucide.createIcons();
   closeAccountDropdown();
 }
@@ -7617,6 +7975,492 @@ function renderBusinessDashboard(){
   _renderEarningsBars('acc-earnings-bars','acc-bar-labels');
 }
 
+function persistLeadsLocal(){
+  if (!currentUser) return;
+  localStorage.setItem(_storageKey('lancify-leads', currentUser.id), JSON.stringify(userLeads));
+}
+
+function loadLeadMeta(uid){
+  try {
+    const raw = localStorage.getItem(_storageKey('lancify-lead-meta', uid));
+    leadMetaStore = raw ? JSON.parse(raw) : {};
+  } catch {
+    leadMetaStore = {};
+  }
+}
+
+function persistLeadMeta(){
+  if (!currentUser) return;
+  localStorage.setItem(_storageKey('lancify-lead-meta', currentUser.id), JSON.stringify(leadMetaStore));
+}
+
+function getLeadMeta(id){
+  return leadMetaStore?.[id] || {};
+}
+
+function upsertLeadMeta(id, patch = {}){
+  if (!id) return;
+  leadMetaStore[id] = { ...(leadMetaStore[id] || {}), ...patch };
+  persistLeadMeta();
+}
+
+function deleteLeadMeta(id){
+  if (!id || !leadMetaStore[id]) return;
+  delete leadMetaStore[id];
+  persistLeadMeta();
+}
+
+function formatShortDate(raw){
+  if (!raw) return 'No date set';
+  const d = new Date(raw);
+  if (Number.isNaN(d.getTime())) return 'No date set';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function _dayStart(dateLike){
+  const d = new Date(dateLike || Date.now());
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function _dayEnd(dateLike){
+  const d = new Date(dateLike || Date.now());
+  d.setHours(23,59,59,999);
+  return d;
+}
+
+function isLeadFollowUpDue(meta){
+  if (!meta?.nextFollowUp) return false;
+  return _dayStart(meta.nextFollowUp) <= _dayStart(Date.now());
+}
+
+function getFilteredPipelineLeads(){
+  const search = String(crmFilters.search || '').trim().toLowerCase();
+  let rows = [...userLeads];
+
+  if (crmFilters.platform && crmFilters.platform !== 'all') {
+    rows = rows.filter(lead => String(lead.platform || '').toLowerCase() === crmFilters.platform.toLowerCase());
+  }
+
+  if (search) {
+    rows = rows.filter(lead => {
+      const meta = getLeadMeta(lead.id);
+      return [lead.client_name, lead.service, lead.platform, meta.notes, meta.contactEmail]
+        .some(value => String(value || '').toLowerCase().includes(search));
+    });
+  }
+
+  const sorters = {
+    newest: (a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0),
+    'value-high': (a, b) => Number(b.project_value || 0) - Number(a.project_value || 0),
+    'next-followup': (a, b) => {
+      const aDate = getLeadMeta(a.id).nextFollowUp ? new Date(getLeadMeta(a.id).nextFollowUp).getTime() : Number.MAX_SAFE_INTEGER;
+      const bDate = getLeadMeta(b.id).nextFollowUp ? new Date(getLeadMeta(b.id).nextFollowUp).getTime() : Number.MAX_SAFE_INTEGER;
+      return aDate - bDate;
+    },
+    name: (a, b) => String(a.client_name || '').localeCompare(String(b.client_name || ''))
+  };
+
+  rows.sort(sorters[crmFilters.sort] || sorters.newest);
+  return rows;
+}
+
+function renderPipelineSummary(){
+  const openLeads = userLeads.filter(lead => (lead.status || 'pitched') !== 'won');
+  const wonLeads = userLeads.filter(lead => (lead.status || '') === 'won');
+  const openValue = openLeads.reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+  const wonValue = wonLeads.reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+  const followUpsDue = openLeads.filter(lead => isLeadFollowUpDue(getLeadMeta(lead.id))).length;
+  const winRate = userLeads.length ? Math.round((wonLeads.length / userLeads.length) * 100) : 0;
+  const avgTicket = wonLeads.length ? Math.round(wonValue / wonLeads.length) : 0;
+
+  setText('pipe-open-value', formatCurrency(openValue));
+  setText('pipe-open-count', `${openLeads.length} active deal${openLeads.length === 1 ? '' : 's'} across the board`);
+  setText('pipe-followups', String(followUpsDue));
+  setText('pipe-win-rate', `${winRate}%`);
+  setText('pipe-avg-ticket', formatCurrency(avgTicket));
+  setText('pipe-saved-count', `${opportunityClients.length} saved opportunit${opportunityClients.length === 1 ? 'y' : 'ies'} waiting`);
+}
+
+function renderPipeline(){
+  renderPipelineSummary();
+  const visibleLeads = getFilteredPipelineLeads();
+  const buckets = { pitched: [], replied: [], won: [] };
+  visibleLeads.forEach(lead => {
+    const status = buckets[lead.status || 'pitched'] ? (lead.status || 'pitched') : 'pitched';
+    buckets[status].push(lead);
+  });
+
+  setText('pipeline-visible-count', `Showing ${visibleLeads.length} of ${userLeads.length} clients`);
+
+  CRM_STAGE_ORDER.forEach(status => {
+    const stageLeads = buckets[status];
+    const totalValue = stageLeads.reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+    setText(`count-${status}`, String(stageLeads.length));
+    setText(`sum-${status}`, `${formatCurrency(totalValue)} ${status === 'won' ? 'closed value' : 'in active value'}`);
+    const column = el(`col-${status}`);
+    if (!column) return;
+
+    column.innerHTML = stageLeads.length ? stageLeads.map(lead => {
+      const meta = getLeadMeta(lead.id);
+      const priority = (meta.priority || 'medium').toLowerCase();
+      const followUpLabel = meta.nextFollowUp ? `Follow-up ${formatShortDate(meta.nextFollowUp)}` : 'No follow-up set';
+      const followUpClass = isLeadFollowUpDue(meta) && status !== 'won' ? 'danger' : '';
+
+      return `
+        <div class="kanban-card" draggable="true" ondragstart="handleLeadDragStart(event,'${escapeJsAttr(lead.id)}')" ondragend="handleLeadDragEnd(event)">
+          <div class="kanban-card-top">
+            <div style="min-width:0">
+              <div class="kanban-card-name">${escapeHtml(lead.client_name || '')}</div>
+              <div class="kanban-card-val">${lead.project_value ? formatCurrency(lead.project_value) : 'Custom quote'}${lead.service ? ` · ${escapeHtml(lead.service)}` : ''}</div>
+            </div>
+            <button class="icon-btn" onclick="openLeadEditor('${escapeJsAttr(lead.id)}')" aria-label="Edit client"><i data-lucide="pencil-line" style="width:14px;height:14px"></i></button>
+          </div>
+          <div class="kanban-chip-row">
+            <span class="kanban-chip">${escapeHtml(lead.platform || 'Website')}</span>
+            <span class="kanban-chip priority-${escapeHtml(priority)}">${escapeHtml(priority)} priority</span>
+            <span class="kanban-chip ${followUpClass}">${escapeHtml(followUpLabel)}</span>
+          </div>
+          ${meta.notes ? `<div class="kanban-card-note">${escapeHtml(meta.notes)}</div>` : ''}
+          <div class="kanban-card-actions">
+            ${status !== 'pitched' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','pitched')">Pitched</button>` : ''}
+            ${status !== 'replied' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','replied')">In Talks</button>` : ''}
+            ${status !== 'won' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','won')">Won</button>` : ''}
+            <button class="stage-btn" onclick="openLeadEditor('${escapeJsAttr(lead.id)}')">Edit</button>
+            <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="deleteLead('${escapeJsAttr(lead.id)}')">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('') : `<div class="analytics-empty">No clients in ${CRM_STAGE_META[status].label.toLowerCase()} for the current filter set.</div>`;
+  });
+
+  renderBusinessDashboard();
+  lucide.createIcons();
+}
+
+function renderManagedOpportunityClients(){
+  const list = el('opp-managed-list');
+  const empty = el('opp-managed-empty');
+  if (!list || !empty) return;
+
+  setText('opp-managed-count', `${opportunityClients.length} saved`);
+
+  if (!opportunityClients.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = opportunityClients.slice(0, 24).map(client => `
+    <div class="opp-managed-item">
+      <div class="opp-managed-top">
+        <div style="min-width:0">
+          <div class="opp-managed-name">${escapeHtml(client.name || '')}</div>
+          <div class="opp-managed-meta">
+            <span class="opp-managed-pill">${escapeHtml(client.platform || 'Website')}</span>
+            <span class="opp-managed-pill">${escapeHtml(client.service || 'Freelance service')}</span>
+            ${client.profileUrl ? '<span class="opp-managed-pill">Live profile</span>' : ''}
+          </div>
+        </div>
+        <div class="opp-managed-date">${formatShortDate(client.created_at)}</div>
+      </div>
+      <div class="opp-managed-value">${escapeHtml(summarizeDealValue(client.potentialValue || ''))}</div>
+      <div class="opp-managed-actions">
+        ${client.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(client.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
+        ${client.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${client.id}')">Copy DM</button>` : ''}
+        <button class="stage-btn" onclick="addOpportunityClientToPipeline('${client.id}')">Add to Pipeline</button>
+        <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="removeOpportunityClient('${client.id}')">Remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setPipelineSearch(value){
+  crmFilters.search = value || '';
+  renderPipeline();
+}
+
+function setPipelinePlatformFilter(value){
+  crmFilters.platform = value || 'all';
+  renderPipeline();
+}
+
+function setPipelineSort(value){
+  crmFilters.sort = value || 'newest';
+  renderPipeline();
+}
+
+function handleLeadDragStart(event, id){
+  draggedLeadId = id;
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', id);
+  event.currentTarget.classList.add('dragging');
+}
+
+function handleLeadDragEnd(event){
+  draggedLeadId = null;
+  event.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.kanban-board-col').forEach(col => col.classList.remove('drag-over'));
+}
+
+function handlePipelineDragOver(event){
+  event.preventDefault();
+  event.currentTarget.classList.add('drag-over');
+}
+
+function handlePipelineDragLeave(event){
+  event.currentTarget.classList.remove('drag-over');
+}
+
+function handlePipelineDrop(event, status){
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  const id = draggedLeadId || event.dataTransfer?.getData('text/plain');
+  if (id) moveLead(id, status);
+}
+
+async function addLead(seedMeta = {}){
+  if (!currentUser) return false;
+  if (!_canAddPipelineLead(true)) return false;
+
+  const clientName = val('lead-name').trim();
+  if (!clientName) {
+    showToast('Add a client name.');
+    return false;
+  }
+
+  const lead = {
+    user_id: currentUser.id,
+    client_name: clientName,
+    service: val('lead-service').trim(),
+    project_value: val('lead-value') || null,
+    platform: val('lead-platform') || 'LinkedIn',
+    status: 'pitched'
+  };
+
+  const metaPayload = {
+    priority: seedMeta.priority || val('lead-priority') || 'medium',
+    nextFollowUp: seedMeta.nextFollowUp || val('lead-followup') || '',
+    notes: seedMeta.notes || '',
+    contactEmail: seedMeta.contactEmail || ''
+  };
+
+  let createdLead = null;
+  try {
+    const { data, error } = await sb.from('leads').insert([lead]).select().single();
+    if (error) throw error;
+    createdLead = data;
+  } catch (error) {
+    console.error('addLead error:', error);
+    createdLead = { ...lead, id: `local-lead-${Date.now()}`, created_at: new Date().toISOString() };
+  }
+
+  userLeads.unshift(createdLead);
+  persistLeadsLocal();
+  upsertLeadMeta(createdLead.id, metaPayload);
+
+  ['lead-name','lead-service','lead-value','lead-followup'].forEach(id => setVal(id, ''));
+  setVal('lead-platform', 'Instagram');
+  setVal('lead-priority', 'medium');
+
+  renderPipeline();
+  showToast(seedMeta.fromSaved ? 'Lead moved to pipeline.' : 'Client added to pipeline.');
+  return true;
+}
+
+async function moveLead(id, status){
+  const idx = userLeads.findIndex(lead => lead.id === id);
+  if (idx === -1) return;
+  userLeads[idx].status = status;
+  persistLeadsLocal();
+  renderPipeline();
+  try {
+    await sb.from('leads').update({ status }).eq('id', id);
+  } catch {
+    persistLeadsLocal();
+  }
+}
+
+async function deleteLead(id){
+  userLeads = userLeads.filter(lead => lead.id !== id);
+  deleteLeadMeta(id);
+  persistLeadsLocal();
+  renderPipeline();
+  if (val('lead-edit-id') === id) closeModal('lead-editor-modal');
+  try {
+    await sb.from('leads').delete().eq('id', id);
+  } catch {
+    persistLeadsLocal();
+  }
+}
+
+function openLeadEditor(id){
+  const lead = userLeads.find(item => item.id === id);
+  if (!lead) return;
+  const meta = getLeadMeta(id);
+
+  setVal('lead-edit-id', lead.id);
+  setVal('lead-edit-name', lead.client_name || '');
+  setVal('lead-edit-service', lead.service || '');
+  setVal('lead-edit-value', lead.project_value || '');
+  setVal('lead-edit-platform', lead.platform || 'LinkedIn');
+  setVal('lead-edit-status', lead.status || 'pitched');
+  setVal('lead-edit-priority', meta.priority || 'medium');
+  setVal('lead-edit-followup', meta.nextFollowUp || '');
+  setVal('lead-edit-email', meta.contactEmail || '');
+  setVal('lead-edit-notes', meta.notes || '');
+
+  el('lead-editor-modal')?.classList.add('show');
+  lucide.createIcons();
+}
+
+async function saveLeadEdits(){
+  const id = val('lead-edit-id');
+  const idx = userLeads.findIndex(lead => lead.id === id);
+  if (idx === -1) return;
+
+  const updatedLead = {
+    ...userLeads[idx],
+    client_name: val('lead-edit-name').trim(),
+    service: val('lead-edit-service').trim(),
+    project_value: val('lead-edit-value') || null,
+    platform: val('lead-edit-platform') || 'LinkedIn',
+    status: val('lead-edit-status') || 'pitched'
+  };
+
+  if (!updatedLead.client_name) {
+    showToast('Client name cannot be empty.');
+    return;
+  }
+
+  userLeads[idx] = updatedLead;
+  upsertLeadMeta(id, {
+    priority: val('lead-edit-priority') || 'medium',
+    nextFollowUp: val('lead-edit-followup') || '',
+    contactEmail: val('lead-edit-email').trim(),
+    notes: val('lead-edit-notes').trim()
+  });
+  persistLeadsLocal();
+  renderPipeline();
+  closeModal('lead-editor-modal');
+
+  try {
+    await sb.from('leads').update({
+      client_name: updatedLead.client_name,
+      service: updatedLead.service,
+      project_value: updatedLead.project_value,
+      platform: updatedLead.platform,
+      status: updatedLead.status
+    }).eq('id', id);
+  } catch {
+    persistLeadsLocal();
+  }
+
+  showToast('Client updated.');
+}
+
+function deleteLeadFromEditor(){
+  const id = val('lead-edit-id');
+  if (!id) return;
+  closeModal('lead-editor-modal');
+  deleteLead(id);
+}
+
+async function removeOpportunityClient(id, options = {}){
+  opportunityClients = opportunityClients.filter(client => client.id !== id);
+  persistOpportunityClients();
+  renderManagedOpportunityClients();
+  renderBusinessDashboard();
+  if (currentUser) {
+    sb.from('opportunity_clients')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', currentUser.id)
+      .catch(() => persistOpportunityClients());
+  }
+  if (!options.silent) showToast('Saved opportunity removed.');
+}
+
+async function addOpportunityClientToPipeline(id){
+  const client = opportunityClients.find(item => item.id === id);
+  if (!client) return false;
+  setVal('lead-name', client.name || '');
+  setVal('lead-service', client.service || '');
+  const amount = getDealFloor(client.potentialValue || '', 0);
+  if (Number.isFinite(amount) && amount > 0) setVal('lead-value', amount);
+  setVal('lead-platform', ['Instagram','LinkedIn','Upwork','Fiverr','Website','Referral'].includes(client.platform) ? client.platform : 'LinkedIn');
+  const moved = await addLead({
+    fromSaved: true,
+    priority: 'medium',
+    nextFollowUp: '',
+    notes: client.quickDm ? 'Saved from Opportunity Engine.' : '',
+    contactEmail: ''
+  });
+  if (moved) await removeOpportunityClient(id, { silent: true });
+  return moved;
+}
+
+function setAccountingRange(range){
+  accountingState.range = range;
+  accountingState.start = '';
+  accountingState.end = '';
+  setVal('acc-date-start', '');
+  setVal('acc-date-end', '');
+  renderBusinessDashboard();
+}
+
+function applyAccountingCustomRange(){
+  const start = val('acc-date-start');
+  const end = val('acc-date-end');
+  if (start && end) {
+    accountingState.range = 'custom';
+    accountingState.start = start;
+    accountingState.end = end;
+  } else {
+    accountingState.range = 'all';
+    accountingState.start = '';
+    accountingState.end = '';
+  }
+  renderBusinessDashboard();
+}
+
+function getAccountingWindow(){
+  const now = new Date();
+  const end = _dayEnd(now);
+  let start = null;
+  let label = 'All time';
+
+  if (accountingState.range === '7d') {
+    start = _dayStart(new Date(now.getTime() - 6 * 86400000));
+    label = 'Last 7 days';
+  } else if (accountingState.range === '30d') {
+    start = _dayStart(new Date(now.getTime() - 29 * 86400000));
+    label = 'Last 30 days';
+  } else if (accountingState.range === '90d') {
+    start = _dayStart(new Date(now.getTime() - 89 * 86400000));
+    label = 'Last 90 days';
+  } else if (accountingState.range === '365d') {
+    start = _dayStart(new Date(now.getTime() - 364 * 86400000));
+    label = 'Last 12 months';
+  } else if (accountingState.range === 'custom' && accountingState.start && accountingState.end) {
+    start = _dayStart(accountingState.start);
+    label = `${formatShortDate(accountingState.start)} to ${formatShortDate(accountingState.end)}`;
+    return { start, end: _dayEnd(accountingState.end), label };
+  }
+
+  return { start, end, label };
+}
+
+function isWithinAccountingWindow(rawDate){
+  const { start, end } = getAccountingWindow();
+  if (!start && accountingState.range === 'all') return true;
+  if (!rawDate) return false;
+  const value = new Date(rawDate);
+  if (Number.isNaN(value.getTime())) return false;
+  return (!start || value >= start) && (!end || value <= end);
+}
+
 /* ─── UI HELPERS ─── */
 function renderPipeline(){
   const buckets={pitched:[],replied:[],won:[]};
@@ -7757,6 +8601,346 @@ function renderBusinessDashboard(){
 
   _renderEarningsBars('home-earnings-bars','home-bar-labels');
   _renderEarningsBars('acc-earnings-bars','acc-bar-labels');
+}
+
+function buildTrendBuckets(leads){
+  const { start, end } = getAccountingWindow();
+  const rangeStart = start || _dayStart(new Date(Date.now() - 179 * 86400000));
+  const rangeEnd = end || _dayEnd(Date.now());
+  const bucketCount = accountingState.range === '7d' ? 7 : 6;
+  const totalMs = Math.max(rangeEnd - rangeStart, 86400000);
+  const step = Math.ceil(totalMs / bucketCount);
+  const buckets = Array.from({ length: bucketCount }, (_, index) => {
+    const bucketStart = new Date(rangeStart.getTime() + (step * index));
+    const bucketEnd = new Date(index === bucketCount - 1 ? rangeEnd.getTime() : rangeStart.getTime() + (step * (index + 1)) - 1);
+    return {
+      start: bucketStart,
+      end: bucketEnd,
+      label: bucketCount === 7 ? bucketStart.toLocaleDateString('en-US', { weekday: 'short' }) : bucketStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      value: 0
+    };
+  });
+
+  leads.forEach(lead => {
+    if ((lead.status || '').toLowerCase() !== 'won') return;
+    const createdAt = new Date(lead.created_at || Date.now());
+    const bucket = buckets.find(item => createdAt >= item.start && createdAt <= item.end);
+    if (bucket) bucket.value += Number(lead.project_value || 0);
+  });
+
+  return buckets;
+}
+
+function renderAccountingTrend(filteredWonLeads){
+  const bars = el('acc-trend-bars');
+  const labels = el('acc-trend-labels');
+  if (!bars || !labels) return;
+  const data = buildTrendBuckets(filteredWonLeads);
+  const maxValue = Math.max(...data.map(item => item.value), 1);
+
+  bars.innerHTML = data.map(item => `
+    <div class="trend-col">
+      <div class="trend-bar-value">${item.value ? formatCurrency(item.value) : '$0'}</div>
+      <div class="trend-bar" style="height:${Math.max(14, Math.round((item.value / maxValue) * 180))}px"></div>
+    </div>
+  `).join('');
+  labels.innerHTML = data.map(item => `<div class="trend-col"><div class="trend-label">${item.label}</div></div>`).join('');
+}
+
+function renderAccountingFunnel(filteredLeads){
+  const funnel = el('acc-funnel-list');
+  if (!funnel) return;
+  const total = Math.max(filteredLeads.length, 1);
+
+  funnel.innerHTML = CRM_STAGE_ORDER.map(status => {
+    const stageLeads = filteredLeads.filter(lead => (lead.status || 'pitched') === status);
+    const stageValue = stageLeads.reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+    const pct = Math.round((stageLeads.length / total) * 100);
+    return `
+      <div class="analytics-funnel-row">
+        <div class="analytics-row-main">
+          <div class="analytics-row-title">${CRM_STAGE_META[status].label}</div>
+          <div class="analytics-row-sub">${stageLeads.length} deal${stageLeads.length === 1 ? '' : 's'} · ${formatCurrency(stageValue)}</div>
+          <div class="analytics-track"><span style="width:${pct}%"></span></div>
+        </div>
+        <div class="analytics-row-value">${pct}%</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAccountingChannels(filteredLeads){
+  const wrap = el('acc-channel-mix');
+  if (!wrap) return;
+  const groups = new Map();
+  filteredLeads.forEach(lead => {
+    const key = lead.platform || 'Unknown';
+    if (!groups.has(key)) groups.set(key, { count: 0, value: 0 });
+    const entry = groups.get(key);
+    entry.count += 1;
+    entry.value += Number(lead.project_value || 0);
+  });
+
+  const rows = [...groups.entries()].sort((a, b) => b[1].count - a[1].count);
+  const maxCount = Math.max(...rows.map(([, value]) => value.count), 1);
+  wrap.innerHTML = rows.length ? rows.map(([platform, value]) => `
+    <div class="analytics-channel-row">
+      <div class="analytics-row-main">
+        <div class="analytics-row-title">${escapeHtml(platform)}</div>
+        <div class="analytics-row-sub">${value.count} client${value.count === 1 ? '' : 's'} · ${formatCurrency(value.value)}</div>
+        <div class="analytics-track"><span style="width:${Math.round((value.count / maxCount) * 100)}%"></span></div>
+      </div>
+      <div class="analytics-row-value">${value.count}</div>
+    </div>
+  `).join('') : '<div class="analytics-empty">No client channels in this date range yet.</div>';
+}
+
+function renderAccountingTopClients(filteredLeads, filteredInvoices){
+  const wrap = el('acc-top-clients-wrap');
+  if (!wrap) return;
+  const clients = new Map();
+  filteredLeads.forEach(lead => {
+    const key = String(lead.client_name || 'Unknown').trim() || 'Unknown';
+    if (!clients.has(key)) clients.set(key, { booked: 0, collected: 0, open: 0 });
+    const row = clients.get(key);
+    if ((lead.status || '') === 'won') row.booked += Number(lead.project_value || 0);
+    else row.open += Number(lead.project_value || 0);
+  });
+  filteredInvoices.forEach(inv => {
+    const key = String(inv.client_name || 'Unknown').trim() || 'Unknown';
+    if (!clients.has(key)) clients.set(key, { booked: 0, collected: 0, open: 0 });
+    const row = clients.get(key);
+    if ((inv.status || '').toLowerCase() === 'paid') row.collected += Number(inv.amount || 0);
+  });
+  const rows = [...clients.entries()].map(([name, stats]) => ({ name, ...stats, total: stats.booked + stats.collected + stats.open })).sort((a, b) => b.total - a.total).slice(0, 6);
+
+  wrap.innerHTML = rows.length ? `
+    <table class="analytics-table">
+      <thead><tr><th>Client</th><th>Booked</th><th>Collected</th><th>Open</th></tr></thead>
+      <tbody>${rows.map(row => `
+        <tr>
+          <td>${escapeHtml(row.name)}</td>
+          <td>${formatCurrency(row.booked)}</td>
+          <td>${formatCurrency(row.collected)}</td>
+          <td>${formatCurrency(row.open)}</td>
+        </tr>
+      `).join('')}</tbody>
+    </table>
+  ` : '<div class="analytics-empty">No client value to rank in this range yet.</div>';
+}
+
+function renderAccountingCollections(filteredInvoices){
+  const wrap = el('acc-collections-list');
+  if (!wrap) return;
+  const paid = filteredInvoices.filter(inv => (inv.status || '').toLowerCase() === 'paid');
+  const sent = filteredInvoices.filter(inv => (inv.status || '').toLowerCase() === 'sent');
+  const overdue = filteredInvoices.filter(inv => (inv.status || '').toLowerCase() === 'overdue');
+
+  wrap.innerHTML = [
+    { label: 'Paid invoices', count: paid.length, amount: paid.reduce((sum, inv) => sum + Number(inv.amount || 0), 0) },
+    { label: 'Sent invoices', count: sent.length, amount: sent.reduce((sum, inv) => sum + Number(inv.amount || 0), 0) },
+    { label: 'Overdue invoices', count: overdue.length, amount: overdue.reduce((sum, inv) => sum + Number(inv.amount || 0), 0) }
+  ].map(row => `
+    <div class="analytics-collection-row">
+      <div class="analytics-row-main">
+        <div class="analytics-row-title">${row.label}</div>
+        <div class="analytics-row-sub">${row.count} invoice${row.count === 1 ? '' : 's'} in the selected range</div>
+      </div>
+      <div class="analytics-row-value">${formatCurrency(row.amount)}</div>
+    </div>
+  `).join('');
+}
+
+function renderAccountingActivity(filteredLeads, filteredInvoices, filteredSaved){
+  const wrap = el('acc-activity-list');
+  if (!wrap) return;
+  const activity = [
+    ...filteredLeads.map(lead => ({ type: (lead.status || '') === 'won' ? 'Deal won' : 'Client created', title: (lead.status || '') === 'won' ? `${lead.client_name || 'Client'} moved to Won` : `${lead.client_name || 'Client'} entered the pipeline`, date: lead.created_at })),
+    ...filteredInvoices.map(inv => ({ type: (inv.status || '').toLowerCase() === 'paid' ? 'Invoice paid' : 'Invoice logged', title: `${inv.client_name || 'Client'} · ${formatCurrency(inv.amount || 0)}`, date: inv.created_at || inv.due_date })),
+    ...filteredSaved.map(client => ({ type: 'Opportunity saved', title: `${client.name || 'Client'} saved from Opportunity Engine`, date: client.created_at }))
+  ].filter(item => item.date).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6);
+
+  wrap.innerHTML = activity.length ? activity.map(item => `
+    <div class="activity-item">
+      <div>
+        <div class="activity-badge">${escapeHtml(item.type)}</div>
+        <div class="analytics-row-title">${escapeHtml(item.title)}</div>
+      </div>
+      <div class="activity-date">${formatShortDate(item.date)}</div>
+    </div>
+  `).join('') : '<div class="analytics-empty">No recorded activity for the selected window yet.</div>';
+}
+
+function syncAccountingRangeUi(){
+  document.querySelectorAll('[data-acc-range]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.accRange === accountingState.range);
+  });
+}
+
+function renderManagedOpportunityClients(){
+  const list = el('opp-managed-list');
+  const empty = el('opp-managed-empty');
+  if (!list || !empty) return;
+
+  setText('opp-managed-count', `${opportunityClients.length} saved`);
+
+  if (!opportunityClients.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = opportunityClients.slice(0, 24).map(client => `
+    <div class="opp-managed-item">
+      <div class="opp-managed-top">
+        <div style="min-width:0">
+          <div class="opp-managed-name">${escapeHtml(client.name || '')}</div>
+          <div class="opp-managed-meta">
+            <span class="opp-managed-pill">${escapeHtml(client.platform || 'Website')}</span>
+            <span class="opp-managed-pill">${escapeHtml(client.service || 'Freelance service')}</span>
+            ${client.profileUrl ? '<span class="opp-managed-pill">Live profile</span>' : ''}
+          </div>
+        </div>
+        <div class="opp-managed-date">${formatShortDate(client.created_at)}</div>
+      </div>
+      <div class="opp-managed-value">${escapeHtml(summarizeDealValue(client.potentialValue || ''))}</div>
+      <div class="opp-managed-actions">
+        ${client.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(client.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
+        ${client.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${client.id}')">Copy DM</button>` : ''}
+        <button class="stage-btn" onclick="addOpportunityClientToPipeline('${client.id}')">Add to Pipeline</button>
+        <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="removeOpportunityClient('${client.id}')">Remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function addOpportunityClientToPipeline(id){
+  const client = opportunityClients.find(item => item.id === id);
+  if (!client) return false;
+  setVal('lead-name', client.name || '');
+  setVal('lead-service', client.service || '');
+  const amount = getDealFloor(client.potentialValue || '', 0);
+  if (Number.isFinite(amount) && amount > 0) setVal('lead-value', amount);
+  setVal('lead-platform', ['Instagram','LinkedIn','Upwork','Fiverr','Website','Referral'].includes(client.platform) ? client.platform : 'LinkedIn');
+  const moved = await addLead({
+    fromSaved: true,
+    priority: 'medium',
+    nextFollowUp: '',
+    notes: client.quickDm ? 'Saved from Opportunity Engine.' : '',
+    contactEmail: ''
+  });
+  if (moved) await removeOpportunityClient(id, { silent: true });
+  return moved;
+}
+
+function renderPipeline(){
+  renderPipelineSummary();
+  const visibleLeads = getFilteredPipelineLeads();
+  const buckets = { pitched: [], replied: [], won: [] };
+  visibleLeads.forEach(lead => {
+    const status = buckets[lead.status || 'pitched'] ? (lead.status || 'pitched') : 'pitched';
+    buckets[status].push(lead);
+  });
+
+  setText('pipeline-visible-count', `Showing ${visibleLeads.length} of ${userLeads.length} clients`);
+
+  CRM_STAGE_ORDER.forEach(status => {
+    const stageLeads = buckets[status];
+    const totalValue = stageLeads.reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+    setText(`count-${status}`, String(stageLeads.length));
+    setText(`sum-${status}`, `${formatCurrency(totalValue)} ${status === 'won' ? 'closed value' : 'in active value'}`);
+    const column = el(`col-${status}`);
+    if (!column) return;
+
+    column.innerHTML = stageLeads.length ? stageLeads.map(lead => {
+      const meta = getLeadMeta(lead.id);
+      const priority = (meta.priority || 'medium').toLowerCase();
+      const followUpLabel = meta.nextFollowUp ? `Follow-up ${formatShortDate(meta.nextFollowUp)}` : 'No follow-up set';
+      const followUpClass = isLeadFollowUpDue(meta) && status !== 'won' ? 'danger' : '';
+
+      return `
+        <div class="kanban-card" draggable="true" ondragstart="handleLeadDragStart(event,'${escapeJsAttr(lead.id)}')" ondragend="handleLeadDragEnd(event)">
+          <div class="kanban-card-top">
+            <div style="min-width:0">
+              <div class="kanban-card-name">${escapeHtml(lead.client_name || '')}</div>
+              <div class="kanban-card-val">${lead.project_value ? formatCurrency(lead.project_value) : 'Custom quote'}${lead.service ? ` · ${escapeHtml(lead.service)}` : ''}</div>
+            </div>
+            <button class="icon-btn" onclick="openLeadEditor('${escapeJsAttr(lead.id)}')" aria-label="Edit client"><i data-lucide="pencil-line" style="width:14px;height:14px"></i></button>
+          </div>
+          <div class="kanban-chip-row">
+            <span class="kanban-chip">${escapeHtml(lead.platform || 'Website')}</span>
+            <span class="kanban-chip priority-${escapeHtml(priority)}">${escapeHtml(priority)} priority</span>
+            <span class="kanban-chip ${followUpClass}">${escapeHtml(followUpLabel)}</span>
+          </div>
+          ${meta.notes ? `<div class="kanban-card-note">${escapeHtml(meta.notes)}</div>` : ''}
+          <div class="kanban-card-actions">
+            ${status !== 'pitched' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','pitched')">Pitched</button>` : ''}
+            ${status !== 'replied' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','replied')">In Talks</button>` : ''}
+            ${status !== 'won' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','won')">Won</button>` : ''}
+            <button class="stage-btn" onclick="openLeadEditor('${escapeJsAttr(lead.id)}')">Edit</button>
+            <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="deleteLead('${escapeJsAttr(lead.id)}')">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('') : `<div class="analytics-empty">No clients in ${CRM_STAGE_META[status].label.toLowerCase()} for the current filter set.</div>`;
+  });
+
+  renderBusinessDashboard();
+  lucide.createIcons();
+}
+
+function renderBusinessDashboard(){
+  injectBusinessDashboardWidgets();
+  syncAccountingRangeUi();
+
+  const wonRevenue = userLeads.filter(lead => (lead.status || '').toLowerCase() === 'won').reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+  const activeDeals = userLeads.filter(lead => ['pitched','replied'].includes((lead.status || '').toLowerCase())).length;
+  const outstandingAll = userInvoices.filter(inv => (inv.status || '').toLowerCase() !== 'paid').reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
+  const totalClientsAll = userLeads.length + opportunityClients.length;
+
+  setText('home-total-clients', String(totalClientsAll));
+  setText('home-active-deals', String(activeDeals));
+  setText('home-won-revenue', formatCurrency(wonRevenue || 0));
+  setText('home-outstanding', formatCurrency(outstandingAll || 0));
+  _renderEarningsBars('home-earnings-bars','home-bar-labels');
+
+  const filteredLeads = userLeads.filter(lead => isWithinAccountingWindow(lead.created_at));
+  const filteredSaved = opportunityClients.filter(client => isWithinAccountingWindow(client.created_at));
+  const filteredInvoices = userInvoices.filter(inv => isWithinAccountingWindow(inv.created_at || inv.due_date));
+  const filteredWonLeads = filteredLeads.filter(lead => (lead.status || '').toLowerCase() === 'won');
+  const openFilteredLeads = filteredLeads.filter(lead => (lead.status || '').toLowerCase() !== 'won');
+  const bookedRevenue = filteredWonLeads.reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+  const collectedCash = filteredInvoices.filter(inv => (inv.status || '').toLowerCase() === 'paid').reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
+  const outstanding = filteredInvoices.filter(inv => (inv.status || '').toLowerCase() !== 'paid').reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
+  const openPipeline = openFilteredLeads.reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+  const totalClients = filteredLeads.length + filteredSaved.length;
+  const closeRate = filteredLeads.length ? Math.round((filteredWonLeads.length / filteredLeads.length) * 100) : 0;
+  const responseRate = filteredLeads.length ? Math.round((filteredLeads.filter(lead => ['replied','won'].includes((lead.status || '').toLowerCase())).length / filteredLeads.length) * 100) : 0;
+  const avgTicket = filteredWonLeads.length ? Math.round(bookedRevenue / filteredWonLeads.length) : 0;
+  const followUpsDue = openFilteredLeads.filter(lead => isLeadFollowUpDue(getLeadMeta(lead.id))).length;
+
+  setText('acc-total-clients', String(totalClients));
+  setText('acc-range-copy', getAccountingWindow().label);
+  setText('acc-open-pipeline', formatCurrency(openPipeline));
+  setText('acc-booked-revenue', formatCurrency(bookedRevenue));
+  setText('acc-collected-cash', formatCurrency(collectedCash));
+  setText('acc-outstanding', formatCurrency(outstanding));
+  setText('acc-close-rate', `${closeRate}%`);
+  setText('acc-active-deals', String(openFilteredLeads.length));
+  setText('acc-avg-ticket', formatCurrency(avgTicket));
+  setText('acc-period-invoices', String(filteredInvoices.length));
+  setText('acc-response-rate', `${responseRate}%`);
+  setText('acc-followups-due', String(followUpsDue));
+  setText('acc-saved-leads', String(filteredSaved.length));
+
+  renderAccountingTrend(filteredWonLeads);
+  renderAccountingFunnel(filteredLeads);
+  renderAccountingChannels(filteredLeads);
+  renderAccountingTopClients(filteredLeads, filteredInvoices);
+  renderAccountingCollections(filteredInvoices);
+  renderAccountingActivity(filteredLeads, filteredInvoices, filteredSaved);
+  lucide.createIcons();
 }
 
 function el(id){return document.getElementById(id)}
@@ -8022,6 +9206,7 @@ async function onLogin(user) {
   if (el('ob-name')) el('ob-name').value = firstName !== 'User' ? name : '';
 
   await loadBillingState(user.id);
+  loadLeadMeta(user.id);
   injectBusinessDashboardWidgets();
   renderBusinessDashboard();
   loadStats(user.id);
