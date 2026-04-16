@@ -29,25 +29,25 @@
   --radius-lg: 10px;
 
   /* ── Light Theme ── */
-  --bg:          #ffffff;
-  --bg-panel:    #f7f7f7;
-  --bg-hover:    #efefef;
-  --text-main:   #0a0a0a;
-  --text-muted:  #6b6b6b;
-  --border:      #e8e8e8;
-  --border2:     #d4d4d4;
-  --btn-bg:      #0a0a0a;
+  --bg:          #f3f7fc;
+  --bg-panel:    #ffffff;
+  --bg-hover:    #eaf1fb;
+  --text-main:   #0f172a;
+  --text-muted:  #5b6473;
+  --border:      #d9e3f0;
+  --border2:     #b8c7da;
+  --btn-bg:      #0f172a;
   --btn-text:    #ffffff;
-  --shadow-sm:   0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md:   0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg:   0 8px 30px rgba(0,0,0,0.12);
+  --shadow-sm:   0 8px 20px rgba(15,23,42,0.04);
+  --shadow-md:   0 18px 40px rgba(15,23,42,0.08);
+  --shadow-lg:   0 26px 60px rgba(15,23,42,0.12);
 
   --bg2:    var(--bg-panel);
   --bg3:    var(--bg-hover);
   --text:   var(--text-main);
   --text2:  var(--text-muted);
-  --text3:  #9ca3af;
-  --accent:  #0a0a0a;
+  --text3:  #94a3b8;
+  --accent:  #0f172a;
   --accent-primary: #5b8def;
   --accent-secondary: #14b8a6;
   --accent-amber: #f59e0b;
@@ -81,6 +81,40 @@ html.dark {
 
 html { transition: background-color .2s ease, color .2s ease; }
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text-main);font-family:'Geist','Inter',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+html:not(.dark) body{
+  background:
+    radial-gradient(circle at top left, rgba(91,141,239,0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(20,184,166,0.10), transparent 24%),
+    linear-gradient(180deg, #f7fbff 0%, #edf4fb 100%);
+}
+html:not(.dark) .content-scroll{
+  background:
+    radial-gradient(circle at top left, rgba(91,141,239,0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255,255,255,0.78), rgba(239,246,255,0.92));
+}
+html:not(.dark) .card,
+html:not(.dark) .result-box,
+html:not(.dark) .biz-card,
+html:not(.dark) .fin-card,
+html:not(.dark) .summary-stat,
+html:not(.dark) .saved-clients-panel,
+html:not(.dark) .pipeline-composer,
+html:not(.dark) .pipeline-toolbar,
+html:not(.dark) .analytics-panel,
+html:not(.dark) .kanban-board-col{
+  background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,250,255,0.92)) !important;
+  border-color:#d6e1ef !important;
+  box-shadow:0 18px 40px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+html:not(.dark) input,
+html:not(.dark) select,
+html:not(.dark) textarea{
+  background:rgba(255,255,255,0.96);
+  border-color:#ccd8e6;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.85);
+}
+html:not(.dark) .page-hd h1{font-size:28px;letter-spacing:-.8px}
+html:not(.dark) .page-hd p{color:#607086}
 
 /* Precise selective transitions */
 .sidebar { transition: width 0.28s cubic-bezier(0.4,0,0.2,1) !important; }
@@ -1044,7 +1078,8 @@ html.dark .profile-banner:hover{background:#14532d}
 /* ─── PIPELINE / KANBAN ─── */
 .page-hd-split{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
 .page-hd-note{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(20,184,166,0.04));font-size:12px;color:var(--text-muted);white-space:nowrap}
-.pipeline-layout{display:grid;grid-template-columns:minmax(280px,320px) minmax(0,1fr);gap:20px;align-items:start;min-width:0}
+.pipeline-shell{display:grid;gap:18px;min-width:0}
+.pipeline-top-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:18px;align-items:start;min-width:0}
 .pipeline-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
 .summary-stat{position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(255,255,255,0)),var(--bg);border:1px solid var(--border);border-radius:20px;padding:18px 18px 16px;box-shadow:var(--shadow-sm)}
 .summary-stat::after{content:'';position:absolute;inset:auto -30px -70px auto;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle, rgba(91,141,239,0.14), transparent 68%);pointer-events:none}
@@ -1054,15 +1089,15 @@ html.dark .profile-banner:hover{background:#14532d}
 .saved-clients-panel,.pipeline-main{display:grid;gap:14px;min-width:0}
 .saved-clients-panel{
   background:linear-gradient(180deg, rgba(91,141,239,0.06), rgba(255,255,255,0)),var(--bg);
-  border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:var(--shadow-sm)
+  border:1px solid var(--border);border-radius:24px;padding:20px;box-shadow:var(--shadow-sm)
 }
 .section-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .saved-opportunity-count{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2563eb}
-.saved-opportunity-sub{font-size:13px;color:var(--text-muted);line-height:1.6}
+.saved-opportunity-sub{font-size:13px;color:var(--text-muted);line-height:1.6;max-width:58ch}
 .saved-opportunity-empty{font-size:12.5px;color:var(--text3);padding:16px;border:1px dashed var(--border2);border-radius:16px;background:var(--bg-panel)}
-.opp-managed-list{display:grid;gap:12px;max-height:780px;overflow:auto;padding-right:4px}
+.opp-managed-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;max-height:none;overflow:visible}
 .opp-managed-item{
-  display:grid;gap:14px;padding:16px;border-radius:18px;border:1px solid var(--border);
+  display:grid;gap:12px;padding:16px;border-radius:18px;border:1px solid var(--border);
   background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(20,184,166,0.03)),var(--bg);
   box-shadow:var(--shadow-sm);transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease
 }
@@ -1073,10 +1108,11 @@ html.dark .profile-banner:hover{background:#14532d}
 .opp-managed-meta{display:flex;flex-wrap:wrap;gap:8px}
 .opp-managed-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--bg-panel);border:1px solid var(--border);font-size:11.5px;color:var(--text-muted)}
 .opp-managed-value{font-size:22px;font-weight:800;color:#0f766e;letter-spacing:-.7px}
+.opp-managed-service{font-size:12px;color:var(--text-muted)}
 .opp-managed-actions{display:flex;gap:8px;flex-wrap:wrap}
 .pipeline-composer{
   background:linear-gradient(145deg, rgba(91,141,239,0.12), rgba(20,184,166,0.05) 42%, transparent 90%),var(--bg);
-  border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:var(--shadow-sm)
+  border:1px solid var(--border);border-radius:24px;padding:20px;box-shadow:var(--shadow-sm)
 }
 .pipeline-composer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
 .pipeline-composer-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}
@@ -1095,7 +1131,7 @@ html.dark .profile-banner:hover{background:#14532d}
 .pipeline-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;min-width:0}
 .kanban-board-col{
   position:relative;background:linear-gradient(180deg, rgba(148,163,184,0.08), rgba(255,255,255,0)),var(--bg-panel);
-  border-radius:22px;padding:16px;border:1px solid var(--border);min-height:520px;transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease
+  border-radius:22px;padding:16px;border:1px solid var(--border);min-height:440px;transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease
 }
 .kanban-board-col{min-width:0}
 .kanban-board-col.drag-over{border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,0.12);transform:translateY(-2px)}
@@ -1265,6 +1301,16 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .fin-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
 .fin-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
 .fin-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.invoice-prefill-bar{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;
+  padding:14px 16px;margin-bottom:14px;border-radius:16px;border:1px solid var(--border);
+  background:linear-gradient(145deg, rgba(91,141,239,0.10), rgba(20,184,166,0.06) 58%, rgba(255,255,255,0.02))
+}
+.invoice-prefill-copy{display:grid;gap:4px}
+.invoice-prefill-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2563eb}
+.invoice-prefill-sub{font-size:12.5px;color:var(--text-muted);max-width:58ch;line-height:1.6}
+.invoice-prefill-controls{display:grid;grid-template-columns:minmax(240px,320px) auto;gap:10px;align-items:center}
+.invoice-prefill-actions{display:flex;gap:8px;flex-wrap:wrap}
 .fin-table{width:100%;border-collapse:collapse}
 .fin-table th,.fin-table td{padding:10px 8px;border-bottom:1px solid var(--border);font-size:12.5px;text-align:left}
 .fin-table th{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
@@ -1291,10 +1337,11 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 
 @media(max-width:1100px){
   .biz-metrics-grid{grid-template-columns:repeat(2,1fr)}
-  .biz-panel-grid,.fin-grid,.pipeline-layout,.analytics-grid,.analytics-grid-bottom{grid-template-columns:1fr}
+  .biz-panel-grid,.fin-grid,.pipeline-top-grid,.analytics-grid,.analytics-grid-bottom{grid-template-columns:1fr}
   .pipeline-summary-grid,.analytics-hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pipeline-composer-grid,.pipeline-board,.crm-modal-grid{grid-template-columns:1fr}
   .pipeline-toolbar,.analytics-range-row,.page-hd-split{flex-direction:column;align-items:stretch}
+  .invoice-prefill-controls{grid-template-columns:1fr}
 }
 
 @media(max-width:780px){
@@ -1303,6 +1350,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
   .pipeline-toolbar-controls{display:grid;grid-template-columns:1fr}
   .pipeline-toolbar-controls input,.pipeline-toolbar-controls select{min-width:0}
   .kanban-board-col{min-height:420px}
+  .invoice-prefill-bar{padding:14px}
 }
 
 /* ─── MODALS ─── */
@@ -3615,16 +3663,7 @@ html.dark .credits-warning-banner {
       <div id="page-home" class="page active">
         <div class="content-inner home-shell">
           <div class="home-hero">
-            <div>
-              <div class="workspace-kicker">My Workspace</div>
-              <h1 id="hero-greeting" class="workspace-title">Welcome</h1>
-              <div class="workspace-sub">A cleaner command center for prospecting, pitching, following up, and tracking money without jumping between tools.</div>
-            </div>
-            <div class="workspace-badge-row">
-              <div class="workspace-badge"><i data-lucide="sparkles" style="width:14px;height:14px"></i> <strong>AI-ready</strong> premium workspace</div>
-              <div class="workspace-badge"><i data-lucide="target" style="width:14px;height:14px"></i> <strong>Reply-first</strong> deal flow</div>
-              <div class="workspace-badge"><i data-lucide="wallet" style="width:14px;height:14px"></i> <strong>Revenue</strong> always visible</div>
-            </div>
+            <div><h1 id="hero-greeting" class="workspace-title">Welcome</h1></div>
           </div>
            <div class="card premium-surface" style="margin-bottom:32px; padding:0; position:relative; overflow:hidden; border-radius:18px;">
 
@@ -3955,9 +3994,9 @@ html.dark .credits-warning-banner {
           <div class="page-hd page-hd-split">
             <div>
               <h1>Client Pipeline CRM</h1>
-              <p>Run your full client workflow with saved opportunity intake, stage-based tracking, drag-and-drop movement, and cleaner deal operations.</p>
+              <p>Manage saved opportunities, active deals, and invoice-ready clients in one clean board.</p>
             </div>
-            <div class="page-hd-note"><i data-lucide="mouse-pointer-click" style="width:14px;height:14px"></i> Drag cards between stages or edit them in-place.</div>
+            <div class="page-hd-note"><i data-lucide="mouse-pointer-click" style="width:14px;height:14px"></i> Drag, filter, edit, and invoice from the same workspace.</div>
           </div>
           <div class="pipeline-summary-grid">
             <div class="summary-stat">
@@ -3981,17 +4020,17 @@ html.dark .credits-warning-banner {
               <div class="summary-stat-sub" id="pipe-saved-count">0 saved opportunities waiting</div>
             </div>
           </div>
-          <div class="pipeline-layout">
-            <div class="saved-clients-panel">
-              <div class="section-title-row">
-                <div class="section-title" style="margin:0;border:0;padding:0">Saved Opportunities</div>
-                <div class="saved-opportunity-count" id="opp-managed-count">0 saved</div>
+          <div class="pipeline-shell">
+            <div class="pipeline-top-grid">
+              <div class="saved-clients-panel">
+                <div class="section-title-row">
+                  <div class="section-title" style="margin:0;border:0;padding:0">Saved Opportunities</div>
+                  <div class="saved-opportunity-count" id="opp-managed-count">0 saved</div>
+                </div>
+                <div class="saved-opportunity-sub">Fresh leads from Opportunity Engine land here first so you can move only the right ones into the CRM.</div>
+                <div id="opp-managed-empty" class="saved-opportunity-empty">No AI leads saved yet. Run Find Clients and your strongest matches will appear here.</div>
+                <div class="opp-managed-list" id="opp-managed-list"></div>
               </div>
-              <div class="saved-opportunity-sub">Every lead saved from Opportunity Engine lands here first, so your CRM stays deliberate instead of messy.</div>
-              <div id="opp-managed-empty" class="saved-opportunity-empty">No AI leads saved yet. Run Find Clients and we will auto-save them here.</div>
-              <div class="opp-managed-list" id="opp-managed-list"></div>
-            </div>
-            <div class="pipeline-main">
               <div class="pipeline-composer">
                 <div class="section-title" style="margin:0;border:0;padding:0">Add Client Manually</div>
                 <div class="pipeline-composer-grid">
@@ -4003,10 +4042,12 @@ html.dark .credits-warning-banner {
                   <div><label class="field-label">Next Follow-up</label><input type="date" id="lead-followup"></div>
                 </div>
                 <div class="pipeline-composer-actions">
-                  <div class="pipeline-composer-note">Use this for manually discovered leads, or push saved opportunities into the CRM and then refine them with notes, contacts, and follow-up dates.</div>
+                  <div class="pipeline-composer-note">Use this for manual leads, or push saved opportunities into the CRM and tighten the notes, contact email, and next step later.</div>
                   <button class="btn btn-primary" onclick="addLead()">Add Client</button>
                 </div>
               </div>
+            </div>
+            <div class="pipeline-main">
               <div class="pipeline-toolbar">
                 <div class="pipeline-toolbar-title">
                   <div class="section-title" style="margin:0;border:0;padding:0">Pipeline Board</div>
@@ -4073,10 +4114,24 @@ html.dark .credits-warning-banner {
 
       <div id="page-invoices" class="page">
         <div class="content-inner wide">
-          <div class="page-hd"><h1>Invoices</h1><p>Create invoices in seconds and keep payment tracking clean.</p></div>
+          <div class="page-hd"><h1>Invoices</h1><p>Generate polished invoices fast and pull client details straight from your CRM.</p></div>
           <div class="fin-grid">
             <div class="fin-card">
               <div class="section-title" style="margin-bottom:10px">Create Invoice</div>
+              <div class="invoice-prefill-bar">
+                <div class="invoice-prefill-copy">
+                  <div class="invoice-prefill-label">Quick Fill From Pipeline</div>
+                  <div class="invoice-prefill-sub">Choose any saved CRM client and we will auto-fill their contact, offer, and amount so you can send the invoice immediately.</div>
+                </div>
+                <div class="invoice-prefill-controls">
+                  <select id="inv-client-select" onchange="prefillInvoiceFromPipeline(this.value)">
+                    <option value="">Choose a pipeline client...</option>
+                  </select>
+                  <div class="invoice-prefill-actions">
+                    <button class="btn btn-secondary" onclick="clearInvoiceForm({ resetPicker: true })">Clear</button>
+                  </div>
+                </div>
+              </div>
               <div class="fin-row" style="margin-bottom:10px">
                 <div><label class="field-label">Client Name</label><input type="text" id="inv-client-name" placeholder="e.g. MilkTea Emma"></div>
                 <div><label class="field-label">Client Email</label><input type="email" id="inv-client-email" placeholder="client@email.com"></div>
@@ -4629,10 +4684,10 @@ html.dark .credits-warning-banner {
 </div>
 
 <!-- ══ FULL-SCREEN PRICING PAGE (replaces modal) ══ -->
-<div id="upgrade-modal" style="display:none;position:fixed;inset:0;z-index:900;background:#111113;overflow-y:auto;animation:fadeUp .22s ease;">
+<div id="upgrade-modal" style="display:none;position:fixed;inset:0;z-index:900;background:radial-gradient(circle at top, rgba(99,102,241,0.18), transparent 24%), radial-gradient(circle at bottom right, rgba(20,184,166,0.12), transparent 22%), linear-gradient(180deg,#0d1017 0%,#090b11 100%);overflow-y:auto;animation:fadeUp .22s ease;">
 
   <!-- Top bar -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid #27272a;position:sticky;top:0;background:#111113;z-index:10;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;background:rgba(9,11,17,0.86);backdrop-filter:blur(18px);z-index:10;">
     <button onclick="closeUpgrade()" style="display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;color:#a1a1aa;font-size:14px;font-family:inherit;padding:6px 10px;border-radius:8px;transition:background .15s;" onmouseover="this.style.background='#1c1c1f'" onmouseout="this.style.background='none'">
       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Back
@@ -4643,20 +4698,20 @@ html.dark .credits-warning-banner {
 
   <!-- Hero -->
   <div style="text-align:center;padding:60px 24px 48px;">
-    <h1 style="font-size:36px;font-weight:700;color:#fafafa;letter-spacing:-.8px;margin-bottom:12px;">Plans that grow with you</h1>
-    <p style="font-size:15px;color:#71717a;max-width:440px;margin:0 auto 0;">Early-bird pricing is live. <span style="color:#a5b4fc;">Rates go up after the first 200 users.</span></p>
+    <h1 style="font-size:36px;font-weight:700;color:#fafafa;letter-spacing:-.8px;margin-bottom:12px;">Simple plans for serious freelancers</h1>
+    <p style="font-size:15px;color:#71717a;max-width:520px;margin:0 auto 0;">Choose the workspace tier that matches your client volume today, then upgrade any time as your pipeline gets stronger.</p>
   </div>
 
   <!-- 3-col grid -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1060px;margin:0 auto;padding:0 24px 80px;">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1080px;margin:0 auto;padding:0 24px 80px;">
 
     <!-- FREE -->
-    <div style="background:#1c1c1f;border:1px solid #2e2e32;border-radius:16px;padding:32px 28px;display:flex;flex-direction:column;transition:border-color .2s;" onmouseover="this.style.borderColor='#52525b'" onmouseout="this.style.borderColor='#2e2e32'">
+    <div style="background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:32px 28px;display:flex;flex-direction:column;transition:border-color .2s, transform .2s, box-shadow .2s;" onmouseover="this.style.borderColor='#52525b';this.style.transform='translateY(-3px)';this.style.boxShadow='0 18px 40px rgba(0,0,0,0.28)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
       <div style="width:48px;height:48px;border-radius:12px;background:#27272a;border:1px solid #3f3f46;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#a1a1aa" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       </div>
       <div style="font-size:20px;font-weight:700;color:#fafafa;margin-bottom:4px;">Free</div>
-      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">Get your first win. No card needed.</div>
+      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">Start clean, learn the workflow, and get your first paid project moving.</div>
       <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:24px;">
         <span style="font-size:40px;font-weight:700;color:#fafafa;letter-spacing:-1.5px;line-height:1;">$0</span>
       </div>
@@ -4674,13 +4729,13 @@ html.dark .credits-warning-banner {
     </div>
 
     <!-- PRO (featured) -->
-    <div style="background:#1f1f23;border:1px solid #3f3f46;border-radius:16px;padding:32px 28px;display:flex;flex-direction:column;position:relative;box-shadow:0 0 0 1px #3f3f46,0 8px 40px rgba(0,0,0,.6);">
+    <div style="background:linear-gradient(180deg, rgba(99,102,241,0.14), rgba(255,255,255,0.03) 28%, rgba(255,255,255,0.01));border:1px solid rgba(165,180,252,0.28);border-radius:20px;padding:32px 28px;display:flex;flex-direction:column;position:relative;box-shadow:0 0 0 1px rgba(165,180,252,0.12),0 18px 44px rgba(0,0,0,.48);">
       <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 14px;border-radius:99px;white-space:nowrap;text-transform:uppercase;">★ Most Popular</div>
       <div style="width:48px;height:48px;border-radius:12px;background:#27272a;border:1px solid #3f3f46;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       </div>
       <div style="font-size:20px;font-weight:700;color:#fafafa;margin-bottom:4px;">Pro</div>
-      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">For freelancers serious about landing clients every week.</div>
+      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">For freelancers building consistent outreach, proposals, and recurring client flow.</div>
       <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:24px;">
         <span style="font-size:40px;font-weight:700;color:#fafafa;letter-spacing:-1.5px;line-height:1;">$12</span>
         <div style="font-size:12px;color:#71717a;line-height:1.5;">USD / month<br>billed monthly</div>
@@ -4699,12 +4754,12 @@ html.dark .credits-warning-banner {
     </div>
 
     <!-- ELITE -->
-    <div style="background:#1c1c1f;border:1px solid #2e2e32;border-radius:16px;padding:32px 28px;display:flex;flex-direction:column;transition:border-color .2s;" onmouseover="this.style.borderColor='#52525b'" onmouseout="this.style.borderColor='#2e2e32'">
+    <div style="background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:32px 28px;display:flex;flex-direction:column;transition:border-color .2s, transform .2s, box-shadow .2s;" onmouseover="this.style.borderColor='#52525b';this.style.transform='translateY(-3px)';this.style.boxShadow='0 18px 40px rgba(0,0,0,0.28)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
       <div style="width:48px;height:48px;border-radius:12px;background:#27272a;border:1px solid #3f3f46;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" stroke-width="1.5"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>
       </div>
       <div style="font-size:20px;font-weight:700;color:#fafafa;margin-bottom:4px;">Elite</div>
-        <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">For those scaling to $5k/mo who need every edge.</div>
+        <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">For operators scaling a real freelance business and wanting every execution edge.</div>
       <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:24px;">
         <span style="font-size:40px;font-weight:700;color:#fafafa;letter-spacing:-1.5px;line-height:1;">$29</span>
         <div style="font-size:12px;color:#71717a;line-height:1.5;">USD / month<br>billed monthly</div>
@@ -5264,7 +5319,7 @@ const _OPP_LEAD_BANK = {
       problem: 'Running ads with no landing page — traffic goes to plain Instagram bio. Ad spend wasted.',
       strategy: 'Build a 1-page landing page + lead magnet to capture the paid traffic properly.',
       match: 94,
-      reason: 'Active ad spend detected — but no landing page means every rupee leaking.',
+      reason: 'Active ad spend detected — but no landing page means every ad dollar is leaking.',
       jobDesc: 'Motivational speaker needs a landing page to convert paid Instagram traffic into email subscribers.',
       signals: ['no_cta', 'no_email_list'],
       budget: ['running_ads', 'monetised'],
@@ -5441,7 +5496,7 @@ const _OPP_LEAD_BANK = {
     problem: 'Running ads but sending traffic to the main Instagram profile, not a booking page. $800/month with no return.',
       strategy: 'Build a simple landing page with Calendly booking form — redirect all ad traffic there.',
       match: 95,
-      reason: 'Active ad spend confirmed with no conversion destination — every rupee going to dead-end profile.',
+      reason: 'Active ad spend confirmed with no conversion destination — every dollar is going to a dead-end profile.',
       jobDesc: 'Nail salon running Instagram ads needs a landing page and booking system to convert ad traffic.',
       signals: ['no_cta'],
       budget: ['running_ads'],
@@ -5584,7 +5639,7 @@ function _renderOppCard(lead) {
   } else if (probLow.includes('ad') || probLow.includes('funnel') || probLow.includes('landing')) {
     dealValue = '$400 – $900'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
     magnet = 'Free Landing Page Audit';
-    afterText = 'Every ad rupee goes to a page that converts, not a dead Instagram bio.';
+    afterText = 'Every ad dollar should land on a page that converts, not a dead Instagram bio.';
     effortClass = 'effort-easy'; effortLabel = 'Easy win';
     closingHint = 'Show them their ad spend is leaking. Offer to build the landing page on a performance basis.';
   }
@@ -7376,6 +7431,7 @@ function _renderOppCard(lead) {
         <span class="opp-action-group-label">Close</span>
         <div class="opp-action-btns">
           <button class="opp-action-btn opp-btn-outline" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal Brief</button>
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToInvoice('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(service)}','${escapeJsAttr(dealValue)}','','Opportunity Engine lead')"><i data-lucide="receipt-text" style="width:11px;height:11px"></i> Quick Invoice</button>
           <button class="opp-action-btn opp-btn-won" onclick="markLeadWon(this.closest('.opp-card'),'${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}','${escapeJsAttr(dealValue)}')"><i data-lucide="trophy" style="width:11px;height:11px"></i> Save as Won</button>
         </div>
       </div>
@@ -7643,6 +7699,92 @@ function renderInvoices(){
   `).join('');
 }
 
+function clearInvoiceForm(opts = {}){
+  const { resetPicker = false } = opts;
+  ['inv-client-name','inv-client-email','inv-service','inv-amount','inv-due-date','inv-notes'].forEach(id => setVal(id,''));
+  setVal('inv-status', 'sent');
+  if (resetPicker) setVal('inv-client-select', '');
+}
+
+function _invoiceClientRows(){
+  return [...userLeads]
+    .map(lead => {
+      const meta = getLeadMeta(lead.id);
+      return {
+        id: lead.id,
+        name: lead.client_name || 'Client',
+        service: lead.service || 'Service',
+        stage: CRM_STAGE_META[lead.status || 'pitched']?.label || 'Pitched',
+        amount: Number(lead.project_value || 0),
+        email: meta.contactEmail || '',
+        notes: meta.notes || ''
+      };
+    })
+    .sort((a, b) => {
+      if (a.stage === 'Won' && b.stage !== 'Won') return -1;
+      if (a.stage !== 'Won' && b.stage === 'Won') return 1;
+      return String(a.name).localeCompare(String(b.name));
+    });
+}
+
+function syncInvoiceClientOptions(){
+  const select = el('inv-client-select');
+  if (!select) return;
+  const current = select.value;
+  const rows = _invoiceClientRows();
+  select.innerHTML = `<option value="">Choose a pipeline client...</option>${rows.map(row => `
+    <option value="${escapeJsAttr(row.id)}">${escapeHtml(row.name)} - ${escapeHtml(row.service)} - ${escapeHtml(row.stage)}</option>
+  `).join('')}`;
+  if (rows.some(row => row.id === current)) select.value = current;
+}
+
+function applyInvoicePrefill(prefill = {}, opts = {}){
+  const { navigateToPage = true, silent = false, pickerValue = '' } = opts;
+  setVal('inv-client-name', prefill.clientName || '');
+  setVal('inv-client-email', prefill.clientEmail || '');
+  setVal('inv-service', prefill.service || '');
+  setVal('inv-amount', prefill.amount || '');
+  setVal('inv-notes', prefill.notes || '');
+  if (!val('inv-due-date')) {
+    const due = new Date(Date.now() + 7 * 86400000);
+    setVal('inv-due-date', due.toISOString().slice(0, 10));
+  }
+  setVal('inv-client-select', pickerValue || '');
+  if (navigateToPage) navigate('invoices');
+  if (!silent) showToast(`Invoice draft ready for ${prefill.clientName || 'client'}.`);
+}
+
+function prefillInvoiceFromPipeline(id){
+  if (!id) {
+    clearInvoiceForm();
+    return;
+  }
+  routeLeadToInvoice(id, { navigateToPage: false, silent: true, pickerValue: id });
+}
+
+function routeLeadToInvoice(id, opts = {}){
+  const lead = userLeads.find(item => item.id === id);
+  if (!lead) return;
+  const meta = getLeadMeta(id);
+  applyInvoicePrefill({
+    clientName: lead.client_name || '',
+    clientEmail: meta.contactEmail || '',
+    service: lead.service || '',
+    amount: Number(lead.project_value || 0) || '',
+    notes: meta.notes || ''
+  }, opts);
+}
+
+function routeToInvoice(clientName, service = '', dealValue = '', clientEmail = '', notes = ''){
+  applyInvoicePrefill({
+    clientName: clientName || '',
+    clientEmail: clientEmail || '',
+    service: service || '',
+    amount: getDealFloor(dealValue || '', 0) || '',
+    notes: notes || ''
+  }, { navigateToPage: true, silent: false, pickerValue: '' });
+}
+
 async function createInvoice(){
   if (!currentUser) return;
   const clientName = val('inv-client-name').trim();
@@ -7680,8 +7822,7 @@ async function createInvoice(){
     persistInvoicesLocal();
   }
 
-  ['inv-client-name','inv-client-email','inv-service','inv-amount','inv-due-date','inv-notes'].forEach(id => setVal(id,''));
-  setVal('inv-status', 'sent');
+  clearInvoiceForm({ resetPicker: true });
   renderInvoices();
   renderBusinessDashboard();
   showToast('Invoice created.');
@@ -7734,10 +7875,10 @@ function injectBusinessDashboardWidgets(){
   section.innerHTML = `
     <div class="section-title" style="margin-bottom:12px">Business Pulse</div>
     <div class="biz-metrics-grid" style="margin-bottom:10px">
-      <div class="biz-metric-card"><div class="biz-metric-label">Total Clients</div><div class="biz-metric-value" id="home-total-clients">0</div><div class="biz-metric-sub">Pipeline + saved leads</div></div>
-      <div class="biz-metric-card"><div class="biz-metric-label">Active Deals</div><div class="biz-metric-value" id="home-active-deals">0</div><div class="biz-metric-sub">Needs follow-up</div></div>
-      <div class="biz-metric-card"><div class="biz-metric-label">Won Revenue</div><div class="biz-metric-value" id="home-won-revenue">$0</div><div class="biz-metric-sub">From closed deals</div></div>
-      <div class="biz-metric-card"><div class="biz-metric-label">Outstanding</div><div class="biz-metric-value" id="home-outstanding">$0</div><div class="biz-metric-sub">Pending invoices</div></div>
+      <div class="biz-metric-card"><div class="biz-metric-label">Clients</div><div class="biz-metric-value" id="home-total-clients">0</div></div>
+      <div class="biz-metric-card"><div class="biz-metric-label">Active</div><div class="biz-metric-value" id="home-active-deals">0</div></div>
+      <div class="biz-metric-card"><div class="biz-metric-label">Closed</div><div class="biz-metric-value" id="home-won-revenue">$0</div></div>
+      <div class="biz-metric-card"><div class="biz-metric-label">Outstanding</div><div class="biz-metric-value" id="home-outstanding">$0</div></div>
     </div>
     <div class="biz-panel-grid">
       <div class="biz-card">
@@ -8009,13 +8150,13 @@ function renderManagedOpportunityClients(){
           <div class="opp-managed-name">${escapeHtml(client.name || '')}</div>
           <div class="opp-managed-meta">
             <span class="opp-managed-pill">${escapeHtml(client.platform || 'Website')}</span>
-            <span class="opp-managed-pill">${escapeHtml(client.service || 'Freelance service')}</span>
             ${client.profileUrl ? '<span class="opp-managed-pill">Live profile</span>' : ''}
           </div>
         </div>
         <div class="opp-managed-date">${formatShortDate(client.created_at)}</div>
       </div>
       <div class="opp-managed-value">${escapeHtml(summarizeDealValue(client.potentialValue || ''))}</div>
+      <div class="opp-managed-service">${escapeHtml(client.service || 'Freelance service')}</div>
       <div class="opp-managed-actions">
         ${client.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(client.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
         ${client.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${client.id}')">Copy DM</button>` : ''}
@@ -8728,6 +8869,7 @@ function renderPipeline(){
             ${status !== 'pitched' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','pitched')">Pitched</button>` : ''}
             ${status !== 'replied' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','replied')">In Talks</button>` : ''}
             ${status !== 'won' ? `<button class="stage-btn" onclick="moveLead('${escapeJsAttr(lead.id)}','won')">Won</button>` : ''}
+            <button class="stage-btn" onclick="routeLeadToInvoice('${escapeJsAttr(lead.id)}')">Invoice</button>
             <button class="stage-btn" onclick="openLeadEditor('${escapeJsAttr(lead.id)}')">Edit</button>
             <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="deleteLead('${escapeJsAttr(lead.id)}')">Delete</button>
           </div>
@@ -8736,6 +8878,7 @@ function renderPipeline(){
     }).join('') : `<div class="analytics-empty">No clients in ${CRM_STAGE_META[status].label.toLowerCase()} for the current filter set.</div>`;
   });
 
+  syncInvoiceClientOptions();
   renderBusinessDashboard();
   lucide.createIcons();
 }
