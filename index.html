@@ -984,7 +984,13 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
   font-weight:800;
   letter-spacing:-1.4px;
   color:var(--text-main);
-  margin-bottom:10px;
+  margin-bottom:8px;
+}
+.workspace-context{
+  font-size:14px;
+  line-height:1.7;
+  color:var(--text-muted);
+  max-width:62ch;
 }
 .workspace-sub{
   font-size:14px;
@@ -1265,6 +1271,20 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .nav-folder-head .nav-label{font-size:12px;font-weight:500}
 .nav-folder-chevron{width:12px;height:12px;transition:transform .15s ease;opacity:.7}
 .nav-folder.open .nav-folder-chevron{transform:rotate(180deg)}
+.nav-folder.spotlight .nav-folder-head{
+  background:linear-gradient(135deg, rgba(91,141,239,0.12), rgba(20,184,166,0.07));
+  border:1px solid rgba(91,141,239,0.18);
+  color:var(--text-main);
+}
+.nav-folder.spotlight .nav-folder-head:hover{
+  background:linear-gradient(135deg, rgba(91,141,239,0.18), rgba(20,184,166,0.10));
+}
+.nav-folder-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:52px;height:20px;padding:0 8px;border-radius:999px;
+  background:rgba(91,141,239,0.14);color:#2563eb;border:1px solid rgba(91,141,239,0.18);
+  font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+}
 .nav-folder-children{
   display:grid;gap:3px;
   padding:0 0 0 12px;
@@ -1296,6 +1316,15 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .biz-bar-row{display:flex;align-items:flex-end;gap:6px;height:180px;margin-top:8px}
 .biz-bar{flex:1;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,rgba(91,141,239,.88),rgba(20,184,166,.24));min-height:10px}
 .biz-bar-label{font-size:10px;color:var(--text3);text-align:center;margin-top:4px}
+.biz-bar-row.empty{height:auto;min-height:190px;display:block}
+.earnings-empty{
+  display:grid;place-items:center;text-align:left;height:100%;
+  border:1px dashed var(--border2);border-radius:18px;padding:22px;
+  background:linear-gradient(145deg, rgba(91,141,239,0.08), rgba(20,184,166,0.03))
+}
+.earnings-empty-kicker{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2563eb;margin-bottom:8px}
+.earnings-empty-title{font-size:20px;font-weight:800;letter-spacing:-.7px;color:var(--text-main);margin-bottom:8px}
+.earnings-empty-copy{font-size:13px;line-height:1.7;color:var(--text-muted);max-width:34ch;margin-bottom:14px}
 
 /* Finance pages */
 .fin-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
@@ -3580,6 +3609,17 @@ html.dark .credits-warning-banner {
         </div>
       </div>
 
+      <div class="nav-folder open spotlight" data-folder="growth">
+        <button class="nav-folder-head" onclick="toggleNavFolder('growth')">
+          <span class="nav-folder-title"><i data-lucide="trending-up" class="icon"></i><span class="nav-label">Growth</span><span class="nav-folder-badge">Start</span></span>
+          <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
+        </button>
+        <div class="nav-folder-children" id="folder-growth">
+          <div class="nav-item" data-tooltip="Start Here" onclick="openStartHere()"><i data-lucide="compass" class="icon"></i><span class="nav-label"> Start Here</span></div>
+          <div class="nav-item" data-page="roadmap" data-tooltip="Growth Roadmap" onclick="navigate('roadmap')"><i data-lucide="map" class="icon"></i><span class="nav-label"> Growth Roadmap</span></div>
+        </div>
+      </div>
+
       <div class="nav-folder open" data-folder="finance">
         <button class="nav-folder-head" onclick="toggleNavFolder('finance')">
           <span class="nav-folder-title"><i data-lucide="wallet" class="icon"></i><span class="nav-label">Finance</span></span>
@@ -3588,16 +3628,6 @@ html.dark .credits-warning-banner {
         <div class="nav-folder-children" id="folder-finance">
           <div class="nav-item" data-page="invoices" data-tooltip="Invoices" onclick="navigate('invoices')"><i data-lucide="receipt-text" class="icon"></i><span class="nav-label"> Invoices</span></div>
           <div class="nav-item" data-page="accounting" data-tooltip="Accounting" onclick="navigate('accounting')"><i data-lucide="line-chart" class="icon"></i><span class="nav-label"> Accounting</span></div>
-        </div>
-      </div>
-
-      <div class="nav-folder" data-folder="growth">
-        <button class="nav-folder-head" onclick="toggleNavFolder('growth')">
-          <span class="nav-folder-title"><i data-lucide="map" class="icon"></i><span class="nav-label">Growth</span></span>
-          <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
-        </button>
-        <div class="nav-folder-children" id="folder-growth">
-          <div class="nav-item" data-page="roadmap" data-tooltip="Roadmap" onclick="navigate('roadmap')"><i data-lucide="map" class="icon"></i><span class="nav-label"> Roadmap</span></div>
         </div>
       </div>
     </nav>
@@ -3663,30 +3693,33 @@ html.dark .credits-warning-banner {
       <div id="page-home" class="page active">
         <div class="content-inner home-shell">
           <div class="home-hero">
-            <div><h1 id="hero-greeting" class="workspace-title">Welcome</h1></div>
+            <div>
+              <h1 id="hero-greeting" class="workspace-title">Welcome</h1>
+              <div id="hero-context" class="workspace-context">No active clients yet. Start with one strong lead and close your first deal.</div>
+            </div>
           </div>
-           <div class="card premium-surface" style="margin-bottom:32px; padding:0; position:relative; overflow:hidden; border-radius:18px;">
+           <div id="home-start-here" class="card premium-surface" style="margin-bottom:32px; padding:0; position:relative; overflow:hidden; border-radius:18px;">
 
   <!-- Header -->
   <div style="padding:20px 24px 16px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--border);">
     <div>
       <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
         <div style="width:6px; height:6px; border-radius:50%; background:var(--text-main); animation:pb-pulse 2s ease-in-out infinite;"></div>
-        <span style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text3);">Active Playbook</span>
+        <span style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text3);">Start Here</span>
       </div>
-      <h2 style="font-size:17px; font-weight:700; color:var(--text-main); letter-spacing:-.4px; margin-bottom:3px;">The Revenue Playbook</h2>
-      <p style="font-size:12.5px; color:var(--text-muted);">Skip the setup. Follow these 4 steps to pitch and close your first client today.</p>
+      <h2 style="font-size:19px; font-weight:800; color:var(--text-main); letter-spacing:-.5px; margin-bottom:3px;">Your first 10 minutes in Lancify</h2>
+      <p style="font-size:12.5px; color:var(--text-muted); max-width:58ch;">This is the fastest path from empty workspace to first outreach. Do these four actions and the app immediately starts feeling useful.</p>
     </div>
     <button onclick="window.open('https://loom.com','_blank')" style="display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 12px; background:rgba(99,102,241,0.07); color:#6366f1; border:1px solid rgba(99,102,241,0.18); border-radius:7px; font-size:12px; font-weight:500; cursor:pointer; font-family:inherit; white-space:nowrap; transition:background .15s;" onmouseover="this.style.background='rgba(99,102,241,0.14)'" onmouseout="this.style.background='rgba(99,102,241,0.07)'">
       <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
-      Watch the walkthrough
+      Watch 2-min walkthrough
     </button>
   </div>
 
   <!-- Progress bar -->
   <div style="padding:12px 24px; border-bottom:1px solid var(--border); background:var(--bg-panel);">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-      <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--text3);">Execution Progress</span>
+      <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--text3);">Start Here Progress</span>
       <span id="pb-pct" style="font-size:11px; font-weight:700; color:var(--text-main);">0%</span>
     </div>
     <div style="height:3px; background:var(--border); border-radius:99px; overflow:hidden;">
@@ -3709,9 +3742,10 @@ html.dark .credits-warning-banner {
         <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
           <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 1</span>
           <span style="font-size:10px; font-weight:600; color:#6366f1; background:rgba(99,102,241,0.08); padding:1px 7px; border-radius:99px;">Opportunity Engine</span>
+          <span style="font-size:10px; font-weight:600; color:var(--text-muted);">3 min</span>
         </div>
-        <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">Mine Leads &amp; Quick Pitch</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Run a Deep Scan to find 5 high-intent targets. Click 'Quick DM' to instantly copy a proven outreach script and send it.</div>
+        <div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px;">Find one lead worth pitching today</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Run Opportunity Engine, save the best match, and use Quick DM so your first move happens now instead of later.</div>
       </div>
       <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
     </div>
@@ -3728,9 +3762,10 @@ html.dark .credits-warning-banner {
         <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
           <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 2</span>
           <span style="font-size:10px; font-weight:600; color:#a855f7; background:rgba(168,85,247,0.08); padding:1px 7px; border-radius:99px;">Audit Generator</span>
+          <span style="font-size:10px; font-weight:600; color:var(--text-muted);">2 min</span>
         </div>
-        <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">The Trojan Horse</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Don't send a generic resume. Pick your best lead and generate a custom 5-point Growth Diagnostic PDF to prove your value instantly.</div>
+        <div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px;">Prove value before you ask for money</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Generate a sharp audit for your best lead so your pitch feels researched, premium, and much harder to ignore.</div>
       </div>
       <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
     </div>
@@ -3747,9 +3782,10 @@ html.dark .credits-warning-banner {
         <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
           <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 3</span>
           <span style="font-size:10px; font-weight:600; color:#f59e0b; background:rgba(245,158,11,0.08); padding:1px 7px; border-radius:99px;">Email Writer</span>
+          <span style="font-size:10px; font-weight:600; color:var(--text-muted);">2 min</span>
         </div>
-        <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">Lock the Follow-up</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">The money is in the follow-up. If they don't reply in 48 hours, use the Email Writer to draft a high-converting, psychology-backed nudge.</div>
+        <div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px;">Send the follow-up before momentum dies</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Use Email Writer for a follow-up that sounds human, specific, and worth replying to instead of generic and forgettable.</div>
       </div>
       <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
     </div>
@@ -3765,10 +3801,11 @@ html.dark .credits-warning-banner {
       <div style="flex:1; min-width:0;">
         <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
           <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 4</span>
-          <span style="font-size:10px; font-weight:600; color:#22c55e; background:rgba(34,197,94,0.08); padding:1px 7px; border-radius:99px;">Roadmap</span>
+          <span style="font-size:10px; font-weight:600; color:#22c55e; background:rgba(34,197,94,0.08); padding:1px 7px; border-radius:99px;">Growth</span>
+          <span style="font-size:10px; font-weight:600; color:var(--text-muted);">3 min</span>
         </div>
-        <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px;">Build Your Daily System</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Once you send your pitches, generate your custom 30-day execution plan. Map out exactly what to do every day to scale to $5k/mo.</div>
+        <div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px;">Turn one win into a repeatable growth system</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Open Growth, generate your roadmap, and give yourself a daily system so you keep coming back with direction.</div>
       </div>
       <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
     </div>
@@ -3962,7 +3999,7 @@ html.dark .credits-warning-banner {
 
       <div id="page-roadmap" class="page">
         <div class="content-inner">
-          <div class="page-hd"><h1>30-Day Income Roadmap</h1><p>Tell us where you're starting. AI builds your daily execution plan.</p></div>
+          <div class="page-hd"><h1>Growth System</h1><p>Build a 30-day plan that keeps you moving every day, not just inspired for one session.</p></div>
           <div class="profile-banner" id="rm-banner" onclick="applyProfileTo('roadmap')"><i data-lucide="user-check" style="width:13px;height:13px"></i> Profile detected — click to auto-fill</div>
           <div id="rm-form" class="card">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
@@ -6529,6 +6566,17 @@ function toggleNavFolder(folderKey){
   _setNavFolderOpen(folder, !folder.classList.contains('open'));
 }
 
+function openStartHere(){
+  navigate('home');
+  setTimeout(() => {
+    const section = el('home-start-here');
+    if (!section) return;
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    section.style.boxShadow = '0 0 0 2px rgba(91,141,239,0.22), var(--shadow-lg)';
+    setTimeout(() => { section.style.boxShadow = ''; }, 1400);
+  }, 120);
+}
+
 /* ─── PROFILE ─── */
 function applyProfileToFields(p){
   if(!p) return;
@@ -7936,9 +7984,40 @@ function _renderEarningsBars(barId, labelId){
   const barsEl = el(barId), labelsEl = el(labelId);
   if (!barsEl || !labelsEl) return;
   const data = _monthlyEarningsBuckets();
+  const total = data.reduce((sum, item) => sum + Number(item.value || 0), 0);
+  if (!total) {
+    barsEl.classList.add('empty');
+    barsEl.innerHTML = `
+      <div class="earnings-empty">
+        <div>
+          <div class="earnings-empty-kicker">No earnings yet</div>
+          <div class="earnings-empty-title">No earnings yet - here's how to get your first</div>
+          <div class="earnings-empty-copy">Start with one lead, send one proof-backed pitch, and use Growth to keep momentum going until the first deal lands.</div>
+          <button class="btn btn-primary" onclick="openStartHere()">Open Start Here</button>
+        </div>
+      </div>
+    `;
+    labelsEl.innerHTML = '';
+    return;
+  }
+  barsEl.classList.remove('empty');
   const maxVal = Math.max(...data.map(d => d.value), 1);
   barsEl.innerHTML = data.map(d => `<div class="biz-bar" style="height:${Math.max(10, Math.round((d.value / maxVal) * 100))}%"></div>`).join('');
   labelsEl.innerHTML = data.map(d => `<div class="biz-bar-label">${d.label}</div>`).join('');
+}
+
+function updateHomeHeroContext(activeDeals, totalClients, savedCount){
+  const contextEl = el('hero-context');
+  if (!contextEl) return;
+  let copy = 'No active clients yet. Start with one strong lead and close your first deal.';
+  if (activeDeals > 0) {
+    copy = `You have ${activeDeals} active client${activeDeals === 1 ? '' : 's'}. Ready to close more?`;
+  } else if (totalClients > 0) {
+    copy = `You already have ${totalClients} client${totalClients === 1 ? '' : 's'} in the workspace. Time to move the next one forward.`;
+  } else if (savedCount > 0) {
+    copy = `You have ${savedCount} saved opportunit${savedCount === 1 ? 'y' : 'ies'} waiting. Turn one into your first client.`;
+  }
+  contextEl.textContent = copy;
 }
 
 function renderBusinessDashboard(){
@@ -8896,6 +8975,7 @@ function renderBusinessDashboard(){
   setText('home-active-deals', String(activeDeals));
   setText('home-won-revenue', formatCurrency(wonRevenue || 0));
   setText('home-outstanding', formatCurrency(outstandingAll || 0));
+  updateHomeHeroContext(activeDeals, totalClientsAll, opportunityClients.length);
   _renderEarningsBars('home-earnings-bars','home-bar-labels');
 
   const filteredLeads = userLeads.filter(lead => isWithinAccountingWindow(lead.created_at));
