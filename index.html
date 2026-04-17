@@ -1422,7 +1422,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .checklist-step-arrow{width:16px;height:16px;color:var(--text3);flex-shrink:0}
 
 .floating-checklist{
-  position:fixed;right:22px;bottom:22px;width:290px;z-index:999;
+  position:fixed;right:14px;bottom:18px;width:min(320px, calc(100vw - 28px));max-height:calc(100vh - 36px);z-index:999;
   background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)), var(--bg-panel);
   border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden
 }
@@ -1431,16 +1431,20 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .floating-checklist.minimized .floating-checklist-footer{display:none}
 .floating-checklist-head{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:14px 14px 12px 16px;border-bottom:1px solid var(--border)
+  padding:12px 12px 10px 14px;border-bottom:1px solid var(--border)
 }
-.floating-checklist-title{font-size:14px;font-weight:800;color:var(--text-main);letter-spacing:-.3px}
-.floating-checklist-head-actions{display:flex;align-items:center;gap:6px}
+.floating-checklist-title{
+  min-width:0;font-size:13px;font-weight:800;line-height:1.2;color:var(--text-main);letter-spacing:-.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.floating-checklist-head-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:auto}
 .floating-checklist-head-btn{
-  width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text-muted);
+  width:24px;height:24px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text-muted);
   display:flex;align-items:center;justify-content:center;cursor:pointer
 }
+.floating-checklist-head-btn svg{width:12px !important;height:12px !important}
 .floating-checklist-head-btn:hover{color:var(--text-main);border-color:var(--border2)}
-.floating-checklist-body{padding:14px 14px 12px;display:grid;gap:12px}
+.floating-checklist-body{padding:12px 12px 10px;display:grid;gap:10px}
 .floating-progress-copy{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .floating-progress-copy span{font-size:12px;font-weight:700;color:var(--text-main)}
 .floating-progress-copy small{font-size:11px;color:var(--text3)}
@@ -1449,7 +1453,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .floating-steps{display:grid;gap:9px}
 .floating-step{
   display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:flex-start;
-  padding:10px;border-radius:14px;border:1px solid var(--border);background:var(--bg)
+  padding:9px;border-radius:14px;border:1px solid var(--border);background:var(--bg)
 }
 .floating-step.active{border-color:rgba(91,141,239,0.28);box-shadow:0 0 0 1px rgba(91,141,239,0.14)}
 .floating-step.completed{opacity:.5}
@@ -1469,7 +1473,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 }
 .floating-step-action:hover{border-color:var(--border2)}
 .floating-checklist-footer{
-  padding:0 14px 14px;font-size:11.5px;line-height:1.6;color:var(--text-muted)
+  padding:0 12px 12px;font-size:11px;line-height:1.55;color:var(--text-muted)
 }
 
 #signup-onboarding-modal{
@@ -5034,10 +5038,10 @@ html.dark .credits-warning-banner {
 </div>
 <div id="floating-checklist-widget" class="floating-checklist hidden">
   <div class="floating-checklist-head">
-    <div class="floating-checklist-title">&#128640; Close your first client</div>
+    <div class="floating-checklist-title">&#128640; First client</div>
     <div class="floating-checklist-head-actions">
-      <button class="floating-checklist-head-btn" onclick="toggleFloatingChecklistMinimize()" aria-label="Minimize"><i data-lucide="minus" style="width:14px;height:14px"></i></button>
-      <button class="floating-checklist-head-btn" onclick="dismissFloatingChecklist()" aria-label="Dismiss"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+      <button class="floating-checklist-head-btn" onclick="toggleFloatingChecklistMinimize()" aria-label="Minimize"><i data-lucide="minus" style="width:12px;height:12px"></i></button>
+      <button class="floating-checklist-head-btn" onclick="dismissFloatingChecklist()" aria-label="Dismiss"><i data-lucide="x" style="width:12px;height:12px"></i></button>
     </div>
   </div>
   <div class="floating-checklist-body">
