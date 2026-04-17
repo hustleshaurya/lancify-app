@@ -1326,6 +1326,189 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .earnings-empty-title{font-size:20px;font-weight:800;letter-spacing:-.7px;color:var(--text-main);margin-bottom:8px}
 .earnings-empty-copy{font-size:13px;line-height:1.7;color:var(--text-muted);max-width:34ch;margin-bottom:14px}
 
+/* Dashboard onboarding surfaces */
+.dashboard-banner{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:20px 22px;margin-bottom:20px;border-radius:18px;border:1px solid var(--border);
+  border-left:3px solid var(--accent-primary);
+  background:
+    linear-gradient(135deg, rgba(91,141,239,0.10), rgba(20,184,166,0.04)),
+    var(--bg-panel);
+  box-shadow:var(--shadow-sm)
+}
+.dashboard-banner.hidden{display:none}
+.dashboard-banner-copy{display:grid;gap:6px}
+.dashboard-banner-eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.dashboard-banner-title{font-size:20px;font-weight:800;letter-spacing:-.6px;color:var(--text-main)}
+.dashboard-banner-sub{font-size:13px;line-height:1.7;color:var(--text-muted)}
+.dashboard-banner-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.challenge-progress{
+  width:58px;height:58px;border-radius:50%;display:grid;place-items:center;position:relative;
+  background:conic-gradient(var(--accent-primary) 0deg, rgba(148,163,184,0.18) 0deg);
+}
+.challenge-progress::before{
+  content:'';position:absolute;inset:5px;border-radius:50%;background:var(--bg-panel);border:1px solid var(--border)
+}
+.challenge-progress strong{position:relative;z-index:1;font-size:15px;font-weight:800;color:var(--text-main)}
+
+.checklist-shell{margin-bottom:26px;padding:0;overflow:hidden;border-radius:20px}
+.checklist-header{
+  padding:24px 26px 18px;display:flex;justify-content:space-between;align-items:flex-start;
+  gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--border)
+}
+.checklist-kicker{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.checklist-kicker-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--text-main);animation:pb-pulse 2s ease-in-out infinite
+}
+.checklist-kicker-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)}
+.checklist-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+.checklist-title{font-size:24px;font-weight:800;color:var(--text-main);letter-spacing:-.7px}
+.checklist-time-badge{
+  display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px;border-radius:999px;
+  border:1px solid var(--border);background:var(--bg);font-size:11px;font-weight:700;color:var(--text-muted)
+}
+.checklist-copy{font-size:13px;line-height:1.7;color:var(--text-muted);max-width:62ch}
+.checklist-progress-wrap{padding:14px 26px;border-bottom:1px solid var(--border);background:var(--bg-panel)}
+.checklist-progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.checklist-progress-label{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3)}
+.checklist-progress-pct{font-size:11px;font-weight:800;color:var(--text-main)}
+.checklist-track{height:4px;background:var(--border);border-radius:999px;overflow:hidden}
+.checklist-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg, var(--accent-primary), rgba(91,141,239,0.55));
+  border-radius:999px;transition:width .4s cubic-bezier(0.16,1,0.3,1)
+}
+.checklist-steps{padding:14px 16px 18px;display:grid;gap:10px}
+.checklist-step{
+  display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:14px;
+  padding:18px 18px 18px 16px;border-radius:16px;border:1px solid var(--border);
+  background:var(--bg);cursor:pointer;transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease, opacity .18s ease
+}
+.checklist-step:hover{border-color:var(--border2);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.checklist-step.active{
+  border-left:2px solid var(--accent-primary);
+  box-shadow:0 0 0 1px rgba(91,141,239,0.18), 0 0 28px rgba(91,141,239,0.10)
+}
+.checklist-step.completed{
+  opacity:.88;
+  background:linear-gradient(135deg, rgba(34,197,94,0.10), rgba(255,255,255,0)), var(--bg)
+}
+.checklist-step.completed .checklist-step-title{
+  text-decoration:line-through;
+  text-decoration-thickness:1.5px;
+  color:var(--text-muted)
+}
+.checklist-check{
+  width:24px;height:24px;border-radius:7px;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;cursor:pointer;transition:all .2s;background:transparent
+}
+.checklist-check i{width:13px;height:13px;color:transparent;transition:color .2s}
+.checklist-step.completed .checklist-check{
+  background:rgba(34,197,94,0.16);border-color:rgba(34,197,94,0.45)
+}
+.checklist-step.completed .checklist-check i{color:#16a34a}
+.checklist-icon{
+  display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;flex-shrink:0
+}
+.checklist-main{min-width:0}
+.checklist-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.checklist-step-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3)}
+.checklist-chip{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid transparent
+}
+.checklist-chip.time{color:var(--text-muted);background:var(--bg-panel);border-color:var(--border)}
+.checklist-step-title{font-size:16px;font-weight:800;color:var(--text-main);margin-bottom:4px;letter-spacing:-.3px}
+.checklist-step-copy{font-size:12.5px;color:var(--text-muted);line-height:1.65}
+.checklist-step-arrow{width:16px;height:16px;color:var(--text3);flex-shrink:0}
+
+.floating-checklist{
+  position:fixed;right:22px;bottom:22px;width:290px;z-index:999;
+  background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)), var(--bg-panel);
+  border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden
+}
+.floating-checklist.hidden{display:none}
+.floating-checklist.minimized .floating-checklist-body,
+.floating-checklist.minimized .floating-checklist-footer{display:none}
+.floating-checklist-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 14px 12px 16px;border-bottom:1px solid var(--border)
+}
+.floating-checklist-title{font-size:14px;font-weight:800;color:var(--text-main);letter-spacing:-.3px}
+.floating-checklist-head-actions{display:flex;align-items:center;gap:6px}
+.floating-checklist-head-btn{
+  width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text-muted);
+  display:flex;align-items:center;justify-content:center;cursor:pointer
+}
+.floating-checklist-head-btn:hover{color:var(--text-main);border-color:var(--border2)}
+.floating-checklist-body{padding:14px 14px 12px;display:grid;gap:12px}
+.floating-progress-copy{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.floating-progress-copy span{font-size:12px;font-weight:700;color:var(--text-main)}
+.floating-progress-copy small{font-size:11px;color:var(--text3)}
+.floating-track{height:5px;border-radius:999px;background:var(--border);overflow:hidden}
+.floating-fill{height:100%;width:0%;background:linear-gradient(90deg, var(--accent-primary), rgba(91,141,239,0.55));transition:width .4s cubic-bezier(0.16,1,0.3,1)}
+.floating-steps{display:grid;gap:9px}
+.floating-step{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:flex-start;
+  padding:10px;border-radius:14px;border:1px solid var(--border);background:var(--bg)
+}
+.floating-step.active{border-color:rgba(91,141,239,0.28);box-shadow:0 0 0 1px rgba(91,141,239,0.14)}
+.floating-step.completed{opacity:.5}
+.floating-step-num{
+  width:24px;height:24px;border-radius:999px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:var(--text-main)
+}
+.floating-step.completed .floating-step-num{
+  background:rgba(34,197,94,0.14);border-color:rgba(34,197,94,0.38);color:#16a34a
+}
+.floating-step-main{min-width:0}
+.floating-step-title{font-size:12.5px;font-weight:700;color:var(--text-main);margin-bottom:2px}
+.floating-step-copy{font-size:11.5px;line-height:1.5;color:var(--text-muted)}
+.floating-step-action{
+  height:28px;padding:0 10px;border-radius:999px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text-main);
+  font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap
+}
+.floating-step-action:hover{border-color:var(--border2)}
+.floating-checklist-footer{
+  padding:0 14px 14px;font-size:11.5px;line-height:1.6;color:var(--text-muted)
+}
+
+#signup-onboarding-modal{
+  position:fixed;inset:0;z-index:9100;display:none;align-items:center;justify-content:center;padding:28px;
+  background:
+    radial-gradient(circle at top left, rgba(91,141,239,0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(20,184,166,0.10), transparent 30%),
+    rgba(6,7,11,0.92);
+  backdrop-filter:blur(18px)
+}
+#signup-onboarding-modal.show{display:flex}
+.signup-onboarding-shell{
+  width:min(760px, 100%);padding:42px 38px;border-radius:28px;border:1px solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+    var(--bg-panel);
+  box-shadow:var(--shadow-lg);text-align:center
+}
+.signup-onboarding-logo{height:26px;margin:0 auto 22px;display:block;opacity:.94}
+.signup-onboarding-shell h2{
+  font-size:42px;line-height:1.04;font-weight:800;letter-spacing:-1.4px;color:var(--text-main);margin-bottom:14px
+}
+.signup-onboarding-shell p{
+  font-size:15px;line-height:1.75;color:var(--text-muted);max-width:42ch;margin:0 auto 24px
+}
+.signup-onboarding-pills{display:grid;gap:10px;max-width:460px;margin:0 auto 28px}
+.signup-onboarding-pill{
+  opacity:0;transform:translateY(10px);animation:signup-pill-in .5s ease forwards;
+  display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 16px;border-radius:999px;
+  border:1px solid var(--border);background:var(--bg);font-size:13px;font-weight:600;color:var(--text-main)
+}
+.signup-onboarding-pill:nth-child(2){animation-delay:.12s}
+.signup-onboarding-pill:nth-child(3){animation-delay:.24s}
+.signup-onboarding-pill i{width:15px;height:15px;color:var(--accent-primary)}
+.signup-onboarding-note{margin-top:12px;font-size:12px;color:var(--text3)}
+@keyframes signup-pill-in{
+  to{opacity:1;transform:translateY(0)}
+}
+
 /* Finance pages */
 .fin-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
 .fin-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
@@ -1371,6 +1554,9 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
   .pipeline-composer-grid,.pipeline-board,.crm-modal-grid{grid-template-columns:1fr}
   .pipeline-toolbar,.analytics-range-row,.page-hd-split{flex-direction:column;align-items:stretch}
   .invoice-prefill-controls{grid-template-columns:1fr}
+  .dashboard-banner{align-items:flex-start}
+  .checklist-step{grid-template-columns:auto auto minmax(0,1fr)}
+  .checklist-step-arrow{display:none}
 }
 
 @media(max-width:780px){
@@ -1380,6 +1566,14 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
   .pipeline-toolbar-controls input,.pipeline-toolbar-controls select{min-width:0}
   .kanban-board-col{min-height:420px}
   .invoice-prefill-bar{padding:14px}
+  .dashboard-banner{padding:18px}
+  .checklist-header,.checklist-progress-wrap{padding-left:18px;padding-right:18px}
+  .checklist-steps{padding:12px}
+  .checklist-step{grid-template-columns:auto minmax(0,1fr);padding:16px 14px}
+  .checklist-icon,.checklist-step-arrow{display:none}
+  .signup-onboarding-shell{padding:32px 24px}
+  .signup-onboarding-shell h2{font-size:34px}
+  .floating-checklist{display:none !important}
 }
 
 /* ─── MODALS ─── */
@@ -3405,6 +3599,20 @@ html.dark .credits-warning-banner {
 <!-- Aurora canvas — z-index 9490, always below everything -->
 <canvas id="ob-aurora-canvas"></canvas>
 
+<div id="signup-onboarding-modal">
+  <div class="signup-onboarding-shell">
+    <img src="darkthemelogo.png" alt="Lancify" class="signup-onboarding-logo">
+    <h2>You're 7 days away from your first client.</h2>
+    <p>Lancify gives you the exact tools and steps. Just follow the checklist.</p>
+    <div class="signup-onboarding-pills">
+      <div class="signup-onboarding-pill"><i data-lucide="target"></i>Find real clients in minutes</div>
+      <div class="signup-onboarding-pill"><i data-lucide="pen-square"></i>AI writes your pitch so you don't freeze</div>
+      <div class="signup-onboarding-pill"><i data-lucide="rocket"></i>Follow up like a pro, close with confidence</div>
+    </div>
+    <button class="btn btn-primary" style="height:48px;padding:0 24px;font-size:15px" onclick="handleSignupOnboardingCta()">Show me how →</button>
+    <div class="signup-onboarding-note">Takes 30 seconds. No setup required.</div>
+  </div>
+</div>
 
 <div id="ob-quote-screen">
   <div class="ob-quote-glow"></div>
@@ -3698,120 +3906,125 @@ html.dark .credits-warning-banner {
               <div id="hero-context" class="workspace-context">No active clients yet. Start with one strong lead and close your first deal.</div>
             </div>
           </div>
-           <div id="home-start-here" class="card premium-surface" style="margin-bottom:32px; padding:0; position:relative; overflow:hidden; border-radius:18px;">
+          <div id="dashboard-challenge-banner" class="dashboard-banner hidden">
+            <div class="dashboard-banner-copy">
+              <div class="dashboard-banner-eyebrow">7-Day Client Challenge</div>
+              <div class="dashboard-banner-title">7-Day Client Challenge — Follow these 4 steps. Land a client this week.</div>
+              <div class="dashboard-banner-sub">Stay focused on the next move, not the whole mountain. Lancify already mapped the path.</div>
+            </div>
+            <div class="dashboard-banner-actions">
+              <div id="dashboard-challenge-progress" class="challenge-progress"><strong>0/4</strong></div>
+              <button class="btn btn-primary" onclick="openStartHere()">Continue →</button>
+            </div>
+          </div>
 
-  <!-- Header -->
-  <div style="padding:20px 24px 16px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--border);">
-    <div>
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-        <div style="width:6px; height:6px; border-radius:50%; background:var(--text-main); animation:pb-pulse 2s ease-in-out infinite;"></div>
-        <span style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text3);">Start Here</span>
-      </div>
-      <h2 style="font-size:19px; font-weight:800; color:var(--text-main); letter-spacing:-.5px; margin-bottom:3px;">Your first 10 minutes in Lancify</h2>
-      <p style="font-size:12.5px; color:var(--text-muted); max-width:58ch;">This is the fastest path from empty workspace to first outreach. Do these four actions and the app immediately starts feeling useful.</p>
-    </div>
-    <button onclick="window.open('https://loom.com','_blank')" style="display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 12px; background:rgba(99,102,241,0.07); color:#6366f1; border:1px solid rgba(99,102,241,0.18); border-radius:7px; font-size:12px; font-weight:500; cursor:pointer; font-family:inherit; white-space:nowrap; transition:background .15s;" onmouseover="this.style.background='rgba(99,102,241,0.14)'" onmouseout="this.style.background='rgba(99,102,241,0.07)'">
-      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
-      Watch 2-min walkthrough
-    </button>
-  </div>
+          <div id="home-start-here" class="card premium-surface checklist-shell">
+            <div class="checklist-header">
+              <div>
+                <div class="checklist-kicker">
+                  <div class="checklist-kicker-dot"></div>
+                  <span class="checklist-kicker-label">Start Here</span>
+                </div>
+                <div class="checklist-title-row">
+                  <h2 class="checklist-title">Your first 10 minutes in Lancify</h2>
+                  <span class="checklist-time-badge">~10 min total</span>
+                </div>
+                <p class="checklist-copy">This is the fastest path from empty workspace to first outreach. Do these four actions and the app immediately starts feeling useful.</p>
+              </div>
+              <button onclick="window.open('https://loom.com','_blank')" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; background:rgba(99,102,241,0.07); color:#6366f1; border:1px solid rgba(99,102,241,0.18); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+                Watch 2-min walkthrough
+              </button>
+            </div>
 
-  <!-- Progress bar -->
-  <div style="padding:12px 24px; border-bottom:1px solid var(--border); background:var(--bg-panel);">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-      <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--text3);">Start Here Progress</span>
-      <span id="pb-pct" style="font-size:11px; font-weight:700; color:var(--text-main);">0%</span>
-    </div>
-    <div style="height:3px; background:var(--border); border-radius:99px; overflow:hidden;">
-      <div id="pb-fill" style="height:100%; width:0%; background:var(--text-main); border-radius:99px; transition:width 0.4s cubic-bezier(0.16,1,0.3,1);"></div>
-    </div>
-  </div>
+            <div class="checklist-progress-wrap">
+              <div class="checklist-progress-row">
+                <span class="checklist-progress-label">Start Here Progress</span>
+                <span id="pb-pct" class="checklist-progress-pct">0%</span>
+              </div>
+              <div class="checklist-track">
+                <div id="pb-fill" class="checklist-fill"></div>
+              </div>
+            </div>
 
-  <!-- Steps -->
-  <div style="padding:12px 16px; display:flex; flex-direction:column; gap:8px;">
+            <div class="checklist-steps">
+              <div id="pb-card-1" class="checklist-step" onclick="navigate('opportunity')">
+                <div id="pb-check-1" class="checklist-check" onclick="event.stopPropagation();togglePb(1)">
+                  <i data-lucide="check"></i>
+                </div>
+                <div class="checklist-icon" style="background:rgba(99,102,241,0.08)">
+                  <i data-lucide="target" style="width:15px;height:15px;color:#6366f1"></i>
+                </div>
+                <div class="checklist-main">
+                  <div class="checklist-meta">
+                    <span class="checklist-step-label">Step 1</span>
+                    <span class="checklist-chip" style="color:#6366f1;background:rgba(99,102,241,0.08)">Opportunity Engine</span>
+                    <span class="checklist-chip time">3 min</span>
+                  </div>
+                  <div class="checklist-step-title">Find one lead worth pitching today</div>
+                  <div class="checklist-step-copy">Run Opportunity Engine, save the best match, and use Quick DM so your first move happens now instead of later.</div>
+                </div>
+                <i data-lucide="arrow-right" class="checklist-step-arrow"></i>
+              </div>
 
-    <!-- Step 1 -->
-    <div id="pb-card-1" onclick="navigate('opportunity')" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease;" onmouseover="this.style.borderColor='var(--border2)';this.style.boxShadow='var(--shadow-md)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='translateY(0)'">
-      <div id="pb-check-1" onclick="event.stopPropagation();togglePb(1)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s; background:transparent;">
-        <i data-lucide="check" style="width:13px; height:13px; color:transparent; transition:color .2s;"></i>
-      </div>
-      <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(99,102,241,0.08); flex-shrink:0;">
-        <i data-lucide="target" style="width:15px; height:15px; color:#6366f1;"></i>
-      </div>
-      <div style="flex:1; min-width:0;">
-        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-          <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 1</span>
-          <span style="font-size:10px; font-weight:600; color:#6366f1; background:rgba(99,102,241,0.08); padding:1px 7px; border-radius:99px;">Opportunity Engine</span>
-          <span style="font-size:10px; font-weight:600; color:var(--text-muted);">3 min</span>
-        </div>
-        <div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px;">Find one lead worth pitching today</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Run Opportunity Engine, save the best match, and use Quick DM so your first move happens now instead of later.</div>
-      </div>
-      <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
-    </div>
+              <div id="pb-card-2" class="checklist-step" onclick="navigate('audit')">
+                <div id="pb-check-2" class="checklist-check" onclick="event.stopPropagation();togglePb(2)">
+                  <i data-lucide="check"></i>
+                </div>
+                <div class="checklist-icon" style="background:rgba(168,85,247,0.08)">
+                  <i data-lucide="sparkles" style="width:15px;height:15px;color:#a855f7"></i>
+                </div>
+                <div class="checklist-main">
+                  <div class="checklist-meta">
+                    <span class="checklist-step-label">Step 2</span>
+                    <span class="checklist-chip" style="color:#a855f7;background:rgba(168,85,247,0.08)">Audit Generator</span>
+                    <span class="checklist-chip time">2 min</span>
+                  </div>
+                  <div class="checklist-step-title">Prove value before you ask for money</div>
+                  <div class="checklist-step-copy">Generate a sharp audit for your best lead so your pitch feels researched, premium, and much harder to ignore.</div>
+                </div>
+                <i data-lucide="arrow-right" class="checklist-step-arrow"></i>
+              </div>
 
-    <!-- Step 2 -->
-    <div id="pb-card-2" onclick="navigate('audit')" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease;" onmouseover="this.style.borderColor='var(--border2)';this.style.boxShadow='var(--shadow-md)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='translateY(0)'">
-      <div id="pb-check-2" onclick="event.stopPropagation();togglePb(2)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s; background:transparent;">
-        <i data-lucide="check" style="width:13px; height:13px; color:transparent; transition:color .2s;"></i>
-      </div>
-      <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(168,85,247,0.08); flex-shrink:0;">
-        <i data-lucide="sparkles" style="width:15px; height:15px; color:#a855f7;"></i>
-      </div>
-      <div style="flex:1; min-width:0;">
-        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-          <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 2</span>
-          <span style="font-size:10px; font-weight:600; color:#a855f7; background:rgba(168,85,247,0.08); padding:1px 7px; border-radius:99px;">Audit Generator</span>
-          <span style="font-size:10px; font-weight:600; color:var(--text-muted);">2 min</span>
-        </div>
-        <div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px;">Prove value before you ask for money</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Generate a sharp audit for your best lead so your pitch feels researched, premium, and much harder to ignore.</div>
-      </div>
-      <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
-    </div>
+              <div id="pb-card-3" class="checklist-step" onclick="navigate('email')">
+                <div id="pb-check-3" class="checklist-check" onclick="event.stopPropagation();togglePb(3)">
+                  <i data-lucide="check"></i>
+                </div>
+                <div class="checklist-icon" style="background:rgba(245,158,11,0.08)">
+                  <i data-lucide="mail" style="width:15px;height:15px;color:#f59e0b"></i>
+                </div>
+                <div class="checklist-main">
+                  <div class="checklist-meta">
+                    <span class="checklist-step-label">Step 3</span>
+                    <span class="checklist-chip" style="color:#f59e0b;background:rgba(245,158,11,0.08)">Email Writer</span>
+                    <span class="checklist-chip time">2 min</span>
+                  </div>
+                  <div class="checklist-step-title">Send the follow-up before momentum dies</div>
+                  <div class="checklist-step-copy">Use Email Writer for a follow-up that sounds human, specific, and worth replying to instead of generic and forgettable.</div>
+                </div>
+                <i data-lucide="arrow-right" class="checklist-step-arrow"></i>
+              </div>
 
-    <!-- Step 3 -->
-    <div id="pb-card-3" onclick="navigate('email')" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease;" onmouseover="this.style.borderColor='var(--border2)';this.style.boxShadow='var(--shadow-md)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='translateY(0)'">
-      <div id="pb-check-3" onclick="event.stopPropagation();togglePb(3)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s; background:transparent;">
-        <i data-lucide="check" style="width:13px; height:13px; color:transparent; transition:color .2s;"></i>
-      </div>
-      <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(245,158,11,0.08); flex-shrink:0;">
-        <i data-lucide="mail" style="width:15px; height:15px; color:#f59e0b;"></i>
-      </div>
-      <div style="flex:1; min-width:0;">
-        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-          <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 3</span>
-          <span style="font-size:10px; font-weight:600; color:#f59e0b; background:rgba(245,158,11,0.08); padding:1px 7px; border-radius:99px;">Email Writer</span>
-          <span style="font-size:10px; font-weight:600; color:var(--text-muted);">2 min</span>
-        </div>
-        <div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px;">Send the follow-up before momentum dies</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Use Email Writer for a follow-up that sounds human, specific, and worth replying to instead of generic and forgettable.</div>
-      </div>
-      <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
-    </div>
-
-    <!-- Step 4 -->
-    <div id="pb-card-4" onclick="navigate('roadmap')" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, transform .12s ease;" onmouseover="this.style.borderColor='var(--border2)';this.style.boxShadow='var(--shadow-md)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='translateY(0)'">
-      <div id="pb-check-4" onclick="event.stopPropagation();togglePb(4)" style="width:22px; height:22px; border-radius:6px; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all .2s; background:transparent;">
-        <i data-lucide="check" style="width:13px; height:13px; color:transparent; transition:color .2s;"></i>
-      </div>
-      <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(34,197,94,0.08); flex-shrink:0;">
-        <i data-lucide="map" style="width:15px; height:15px; color:#22c55e;"></i>
-      </div>
-      <div style="flex:1; min-width:0;">
-        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-          <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text3);">Step 4</span>
-          <span style="font-size:10px; font-weight:600; color:#22c55e; background:rgba(34,197,94,0.08); padding:1px 7px; border-radius:99px;">Growth</span>
-          <span style="font-size:10px; font-weight:600; color:var(--text-muted);">3 min</span>
-        </div>
-        <div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px;">Turn one win into a repeatable growth system</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Open Growth, generate your roadmap, and give yourself a daily system so you keep coming back with direction.</div>
-      </div>
-      <i data-lucide="arrow-right" style="width:15px; height:15px; color:var(--text3); flex-shrink:0;"></i>
-    </div>
-
-  </div>
-</div>
+              <div id="pb-card-4" class="checklist-step" onclick="navigate('roadmap')">
+                <div id="pb-check-4" class="checklist-check" onclick="event.stopPropagation();togglePb(4)">
+                  <i data-lucide="check"></i>
+                </div>
+                <div class="checklist-icon" style="background:rgba(34,197,94,0.08)">
+                  <i data-lucide="map" style="width:15px;height:15px;color:#22c55e"></i>
+                </div>
+                <div class="checklist-main">
+                  <div class="checklist-meta">
+                    <span class="checklist-step-label">Step 4</span>
+                    <span class="checklist-chip" style="color:#22c55e;background:rgba(34,197,94,0.08)">Growth</span>
+                    <span class="checklist-chip time">3 min</span>
+                  </div>
+                  <div class="checklist-step-title">Turn one win into a repeatable growth system</div>
+                  <div class="checklist-step-copy">Open Growth, generate your roadmap, and give yourself a daily system so you keep coming back with direction.</div>
+                </div>
+                <i data-lucide="arrow-right" class="checklist-step-arrow"></i>
+              </div>
+            </div>
+          </div>
 
            
           <div class="home-mini-stats">
@@ -4748,45 +4961,44 @@ html.dark .credits-warning-banner {
         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#a1a1aa" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       </div>
       <div style="font-size:20px;font-weight:700;color:#fafafa;margin-bottom:4px;">Free</div>
-      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">Start clean, learn the workflow, and get your first paid project moving.</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;width:max-content;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);font-size:11px;font-weight:700;letter-spacing:.04em;color:#d4d4d8;margin-bottom:16px;">Free forever — no card needed</div>
+      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">Everything a beginner needs to land their first paying client</div>
       <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:24px;">
         <span style="font-size:40px;font-weight:700;color:#fafafa;letter-spacing:-1.5px;line-height:1;">$0</span>
       </div>
-      <button onclick="closeUpgrade()" style="height:44px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;width:100%;font-family:inherit;background:transparent;border:1px solid #3f3f46;color:#a1a1aa;transition:background .15s,color .15s;margin-bottom:28px;" onmouseover="this.style.background='#27272a';this.style.color='#fafafa'" onmouseout="this.style.background='transparent';this.style.color='#a1a1aa'">Current Plan</button>
+      <button onclick="closeUpgrade()" style="height:44px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;width:100%;font-family:inherit;background:transparent;border:1px solid #3f3f46;color:#a1a1aa;transition:background .15s,color .15s;margin-bottom:28px;" onmouseover="this.style.background='#27272a';this.style.color='#fafafa'" onmouseout="this.style.background='transparent';this.style.color='#a1a1aa'">Start my free plan →</button>
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#3f3f46;padding-top:16px;border-top:1px solid #27272a;margin-bottom:16px;">What's included</div>
       <div style="display:flex;flex-direction:column;gap:13px;flex:1;">
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>1,000 AI Credits / month</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>3 Opportunity Engine scans</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>3 Audit PDFs + 3 Proposals</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Email Writer (basic templates)</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Client Pipeline (up to 5 leads)</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#52525b;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#3f3f46" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gig Finder — locked</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#52525b;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#3f3f46" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>30-Day Roadmap — locked</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>5 leads/day via Opportunity Engine</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>AI Pitch Writer 3/day</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Audit Generator 1/day</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Email Writer</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Growth checklist</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#52525b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Basic analytics</div>
       </div>
     </div>
 
     <!-- PRO (featured) -->
     <div style="background:linear-gradient(180deg, rgba(99,102,241,0.14), rgba(255,255,255,0.03) 28%, rgba(255,255,255,0.01));border:1px solid rgba(165,180,252,0.28);border-radius:20px;padding:32px 28px;display:flex;flex-direction:column;position:relative;box-shadow:0 0 0 1px rgba(165,180,252,0.12),0 18px 44px rgba(0,0,0,.48);">
-      <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 14px;border-radius:99px;white-space:nowrap;text-transform:uppercase;">★ Most Popular</div>
+      <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 14px;border-radius:99px;white-space:nowrap;text-transform:uppercase;">Most popular — 3x faster results</div>
       <div style="width:48px;height:48px;border-radius:12px;background:#27272a;border:1px solid #3f3f46;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       </div>
       <div style="font-size:20px;font-weight:700;color:#fafafa;margin-bottom:4px;">Pro</div>
-      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">For freelancers building consistent outreach, proposals, and recurring client flow.</div>
+      <div style="font-size:13px;color:#71717a;margin-bottom:20px;min-height:36px;">For freelancers ready to scale past their first client</div>
       <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:24px;">
         <span style="font-size:40px;font-weight:700;color:#fafafa;letter-spacing:-1.5px;line-height:1;">$12</span>
         <div style="font-size:12px;color:#71717a;line-height:1.5;">USD / month<br>billed monthly</div>
       </div>
-      <button onclick="window.open('https://whop.com/checkout/plan_R0hZsM2GwvXDJ','_blank')" style="height:44px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;background:#fafafa;border:none;color:#0a0a0a;transition:opacity .15s;margin-bottom:28px;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Get Pro Plan →</button>
+      <button onclick="window.open('https://whop.com/checkout/plan_R0hZsM2GwvXDJ','_blank')" style="height:44px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;background:#fafafa;border:none;color:#0a0a0a;transition:opacity .15s;margin-bottom:28px;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Start 7-day free trial →</button>
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#3f3f46;padding-top:16px;border-top:1px solid #27272a;margin-bottom:16px;">Everything in Free, plus:</div>
       <div style="display:flex;flex-direction:column;gap:13px;flex:1;">
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>15,000 AI Credits / month</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited Opportunity Engine scans</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited Audit PDFs &amp; Proposals</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Full Email Writer (all templates)</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Gig Finder — find paying niches fast</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>30-Day Custom Roadmap unlocked</div>
-        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited Pipeline leads</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited leads</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited AI pitches/audits</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Priority lead matching</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Auto follow-ups</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Full Growth Roadmap + CRM</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#d4d4d8;"><svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px;" fill="none" viewBox="0 0 24 24" stroke="#a5b4fc" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Invoice &amp; proposal tools</div>
       </div>
     </div>
 
@@ -4819,6 +5031,26 @@ html.dark .credits-warning-banner {
   <!-- Footer note -->
   <div style="text-align:center;padding-bottom:48px;font-size:12px;color:#3f3f46;">No commitment · Cancel anytime · Secure checkout via Whop</div>
 
+</div>
+<div id="floating-checklist-widget" class="floating-checklist hidden">
+  <div class="floating-checklist-head">
+    <div class="floating-checklist-title">&#128640; Close your first client</div>
+    <div class="floating-checklist-head-actions">
+      <button class="floating-checklist-head-btn" onclick="toggleFloatingChecklistMinimize()" aria-label="Minimize"><i data-lucide="minus" style="width:14px;height:14px"></i></button>
+      <button class="floating-checklist-head-btn" onclick="dismissFloatingChecklist()" aria-label="Dismiss"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+  </div>
+  <div class="floating-checklist-body">
+    <div>
+      <div class="floating-progress-copy">
+        <span id="floating-checklist-copy">0 of 4 steps done</span>
+        <small id="floating-checklist-pct">0%</small>
+      </div>
+      <div class="floating-track"><div id="floating-checklist-fill" class="floating-fill"></div></div>
+    </div>
+    <div id="floating-checklist-steps" class="floating-steps"></div>
+  </div>
+  <div id="floating-checklist-footer" class="floating-checklist-footer"></div>
 </div>
        <div id="toast"></div>
        
@@ -6013,42 +6245,167 @@ async function scanOpportunities() {
    END OPPORTUNITY ENGINE JS
 ═══════════════════════════════════════════════════════════════ */
 /* ─── PLAYBOOK GAMIFICATION ─── */
-let pbProgress = [false, false, false, false];
+const CHECKLIST_STORAGE_KEY = 'lancify_checklist_progress';
+const CHECKLIST_WIDGET_DISMISS_KEY = 'lancify_widget_dismissed_until';
+const CHECKLIST_WIDGET_MIN_KEY = 'lancify_widget_minimized';
+const CHECKLIST_WIDGET_SESSION_KEY = 'lancify_widget_message';
+const ONBOARDING_SEEN_KEY = 'onboarding_seen';
+const PLAN_PATH = '/plan';
+const CHECKLIST_STEPS = [
+  { id: 1, route: 'opportunity', label: 'Opportunity Engine', title: 'Find one lead worth pitching today', desc: 'Run Opportunity Engine, save the best match, and use Quick DM so your first move happens now instead of later.', widgetDesc: 'Find a real lead and send the first move.', action: 'Open' },
+  { id: 2, route: 'audit', label: 'Audit Generator', title: 'Prove value before you ask for money', desc: 'Generate a sharp audit for your best lead so your pitch feels researched, premium, and much harder to ignore.', widgetDesc: 'Generate proof before you pitch.', action: 'Build' },
+  { id: 3, route: 'email', label: 'Email Writer', title: 'Send the follow-up before momentum dies', desc: 'Use Email Writer for a follow-up that sounds human, specific, and worth replying to instead of generic and forgettable.', widgetDesc: 'Send the follow-up while the lead is warm.', action: 'Write' },
+  { id: 4, route: 'roadmap', label: 'Growth', title: 'Turn one win into a repeatable growth system', desc: 'Open Growth, generate your roadmap, and give yourself a daily system so you keep coming back with direction.', widgetDesc: 'Turn momentum into a repeatable system.', action: 'Plan' }
+];
+const CHECKLIST_WIDGET_MESSAGES = [
+  'Your first client rarely comes from genius. It comes from doing the next obvious move.',
+  'One sharp outreach can change the whole week. Keep the streak alive.',
+  'Momentum is the real advantage. Finish the next step before you overthink it.'
+];
+let pbProgress = loadChecklistProgress();
+let _pendingPostPlanAction = null;
+
+function loadChecklistProgress() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY) || '[]');
+    return Array.isArray(raw) && raw.length === 4 ? raw.map(Boolean) : [false, false, false, false];
+  } catch {
+    return [false, false, false, false];
+  }
+}
+
+function saveChecklistProgress() {
+  localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(pbProgress.map(Boolean)));
+}
+
+function getChecklistCompletedCount() {
+  return pbProgress.filter(Boolean).length;
+}
+
+function getChecklistPct() {
+  return Math.round((getChecklistCompletedCount() / CHECKLIST_STEPS.length) * 100);
+}
+
+function getChecklistActiveStep() {
+  const idx = pbProgress.findIndex(done => !done);
+  return idx === -1 ? null : idx + 1;
+}
+
+function getWidgetMessage() {
+  const cached = sessionStorage.getItem(CHECKLIST_WIDGET_SESSION_KEY);
+  if (cached) return cached;
+  const pick = CHECKLIST_WIDGET_MESSAGES[Math.floor(Math.random() * CHECKLIST_WIDGET_MESSAGES.length)];
+  sessionStorage.setItem(CHECKLIST_WIDGET_SESSION_KEY, pick);
+  return pick;
+}
+
+function isDashboardVisible() {
+  return !!document.querySelector('#app-layout.show #page-home.page.active');
+}
+
+function isPlanRoute() {
+  return window.location.pathname === PLAN_PATH;
+}
+
+function updateChecklistBanner() {
+  const banner = el('dashboard-challenge-banner');
+  const progress = el('dashboard-challenge-progress');
+  const completed = getChecklistCompletedCount();
+  const pct = getChecklistPct();
+  if (!banner || !progress) return;
+  banner.classList.toggle('hidden', pct >= 100);
+  const angle = Math.max(0, Math.min(360, Math.round((completed / CHECKLIST_STEPS.length) * 360)));
+  progress.style.background = `conic-gradient(var(--accent-primary) ${angle}deg, rgba(148,163,184,0.18) ${angle}deg)`;
+  progress.innerHTML = `<strong>${completed}/${CHECKLIST_STEPS.length}</strong>`;
+}
+
+function renderFloatingChecklistWidget() {
+  const widget = el('floating-checklist-widget');
+  if (!widget) return;
+  const pct = getChecklistPct();
+  const completed = getChecklistCompletedCount();
+  const dismissedUntil = Number(localStorage.getItem(CHECKLIST_WIDGET_DISMISS_KEY) || 0);
+  const shouldHide = window.innerWidth < 768 || !isDashboardVisible() || pct >= 100 || Date.now() < dismissedUntil;
+  widget.classList.toggle('hidden', shouldHide);
+  if (shouldHide) return;
+
+  widget.classList.toggle('minimized', localStorage.getItem(CHECKLIST_WIDGET_MIN_KEY) === 'yes');
+  setText('floating-checklist-copy', `${completed} of ${CHECKLIST_STEPS.length} steps done`);
+  setText('floating-checklist-pct', `${pct}%`);
+  const fill = el('floating-checklist-fill');
+  if (fill) fill.style.width = `${pct}%`;
+  setText('floating-checklist-footer', getWidgetMessage());
+
+  const activeStep = getChecklistActiveStep();
+  const stepsWrap = el('floating-checklist-steps');
+  if (stepsWrap) {
+    stepsWrap.innerHTML = CHECKLIST_STEPS.map(step => {
+      const done = !!pbProgress[step.id - 1];
+      return `
+        <div class="floating-step ${done ? 'completed' : ''} ${activeStep === step.id ? 'active' : ''}">
+          <button class="floating-step-num" onclick="event.stopPropagation();togglePb(${step.id})" aria-label="Mark step ${step.id} complete">${done ? '✓' : step.id}</button>
+          <div class="floating-step-main">
+            <div class="floating-step-title">${escapeHtml(step.title)}</div>
+            <div class="floating-step-copy">${escapeHtml(step.widgetDesc)}</div>
+          </div>
+          <button class="floating-step-action" onclick="event.stopPropagation();navigate('${step.route}')">${done ? 'Review' : step.action}</button>
+        </div>
+      `;
+    }).join('');
+  }
+  lucide.createIcons();
+}
+
+function updateChecklistUi() {
+  const pct = getChecklistPct();
+  const completed = getChecklistCompletedCount();
+  const activeStep = getChecklistActiveStep();
+
+  setText('pb-pct', `${pct}%`);
+  const fill = el('pb-fill');
+  if (fill) fill.style.width = `${pct}%`;
+
+  CHECKLIST_STEPS.forEach(step => {
+    const done = !!pbProgress[step.id - 1];
+    const card = el(`pb-card-${step.id}`);
+    const check = el(`pb-check-${step.id}`);
+    if (card) {
+      card.classList.toggle('completed', done);
+      card.classList.toggle('active', !done && activeStep === step.id);
+    }
+    if (check) {
+      check.setAttribute('aria-pressed', done ? 'true' : 'false');
+    }
+  });
+
+  updateChecklistBanner();
+  renderFloatingChecklistWidget();
+}
 
 function togglePb(step) {
   const idx = step - 1;
-  pbProgress[idx] = !pbProgress[idx]; // Toggle state
-  
-  const card  = el('pb-card-' + step);
-  const check = el('pb-check-' + step);
-  const icon  = check.querySelector('i');
-  
-  if (pbProgress[idx]) {
-    // Checked State
-    check.style.background = 'var(--text-main)';
-    check.style.borderColor = 'var(--text-main)';
-    icon.style.color = 'var(--bg)';
-    card.style.opacity = '0.5'; // Dim it to show it's done
-  } else {
-    // Unchecked State
-    check.style.background = 'transparent';
-    check.style.borderColor = 'var(--border2)';
-    icon.style.color = 'transparent';
-    card.style.opacity = '1';
-  }
-  
-  // Update Progress Bar
-  const completed = pbProgress.filter(x => x).length;
-  const pct = Math.round((completed / 4) * 100);
-  setText('pb-pct', pct + '%');
-  el('pb-fill').style.width = pct + '%';
-  
-  if (pct === 100) {
+  pbProgress[idx] = !pbProgress[idx];
+  saveChecklistProgress();
+  updateChecklistUi();
+
+  if (getChecklistPct() === 100) {
     setTimeout(() => {
-      showToast('Playbook complete! Now execute and collect the cash. 💰');
+      showToast('Playbook complete! Now execute and collect the cash.');
     }, 400);
   }
-}   
+}
+
+function dismissFloatingChecklist() {
+  if (getChecklistPct() >= 100) return;
+  localStorage.setItem(CHECKLIST_WIDGET_DISMISS_KEY, String(Date.now() + (24 * 60 * 60 * 1000)));
+  renderFloatingChecklistWidget();
+}
+
+function toggleFloatingChecklistMinimize() {
+  const next = localStorage.getItem(CHECKLIST_WIDGET_MIN_KEY) === 'yes' ? 'no' : 'yes';
+  localStorage.setItem(CHECKLIST_WIDGET_MIN_KEY, next === 'yes' ? 'yes' : 'no');
+  renderFloatingChecklistWidget();
+}
 /* ═══════════════════════════════════════════════════════
    THEME SYSTEM
    ═══════════════════════════════════════════════════════ */
@@ -6475,10 +6832,24 @@ async function initApp() {
   });
 }
 
+window.addEventListener('resize', () => {
+  renderFloatingChecklistWidget();
+});
+
+window.addEventListener('popstate', () => {
+  if (isPlanRoute()) {
+    showUpgradeModal({ pushRoute: false });
+  } else if (el('upgrade-modal')?.style.display === 'block') {
+    closeUpgrade({ fromHistory: true, suppressPending: true });
+  }
+});
+
 function showLogin() {
   billingState = { total: 1000, remaining: 1000, cycleStart: null, usage: {} };
   const ls = el('login-screen');
   if(ls) ls.style.display='flex';
+  el('signup-onboarding-modal')?.classList.remove('show');
+  closeUpgrade({ fromHistory: true, suppressPending: true });
   const al = el('app-layout');
   if(al) al.style.display='none';
 }
@@ -6556,6 +6927,7 @@ function navigate(page) {
   if (page === 'invoices') renderInvoices();
   if (page === 'accounting' || page === 'home') renderBusinessDashboard();
   if (page === 'pipeline') { renderManagedOpportunityClients(); renderPipeline(); }
+  renderFloatingChecklistWidget();
   lucide.createIcons();
   closeAccountDropdown();
 }
@@ -7948,12 +8320,9 @@ function injectBusinessDashboardWidgets(){
       </div>
     </div>
   `;
-  const hero = home.querySelector('.home-hero');
-  if (hero) {
-    hero.insertAdjacentElement('afterend', section);
-  } else {
-    home.prepend(section);
-  }
+  const checklist = el('home-start-here');
+  if (checklist) checklist.insertAdjacentElement('afterend', section);
+  else home.prepend(section);
 }
 
 function _monthlyEarningsBuckets(){
@@ -8008,8 +8377,19 @@ function _renderEarningsBars(barId, labelId){
 
 function updateHomeHeroContext(activeDeals, totalClients, savedCount){
   const contextEl = el('hero-context');
+  const greetingEl = el('hero-greeting');
   if (!contextEl) return;
+  const rawName = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Shaurya';
+  const firstName = String(rawName).split(' ')[0] || 'Shaurya';
+  const h = new Date().getHours();
+  const timeGreeting = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
   let copy = 'No active clients yet. Start with one strong lead and close your first deal.';
+  if (greetingEl) greetingEl.textContent = `${timeGreeting}, ${firstName}`;
+  if (totalClients === 0 && activeDeals === 0 && savedCount === 0) {
+    if (greetingEl) greetingEl.textContent = `${timeGreeting}, ${firstName}. Let's get your first client this week.`;
+    contextEl.textContent = `You're 1 outreach away from changing everything.`;
+    return;
+  }
   if (activeDeals > 0) {
     copy = `You have ${activeDeals} active client${activeDeals === 1 ? '' : 's'}. Ready to close more?`;
   } else if (totalClients > 0) {
@@ -8976,6 +9356,7 @@ function renderBusinessDashboard(){
   setText('home-won-revenue', formatCurrency(wonRevenue || 0));
   setText('home-outstanding', formatCurrency(outstandingAll || 0));
   updateHomeHeroContext(activeDeals, totalClientsAll, opportunityClients.length);
+  updateChecklistUi();
   _renderEarningsBars('home-earnings-bars','home-bar-labels');
 
   const filteredLeads = userLeads.filter(lead => isWithinAccountingWindow(lead.created_at));
@@ -9203,15 +9584,36 @@ function copyEl(id){
 
 function autoResize(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,200)+'px'; }
 
-function showUpgradeModal(){
+function openPlanRoute(options = {}) {
+  showUpgradeModal({ pushRoute: true, ...options });
+}
+
+function handleSignupOnboardingCta() {
+  localStorage.setItem(ONBOARDING_SEEN_KEY, 'yes');
+  el('signup-onboarding-modal')?.classList.remove('show');
+  _pendingPostPlanAction = 'onboarding';
+  openPlanRoute();
+}
+
+function showUpgradeModal(options = {}){
   const m = el('upgrade-modal');
   m.style.display = 'block';
   document.body.style.overflow = 'hidden';
+  if (options.pushRoute && !isPlanRoute()) {
+    history.pushState({ modal: 'plan' }, '', PLAN_PATH);
+  }
 }
-function closeUpgrade(){
+function closeUpgrade(options = {}){
   const m = el('upgrade-modal');
   m.style.display = 'none';
   document.body.style.overflow = '';
+  if (isPlanRoute() && !options.fromHistory) {
+    history.replaceState(history.state || {}, '', '/');
+  }
+  if (!options.suppressPending && _pendingPostPlanAction === 'onboarding') {
+    _pendingPostPlanAction = null;
+    _showOnboarding();
+  }
 }
 function closeModal(id){
   if(id === 'upgrade-modal') { closeUpgrade(); return; }
@@ -9267,6 +9669,7 @@ const _obQuotes = {
 async function onLogin(user) {
   currentUser = user;
   el('login-screen').style.display = 'none';
+  pbProgress = loadChecklistProgress();
 
   const name      = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const firstName = name.split(' ')[0];
@@ -9286,6 +9689,7 @@ async function onLogin(user) {
   loadLeads(user.id);
   loadInvoices(user.id);
   loadOpportunityClients(user.id);
+  updateChecklistUi();
   lucide.createIcons();
 
   _decideRoute(user.id);
@@ -9391,13 +9795,20 @@ async function _decideRoute(uid) {
       await loadBillingState(uid);
     }
     el('app-layout').classList.add('show');
+    if (isPlanRoute()) showUpgradeModal({ pushRoute: false });
   } else {
-    _showOnboarding();
+    if (localStorage.getItem(ONBOARDING_SEEN_KEY) === 'yes') {
+      _showOnboarding();
+    } else {
+      el('signup-onboarding-modal')?.classList.add('show');
+      lucide.createIcons();
+    }
   }
 }
 function _showOnboarding() {
   _obStep = 1;
   _obRenderStep();
+  el('signup-onboarding-modal')?.classList.remove('show');
   el('onboarding-screen').classList.add('show');
 }
 
@@ -9603,6 +10014,8 @@ initApp();
        <div id="toast"></div>
 </body>
 </html>
+
+
 
 
 
