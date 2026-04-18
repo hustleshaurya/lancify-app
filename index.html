@@ -980,9 +980,9 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
   background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));
 }
 .workspace-title{
-  font-size:38px;
-  font-weight:800;
-  letter-spacing:-1.4px;
+  font-size:24px;
+  font-weight:700;
+  letter-spacing:-0.5px;
   color:var(--text-main);
   margin-bottom:8px;
 }
@@ -1352,6 +1352,56 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .challenge-progress strong{position:relative;z-index:1;font-size:15px;font-weight:800;color:var(--text-main)}
 
 .checklist-shell{margin-bottom:26px;padding:0;overflow:hidden;border-radius:20px}
+.checklist-collapsible{
+  max-height: 2000px;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.checklist-collapsible.collapsed{
+  max-height: 0px;
+}
+.checklist-summary{
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: fadeIn 0.3s ease forwards;
+}
+.checklist-summary.hidden{
+  display: none;
+}
+.guide-banner{
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  background: #0a0a0a;
+  color: #fff;
+  border-left: 3px solid #5b8def;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  animation: slideInDown 0.4s ease;
+}
+.guide-banner-close{
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 4px;
+}
+.guide-banner-close:hover{
+  opacity: 1;
+}
+@keyframes slideInDown {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 .checklist-header{
   padding:24px 26px 18px;display:flex;justify-content:space-between;align-items:flex-start;
   gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--border)
@@ -1392,6 +1442,15 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .checklist-step.completed{
   opacity:.88;
   background:linear-gradient(135deg, rgba(34,197,94,0.10), rgba(255,255,255,0)), var(--bg)
+}
+.checklist-step.just-completed{
+  background: rgba(22, 163, 74, 0.12) !important;
+  border-color: #16a34a !important;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.floating-step.fl-just-done{
+  background: rgba(22, 163, 74, 0.08) !important;
+  transition: background 0.3s ease;
 }
 .checklist-step.completed .checklist-step-title{
   text-decoration:line-through;
@@ -3923,8 +3982,8 @@ html.dark .credits-warning-banner {
           </div>
 
           <div id="home-start-here" class="card premium-surface checklist-shell">
-            <div class="checklist-header">
-              <div>
+            <div class="checklist-header" style="position:relative;">
+              <div style="flex:1; min-width:0;">
                 <div class="checklist-kicker">
                   <div class="checklist-kicker-dot"></div>
                   <span class="checklist-kicker-label">Start Here</span>
@@ -3934,24 +3993,33 @@ html.dark .credits-warning-banner {
                   <span class="checklist-time-badge">~10 min total</span>
                 </div>
                 <p class="checklist-copy">This is the fastest path from empty workspace to first outreach. Do these four actions and the app immediately starts feeling useful.</p>
+                <div id="checklist-summary" class="checklist-summary hidden" onclick="toggleChecklistCollapse()" style="margin-top:12px; font-size:13px; font-weight:600; color:var(--accent-primary); cursor:pointer;">
+                  <span id="checklist-summary-text">0/4 steps done — click to expand</span>
+                </div>
               </div>
-              <button onclick="window.open('https://loom.com','_blank')" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; background:rgba(99,102,241,0.07); color:#6366f1; border:1px solid rgba(99,102,241,0.18); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">
-                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
-                Watch 2-min walkthrough
-              </button>
-            </div>
-
-            <div class="checklist-progress-wrap">
-              <div class="checklist-progress-row">
-                <span class="checklist-progress-label">Start Here Progress</span>
-                <span id="pb-pct" class="checklist-progress-pct">0%</span>
-              </div>
-              <div class="checklist-track">
-                <div id="pb-fill" class="checklist-fill"></div>
+              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
+                <button id="checklist-minimize-btn" class="icon-btn" onclick="toggleChecklistCollapse()" style="background:var(--bg-panel); border:1px solid var(--border);" aria-label="Toggle checklist">
+                  <i data-lucide="chevron-up" id="checklist-chevron" style="width:16px; height:16px;"></i>
+                </button>
+                <button onclick="window.open('https://loom.com','_blank')" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; background:rgba(99,102,241,0.07); color:#6366f1; border:1px solid rgba(99,102,241,0.18); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">
+                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+                  Watch 2-min walkthrough
+                </button>
               </div>
             </div>
 
-            <div class="checklist-steps">
+            <div id="checklist-collapsible-content" class="checklist-collapsible">
+              <div class="checklist-progress-wrap">
+                <div class="checklist-progress-row">
+                  <span class="checklist-progress-label">Start Here Progress</span>
+                  <span id="pb-pct" class="checklist-progress-pct">0%</span>
+                </div>
+                <div class="checklist-track">
+                  <div id="pb-fill" class="checklist-fill"></div>
+                </div>
+              </div>
+
+              <div class="checklist-steps">
               <div id="pb-card-1" class="checklist-step" onclick="navigate('opportunity')">
                 <div id="pb-check-1" class="checklist-check" onclick="event.stopPropagation();togglePb(1)">
                   <i data-lucide="check"></i>
@@ -4029,6 +4097,7 @@ html.dark .credits-warning-banner {
               </div>
             </div>
           </div>
+        </div>
 
            
           <div class="home-mini-stats">
@@ -6262,45 +6331,14 @@ const CHECKLIST_STEPS = [
   { id: 4, route: 'roadmap', label: 'Growth', title: 'Turn one win into a repeatable growth system', desc: 'Open Growth, generate your roadmap, and give yourself a daily system so you keep coming back with direction.', widgetDesc: 'Turn momentum into a repeatable system.', action: 'Plan' }
 ];
 const CHECKLIST_WIDGET_MESSAGES = [
-  'Your first client rarely comes from genius. It comes from doing the next obvious move.',
-  'One sharp outreach can change the whole week. Keep the streak alive.',
-  'Momentum is the real advantage. Finish the next step before you overthink it.'
+  "Most users close their first client within 6 days of doing this.",
+  "You're closer than you think. One reply changes everything.",
+  "The freelancers who follow this checklist earn 4x faster."
 ];
-let pbProgress = loadChecklistProgress();
-let _pendingPostPlanAction = null;
-
-function loadChecklistProgress() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY) || '[]');
-    return Array.isArray(raw) && raw.length === 4 ? raw.map(Boolean) : [false, false, false, false];
-  } catch {
-    return [false, false, false, false];
-  }
-}
-
-function saveChecklistProgress() {
-  localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(pbProgress.map(Boolean)));
-}
-
-function getChecklistCompletedCount() {
-  return pbProgress.filter(Boolean).length;
-}
-
-function getChecklistPct() {
-  return Math.round((getChecklistCompletedCount() / CHECKLIST_STEPS.length) * 100);
-}
-
-function getChecklistActiveStep() {
-  const idx = pbProgress.findIndex(done => !done);
-  return idx === -1 ? null : idx + 1;
-}
 
 function getWidgetMessage() {
-  const cached = sessionStorage.getItem(CHECKLIST_WIDGET_SESSION_KEY);
-  if (cached) return cached;
-  const pick = CHECKLIST_WIDGET_MESSAGES[Math.floor(Math.random() * CHECKLIST_WIDGET_MESSAGES.length)];
-  sessionStorage.setItem(CHECKLIST_WIDGET_SESSION_KEY, pick);
-  return pick;
+  const dayIndex = Math.floor(Date.now() / 86400000) % 3;
+  return CHECKLIST_WIDGET_MESSAGES[dayIndex];
 }
 
 function isDashboardVisible() {
@@ -6317,16 +6355,28 @@ function updateChecklistBanner() {
   const completed = getChecklistCompletedCount();
   const pct = getChecklistPct();
   if (!banner || !progress) return;
-  
-  // Bug 2: Show banner if not 100% complete and on dashboard
-  const shouldShow = pct < 100 && isDashboardVisible();
+
+  // Bug 3: Logic for banner visibility
+  if (pct >= 100) {
+    localStorage.setItem('lancify_challenge_complete', 'true');
+    banner.classList.add('hidden');
+    return;
+  }
+
+  // If already marked complete in local storage, keep hidden
+  if (localStorage.getItem('lancify_challenge_complete') === 'true') {
+    banner.classList.add('hidden');
+    return;
+  }
+
+  // Show only on dashboard if not 100% complete
+  const shouldShow = isDashboardVisible();
   banner.classList.toggle('hidden', !shouldShow);
-  
+
   const angle = Math.max(0, Math.min(360, Math.round((completed / CHECKLIST_STEPS.length) * 360)));
   progress.style.background = `conic-gradient(var(--accent-primary) ${angle}deg, rgba(148,163,184,0.18) ${angle}deg)`;
   progress.innerHTML = `<strong>${completed}/${CHECKLIST_STEPS.length}</strong>`;
 }
-
 function renderFloatingChecklistWidget() {
   const widget = el('floating-checklist-widget');
   if (!widget) return;
@@ -6353,8 +6403,9 @@ function renderFloatingChecklistWidget() {
   if (stepsWrap) {
     stepsWrap.innerHTML = CHECKLIST_STEPS.map(step => {
       const done = !!pbProgress[step.id - 1];
+      const justDone = _justCompletedStep === step.id;
       return `
-        <div class="floating-step ${done ? 'completed' : ''} ${activeStep === step.id ? 'active' : ''}">
+        <div class="floating-step ${done ? 'completed' : ''} ${activeStep === step.id ? 'active' : ''} ${justDone ? 'fl-just-done' : ''}">
           <button class="floating-step-num" onclick="event.stopPropagation();togglePb(${step.id})" aria-label="Mark step ${step.id} complete">${done ? '✓' : step.id}</button>
           <div class="floating-step-main">
             <div class="floating-step-title">${escapeHtml(step.title)}</div>
@@ -6390,14 +6441,63 @@ function updateChecklistUi() {
     }
   });
 
+  // Improvement 2: Update summary text
+  setText('checklist-summary-text', `${completed}/${CHECKLIST_STEPS.length} steps done — click to expand`);
+
   updateChecklistBanner();
   renderFloatingChecklistWidget();
 }
 
+function toggleChecklistCollapse(forceState) {
+  const content = el('checklist-collapsible-content');
+  const summary = el('checklist-summary');
+  const btn = el('checklist-minimize-btn');
+  const chevron = el('checklist-chevron');
+  if (!content || !summary) return;
+
+  const isCollapsed = forceState !== undefined ? !forceState : !content.classList.contains('collapsed');
+  
+  content.classList.toggle('collapsed', isCollapsed);
+  summary.classList.toggle('hidden', !isCollapsed);
+  
+  if (isCollapsed) {
+    localStorage.setItem('lancify_checklist_collapsed', 'true');
+    if (chevron) chevron.setAttribute('data-lucide', 'chevron-down');
+  } else {
+    localStorage.removeItem('lancify_checklist_collapsed');
+    if (chevron) chevron.setAttribute('data-lucide', 'chevron-up');
+  }
+  
+  lucide.createIcons();
+}
+
+function initChecklistCollapse() {
+  const collapsed = localStorage.getItem('lancify_checklist_collapsed') === 'true';
+  if (collapsed) {
+    toggleChecklistCollapse(false);
+  }
+}
+
+let _justCompletedStep = null;
+
 function togglePb(step) {
   const idx = step - 1;
+  const wasDone = pbProgress[idx];
   pbProgress[idx] = !pbProgress[idx];
   saveChecklistProgress();
+  
+  if (!wasDone && pbProgress[idx]) {
+    // Main checklist flash
+    const card = el(`pb-card-${step}`);
+    if (card) {
+      card.classList.add('just-completed');
+      setTimeout(() => card.classList.remove('just-completed'), 1500);
+    }
+    // Set flag for floating widget re-render
+    _justCompletedStep = step;
+    setTimeout(() => { _justCompletedStep = null; }, 1500);
+  }
+
   updateChecklistUi();
 
   if (getChecklistPct() === 100) {
@@ -6835,6 +6935,7 @@ const chatQuestions = [
 /* ─── INIT ─── */
 async function initApp() {
   applySidebarState();
+  initChecklistCollapse();
   const {data:{session}} = await sb.auth.getSession();
   hide('loading-screen');
   if (session?.user) onLogin(session.user);
@@ -6908,12 +7009,84 @@ function showAuthSuccess(msg){ const e=el('auth-success'); e.textContent=msg; e.
 function clearAuthMessages(){ el('auth-error').style.display='none'; el('auth-success').style.display='none'; }
 
 /* ─── NAVIGATION ─── */
+function renderQuickGuideBanner(page) {
+  const guides = {
+    opportunity: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
+    gig: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
+    audit: "⚡ Step 2: Enter your lead's website URL → Generate the audit → Copy the key finding to use in your pitch. Takes 2 minutes.",
+    email: "✉️ Step 3: Select 'Follow-up' email type → Enter your lead's name and context → Send or copy the email. This is what gets replies.",
+    roadmap: "📈 Step 4: Generate your 30-day roadmap → Save it → Come back to it daily. This is your system."
+  };
+
+  if (!guides[page]) return;
+  if (sessionStorage.getItem(`lancify_guide_dismissed_${page}`)) return;
+
+  // Check if corresponding step is already done
+  const stepMap = { opportunity: 1, gig: 1, audit: 2, email: 3, roadmap: 4 };
+  if (pbProgress[stepMap[page] - 1]) return;
+
+  const pageEl = el('page-' + page);
+  const contentInner = pageEl?.querySelector('.content-inner');
+  if (!contentInner) return;
+
+  // Remove existing if any
+  contentInner.querySelector('.guide-banner')?.remove();
+
+  const banner = document.createElement('div');
+  banner.className = 'guide-banner';
+  banner.innerHTML = `
+    <span>${guides[page]}</span>
+    <div class="guide-banner-close" onclick="dismissGuideBanner('${page}')">
+      <i data-lucide="x" style="width:16px; height:16px;"></i>
+    </div>
+  `;
+  contentInner.prepend(banner);
+  lucide.createIcons();
+}
+
+function dismissGuideBanner(page) {
+  sessionStorage.setItem(`lancify_guide_dismissed_${page}`, 'true');
+  const pageEl = el('page-' + page);
+  pageEl?.querySelector('.guide-banner')?.remove();
+}
+
 function navigate(page) {
   if (_isPageLocked(page)) {
     showToast('This feature is available on Pro plan.');
     showUpgradeModal();
     return;
   }
+
+  // Improvement 1: Check for auto-complete when returning to home
+  if (page === 'home') {
+    const now = Date.now();
+    CHECKLIST_STEPS.forEach(step => {
+      const visitTime = sessionStorage.getItem(`lancify_visited_${step.route}`);
+      if (visitTime) {
+        const duration = now - parseInt(visitTime, 10);
+        if (duration >= 5000 && !pbProgress[step.id - 1]) {
+          togglePb(step.id);
+        }
+        sessionStorage.removeItem(`lancify_visited_${step.route}`);
+      }
+    });
+    
+    // Also check 'gig' for Step 1 as requested
+    const gigVisitTime = sessionStorage.getItem('lancify_visited_gig');
+    if (gigVisitTime) {
+      if (now - parseInt(gigVisitTime, 10) >= 5000 && !pbProgress[0]) {
+        togglePb(1);
+      }
+      sessionStorage.removeItem('lancify_visited_gig');
+    }
+  }
+
+  // Improvement 1: Set visit timestamp when leaving home for a feature page
+  const targetStep = CHECKLIST_STEPS.find(s => s.route === page);
+  if (targetStep || page === 'gig') {
+    sessionStorage.setItem(`lancify_visited_${page}`, Date.now().toString());
+  }
+
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const titles={
@@ -6940,7 +7113,18 @@ function navigate(page) {
   if (page === 'invoices') renderInvoices();
   if (page === 'accounting' || page === 'home') renderBusinessDashboard();
   if (page === 'pipeline') { renderManagedOpportunityClients(); renderPipeline(); }
-  renderFloatingChecklistWidget();
+  
+  if (page !== 'home') {
+    renderQuickGuideBanner(page);
+  }
+
+  if (page === 'home') {
+    updateChecklistBanner();
+    setTimeout(() => renderFloatingChecklistWidget(), 300);
+  } else {
+    renderFloatingChecklistWidget();
+  }
+
   lucide.createIcons();
   closeAccountDropdown();
 }
@@ -8301,6 +8485,13 @@ function copyInvoiceDraft(){
 function injectBusinessDashboardWidgets(){
   const home = document.querySelector('#page-home .content-inner');
   if (!home || el('home-biz-dashboard')) return;
+
+  // Improvements 4 & 5: Check if we should promote stats
+  const hasData = (userLeads && userLeads.length > 0) || 
+                  (opportunityClients && opportunityClients.length > 0) || 
+                  (userInvoices && userInvoices.length > 0) || 
+                  localStorage.getItem('lancify_has_data') === 'true';
+
   const section = document.createElement('div');
   section.id = 'home-biz-dashboard';
   section.className = 'card premium-surface';
@@ -8334,8 +8525,16 @@ function injectBusinessDashboardWidgets(){
     </div>
   `;
   const checklist = el('home-start-here');
-  if (checklist) checklist.insertAdjacentElement('afterend', section);
-  else home.prepend(section);
+  if (checklist) {
+    if (hasData) {
+      checklist.parentNode.insertBefore(section, checklist);
+      sessionStorage.setItem('lancify_stats_promoted', 'true');
+    } else {
+      checklist.insertAdjacentElement('afterend', section);
+    }
+  } else {
+    home.prepend(section);
+  }
 }
 
 function _monthlyEarningsBuckets(){
@@ -8722,6 +8921,9 @@ async function addLead(seedMeta = {}){
   userLeads.unshift(createdLead);
   persistLeadsLocal();
   upsertLeadMeta(createdLead.id, metaPayload);
+  
+  // Improvement 5: Flag that user has data for stats promotion
+  localStorage.setItem('lancify_has_data', 'true');
 
   ['lead-name','lead-service','lead-value','lead-followup'].forEach(id => setVal(id, ''));
   setVal('lead-platform', 'Instagram');
@@ -9363,6 +9565,17 @@ function renderBusinessDashboard(){
   const activeDeals = userLeads.filter(lead => ['pitched','replied'].includes((lead.status || '').toLowerCase())).length;
   const outstandingAll = userInvoices.filter(inv => (inv.status || '').toLowerCase() !== 'paid').reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
   const totalClientsAll = userLeads.length + opportunityClients.length;
+
+  // Improvement 4: Promote stats to top if data exists
+  const hasData = totalClientsAll > 0 || wonRevenue > 0 || outstandingAll > 0 || localStorage.getItem('lancify_has_data') === 'true';
+  if (hasData && !sessionStorage.getItem('lancify_stats_promoted')) {
+    const statsDiv = el('home-biz-dashboard');
+    const checklistDiv = el('home-start-here');
+    if (statsDiv && checklistDiv) {
+      checklistDiv.parentNode.insertBefore(statsDiv, checklistDiv);
+      sessionStorage.setItem('lancify_stats_promoted', 'true');
+    }
+  }
 
   setText('home-total-clients', String(totalClientsAll));
   setText('home-active-deals', String(activeDeals));
