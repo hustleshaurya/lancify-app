@@ -6335,6 +6335,35 @@ const CHECKLIST_WIDGET_MESSAGES = [
   "You're closer than you think. One reply changes everything.",
   "The freelancers who follow this checklist earn 4x faster."
 ];
+let pbProgress = loadChecklistProgress();
+let _pendingPostPlanAction = null;
+
+function loadChecklistProgress() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY) || '[]');
+    return Array.isArray(raw) && raw.length === 4 ? raw.map(Boolean) : [false, false, false, false];
+  } catch {
+    return [false, false, false, false];
+  }
+}
+
+function saveChecklistProgress() {
+  localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(pbProgress.map(Boolean)));
+}
+
+function getChecklistCompletedCount() {
+  return pbProgress.filter(Boolean).length;
+}
+
+function getChecklistPct() {
+  const done = pbProgress.filter(Boolean).length;
+  return Math.round((done / pbProgress.length) * 100);
+}
+
+function getChecklistActiveStep() {
+  const idx = pbProgress.findIndex(done => !done);
+  return idx === -1 ? null : idx + 1;
+}
 
 function getWidgetMessage() {
   const dayIndex = Math.floor(Date.now() / 86400000) % 3;
