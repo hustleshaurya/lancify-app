@@ -3687,6 +3687,19 @@ html.dark .credits-warning-banner {
   <div class="ob-quote-progress" id="ob-quote-dots"></div>
 </div>
 
+<div id="guide-pref-screen" class="onboarding-screen" style="display:none; position:fixed; inset:0; z-index:10000; background:#000; align-items:center; justify-content:center; padding:20px;">
+  <div id="onboarding-wizard" style="text-align:center; padding:48px; background:#0d0d0d; border:1px solid #222; border-radius:18px; width:100%; max-width:560px;">
+    <div style="font-size:11px; font-weight:700; letter-spacing:.08em; color:#666; margin-bottom:12px; text-transform:uppercase;">One last thing</div>
+    <h2 style="font-size:28px; font-weight:800; margin-bottom:16px; color:#fff;">Want Lancify to guide you to your first client?</h2>
+    <p style="color:#a1a1a1; margin-bottom:32px; font-size:15px; line-height:1.6;">We'll show you exactly what to do, step by step. Takes 10 minutes. You can turn it off anytime.</p>
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button class="btn btn-primary" onclick="setGuideMode('on')" style="padding:12px 24px;">Yes, guide me →</button>
+      <button class="btn btn-secondary" onclick="setGuideMode('off')" style="padding:12px 24px; border:1px solid #333; color:#fff;">No, I'll explore myself</button>
+    </div>
+    <p style="margin-top:24px; color:#666; font-size:12px;">You can change this anytime in Settings</p>
+  </div>
+</div>
+
 <div id="onboarding-screen">
   <div id="onboarding-wizard">
 
@@ -3880,17 +3893,6 @@ html.dark .credits-warning-banner {
         </div>
       </div>
 
-      <div class="nav-folder open spotlight" data-folder="growth">
-        <button class="nav-folder-head" onclick="toggleNavFolder('growth')">
-          <span class="nav-folder-title"><i data-lucide="trending-up" class="icon"></i><span class="nav-label">Growth</span><span class="nav-folder-badge">Start</span></span>
-          <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
-        </button>
-        <div class="nav-folder-children" id="folder-growth">
-          <div class="nav-item" data-tooltip="Start Here" onclick="openStartHere()"><i data-lucide="compass" class="icon"></i><span class="nav-label"> Start Here</span></div>
-          <div class="nav-item" data-page="roadmap" data-tooltip="Growth Roadmap" onclick="navigate('roadmap')"><i data-lucide="map" class="icon"></i><span class="nav-label"> Growth Roadmap</span></div>
-        </div>
-      </div>
-
       <div class="nav-folder open" data-folder="finance">
         <button class="nav-folder-head" onclick="toggleNavFolder('finance')">
           <span class="nav-folder-title"><i data-lucide="wallet" class="icon"></i><span class="nav-label">Finance</span></span>
@@ -3899,6 +3901,22 @@ html.dark .credits-warning-banner {
         <div class="nav-folder-children" id="folder-finance">
           <div class="nav-item" data-page="invoices" data-tooltip="Invoices" onclick="navigate('invoices')"><i data-lucide="receipt-text" class="icon"></i><span class="nav-label"> Invoices</span></div>
           <div class="nav-item" data-page="accounting" data-tooltip="Accounting" onclick="navigate('accounting')"><i data-lucide="line-chart" class="icon"></i><span class="nav-label"> Accounting</span></div>
+        </div>
+      </div>
+
+      <div class="nav-folder" data-folder="growth">
+        <button class="nav-folder-head" onclick="toggleNavFolder('growth')">
+          <span class="nav-folder-title">
+            <i data-lucide="trending-up" class="icon"></i>
+            <span class="nav-label">Growth</span>
+          </span>
+          <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
+        </button>
+        <div class="nav-folder-children" id="folder-growth">
+          <div class="nav-item" data-page="roadmap" data-tooltip="Growth Roadmap" onclick="navigate('roadmap')">
+            <i data-lucide="map" class="icon"></i>
+            <span class="nav-label"> Growth Roadmap</span>
+          </div>
         </div>
       </div>
     </nav>
@@ -3954,6 +3972,10 @@ html.dark .credits-warning-banner {
         <div class="acct-divider"></div>
         <button class="acct-menu-item" onclick="showToast('Usage analytics coming soon')">Usage analytics</button>
         <button class="acct-menu-item" onclick="window.open('https://lancify.framer.website','_blank');toggleAccountDropdown()">Become an affiliate</button>
+        <button class="acct-menu-item" onclick="toggleGuideModeSetting();toggleAccountDropdown()">
+          <span>Step-by-step guide</span>
+          <span id="guide-mode-indicator" style="float:right;">ON</span>
+        </button>
         <div class="acct-divider"></div>
         <button class="acct-menu-item danger" onclick="signOut();toggleAccountDropdown()">Sign out</button>
       </div>
@@ -6376,6 +6398,9 @@ function updateChecklistBanner() {
   const completed = getChecklistCompletedCount();
   const pct = getChecklistPct();
   if (!banner || !progress) return;
+  
+  // Change 1: Check guide mode
+  if (localStorage.getItem('lancify_guide_mode') === 'off') { banner.classList.add('hidden'); return; }
 
   // Bug 3: Logic for banner visibility
   if (pct >= 100) {
@@ -6401,6 +6426,9 @@ function updateChecklistBanner() {
 function renderFloatingChecklistWidget() {
   const widget = el('floating-checklist-widget');
   if (!widget) return;
+  // Change 1: Check guide mode
+  if (localStorage.getItem('lancify_guide_mode') === 'off') { widget.classList.add('hidden'); return; }
+  
   const pct = getChecklistPct();
   const completed = getChecklistCompletedCount();
   
@@ -7049,6 +7077,9 @@ function clearAuthMessages(){ el('auth-error').style.display='none'; el('auth-su
 
 /* ─── NAVIGATION ─── */
 function renderQuickGuideBanner(page) {
+  // Change 1: Check guide mode
+  if (localStorage.getItem('lancify_guide_mode') === 'off') return;
+
   const guides = {
     opportunity: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
     gig: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
@@ -9868,20 +9899,66 @@ function showUpgradeModal(options = {}){
     history.pushState({ modal: 'plan' }, '', PLAN_PATH);
   }
 }
+function showGuidePrefScreen() {
+  const screen = el('guide-pref-screen');
+  if (screen) screen.style.display = 'flex';
+}
+
+function setGuideMode(mode) {
+  localStorage.setItem('lancify_guide_mode', mode);
+  const screen = el('guide-pref-screen');
+  if (screen) screen.style.display = 'none';
+  applyGuideMode(mode);
+  navigate('home');
+}
+
+function applyGuideMode(mode) {
+  if (!mode) mode = localStorage.getItem('lancify_guide_mode') || 'on';
+
+  const guideElements = [
+    'home-start-here',
+    'dashboard-challenge-banner',
+    'floating-checklist-widget'
+  ];
+
+  guideElements.forEach(id => {
+    const el2 = el(id);
+    if (!el2) return;
+    if (mode === 'off') {
+      el2.setAttribute('data-guide-hidden', 'true');
+      el2.style.display = 'none';
+    } else {
+      el2.removeAttribute('data-guide-hidden');
+      el2.style.display = '';
+    }
+  });
+
+  document.querySelectorAll('.guide-banner').forEach(b => {
+    b.style.display = mode === 'off' ? 'none' : '';
+  });
+}
+
 function closeUpgrade(options = {}){
   const m = el('upgrade-modal');
-  m.style.display = 'none';
+  if (m) { m.style.display = 'none'; }
   document.body.style.overflow = '';
   if (isPlanRoute() && !options.fromHistory) {
     history.replaceState(history.state || {}, '', '/');
   }
+
   if (!options.suppressPending) {
     if (_pendingPostPlanAction === 'onboarding') {
       _pendingPostPlanAction = null;
       _showOnboarding();
     } else if (_pendingPostPlanAction === 'dashboard_entrance') {
       _pendingPostPlanAction = null;
-      el('app-layout').classList.add('show');
+      // Change 1: Intercept dashboard entrance for guide pref screen
+      if (!localStorage.getItem('lancify_guide_mode')) {
+        showGuidePrefScreen();
+      } else {
+        el('app-layout').classList.add('show');
+        applyGuideMode(localStorage.getItem('lancify_guide_mode'));
+      }
     }
   }
 }
@@ -9936,10 +10013,25 @@ const _obQuotes = {
   ]
 };
 
+function toggleGuideModeSetting() {
+  const current = localStorage.getItem('lancify_guide_mode') || 'on';
+  const next = current === 'on' ? 'off' : 'on';
+  setGuideMode(next);
+  const indicator = el('guide-mode-indicator');
+  if (indicator) indicator.textContent = next.toUpperCase();
+  showToast(`Step-by-step guide turned ${next.toUpperCase()}`);
+}
+
 async function onLogin(user) {
   currentUser = user;
   el('login-screen').style.display = 'none';
-  pbProgress = loadChecklistProgress();
+  pbProgress = loadChecklistProgress(user.id);
+
+  // Update guide indicator
+  const indicator = el('guide-mode-indicator');
+  if (indicator) {
+    indicator.textContent = (localStorage.getItem('lancify_guide_mode') || 'on').toUpperCase();
+  }
 
   const name      = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const firstName = name.split(' ')[0];
@@ -9967,6 +10059,9 @@ async function onLogin(user) {
   updateChecklistUi();
   setTimeout(() => renderFloatingChecklistWidget(), 500);
   updateChecklistBanner();
+  
+  // Change 1: Persist guide mode state
+  applyGuideMode(localStorage.getItem('lancify_guide_mode') || 'on');
   
   lucide.createIcons();
 
