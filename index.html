@@ -6935,9 +6935,9 @@ const chatQuestions = [
 /* ─── INIT ─── */
 async function initApp() {
   applySidebarState();
-  initChecklistCollapse();
   const {data:{session}} = await sb.auth.getSession();
   hide('loading-screen');
+  setTimeout(() => initChecklistCollapse(), 500);
   if (session?.user) onLogin(session.user);
   else showLogin();
   sb.auth.onAuthStateChange((_,s) => {
