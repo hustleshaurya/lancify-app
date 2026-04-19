@@ -610,10 +610,17 @@ html.dark #theme-icon-sun{display:block}
 html.dark #theme-icon-moon{display:none}
 
 /* ─── CONTENT ─── */
-.content-scroll{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
-.content-inner{width:100%;max-width:var(--page-max);margin:0 auto;padding:40px 36px 88px}
-.content-inner.wide{max-width:var(--page-max-wide)}
-.content-inner.home-shell{max-width:var(--page-max-wide)}
+.content-scroll{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  background:var(--bg);
+  height:0;
+  min-height:0;
+}
+.content-inner{width:100%;max-width:var(--page-max);margin:0 auto;padding:40px 36px 88px;padding-bottom:80px}
+.content-inner.wide{max-width:var(--page-max-wide);padding-bottom:80px}
+.content-inner.home-shell{max-width:var(--page-max-wide);padding-bottom:80px}
 
 /* ─── PAGES ─── */
 .page{display:none;animation:fadeUp .2s ease}
@@ -1364,10 +1371,12 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .checklist-collapsible{
   max-height: 2000px;
   overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1);
+  transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 1;
 }
 .checklist-collapsible.collapsed{
   max-height: 0px;
+  opacity: 0;
 }
 .checklist-summary{
   margin-top: 12px;
@@ -4400,33 +4409,11 @@ html.dark .credits-warning-banner {
               <div class="summary-stat-value" id="pipe-avg-ticket">$0</div>
               <div class="summary-stat-sub" id="pipe-saved-count">0 saved opportunities waiting</div>
             </div>
-          </div>
-          <div class="pipeline-summary-grid">
-            <div class="summary-stat">
-              <div class="summary-stat-label">Open Pipeline</div>
-              <div class="summary-stat-value" id="pipe-open-value">$0</div>
-              <div class="summary-stat-sub" id="pipe-open-count">0 active deals across the board</div>
             </div>
-            <div class="summary-stat">
-              <div class="summary-stat-label">Follow-ups Due</div>
-              <div class="summary-stat-value" id="pipe-followups">0</div>
-              <div class="summary-stat-sub">Deals that need a next touchpoint today</div>
-            </div>
-            <div class="summary-stat">
-              <div class="summary-stat-label">Win Rate</div>
-              <div class="summary-stat-value" id="pipe-win-rate">0%</div>
-              <div class="summary-stat-sub">Closed wins across your active CRM history</div>
-            </div>
-            <div class="summary-stat">
-              <div class="summary-stat-label">Avg Ticket</div>
-              <div class="summary-stat-value" id="pipe-avg-ticket">$0</div>
-              <div class="summary-stat-sub" id="pipe-saved-count">0 saved opportunities waiting</div>
-            </div>
-          </div>
 
-          <div class="pipeline-shell">
+            <div class="pipeline-shell">
             <div class="saved-clients-panel" style="margin-bottom:24px;">
-              <div class="section-title-row" style="cursor:pointer;" onclick="toggleManagedClientsCollapse()">
+              <div class="section-title-row" style="cursor:pointer; padding: 10px 12px; border-radius: 10px; transition: background 0.15s ease;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background=''" onclick="toggleManagedClientsCollapse()">
                 <div class="section-title" style="margin:0;border:0;padding:0;display:flex;align-items:center;gap:8px;">
                   <i data-lucide="chevron-down" id="opp-managed-chevron"></i>
                   Saved from Opportunity Engine (<span id="opp-managed-count">0</span>)
@@ -4436,6 +4423,27 @@ html.dark .credits-warning-banner {
                 <div class="saved-opportunity-sub" style="margin-top:10px;">Fresh leads from Opportunity Engine land here first.</div>
                 <div id="opp-managed-empty" class="saved-opportunity-empty" style="margin-top:10px;">No AI leads saved yet.</div>
                 <div class="opp-managed-list" id="opp-managed-list" style="margin-top:10px;"></div>
+              </div>
+            </div>
+
+            <div class="pipeline-composer" style="margin-bottom:24px; border:1px solid var(--border); border-radius:18px; padding:20px; background:var(--bg-panel);">
+              <div class="section-title" style="cursor:pointer; display:flex; align-items:center; gap:8px;" onclick="toggleAddLeadCollapse()">
+                <i data-lucide="chevron-right" id="addlead-chevron"></i>
+                Add Lead Manually
+              </div>
+              <div id="add-lead-collapsible" class="checklist-collapsible collapsed">
+                <div class="pipeline-composer-grid">
+                  <div><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Northwind Studio"></div>
+                  <div><label class="field-label">Service / Project</label><input type="text" id="lead-service" placeholder="e.g. Retainer CRO sprint"></div>
+                  <div><label class="field-label">Value ($)</label><input type="number" id="lead-value" placeholder="2400"></div>
+                  <div><label class="field-label">Platform</label><select id="lead-platform"><option>Instagram</option><option>LinkedIn</option><option>Upwork</option><option>Fiverr</option><option>Website</option><option>Referral</option></select></div>
+                  <div><label class="field-label">Priority</label><select id="lead-priority"><option value="medium" selected>Medium</option><option value="high">High</option><option value="low">Low</option></select></div>
+                  <div><label class="field-label">Next Follow-up</label><input type="date" id="lead-followup"></div>
+                </div>
+                <div class="pipeline-composer-actions">
+                  <div class="pipeline-composer-note">Use this for manual leads, or push saved opportunities into the CRM and tighten the notes, contact email, and next step later.</div>
+                  <button class="btn btn-primary" onclick="addLead()">Add Client</button>
+                </div>
               </div>
             </div>
 
@@ -4500,31 +4508,17 @@ html.dark .credits-warning-banner {
                 </div>
               </div>
             </div>
-
-            <div class="pipeline-composer" style="margin-top:24px; border:1px solid var(--border); border-radius:18px; padding:20px; background:var(--bg-panel);">
-              <div class="section-title" style="cursor:pointer; display:flex; align-items:center; gap:8px;" onclick="toggleAddLeadCollapse()">
-                <i data-lucide="chevron-down" id="addlead-chevron"></i>
-                Add Lead Manually
-              </div>
-              <div id="add-lead-collapsible" class="checklist-collapsible collapsed">
-                <div class="pipeline-composer-grid">
-                  <div><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Northwind Studio"></div>
-                  <div><label class="field-label">Service / Project</label><input type="text" id="lead-service" placeholder="e.g. Retainer CRO sprint"></div>
-                  <div><label class="field-label">Value ($)</label><input type="number" id="lead-value" placeholder="2400"></div>
-                  <div><label class="field-label">Platform</label><select id="lead-platform"><option>Instagram</option><option>LinkedIn</option><option>Upwork</option><option>Fiverr</option><option>Website</option><option>Referral</option></select></div>
-                  <div><label class="field-label">Priority</label><select id="lead-priority"><option value="medium" selected>Medium</option><option value="high">High</option><option value="low">Low</option></select></div>
-                  <div><label class="field-label">Next Follow-up</label><input type="date" id="lead-followup"></div>
-                </div>
-                <div class="pipeline-composer-actions">
-                  <div class="pipeline-composer-note">Use this for manual leads, or push saved opportunities into the CRM and tighten the notes, contact email, and next step later.</div>
-                  <button class="btn btn-primary" onclick="addLead()">Add Client</button>
-                </div>
-              </div>
             </div>
-          </div>          </div>
+            </div>
+            </div>          </div>
         </div>
       </div>
-      
+      <div id="page-opportunity" class="page">
+  <div class="content-inner wide">
+    <div class="page-hd">
+      <h1>Opportunity Engine</h1>
+      <p>Add your skill. We find real clients. You make money.</p>
+    </div>
 
 
       <div id="page-invoices" class="page">
@@ -4805,12 +4799,7 @@ html.dark .credits-warning-banner {
       
 
 
-<div id="page-opportunity" class="page">
-  <div class="content-inner wide">
-    <div class="page-hd">
-      <h1>Opportunity Engine</h1>
-      <p>Add your skill. We find real clients. You make money.</p>
-    </div>
+
 
     <!-- MODE TABS -->
     <div class="opp-mode-tabs">
@@ -6710,6 +6699,33 @@ function toggleManagedClientsCollapse() {
   }
 }
 
+// ... helper logic already exists nearby ...
+
+
+function toggleAddLeadCollapse() {
+  const content = el('add-lead-collapsible');
+  const chevron = el('addlead-chevron');
+  if (!content) return;
+
+  const isCollapsed = content.classList.contains('collapsed');
+
+  if (isCollapsed) {
+    content.classList.remove('collapsed');
+    sessionStorage.setItem('lancify_addlead_open', 'true');
+    if (chevron) {
+      chevron.setAttribute('data-lucide', 'chevron-down');
+      lucide.createIcons();
+    }
+  } else {
+    content.classList.add('collapsed');
+    sessionStorage.removeItem('lancify_addlead_open');
+    if (chevron) {
+      chevron.setAttribute('data-lucide', 'chevron-right');
+      lucide.createIcons();
+    }
+  }
+}
+
 function initChecklistCollapse() {
   const collapsed = localStorage.getItem('lancify_checklist_collapsed') === 'true';
   if (collapsed) {
@@ -7388,7 +7404,16 @@ function navigate(page) {
   setText('header-title', titles[page]||'Dashboard');
   if (page === 'invoices') renderInvoices();
   if (page === 'accounting' || page === 'home') renderBusinessDashboard();
-  if (page === 'pipeline') { renderManagedOpportunityClients(); renderPipeline(); }
+  if (page === 'pipeline') { 
+    renderManagedOpportunityClients(); 
+    renderPipeline(); 
+    if (sessionStorage.getItem('lancify_addlead_open')) {
+      const content = el('add-lead-collapsible');
+      if (content) content.classList.remove('collapsed');
+      const chevron = el('addlead-chevron');
+      if (chevron) chevron.setAttribute('data-lucide', 'chevron-down');
+    }
+  }
   
   if (page !== 'home') {
     renderQuickGuideBanner(page);
