@@ -10259,6 +10259,7 @@ function closeUpgrade(options = {}){
       } else {
         el('app-layout').classList.add('show');
         applyGuideMode(localStorage.getItem('lancify_guide_mode'));
+        requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
       }
     }
   }
@@ -10474,6 +10475,7 @@ async function _decideRoute(uid) {
       await loadBillingState(uid);
     }
     el('app-layout').classList.add('show');
+    requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
     if (isPlanRoute()) showUpgradeModal({ pushRoute: false });
   } else {
     if (localStorage.getItem(ONBOARDING_SEEN_KEY) === 'yes') {
@@ -10574,7 +10576,7 @@ async function _obFinish() {
 /* ── Quote screen (5 seconds, then dashboard) ── */
 function _runQuoteScreen(goal, firstName) {
   const qs = el('ob-quote-screen');
-  if (!qs) { el('app-layout').classList.add('show'); showToast(`Welcome to Lancify, ${firstName}! 🚀`); return; }
+  if (!qs) { el('app-layout').classList.add('show'); requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights)); showToast(`Welcome to Lancify, ${firstName}! 🚀`); return; }
 
   const pool = _obQuotes[goal] || _obQuotes.default;
   const quotes = pool.length >= 2 ? pool : [...pool, ..._obQuotes.default].slice(0, 3);
@@ -10624,6 +10626,7 @@ function _runQuoteScreen(goal, firstName) {
           qs.style.transition = '';
           
           el('app-layout').classList.add('show');
+          requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
           el('loading-screen').style.display = 'none';
           
           _pendingPostPlanAction = 'dashboard_entrance';
@@ -10712,9 +10715,3 @@ initApp();
        <div id="toast"></div>
 </body>
 </html>
-
-
-
-
-
-
