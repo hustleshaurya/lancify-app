@@ -332,7 +332,7 @@ input, select, textarea { transition: border-color .15s, box-shadow .15s; }
 /* ─── INPUTS ─── */
 .field-label{display:block;font-size:12px;font-weight:500;color:var(--text-muted);margin-bottom:5px;letter-spacing:.01em}
 .field-optional{font-size:11px;font-weight:400;color:var(--text3)}
-input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],select,textarea{
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],input[type=date],select,textarea{
   display:block;width:100%;
   background:var(--bg);
   border:1px solid var(--border2);
@@ -340,7 +340,7 @@ input[type=text],input[type=email],input[type=password],input[type=url],input[ty
   color:var(--text-main);
   font-family:inherit;font-size:13px;outline:none;
 }
-input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],select{height:36px;padding:0 11px}
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],input[type=date],select{height:36px;padding:0 11px}
 textarea{padding:9px 11px;resize:vertical;line-height:1.55}
 input::placeholder,textarea::placeholder{color:var(--text3)}
 input:hover,select:hover,textarea:hover{border-color:var(--text-muted)}
@@ -358,6 +358,15 @@ select{
 }
 html.dark select{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a1a1a1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")
+}
+html.dark input[type=date]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.7;
+  cursor: pointer;
+}
+input[type=date]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
 }
 
 /* ─── BUTTONS ─── */
@@ -1270,7 +1279,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .nav-folder-title{display:flex;align-items:center;gap:7px;min-width:0}
 .nav-folder-head .nav-label{font-size:12px;font-weight:500}
 .nav-folder-chevron{width:12px;height:12px;transition:transform .15s ease;opacity:.7}
-.nav-folder.open .nav-folder-chevron{transform:rotate(180deg)}
+.nav-folder:not(.open) .nav-folder-chevron{transform:rotate(-90deg)}
 .nav-folder.spotlight .nav-folder-head{
   background:linear-gradient(135deg, rgba(91,141,239,0.12), rgba(20,184,166,0.07));
   border:1px solid rgba(91,141,239,0.18);
@@ -3619,71 +3628,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
     </div>
     <div class="login-form-col">
   <div class="login-card">
@@ -3983,7 +3928,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
 
-      <div class="nav-folder" data-folder="growth">
+      <div class="nav-folder open" data-folder="growth">
         <button class="nav-folder-head" onclick="toggleNavFolder('growth')">
           <span class="nav-folder-title">
             <i data-lucide="trending-up" class="icon"></i>
@@ -3999,71 +3944,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
     </nav>
 
     <div class="sb-bottom">
@@ -4306,71 +4187,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
 
       <div id="page-audit" class="page">
         <div class="content-inner">
@@ -4471,71 +4288,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
 
       <div id="page-email" class="page">
         <div class="content-inner">
@@ -4563,71 +4316,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
 
       <div id="page-gig" class="page">
         <div class="content-inner">
@@ -4648,71 +4337,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
 
       <div id="page-roadmap" class="page">
         <div class="content-inner">
@@ -4740,71 +4365,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
 
       <!-- page-profile is now a hidden stub; profile editing moved to Settings modal -->
       <div id="page-profile" class="page" style="display:none!important"></div>
@@ -4840,6 +4401,29 @@ html.dark .credits-warning-banner {
               <div class="summary-stat-sub" id="pipe-saved-count">0 saved opportunities waiting</div>
             </div>
           </div>
+          <div class="pipeline-summary-grid">
+            <div class="summary-stat">
+              <div class="summary-stat-label">Open Pipeline</div>
+              <div class="summary-stat-value" id="pipe-open-value">$0</div>
+              <div class="summary-stat-sub" id="pipe-open-count">0 active deals across the board</div>
+            </div>
+            <div class="summary-stat">
+              <div class="summary-stat-label">Follow-ups Due</div>
+              <div class="summary-stat-value" id="pipe-followups">0</div>
+              <div class="summary-stat-sub">Deals that need a next touchpoint today</div>
+            </div>
+            <div class="summary-stat">
+              <div class="summary-stat-label">Win Rate</div>
+              <div class="summary-stat-value" id="pipe-win-rate">0%</div>
+              <div class="summary-stat-sub">Closed wins across your active CRM history</div>
+            </div>
+            <div class="summary-stat">
+              <div class="summary-stat-label">Avg Ticket</div>
+              <div class="summary-stat-value" id="pipe-avg-ticket">$0</div>
+              <div class="summary-stat-sub" id="pipe-saved-count">0 saved opportunities waiting</div>
+            </div>
+          </div>
+
           <div class="pipeline-shell">
             <div class="saved-clients-panel" style="margin-bottom:24px;">
               <div class="section-title-row" style="cursor:pointer;" onclick="toggleManagedClientsCollapse()">
@@ -4916,13 +4500,13 @@ html.dark .credits-warning-banner {
                 </div>
               </div>
             </div>
-            
-            <div class="pipeline-composer" style="margin-top:24px;">
+
+            <div class="pipeline-composer" style="margin-top:24px; border:1px solid var(--border); border-radius:18px; padding:20px; background:var(--bg-panel);">
               <div class="section-title" style="cursor:pointer; display:flex; align-items:center; gap:8px;" onclick="toggleAddLeadCollapse()">
-                <i data-lucide="chevron-up" id="addlead-chevron"></i>
+                <i data-lucide="chevron-down" id="addlead-chevron"></i>
                 Add Lead Manually
               </div>
-              <div id="add-lead-collapsible" class="checklist-collapsible">
+              <div id="add-lead-collapsible" class="checklist-collapsible collapsed">
                 <div class="pipeline-composer-grid">
                   <div><label class="field-label">Client Name</label><input type="text" id="lead-name" placeholder="e.g. Northwind Studio"></div>
                   <div><label class="field-label">Service / Project</label><input type="text" id="lead-service" placeholder="e.g. Retainer CRO sprint"></div>
@@ -4937,76 +4521,11 @@ html.dark .credits-warning-banner {
                 </div>
               </div>
             </div>
-          </div>
-          </div>
+          </div>          </div>
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
 
       <div id="page-invoices" class="page">
         <div class="content-inner wide">
@@ -5072,7 +4591,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
+      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;visibility:hidden;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
           <div>
             <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
@@ -5123,7 +4642,7 @@ html.dark .credits-warning-banner {
               <span style="font-size:15px;font-weight:700;">Total Due</span>
               <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
             </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
+            <div style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
           </div>
         </div>
         
@@ -5250,71 +4769,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
 
       <div class="modal-backdrop" id="lead-editor-modal" onclick="if(event.target===this)closeModal('lead-editor-modal')">
         <div class="modal crm-modal">
@@ -5348,71 +4803,7 @@ html.dark .credits-warning-banner {
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
-          <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
-          </div>
-        </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
-          <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
-            </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
-          </div>
-        </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
-        </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
-        </div>
-      </div>
+
 
 <div id="page-opportunity" class="page">
   <div class="content-inner wide">
@@ -5734,6 +5125,26 @@ html.dark .credits-warning-banner {
       <div class="settings-tab" id="stab-preferences">
         <div class="settings-section-title">Preferences</div>
         <div class="settings-section-sub">Customise your Lancify experience.</div>
+        <div class="pref-row">
+          <div>
+            <div class="pref-label">Email me when a lead replies</div>
+            <div class="pref-desc">Coming soon — we'll notify you via email</div>
+          </div>
+          <input type="checkbox" id="notif-email" onchange="localStorage.setItem('lancify_notif_email', this.checked)" style="width:auto">
+        </div>
+        <div class="pref-row">
+          <div>
+            <div class="pref-label">Default currency</div>
+            <div class="pref-desc">Set the currency symbol for your invoices.</div>
+          </div>
+          <select id="inv-currency-pref" onchange="localStorage.setItem('lancify_currency', this.value)" style="width:120px">
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="INR">INR (₹)</option>
+            <option value="AUD">AUD (A$)</option>
+          </select>
+        </div>
         <div class="pref-row">
           <div>
             <div class="pref-label">Theme</div>
@@ -7275,10 +6686,46 @@ function toggleChecklistCollapse(forceState) {
   lucide.createIcons();
 }
 
+function toggleManagedClientsCollapse() {
+  const content = el('opp-managed-collapsible');
+  const chevron = el('opp-managed-chevron');
+  if (!content) return;
+  
+  const isCollapsed = content.classList.contains('collapsed');
+  
+  if (isCollapsed) {
+    content.classList.remove('collapsed');
+    localStorage.removeItem('lancify_saved_collapsed');
+    if (chevron) {
+      chevron.setAttribute('data-lucide', 'chevron-down');
+      lucide.createIcons();
+    }
+  } else {
+    content.classList.add('collapsed');
+    localStorage.setItem('lancify_saved_collapsed', 'true');
+    if (chevron) {
+      chevron.setAttribute('data-lucide', 'chevron-right');
+      lucide.createIcons();
+    }
+  }
+}
+
 function initChecklistCollapse() {
   const collapsed = localStorage.getItem('lancify_checklist_collapsed') === 'true';
   if (collapsed) {
     toggleChecklistCollapse(false);
+  }
+  
+  // Fix 5: Restore saved collapse state
+  const savedCollapsed = localStorage.getItem('lancify_saved_collapsed') === 'true';
+  if (savedCollapsed) {
+    const content = el('opp-managed-collapsible');
+    const chevron = el('opp-managed-chevron');
+    if (content) content.classList.add('collapsed');
+    if (chevron) {
+        chevron.setAttribute('data-lucide', 'chevron-right');
+        lucide.createIcons();
+    }
   }
 }
 
@@ -7756,6 +7203,7 @@ async function initApp() {
   const {data:{session}} = await sb.auth.getSession();
   hide('loading-screen');
   setTimeout(() => initChecklistCollapse(), 500);
+  setTimeout(() => _syncNavFolderHeights(), 100);
   if (session?.user) onLogin(session.user);
   else showLogin();
   sb.auth.onAuthStateChange((_,s) => {
@@ -9120,7 +8568,7 @@ function renderInvoices(){
   setText('inv-stat-total', String(total));
   setText('inv-stat-paid', String(paid));
   setText('inv-stat-pending', String(pending));
-  setText('inv-stat-outstanding', `$${Number(outstanding || 0).toLocaleString()}`);
+  setText('inv-stat-outstanding', `${getCurrencySymbol()}${Number(outstanding || 0).toLocaleString()}`);
 
   if (!userInvoices.length) {
     body.innerHTML = '<tr><td colspan="6" style="color:var(--text3);text-align:center;padding:20px 8px">No invoices yet</td></tr>';
@@ -10096,8 +9544,8 @@ function previewInvoicePdf() {
   setText('pdf-date-issued', today);
   setText('pdf-due-date', dueDateFormatted);
   setText('pdf-service', service);
-  setText('pdf-amount-row', `$${parseFloat(amount).toFixed(2)}`);
-  setText('pdf-total', `$${parseFloat(amount).toFixed(2)}`);
+  setText('pdf-amount-row', `${getCurrencySymbol()}${parseFloat(amount).toFixed(2)}`);
+  setText('pdf-total', `${getCurrencySymbol()}${parseFloat(amount).toFixed(2)}`);
   setText('pdf-notes', notes);
   setText('pdf-footer-email', clientEmail);
   
@@ -10108,13 +9556,23 @@ function previewInvoicePdf() {
   }
   
   const preview = el('invoice-pdf-preview');
-  preview.style.left = '0';
-  preview.style.zIndex = '1';
+  preview.style.position = 'absolute';
+  preview.style.left = '-9999px';
+  preview.style.top = document.documentElement.scrollTop + 'px';
+  preview.style.zIndex = '9999';
+  preview.style.visibility = 'visible';
+  preview.style.display = 'block';
+  document.body.appendChild(preview);
+
   showToast('Generating PDF...');
-  
+
   html2canvas(preview, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
+    preview.style.position = 'fixed';
     preview.style.left = '-9999px';
+    preview.style.top = '0';
     preview.style.zIndex = '-1';
+    preview.style.visibility = 'hidden';
+
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const imgData = canvas.toDataURL('image/png');
@@ -10123,11 +9581,16 @@ function previewInvoicePdf() {
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`${invNum}-${clientName.replace(/\s+/g,'-')}.pdf`);
     showToast('Invoice downloaded!');
-  }).catch(() => {
+  }).catch((err) => {
+    console.error('PDF error:', err);
+    preview.style.position = 'fixed';
     preview.style.left = '-9999px';
-    showToast('PDF generation failed. Try again.');
+    preview.style.top = '0';
+    preview.style.zIndex = '-1';
+    preview.style.visibility = 'hidden';
+    showToast('PDF generation failed: ' + (err?.message || 'unknown error'));
   });
-}
+  }
 
 function renderBusinessDashboard(){
   injectBusinessDashboardWidgets();
@@ -10534,11 +9997,8 @@ function escapeJsAttr(str=''){
 }
 function formatCurrency(amount){
   const num = Number(amount || 0);
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0
-  }).format(Number.isFinite(num) ? num : 0);
+  const symbol = getCurrencySymbol();
+  return `${symbol}${num.toLocaleString()}`;
 }
 function normalizeDealValue(raw, fallback='$150 - $450'){
   const text = String(raw || '').replace(/\s+/g, ' ').trim();
@@ -11190,10 +10650,24 @@ function _runQuoteScreen(goal, firstName) {
 }
 
 /* ─── SETTINGS MODAL ─── */
+function getCurrencySymbol() {
+  const currencies = { USD:'$', EUR:'€', GBP:'£', INR:'₹', AUD:'A$' };
+  return currencies[localStorage.getItem('lancify_currency') || 'USD'] || '$';
+}
+
+function syncSettingsUi() {
+  const emailNotif = el('notif-email');
+  if(emailNotif) emailNotif.checked = localStorage.getItem('lancify_notif_email') === 'true';
+  const currency = el('inv-currency-pref');
+  if(currency) currency.value = localStorage.getItem('lancify_currency') || 'USD';
+}
+
+// Ensure these are called after Settings modal opens
 function openSettings(tabId){
   tabId = tabId || 'profile';
   el('settings-modal').classList.add('show');
   switchSettingsTab(tabId);
+  syncSettingsUi();
   // Sync theme buttons
   const isDark = document.documentElement.classList.contains('dark');
   const btnL = el('theme-btn-light'), btnD = el('theme-btn-dark');
