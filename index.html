@@ -8,7 +8,8 @@
 <link rel="icon" type="image/png" href="Favicon_new_logo-removebg-preview.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -3577,6 +3578,1065 @@ html.dark .credits-warning-banner {
   border-color: var(--btn-bg);
 }
 .qf-action-btn.primary:hover { opacity: .85; }
+
+/* Premium SaaS refresh */
+:root{
+  --sidebar-w:240px;
+  --radius:8px;
+  --radius-lg:12px;
+  --bg:#ffffff;
+  --bg-panel:#ffffff;
+  --bg-hover:#f0efec;
+  --bg2:#f7f7f5;
+  --bg3:#f0efec;
+  --text-main:#0a0a0a;
+  --text-muted:#6b6b6b;
+  --text:#0a0a0a;
+  --text2:#6b6b6b;
+  --text3:#8f8f87;
+  --accent:#e8500a;
+  --accent-primary:#e8500a;
+  --accent-secondary:#e8500a;
+  --accent-soft:#fff0eb;
+  --border:#e4e4e0;
+  --border2:#c8c8c2;
+  --btn-bg:#e8500a;
+  --btn-text:#ffffff;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:0 8px 24px rgba(0,0,0,0.10);
+  --page-max:min(1440px, calc(100vw - 96px));
+  --page-max-wide:min(1520px, calc(100vw - 72px));
+}
+html.dark{
+  --bg:#0d0d0d;
+  --bg-panel:#0d0d0d;
+  --bg-hover:#1e1e1e;
+  --bg2:#161616;
+  --bg3:#1e1e1e;
+  --text-main:#f5f5f3;
+  --text-muted:#8a8a8a;
+  --text:#f5f5f3;
+  --text2:#8a8a8a;
+  --text3:#666666;
+  --accent:#e8500a;
+  --accent-primary:#e8500a;
+  --accent-secondary:#e8500a;
+  --accent-soft:#1f1208;
+  --border:#2a2a2a;
+  --border2:#3a3a3a;
+  --btn-bg:#e8500a;
+  --btn-text:#ffffff;
+  --shadow-sm:none;
+  --shadow-md:none;
+  --shadow-lg:none;
+}
+html,body{
+  background:var(--bg);
+  color:var(--text-main);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:14px;
+  line-height:1.6;
+  letter-spacing:0;
+}
+html:not(.dark) body,
+html:not(.dark) .content-scroll,
+html:not(.dark) .main{
+  background:var(--bg);
+}
+.main{background:var(--bg)}
+.content-scroll{background:var(--bg)}
+.content-inner{padding:32px 36px 96px}
+.content-inner.home-shell{padding-top:28px}
+.page{animation:premiumPageIn .22s ease}
+@keyframes premiumPageIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.page-hd{margin-bottom:24px}
+.page-hd h1,
+.workspace-title,
+.dashboard-banner-title,
+.empty-state-heading,
+.tool-output-heading,
+.brand-wordmark,
+.header-title{
+  font-family:'Instrument Serif',serif;
+  font-weight:400;
+}
+.page-hd h1{
+  font-size:32px;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+  margin-bottom:6px;
+}
+.page-hd p{
+  font-size:14px;
+  color:var(--text-muted);
+  line-height:1.6;
+}
+.header{
+  height:52px;
+  padding:0 24px;
+  background:rgba(255,255,255,0.88);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(14px);
+}
+html.dark .header{background:rgba(13,13,13,0.88)}
+.header-title{
+  font-size:18px;
+  letter-spacing:-0.01em;
+}
+.header-actions{gap:8px}
+.header-icon-btn,
+.btn,
+.copy-btn,
+.range-chip,
+.topbar-link{
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.header-icon-btn{
+  width:34px;
+  height:34px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--bg-panel);
+}
+.header-avatar{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  border:1px solid rgba(232,80,10,0.18);
+  font-weight:700;
+}
+.topbar-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:34px;
+  padding:0 12px;
+  border:1px solid transparent;
+  border-radius:8px;
+  color:var(--text-muted);
+  font-size:13px;
+  text-decoration:none;
+}
+.topbar-link:hover{
+  background:var(--bg2);
+  color:var(--text-main);
+}
+.sidebar{
+  width:240px;
+  background:var(--bg-panel);
+  border-right:1px solid var(--border);
+}
+.sb-logo{
+  height:64px;
+  padding:0 16px;
+}
+.logo-img-light,.logo-img-dark,.logo-img-icon{display:none!important}
+.brand-lockup{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.brand-monogram{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-size:14px;
+  font-weight:700;
+  border:1px solid rgba(232,80,10,0.14);
+}
+.brand-wordmark{
+  font-size:20px;
+  line-height:1;
+  color:var(--text-main);
+}
+.sidebar.collapsed .brand-wordmark{display:none}
+.sidebar.collapsed .brand-lockup{margin:0 auto}
+.sb-collapse-btn{
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.sb-workspace{
+  padding:8px 12px 12px;
+  border-bottom:1px solid var(--border);
+}
+.sb-workspace-btn{
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--bg2);
+}
+.ws-dot{
+  width:10px;
+  height:10px;
+  background:var(--accent);
+}
+.ws-name{font-size:14px}
+.sb-nav{padding:10px 10px 16px}
+.sb-section{
+  padding:14px 10px 8px;
+  font-size:11px;
+  font-weight:600;
+  color:var(--text3);
+  letter-spacing:.08em;
+}
+.nav-folder-head,
+.nav-item{
+  min-height:40px;
+  border-radius:10px;
+}
+.nav-folder-head{
+  padding:9px 10px;
+}
+.nav-item{
+  padding:10px 12px;
+  color:var(--text-muted);
+  border:1px solid transparent;
+}
+.nav-item:hover,
+.nav-folder-head:hover{
+  background:var(--bg2);
+  color:var(--text-main);
+}
+.nav-item.active{
+  position:relative;
+  background:var(--accent-soft);
+  color:var(--accent);
+  border-color:rgba(232,80,10,0.12);
+  font-weight:500;
+}
+.nav-item.active::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:8px;
+  bottom:8px;
+  width:2px;
+  border-radius:999px;
+  background:var(--accent);
+}
+.sb-bottom{
+  padding:14px;
+  gap:10px;
+  border-top:1px solid var(--border);
+  background:var(--bg-panel);
+}
+.sb-credits{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+}
+.sb-credits-label{
+  font-size:11px;
+  letter-spacing:.08em;
+  color:var(--text3);
+  margin-bottom:8px;
+}
+.sb-credits-bar-wrap{
+  height:6px;
+  background:var(--bg3);
+  margin-bottom:10px;
+}
+.sb-credits-bar{
+  background:var(--accent);
+}
+.sb-credits-num{
+  font-size:12px;
+  color:var(--text-muted);
+}
+.btn-primary,
+.btn-upgrade{
+  background:var(--accent);
+  color:#fff;
+  border:1px solid var(--accent);
+  height:40px;
+  border-radius:8px;
+  box-shadow:none;
+}
+.btn-primary:hover:not(:disabled),
+.btn-upgrade:hover{
+  background:#c94008;
+  border-color:#c94008;
+  opacity:1;
+}
+.btn-secondary{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--text-main);
+  height:40px;
+  border-radius:8px;
+  box-shadow:none;
+}
+.btn-secondary:hover:not(:disabled),
+.copy-btn:hover{
+  background:var(--bg3);
+  border-color:var(--border2);
+}
+.btn-ghost{
+  color:var(--text-muted);
+}
+.btn-ghost:hover{
+  background:var(--bg2);
+  color:var(--text-main);
+}
+.sb-theme-toggle{
+  width:100%;
+  height:40px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text-muted);
+}
+.sb-theme-toggle:hover{
+  background:var(--bg2);
+  color:var(--text-main);
+}
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],input[type=date],select,textarea{
+  background:var(--bg-panel)!important;
+  border:1px solid var(--border2)!important;
+  color:var(--text-main)!important;
+  border-radius:8px;
+  box-shadow:none!important;
+}
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],input[type=date],select{
+  height:40px;
+  padding:0 12px;
+}
+textarea{
+  min-height:120px;
+  padding:11px 12px;
+}
+input::placeholder,textarea::placeholder{color:var(--text-muted)}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--accent)!important;
+  box-shadow:none!important;
+}
+.field-label{
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-weight:600;
+  color:var(--text-secondary,var(--text-muted));
+}
+.card,
+.result-box,
+.biz-card,
+.summary-stat,
+.saved-clients-panel,
+.pipeline-composer,
+.pipeline-toolbar,
+.analytics-panel,
+.kanban-board-col{
+  background:var(--bg2)!important;
+  border:1px solid var(--border)!important;
+  border-radius:12px!important;
+  box-shadow:var(--shadow-sm)!important;
+}
+.card-dashed{
+  background:var(--bg2);
+  border:1px dashed var(--border2);
+  border-radius:12px;
+}
+.premium-surface{
+  background:var(--bg2)!important;
+}
+.home-hero{
+  margin-bottom:22px;
+}
+.workspace-title{
+  font-size:32px;
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  margin-bottom:8px;
+}
+.workspace-context{
+  font-size:14px;
+  color:var(--text-muted);
+}
+.dashboard-banner{
+  border:1px solid rgba(232,80,10,0.16);
+  border-radius:12px;
+  background:var(--accent-soft);
+  padding:18px 20px;
+  margin-bottom:20px;
+}
+.dashboard-banner-eyebrow{
+  color:var(--accent);
+}
+.dashboard-banner-title{
+  font-size:24px;
+  line-height:1.1;
+}
+.dashboard-banner-sub{
+  color:rgba(10,10,10,0.72);
+}
+html.dark .dashboard-banner-sub{color:rgba(245,245,243,0.72)}
+.challenge-progress{
+  background:rgba(255,255,255,0.72);
+  border:1px solid rgba(232,80,10,0.16);
+}
+.home-dashboard-stack{
+  display:grid;
+  gap:20px;
+  margin-bottom:22px;
+}
+.dashboard-shell{
+  display:grid;
+  gap:20px;
+}
+.business-pulse-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+}
+.pulse-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-left:2px solid var(--accent);
+  border-radius:12px;
+  padding:18px;
+  box-shadow:var(--shadow-sm);
+}
+.pulse-card:hover,
+.dashboard-panel:hover,
+.quick-action-card:hover{
+  transform:translateY(-1px);
+  border-color:var(--border2);
+  box-shadow:var(--shadow-md);
+}
+.pulse-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text-muted);
+  margin-bottom:8px;
+}
+.pulse-value{
+  font-family:'Instrument Serif',serif;
+  font-size:28px;
+  line-height:1;
+  color:var(--text-main);
+}
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);
+  gap:16px;
+}
+.dashboard-grid-secondary{
+  display:grid;
+  grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+  gap:16px;
+}
+.dashboard-panel{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px;
+  box-shadow:var(--shadow-sm);
+}
+.dashboard-panel-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+}
+.dashboard-panel-kicker{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text3);
+  margin-bottom:6px;
+}
+.dashboard-panel-title{
+  font-family:'Instrument Serif',serif;
+  font-size:24px;
+  line-height:1.1;
+  color:var(--text-main);
+}
+.dashboard-panel-copy{
+  font-size:14px;
+  color:var(--text-muted);
+}
+.credits-widget{
+  display:grid;
+  grid-template-columns:120px minmax(0,1fr);
+  gap:16px;
+  align-items:center;
+}
+.credits-ring{
+  position:relative;
+  width:112px;
+  height:112px;
+}
+.credits-ring svg{
+  width:112px;
+  height:112px;
+  transform:rotate(-90deg);
+}
+.credits-ring-track{
+  fill:none;
+  stroke:var(--bg3);
+  stroke-width:8;
+}
+.credits-ring-progress{
+  fill:none;
+  stroke:var(--accent);
+  stroke-width:8;
+  stroke-linecap:round;
+  transition:stroke-dashoffset .25s ease;
+}
+.credits-ring-value{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.credits-ring-value strong{
+  font-family:'Instrument Serif',serif;
+  font-size:26px;
+  line-height:1;
+}
+.credits-ring-value span{
+  font-size:11px;
+  color:var(--text-muted);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.credits-meta{
+  display:grid;
+  gap:10px;
+}
+.credits-copy{
+  font-size:14px;
+  color:var(--text-muted);
+}
+.credits-upgrade-note{
+  color:var(--accent);
+  font-size:13px;
+  font-weight:600;
+}
+.activity-feed{
+  display:grid;
+  gap:12px;
+}
+.activity-feed-row{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.activity-feed-row:last-child{border-bottom:0;padding-bottom:0}
+.activity-icon{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--accent);
+}
+.activity-text{
+  font-size:14px;
+  color:var(--text-main);
+}
+.activity-time{
+  font-size:12px;
+  color:var(--text-muted);
+  white-space:nowrap;
+}
+.quick-actions-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.quick-action-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-height:74px;
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--bg-panel);
+  cursor:pointer;
+}
+.quick-action-copy{
+  display:grid;
+  gap:4px;
+}
+.quick-action-title{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text-main);
+}
+.quick-action-sub{
+  font-size:13px;
+  color:var(--text-muted);
+}
+.quick-action-icon{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.earnings-shell{
+  display:grid;
+  gap:14px;
+}
+.chart-toggle{
+  display:inline-flex;
+  gap:8px;
+  padding:4px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--bg-panel);
+}
+.range-chip{
+  border:0;
+  background:transparent;
+  color:var(--text-muted);
+  border-radius:999px;
+  height:30px;
+  padding:0 12px;
+  font-size:12px;
+  cursor:pointer;
+}
+.range-chip.active{
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+.earnings-chart-wrap{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--bg-panel);
+  padding:14px;
+}
+.earnings-chart-svg{
+  width:100%;
+  height:220px;
+  display:block;
+}
+.chart-label-row{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:6px;
+  margin-top:10px;
+}
+.chart-label{
+  font-size:11px;
+  color:var(--text-muted);
+  text-align:center;
+}
+.top-client-list{
+  display:grid;
+  gap:12px;
+}
+.top-client-row{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.top-client-row:last-child{border-bottom:0;padding-bottom:0}
+.client-avatar{
+  width:36px;
+  height:36px;
+  border-radius:999px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:700;
+}
+.client-name{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text-main);
+}
+.client-total{
+  font-size:13px;
+  color:var(--text-muted);
+}
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  border:1px solid transparent;
+}
+.status-pill.active{background:rgba(34,197,94,.12);color:#15803d}
+.status-pill.pending{background:rgba(245,158,11,.14);color:#b45309}
+.status-pill.closed{background:var(--accent-soft);color:var(--accent)}
+.status-pill.inactive{border-color:var(--border);color:var(--text-muted);background:transparent}
+html.dark .status-pill.active{color:#86efac}
+html.dark .status-pill.pending{color:#fbbf24}
+.roadmap-teaser{
+  display:grid;
+  gap:10px;
+  padding:18px;
+  border-radius:12px;
+  border:1px solid rgba(232,80,10,0.12);
+  background:var(--accent-soft);
+}
+.roadmap-teaser-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--accent);
+}
+.roadmap-teaser-title{
+  font-family:'Instrument Serif',serif;
+  font-size:24px;
+  line-height:1.1;
+}
+.roadmap-teaser-copy{
+  font-size:14px;
+  color:var(--text-main);
+}
+.tool-grid{
+  grid-template-columns:minmax(340px,420px) minmax(0,1fr);
+  gap:18px;
+  align-items:start;
+}
+.tool-form-card,
+.tool-output-card{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  min-height:100%;
+}
+.tool-section-kicker{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text3);
+}
+.tool-output-heading{
+  font-size:24px;
+  line-height:1.1;
+}
+.result-box-header,
+.output-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.copy-btn{
+  height:36px;
+  padding:0 12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text-main);
+  font-size:13px;
+  cursor:pointer;
+}
+.result-box-body{
+  padding:0;
+  background:transparent;
+  color:var(--text-main);
+}
+.result-box-body .ai-result-body-card,
+.result-box-body .ai-result-side-card{
+  background:var(--bg-panel);
+}
+.subject-pill,
+.word-count-badge{
+  display:inline-flex;
+  align-items:center;
+  min-height:32px;
+  padding:0 12px;
+  border-radius:999px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-size:12px;
+  font-weight:600;
+  width:max-content;
+  max-width:100%;
+}
+.word-count-badge{
+  background:var(--bg-panel);
+  color:var(--text-muted);
+  border:1px solid var(--border);
+}
+.output-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:4px;
+}
+.profile-banner{
+  background:rgba(34,197,94,0.12);
+  border:1px solid rgba(34,197,94,0.2);
+  border-radius:12px;
+  padding:12px 14px;
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  font-size:13px;
+  color:#166534;
+  margin-bottom:16px;
+}
+.profile-banner.show{display:flex}
+.profile-banner-copy{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  min-width:0;
+}
+.banner-close{
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  border:1px solid transparent;
+  background:transparent;
+  color:inherit;
+  cursor:pointer;
+}
+.banner-close:hover{background:rgba(0,0,0,0.06)}
+html.dark .profile-banner{
+  color:#86efac;
+  background:rgba(34,197,94,0.08);
+  border-color:rgba(34,197,94,0.18);
+}
+.file-upload{
+  min-height:110px;
+  border-radius:12px;
+  border:1px dashed var(--border2);
+  background:var(--bg-panel);
+}
+.file-upload:hover{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.inline-loader{
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+}
+.spin{
+  border:1.5px solid var(--border2);
+  border-top-color:var(--accent);
+}
+.empty-state{
+  align-items:flex-start;
+  justify-content:center;
+  text-align:left;
+  min-height:360px;
+  padding:24px;
+  color:var(--text-muted);
+}
+.empty-state.centered{
+  align-items:center;
+  text-align:center;
+}
+.empty-state-icon{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  color:var(--accent);
+  margin-bottom:18px;
+}
+.empty-state-heading{
+  font-size:24px;
+  line-height:1.1;
+  color:var(--text-main);
+}
+.empty-state-copy{
+  font-size:14px;
+  color:var(--text-muted);
+  line-height:1.6;
+}
+.audit-progress-list{
+  display:grid;
+  gap:12px;
+  margin-top:4px;
+}
+.audit-progress-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  color:var(--text-muted);
+}
+.audit-progress-dot{
+  width:18px;
+  height:18px;
+  border-radius:999px;
+  border:1.5px solid var(--border2);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.audit-progress-item.ready .audit-progress-dot{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+.audit-download-card{
+  display:grid;
+  gap:10px;
+  align-items:start;
+  padding:18px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--bg-panel);
+}
+.audit-download-card p{color:var(--text-muted)}
+.btn.is-loading{
+  pointer-events:none;
+}
+.btn-text-default{display:inline}
+.btn-text-loading,
+.btn-spinner{display:none}
+.btn.is-loading .btn-text-default{display:none}
+.btn.is-loading .btn-text-loading,
+.btn.is-loading .btn-spinner{
+  display:inline-flex;
+}
+.btn-spinner{
+  width:14px;
+  height:14px;
+  border:1.5px solid rgba(255,255,255,0.45);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .65s linear infinite;
+}
+#prop-job,
+#email-context{
+  min-height:160px!important;
+}
+.btn-secondary .btn-spinner{
+  border-color:rgba(10,10,10,0.2);
+  border-top-color:var(--text-main);
+}
+html.dark .btn-secondary .btn-spinner{
+  border-color:rgba(245,245,243,0.18);
+  border-top-color:var(--text-main);
+}
+@media(max-width:1180px){
+  .dashboard-grid,
+  .dashboard-grid-secondary{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:900px){
+  .business-pulse-grid,
+  .quick-actions-grid,
+  .tool-grid{
+    grid-template-columns:1fr;
+  }
+  .credits-widget{
+    grid-template-columns:1fr;
+    justify-items:start;
+  }
+}
+@media(max-width:768px){
+  .content-inner,
+  .content-inner.wide,
+  .content-inner.home-shell{
+    padding:22px 18px 112px;
+  }
+  .sidebar{
+    position:fixed;
+    left:0;
+    right:0;
+    top:auto;
+    bottom:0;
+    width:100%;
+    height:72px;
+    transform:none;
+    z-index:220;
+    border-right:0;
+    border-top:1px solid var(--border);
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(14px);
+  }
+  html.dark .sidebar{background:rgba(13,13,13,0.92)}
+  .sb-logo,.sb-workspace,.sb-bottom,.sb-section,.nav-folder-head{display:none!important}
+  .sb-nav{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    height:100%;
+    overflow-x:auto;
+    padding:12px;
+  }
+  .nav-folder{display:contents}
+  .nav-folder-children{
+    display:flex!important;
+    align-items:center;
+    gap:10px;
+    max-height:none!important;
+    overflow:visible!important;
+    padding:0!important;
+  }
+  .nav-item{
+    min-width:max-content;
+    margin:0;
+    padding:10px 12px;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+  }
+  .nav-item.active::before{display:none}
+  .nav-item .nav-label{
+    opacity:1!important;
+    width:auto!important;
+  }
+  .header{
+    padding:0 18px;
+  }
+  .header-actions .topbar-link{
+    display:none;
+  }
+  .workspace-title,
+  .page-hd h1{
+    font-size:28px;
+  }
+}
 </style>
 </head>
 <body>
@@ -3879,9 +4939,10 @@ html.dark .credits-warning-banner {
   <aside class="sidebar" id="sidebar">
 
     <div class="sb-logo">
-      <img src="lightthemelogo.png"                        alt="Lancify" class="logo-img-light">
-      <img src="darkthemelogo.png"                         alt="Lancify" class="logo-img-dark">
-      <img src="Favicon_new_logo-removebg-preview.png"    alt="L"       class="logo-img-icon">
+      <div class="brand-lockup">
+        <span class="brand-monogram">L</span>
+        <span class="brand-wordmark">Lancify</span>
+      </div>
 
       <button class="sb-collapse-btn" id="sb-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
         <i data-lucide="panel-left-close" style="width:15px;height:15px;stroke-width:1.75"></i>
@@ -3966,6 +5027,10 @@ html.dark .credits-warning-banner {
         <i data-lucide="zap" style="width:13px;height:13px"></i>
         <span class="upgrade-label">Upgrade to Pro</span>
       </button>
+      <button class="btn sb-theme-toggle" onclick="toggleTheme()">
+        <i data-lucide="sun-moon" style="width:14px;height:14px"></i>
+        <span>Toggle Theme</span>
+      </button>
     </div>
   </aside>
 
@@ -4037,6 +5102,8 @@ html.dark .credits-warning-banner {
               <button class="btn btn-primary" onclick="openStartHere()">Continue →</button>
             </div>
           </div>
+
+          <div id="home-dashboard-stack" class="home-dashboard-stack"></div>
 
           <div id="home-start-here" class="card premium-surface checklist-shell">
             <div class="checklist-header" style="position:relative;">
@@ -4156,43 +5223,6 @@ html.dark .credits-warning-banner {
           </div>
         </div>
 
-           
-          <div class="home-mini-stats">
-            <div class="stat-card"><span class="stat-label">Total Kits</span><span class="stat-val" id="stat-kits">0</span></div>
-            <div class="stat-card"><span class="stat-label">Proposals</span><span class="stat-val" id="stat-proposals">0</span></div>
-            <div class="stat-card"><span class="stat-label">Emails</span><span class="stat-val" id="stat-emails">0</span></div>
-            <div class="stat-card"><span class="stat-label">Gigs Found</span><span class="stat-val" id="stat-gigs">0</span></div>
-          </div>
-
-          <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text-main)">Get started</div>
-          <div class="home-tool-grid">
-            
-            <div class="tool-card" onclick="navigate('proposal')">
-              <div class="tool-icon" style="background:rgba(34,197,94,0.08)"><i data-lucide="file-text" style="width:22px;height:22px;color:#22c55e;stroke-width:1.75"></i></div>
-              <div><h3>Proposal Writer</h3><p>Tailored cold pitch generator</p></div>
-            </div>
-            <div class="tool-card" onclick="navigate('email')">
-              <div class="tool-icon" style="background:rgba(245,158,11,0.08)"><i data-lucide="mail" style="width:22px;height:22px;color:#f59e0b;stroke-width:1.75"></i></div>
-              <div><h3>Email Writer</h3><p>Draft professional client emails</p></div>
-            </div>
-            <div class="tool-card" onclick="navigate('audit')">
-              <div class="tool-icon" style="background:rgba(168,85,247,0.08)"><i data-lucide="sparkles" style="width:22px;height:22px;color:#a855f7;stroke-width:1.75"></i></div>
-              <div><h3>Audit Generator</h3><p>3-point growth diagnostics</p></div>
-            </div>
-            <div class="tool-card" onclick="navigate('gig')">
-              <div class="tool-icon" style="background:rgba(99,102,241,0.08)"><i data-lucide="search" style="width:22px;height:22px;color:#6366f1;stroke-width:1.75"></i></div>
-              <div><h3>Gig Finder</h3><p>Match skills to paying niches</p></div>
-            </div>
-            <div class="tool-card" onclick="navigate('pipeline')">
-              <div class="tool-icon" style="background:rgba(244,63,94,0.08)"><i data-lucide="bar-chart-2" style="width:22px;height:22px;color:#f43f5e;stroke-width:1.75"></i></div>
-              <div><h3>Client Pipeline</h3><p>Track leads from pitch to paid</p></div>
-            </div>
-          </div>
-
-          <div class="section-title">Recent activity</div>
-          <div class="card premium-surface activity-card">
-            <div id="recent-activity" style="color:var(--text3);font-size:13.5px;text-align:center">No activity yet. Start by creating your first freelance kit!</div>
-          </div>
         </div>
       </div>
       
@@ -4202,8 +5232,8 @@ html.dark .credits-warning-banner {
         <div class="content-inner">
           <div class="page-hd"><h1>Trojan Horse Audit</h1><p>Generate a clinical, 3-point growth diagnostic to send as a cold pitch.</p></div>
           <div class="tool-grid">
-            <div class="card" style="display:flex;flex-direction:column">
-              <div class="panel-title">Target Intelligence</div>
+            <div class="card tool-form-card">
+              <div class="tool-section-kicker">Target Intelligence</div>
               <div class="field-group">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
                   <div><label class="field-label">Business Name</label><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
@@ -4223,42 +5253,51 @@ html.dark .credits-warning-banner {
               </div>
               <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="$250"></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(120, generateAudit)">Generate Audit Dossier</button>
+              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(120, generateAudit)">
+                <span class="btn-spinner"></span>
+                <span class="btn-text-default">Generate Audit Dossier</span>
+                <span class="btn-text-loading">Generating...</span>
+              </button>
               <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
             </div>
             <div class="result-panel">
-              <div id="audit-result-box" style="display:none; flex-direction:column; gap:16px; height:100%;">
+              <div id="audit-result-box" class="tool-output-card" style="display:none">
                 
                 <div class="result-box" style="flex:1; min-height:220px;">
                   <div class="result-box-header">
-                    <span class="result-box-title">The Trojan Horse Email</span>
+                    <div>
+                      <div class="tool-section-kicker">Generated Output</div>
+                      <div class="tool-output-heading">The Trojan Horse Email</div>
+                    </div>
                     <button class="copy-btn" onclick="copyEl('audit-email-text')">Copy Email</button>
                   </div>
                   <div class="result-box-body" id="audit-email-text" style="font-size:14px; line-height:1.7;"></div>
                 </div>
 
-                <div class="result-box" style="flex:none; background: var(--bg-panel); padding: 24px; text-align: center; border-top: 1px solid var(--border);">
-                  <div style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">Client Audit Dossier Ready</div>
-                  <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">Attach this premium PDF to your email to prove your expertise.</div>
-                  <button class="btn btn-primary" style="height:42px; font-size:14px; padding:0 24px;" onclick="downloadAuditPDF()">
-                    <i data-lucide="download" style="width:16px;height:16px;margin-right:8px;"></i> Download PDF Audit
+                <div class="audit-download-card">
+                  <div class="tool-section-kicker">Audit Dossier</div>
+                  <div class="tool-output-heading">Client Audit Dossier Ready</div>
+                  <p>Attach this PDF to your outreach email to show a clean diagnostic before you ask for implementation work.</p>
+                  <button class="btn btn-primary" style="width:max-content" onclick="downloadAuditPDF()">
+                    <i data-lucide="download" style="width:16px;height:16px"></i>
+                    <span>Download PDF Audit</span>
                   </button>
                 </div>
 
               </div>
               
-              <div class="card-dashed empty-state" id="audit-empty" style="text-align:left; padding: 40px 30px; align-items: flex-start; justify-content: flex-start;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(168, 85, 247, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                  <i data-lucide="crosshair" style="width: 24px; height: 24px; color: #a855f7;"></i>
+              <div class="card-dashed empty-state" id="audit-empty">
+                <div class="empty-state-icon">
+                  <i data-lucide="crosshair" style="width:24px;height:24px"></i>
                 </div>
-                <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Awaiting Target Intelligence</h3>
-                <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6;">Enter the client's details to initiate the Trojan Horse sequence. The AI will:</p>
-                <ul style="font-size: 13.5px; color: var(--text-muted); display: flex; flex-direction: column; gap: 14px; list-style: none; margin-left: 0;">
-                  <li style="display: flex; align-items: center; gap: 10px;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--text3);"></i> Scrape their current website</li>
-                  <li style="display: flex; align-items: center; gap: 10px;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--text3);"></i> Identify a high-friction conversion gap</li>
-                  <li style="display: flex; align-items: center; gap: 10px;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--text3);"></i> Generate a custom cold email</li>
-                  <li style="display: flex; align-items: center; gap: 10px;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--text3);"></i> Package a premium 5-point audit PDF</li>
-                </ul>
+                <div class="empty-state-heading">Awaiting Target Intelligence</div>
+                <p class="empty-state-copy">Enter the target details to generate a focused growth diagnostic built for premium outbound.</p>
+                <div class="audit-progress-list">
+                  <div class="audit-progress-item"><span class="audit-progress-dot"></span><span>Inspect the current surface and spot the friction</span></div>
+                  <div class="audit-progress-item"><span class="audit-progress-dot"></span><span>Frame the highest-impact weakness</span></div>
+                  <div class="audit-progress-item"><span class="audit-progress-dot"></span><span>Draft the outreach email with a specific hook</span></div>
+                  <div class="audit-progress-item"><span class="audit-progress-dot"></span><span>Package the findings into a premium PDF dossier</span></div>
+                </div>
               </div>
             </div>
              </div>
@@ -4270,8 +5309,8 @@ html.dark .credits-warning-banner {
           <div class="page-hd"><h1>Proposal Writer</h1><p>Paste a job description to generate a tailored, high-converting proposal.</p></div>
           <div class="profile-banner" id="prop-banner" onclick="applyProfileTo('proposal')"><i data-lucide="user-check" style="width:13px;height:13px"></i> Profile detected — click to auto-fill your details</div>
           <div class="tool-grid">
-            <div class="card" style="display:flex;flex-direction:column">
-              <div class="panel-title">Settings</div>
+            <div class="card tool-form-card">
+              <div class="tool-section-kicker">Proposal Inputs</div>
               <div class="field-group">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
                   <div><label class="field-label">Platform</label><select id="prop-platform"><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Direct Email</option></select></div>
@@ -4280,17 +5319,31 @@ html.dark .credits-warning-banner {
               </div>
               <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing here…"></textarea></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Experience</label><input type="text" id="prop-exp" placeholder="e.g. I designed thumbnails for a 100k channel"></div>
-              <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:18px" onclick="checkCredits(30, generateProposal)">Write My Proposal</button>
+              <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:18px" onclick="checkCredits(30, generateProposal)">
+                <span class="btn-spinner"></span>
+                <span class="btn-text-default">Write My Proposal</span>
+                <span class="btn-text-loading">Generating...</span>
+              </button>
               <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposal…</span></div>
             </div>
             <div class="result-panel">
-              <div class="result-box" id="prop-result-box" style="display:none">
-                <div class="result-box-header"><span class="result-box-title">Your Proposal</span><button class="copy-btn" onclick="copyEl('prop-result-text')">Copy</button></div>
+              <div class="result-box tool-output-card" id="prop-result-box" style="display:none">
+                <div class="result-box-header">
+                  <div>
+                    <div class="tool-section-kicker">Generated Output</div>
+                    <div class="tool-output-heading">Your Proposal</div>
+                  </div>
+                  <button class="copy-btn" onclick="copyEl('prop-result-text')">Copy</button>
+                </div>
                 <div class="result-box-body" id="prop-result-text"></div>
+                <div class="output-footer">
+                  <span class="word-count-badge" id="prop-word-count">0 words</span>
+                </div>
               </div>
-              <div class="card-dashed empty-state" id="prop-empty">
-                <i data-lucide="file-text" style="width:26px;height:26px;color:var(--text3)"></i>
-                <p>Fill in the details on the left to generate your proposal.</p>
+              <div class="card-dashed empty-state centered" id="prop-empty">
+                <div class="empty-state-icon"><i data-lucide="file-text" style="width:22px;height:22px"></i></div>
+                <div class="empty-state-heading">Ready To Write</div>
+                <p class="empty-state-copy">Paste the opportunity details on the left and Lancify will generate a tailored proposal that sounds clear, credible, and easy to reply to.</p>
               </div>
             </div>
           </div>
@@ -4303,22 +5356,39 @@ html.dark .credits-warning-banner {
         <div class="content-inner">
           <div class="page-hd"><h1>Email Writer</h1><p>Draft professional client communications instantly.</p></div>
           <div class="tool-grid">
-            <div class="card" style="display:flex;flex-direction:column">
-              <div class="panel-title">Settings</div>
-              <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Cold outreach with a specific insight">Cold Outreach With Insight</option><option value="Follow-up after a proposal">Follow-up on Proposal</option><option value="Reply to budget objection">Reply to Budget Objection</option><option value="Polite payment reminder">Payment Reminder (Polite)</option><option value="Firm overdue payment reminder">Payment Reminder (Firm)</option><option value="Delivering final project files">Project Delivery & Handoff</option><option value="Asking for a review or testimonial">Request Review / Testimonial</option></select></div>
-              <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly and warm">Friendly & Warm</option><option value="Firm and direct">Firm & Direct</option></select></div>
+            <div class="card tool-form-card">
+              <div class="tool-section-kicker">Email Inputs</div>
+              <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Cold outreach with a specific insight">Cold Outreach With Insight</option><option value="Follow-up">Follow Up</option><option value="Invoice reminder">Invoice Reminder</option><option value="Proposal follow up">Proposal Follow Up</option><option value="Thank you">Thank You</option></select></div>
+              <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly">Friendly</option><option value="Direct">Direct</option><option value="Assertive">Assertive</option></select></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(20, generateEmail)">Generate Draft</button>
+              <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(20, generateEmail)">
+                <span class="btn-spinner"></span>
+                <span class="btn-text-default">Generate Draft</span>
+                <span class="btn-text-loading">Generating...</span>
+              </button>
               <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
             </div>
             <div class="result-panel">
-              <div class="result-box" id="email-result-box" style="display:none">
-                <div class="result-box-header"><span class="result-box-title">Email Draft</span><button class="copy-btn" onclick="copyEl('email-result-text')">Copy</button></div>
+              <div class="result-box tool-output-card" id="email-result-box" style="display:none">
+                <div class="result-box-header">
+                  <div>
+                    <div class="tool-section-kicker">Generated Output</div>
+                    <div class="tool-output-heading">Email Draft</div>
+                  </div>
+                  <button class="copy-btn" onclick="copyEl('email-result-text')">Copy</button>
+                </div>
+                <div class="subject-pill" id="email-subject-pill">Subject: Not generated yet</div>
                 <div class="result-box-body" id="email-result-text"></div>
+                <div class="output-actions">
+                  <button class="btn btn-secondary" onclick="copyEl('email-result-text')">Copy</button>
+                  <button class="btn btn-secondary" onclick="checkCredits(20, generateEmail)">Regenerate</button>
+                  <button class="btn btn-secondary" onclick="downloadEmailDraft()">Download</button>
+                </div>
               </div>
-              <div class="card-dashed empty-state" id="email-empty">
-                <i data-lucide="mail" style="width:26px;height:26px;color:var(--text3)"></i>
-                <p>Set your objective on the left to draft an email.</p>
+              <div class="card-dashed empty-state centered" id="email-empty">
+                <div class="empty-state-icon"><i data-lucide="mail" style="width:22px;height:22px"></i></div>
+                <div class="empty-state-heading">Draft Client Communication Fast</div>
+                <p class="empty-state-copy">Set your objective, choose the tone, and generate a polished email with a clean subject line and send-ready copy.</p>
               </div>
             </div>
           </div>
@@ -6885,6 +7955,8 @@ let leadMetaStore = {}, crmFilters = { search:'', platform:'all', sort:'newest' 
 let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
 let billingState = { total: 1000, remaining: 1000, cycleStart: null, usage: {} };
+let homeEarningsRange = '30d';
+let latestEmailDraft = { subject: '', body: '' };
 const CRM_STAGE_ORDER = ['pitched','replied','won'];
 const CRM_STAGE_META = {
   pitched: { label: 'Pitched', eyebrow: 'Outreach', color: '#64748b' },
@@ -6988,6 +8060,7 @@ function _setPlanUi(){
       ? `${total.toLocaleString()} AI credits included. Premium feature limits unlocked.`
       : `${total.toLocaleString()} AI credits included. Resets monthly.`
   );
+  renderHomeCreditsWidget(total, remaining);
 }
 
 function _applyPlanLocks(){
@@ -7423,6 +8496,7 @@ function applyProfileToFields(p){
 }
 
 function checkProfileBanners(){
+  enhanceProfileBanners();
   if(userProfile.skills){
     ['prop','gig','rm'].forEach(id=>{
       const b=el(id+'-banner'); if(b) b.classList.add('show');
@@ -7503,7 +8577,7 @@ function updateLogoText(input) {
 async function generateAudit(){
   const targetVal=val('audit-target'); if(!targetVal) { showToast('Enter a business name'); return false; }
   let ok = false;
-  el('audit-btn').disabled=true; loader('audit',true); toggleResult('audit',false);
+  setButtonLoading('audit-btn', true); loader('audit',true); toggleResult('audit',false);
   try {
     const res=await fetch('/api/audit',{
       method:'POST',
@@ -7522,16 +8596,30 @@ async function generateAudit(){
     if(data.error) throw new Error(data.error);
 
     savedAuditData = data;
+    recordActivity('audit', `Generated an audit for ${targetVal}`);
 
-    // We only display the email in the UI now.
-    const emailText = `SUBJECT: ${data.email_subject || ''}\n\n${data.email_body || ''}\n\n(P.S. I attached a quick PDF breakdown of the exact fixes for your site.)`;
-    el('audit-email-text').textContent = emailText;
+    el('audit-email-text').innerHTML = renderAiResultMarkup({
+      kicker: 'Audit email',
+      title: 'A proof-backed outreach draft built around real friction',
+      subject: data.email_subject || '',
+      body: `${data.email_body || ''}\n\nP.S. I attached a quick PDF breakdown of the exact fixes for your site.`,
+      tips: [
+        'Leads with a specific observation instead of a generic compliment.',
+        'Turns the audit into a reason to reply, not just read.',
+        'Keeps the ask clear and low-friction.'
+      ],
+      pills: [
+        `<strong>Platform</strong> ${escapeHtml(val('audit-platform') || 'Website')}`,
+        `<strong>Service</strong> ${escapeHtml(val('audit-service') || 'Creative')}`,
+        `<strong>Price</strong> ${escapeHtml(val('audit-price') || 'Custom quote')}`
+      ]
+    });
 
     toggleResult('audit',true);
     lucide.createIcons();
     ok = true;
   } catch(e){ showToast('Error. Try again.'); toggleResult('audit',false,true); ok = false; }
-  el('audit-btn').disabled=false; loader('audit',false);
+  setButtonLoading('audit-btn', false); loader('audit',false);
   return ok;
 }
 
@@ -7548,7 +8636,7 @@ async function downloadAuditPDF() {
     const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
     // Premium Agency Top Accent Line
-    doc.setFillColor(124, 58, 237); // Lancify Purple
+    doc.setFillColor(232, 80, 10);
     doc.rect(0, 0, 210, 6, 'F');
 
     let yOffset = 25;
@@ -7622,7 +8710,7 @@ async function downloadAuditPDF() {
     doc.roundedRect(20, yOffset, 170, 35, 3, 3, 'FD'); 
     
     // Purple accent line on the left of the invoice box
-    doc.setFillColor(124, 58, 237);
+    doc.setFillColor(232, 80, 10);
     doc.rect(20, yOffset, 4, 35, 'F');
     
     yOffset += 12;
@@ -7924,7 +9012,7 @@ async function loadLeads(uid){
 async function generateProposal(){
   const job=val('prop-job'); if(!job) { showToast('Paste a job description first'); return false; }
   let ok = false;
-  el('prop-btn').disabled=true; loader('prop',true); toggleResult('prop',false);
+  setButtonLoading('prop-btn', true); loader('prop',true); toggleResult('prop',false);
   try {
     const res=await fetch('/api/proposal',{
       method:'POST',
@@ -7951,7 +9039,9 @@ async function generateProposal(){
         `<strong>Goal</strong> get the reply`
       ]
     });
+    setText('prop-word-count', `${wordCount(data.proposal || '')} words`);
     toggleResult('prop',true);
+    recordActivity('proposal', `Generated a proposal for ${val('prop-platform') || 'a client opportunity'}`);
 
     if(currentUser){
       await sb.from('proposals').insert([{
@@ -7965,14 +9055,14 @@ async function generateProposal(){
     }
     ok = true;
   } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); ok = false; }
-  el('prop-btn').disabled=false; loader('prop',false);
+  setButtonLoading('prop-btn', false); loader('prop',false);
   return ok;
 }
 
 async function generateEmail(){
   const ctx=val('email-context'); if(!ctx) { showToast('Add some context first'); return false; }
   let ok = false;
-  el('email-btn').disabled=true; loader('email',true); toggleResult('email',false);
+  setButtonLoading('email-btn', true); loader('email',true); toggleResult('email',false);
   try {
     const res=await fetch('/api/email',{
       method:'POST',
@@ -7987,6 +9077,8 @@ async function generateEmail(){
     const data=await res.json();
     if(data.error) throw new Error(data.error);
 
+    latestEmailDraft = { subject: data.subject || '', body: data.body || '' };
+    setText('email-subject-pill', `Subject: ${data.subject || 'No subject generated'}`);
     el('email-result-text').innerHTML = renderAiResultMarkup({
       kicker: 'Email draft',
       title: 'Short enough to read, sharp enough to earn a reply',
@@ -7999,6 +9091,7 @@ async function generateEmail(){
       ]
     });
     toggleResult('email',true);
+    recordActivity('email', `Generated an email for ${val('email-type') || 'client outreach'}`);
 
     if(currentUser){
       await sb.from('emails').insert([{
@@ -8011,7 +9104,7 @@ async function generateEmail(){
     }
     ok = true;
   } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); ok = false; }
-  el('email-btn').disabled=false; loader('email',false);
+  setButtonLoading('email-btn', false); loader('email',false);
   return ok;
 }
 
@@ -8702,6 +9795,7 @@ async function createInvoice(){
   }
 
   clearInvoiceForm({ resetPicker: true });
+  recordActivity('invoice', `Created an invoice for ${clientName}`);
   renderInvoices();
   renderBusinessDashboard();
   showToast('Invoice created.');
@@ -8745,58 +9839,136 @@ function copyInvoiceDraft(){
 }
 
 function injectBusinessDashboardWidgets(){
-  const home = document.querySelector('#page-home .content-inner');
-  if (!home || el('home-biz-dashboard')) return;
-
-  // Improvements 4 & 5: Check if we should promote stats
-  const hasData = (userLeads && userLeads.length > 0) || 
-                  (opportunityClients && opportunityClients.length > 0) || 
-                  (userInvoices && userInvoices.length > 0) || 
-                  localStorage.getItem('lancify_has_data') === 'true';
-
-  const section = document.createElement('div');
-  section.id = 'home-biz-dashboard';
-  section.className = 'card premium-surface';
-  section.style.marginBottom = '22px';
-  section.innerHTML = `
-    <div class="section-title" style="margin-bottom:12px">Business Pulse</div>
-    <div class="biz-metrics-grid" style="margin-bottom:10px">
-      <div class="biz-metric-card"><div class="biz-metric-label">Clients</div><div class="biz-metric-value" id="home-total-clients">0</div></div>
-      <div class="biz-metric-card"><div class="biz-metric-label">Active</div><div class="biz-metric-value" id="home-active-deals">0</div></div>
-      <div class="biz-metric-card"><div class="biz-metric-label">Closed</div><div class="biz-metric-value" id="home-won-revenue">$0</div></div>
-      <div class="biz-metric-card"><div class="biz-metric-label">Outstanding</div><div class="biz-metric-value" id="home-outstanding">$0</div></div>
-    </div>
-    <div class="biz-panel-grid">
-      <div class="biz-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div class="section-title" style="margin:0;border:0;padding:0">Earnings Over Time</div>
-          <button class="btn btn-ghost" onclick="navigate('accounting')">Open Analytics</button>
+  const host = el('home-dashboard-stack');
+  if (!host) return;
+  host.innerHTML = `
+    <div id="home-biz-dashboard" class="dashboard-shell">
+      <div>
+        <div class="dashboard-panel-kicker">Business Pulse</div>
+        <div class="business-pulse-grid">
+          <div class="pulse-card"><div class="pulse-label">Clients</div><div class="pulse-value" id="home-total-clients">0</div></div>
+          <div class="pulse-card"><div class="pulse-label">Active</div><div class="pulse-value" id="home-active-deals">0</div></div>
+          <div class="pulse-card"><div class="pulse-label">Closed</div><div class="pulse-value" id="home-won-revenue">$0</div></div>
+          <div class="pulse-card"><div class="pulse-label">Outstanding</div><div class="pulse-value" id="home-outstanding">$0</div></div>
         </div>
-        <div class="biz-bar-row" id="home-earnings-bars"></div>
-        <div id="home-bar-labels" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:4px"></div>
       </div>
-      <div class="biz-card">
-        <div class="section-title" style="margin-bottom:8px">Quick Actions</div>
-        <div style="display:grid;gap:8px">
-          <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('invoices')"><i data-lucide="receipt-text" style="width:14px;height:14px"></i> Send an invoice</button>
-          <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('proposal')"><i data-lucide="file-text" style="width:14px;height:14px"></i> Draft a proposal</button>
-          <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('pipeline')"><i data-lucide="users" style="width:14px;height:14px"></i> Manage clients</button>
-          <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('opportunity')"><i data-lucide="target" style="width:14px;height:14px"></i> Find clients</button>
+      <div class="dashboard-grid">
+        <div class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <div class="dashboard-panel-kicker">Performance</div>
+              <div class="dashboard-panel-title">Earnings Over Time</div>
+              <div class="dashboard-panel-copy">See your revenue trend without the clutter.</div>
+            </div>
+            <div class="chart-toggle">
+              <button class="range-chip" id="home-range-7d" onclick="setHomeEarningsRange('7d')">7d</button>
+              <button class="range-chip" id="home-range-30d" onclick="setHomeEarningsRange('30d')">30d</button>
+              <button class="range-chip" id="home-range-90d" onclick="setHomeEarningsRange('90d')">90d</button>
+            </div>
+          </div>
+          <div class="earnings-shell">
+            <div class="earnings-chart-wrap">
+              <div id="home-earnings-chart"></div>
+              <div class="chart-label-row" id="home-chart-labels"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <div class="dashboard-panel-kicker">Usage</div>
+              <div class="dashboard-panel-title">AI Credits</div>
+              <div class="dashboard-panel-copy">Track remaining credits before the monthly reset.</div>
+            </div>
+          </div>
+          <div class="credits-widget">
+            <div class="credits-ring">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="credits-ring-track" cx="60" cy="60" r="46"></circle>
+                <circle class="credits-ring-progress" id="home-credits-ring" cx="60" cy="60" r="46"></circle>
+              </svg>
+              <div class="credits-ring-value">
+                <strong id="home-credits-pct">100%</strong>
+                <span>Remaining</span>
+              </div>
+            </div>
+            <div class="credits-meta">
+              <div class="credits-copy" id="home-credits-copy">1,000 credits remaining this month.</div>
+              <div class="credits-upgrade-note" id="home-credits-warning" style="display:none">Running low this month. Upgrade to Pro to keep momentum high.</div>
+              <button class="btn btn-primary" id="home-credits-cta" style="width:max-content;display:none" onclick="showUpgradeModal()">Upgrade to Pro</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-grid-secondary">
+        <div class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <div class="dashboard-panel-kicker">Actions</div>
+              <div class="dashboard-panel-title">Quick Actions</div>
+              <div class="dashboard-panel-copy">Jump straight into the next revenue move.</div>
+            </div>
+          </div>
+          <div class="quick-actions-grid">
+            <div class="quick-action-card" onclick="navigate('invoices')">
+              <div class="quick-action-copy"><div class="quick-action-title">Send an Invoice</div><div class="quick-action-sub">Turn finished work into collected cash.</div></div>
+              <div class="quick-action-icon"><i data-lucide="receipt-text" style="width:18px;height:18px"></i></div>
+            </div>
+            <div class="quick-action-card" onclick="navigate('proposal')">
+              <div class="quick-action-copy"><div class="quick-action-title">Draft a Proposal</div><div class="quick-action-sub">Write a sharper pitch for the next opportunity.</div></div>
+              <div class="quick-action-icon"><i data-lucide="file-text" style="width:18px;height:18px"></i></div>
+            </div>
+            <div class="quick-action-card" onclick="navigate('opportunity')">
+              <div class="quick-action-copy"><div class="quick-action-title">Find New Clients</div><div class="quick-action-sub">Pull fresh leads into your pipeline.</div></div>
+              <div class="quick-action-icon"><i data-lucide="target" style="width:18px;height:18px"></i></div>
+            </div>
+            <div class="quick-action-card" onclick="navigate('audit')">
+              <div class="quick-action-copy"><div class="quick-action-title">Generate Audit</div><div class="quick-action-sub">Lead with insight before you ask for the call.</div></div>
+              <div class="quick-action-icon"><i data-lucide="sparkles" style="width:18px;height:18px"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <div class="dashboard-panel-kicker">Activity</div>
+              <div class="dashboard-panel-title">Recent Activity</div>
+              <div class="dashboard-panel-copy">The last 5 moves across your workspace.</div>
+            </div>
+            <button class="btn btn-ghost" onclick="navigate('accounting')">View all activity</button>
+          </div>
+          <div class="activity-feed" id="home-activity-feed"></div>
+        </div>
+      </div>
+      <div class="dashboard-grid-secondary">
+        <div class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <div class="dashboard-panel-kicker">Relationships</div>
+              <div class="dashboard-panel-title">Top Clients</div>
+              <div class="dashboard-panel-copy">Your highest-value client relationships right now.</div>
+            </div>
+          </div>
+          <div class="top-client-list" id="home-top-clients"></div>
+        </div>
+        <div class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <div class="dashboard-panel-kicker">Next Move</div>
+              <div class="dashboard-panel-title">Growth Roadmap Teaser</div>
+              <div class="dashboard-panel-copy">The next action Lancify recommends this week.</div>
+            </div>
+          </div>
+          <div class="roadmap-teaser">
+            <div class="roadmap-teaser-label">Recommended Action</div>
+            <div class="roadmap-teaser-title" id="home-roadmap-title">Keep your pipeline moving</div>
+            <div class="roadmap-teaser-copy" id="home-roadmap-copy">Open Growth Roadmap and build the next 30 days around one clear client acquisition loop.</div>
+            <button class="btn btn-secondary" style="width:max-content" onclick="navigate('roadmap')">Open Roadmap -></button>
+          </div>
         </div>
       </div>
     </div>
   `;
-  const checklist = el('home-start-here');
-  if (checklist) {
-    if (hasData) {
-      checklist.parentNode.insertBefore(section, checklist);
-      sessionStorage.setItem('lancify_stats_promoted', 'true');
-    } else {
-      checklist.insertAdjacentElement('afterend', section);
-    }
-  } else {
-    home.prepend(section);
-  }
 }
 
 function _monthlyEarningsBuckets(){
@@ -8847,6 +10019,266 @@ function _renderEarningsBars(barId, labelId){
   const maxVal = Math.max(...data.map(d => d.value), 1);
   barsEl.innerHTML = data.map(d => `<div class="biz-bar" style="height:${Math.max(10, Math.round((d.value / maxVal) * 100))}%"></div>`).join('');
   labelsEl.innerHTML = data.map(d => `<div class="biz-bar-label">${d.label}</div>`).join('');
+}
+
+function _activityStoreKey(){
+  return `lancify-activity-${currentUser?.id || 'guest'}`;
+}
+
+function getStoredActivity(){
+  try {
+    return JSON.parse(localStorage.getItem(_activityStoreKey()) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function recordActivity(type, text, createdAt = new Date().toISOString()){
+  const next = [{ type, text, created_at: createdAt }, ...getStoredActivity()].slice(0, 30);
+  localStorage.setItem(_activityStoreKey(), JSON.stringify(next));
+}
+
+function formatRelativeTime(dateLike){
+  const diff = Math.max(0, Date.now() - new Date(dateLike || Date.now()).getTime());
+  const minute = 60000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+  if (diff < hour) return `${Math.max(1, Math.round(diff / minute))}m ago`;
+  if (diff < day) return `${Math.round(diff / hour)}h ago`;
+  if (diff < day * 7) return `${Math.round(diff / day)}d ago`;
+  return new Date(dateLike || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function wordCount(text = ''){
+  return String(text).trim().split(/\s+/).filter(Boolean).length;
+}
+
+function setButtonLoading(id, isLoading){
+  const btn = el(id);
+  if (!btn) return;
+  btn.disabled = isLoading;
+  btn.classList.toggle('is-loading', !!isLoading);
+}
+
+function dismissProfileBanner(id, event){
+  if (event) event.stopPropagation();
+  el(id)?.classList.remove('show');
+}
+
+function enhanceProfileBanners(){
+  [
+    { id: 'prop-banner', tool: 'proposal', label: 'Profile detected - click to auto-fill your details' },
+    { id: 'gig-banner', tool: 'gig', label: 'Profile detected - click to auto-fill' },
+    { id: 'rm-banner', tool: 'roadmap', label: 'Profile detected - click to auto-fill' }
+  ].forEach(item => {
+    const banner = el(item.id);
+    if (!banner || banner.dataset.enhanced === 'yes') return;
+    banner.dataset.enhanced = 'yes';
+    banner.innerHTML = `
+      <div class="profile-banner-copy" onclick="applyProfileTo('${item.tool}')"><i data-lucide="user-check" style="width:13px;height:13px"></i><span>${item.label}</span></div>
+      <button class="banner-close" onclick="dismissProfileBanner('${item.id}', event)" aria-label="Dismiss profile banner">x</button>
+    `;
+  });
+}
+
+function setHomeEarningsRange(range){
+  homeEarningsRange = range;
+  renderBusinessDashboard();
+}
+
+function getHomeTimeline(range = '30d'){
+  const spanDays = range === '7d' ? 7 : range === '90d' ? 90 : 30;
+  const bucketCount = 7;
+  const now = new Date();
+  const start = new Date(now.getTime() - ((spanDays - 1) * 86400000));
+  const buckets = Array.from({ length: bucketCount }, (_, index) => {
+    const bucketStart = new Date(start.getTime() + Math.floor((spanDays * index) / bucketCount) * 86400000);
+    const bucketEnd = new Date(start.getTime() + Math.floor((spanDays * (index + 1)) / bucketCount) * 86400000);
+    const label = range === '7d'
+      ? bucketStart.toLocaleDateString('en-US', { weekday: 'short' })
+      : bucketStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return { label, start: bucketStart, end: bucketEnd, value: 0 };
+  });
+
+  const addValue = (dateLike, amount) => {
+    const ts = new Date(dateLike || Date.now()).getTime();
+    const bucket = buckets.find(item => ts >= item.start.getTime() && ts < item.end.getTime());
+    if (bucket) bucket.value += Number(amount || 0);
+  };
+
+  userInvoices.forEach(inv => {
+    if ((inv.status || '').toLowerCase() !== 'paid') return;
+    addValue(inv.created_at || inv.due_date, inv.amount);
+  });
+  userLeads.forEach(lead => {
+    if ((lead.status || '').toLowerCase() !== 'won') return;
+    addValue(lead.created_at, lead.project_value);
+  });
+  return buckets;
+}
+
+function renderHomeEarningsChart(){
+  const host = el('home-earnings-chart');
+  const labels = el('home-chart-labels');
+  if (!host || !labels) return;
+
+  ['7d','30d','90d'].forEach(range => el(`home-range-${range}`)?.classList.toggle('active', homeEarningsRange === range));
+
+  const points = getHomeTimeline(homeEarningsRange);
+  const max = Math.max(...points.map(item => item.value), 1);
+  const w = 720;
+  const h = 220;
+  const padX = 18;
+  const padY = 18;
+  const innerW = w - padX * 2;
+  const innerH = h - padY * 2;
+  const coords = points.map((point, index) => {
+    const x = padX + (innerW * index / Math.max(points.length - 1, 1));
+    const y = h - padY - ((point.value / max) * innerH);
+    return { ...point, x, y };
+  });
+
+  if (!coords.some(point => point.value > 0)) {
+    host.innerHTML = `<div class="empty-state centered" style="min-height:220px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No earnings yet</div><p class="empty-state-copy">Once deals close and invoices are paid, your revenue trend will appear here.</p></div>`;
+    labels.innerHTML = '';
+    return;
+  }
+
+  const path = coords.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(' ');
+  const area = `${path} L ${coords[coords.length - 1].x.toFixed(1)} ${(h - padY).toFixed(1)} L ${coords[0].x.toFixed(1)} ${(h - padY).toFixed(1)} Z`;
+  const gridLines = [0.25, 0.5, 0.75].map(line => {
+    const y = padY + (innerH * line);
+    return `<line x1="${padX}" y1="${y}" x2="${w - padX}" y2="${y}" stroke="var(--border)" stroke-width="1" />`;
+  }).join('');
+
+  host.innerHTML = `
+    <svg class="earnings-chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-label="Earnings chart">
+      ${gridLines}
+      <path d="${area}" fill="rgba(232,80,10,0.08)"></path>
+      <path d="${path}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+      ${coords.map(point => `<circle cx="${point.x}" cy="${point.y}" r="4" fill="var(--accent)"></circle>`).join('')}
+    </svg>
+  `;
+  labels.innerHTML = points.map(point => `<div class="chart-label">${escapeHtml(point.label)}</div>`).join('');
+}
+
+function renderHomeCreditsWidget(total, remaining){
+  const ring = el('home-credits-ring');
+  if (!ring) return;
+  const pct = Math.max(0, Math.min(100, Math.round((remaining / Math.max(total, 1)) * 100)));
+  const circumference = 2 * Math.PI * 46;
+  ring.style.strokeDasharray = `${circumference}`;
+  ring.style.strokeDashoffset = `${circumference - ((pct / 100) * circumference)}`;
+  setText('home-credits-pct', `${pct}%`);
+  setText('home-credits-copy', `${remaining.toLocaleString()} credits remaining this month`);
+  const warning = el('home-credits-warning');
+  const cta = el('home-credits-cta');
+  const low = pct <= 20;
+  if (warning) warning.style.display = low ? 'block' : 'none';
+  if (cta) cta.style.display = low ? 'inline-flex' : 'none';
+}
+
+function renderHomeActivityFeed(){
+  const host = el('home-activity-feed');
+  if (!host) return;
+
+  const activity = [
+    ...getStoredActivity(),
+    ...userLeads.map(lead => ({
+      type: (lead.status || '').toLowerCase() === 'won' ? 'closed' : 'client',
+      text: (lead.status || '').toLowerCase() === 'won'
+        ? `Closed ${lead.client_name || 'client'} for ${formatCurrency(lead.project_value || 0)}`
+        : `Added client ${lead.client_name || 'Untitled client'} to the pipeline`,
+      created_at: lead.created_at || new Date().toISOString()
+    })),
+    ...userInvoices.map(inv => ({
+      type: (inv.status || '').toLowerCase() === 'paid' ? 'paid' : 'invoice',
+      text: (inv.status || '').toLowerCase() === 'paid'
+        ? `Invoice paid by ${inv.client_name || 'client'}`
+        : `Invoice created for ${inv.client_name || 'client'}`,
+      created_at: inv.created_at || inv.due_date || new Date().toISOString()
+    })),
+    ...opportunityClients.map(client => ({
+      type: 'lead',
+      text: `Saved lead ${client.name || 'Opportunity'} for follow-up`,
+      created_at: client.created_at || new Date().toISOString()
+    }))
+  ]
+    .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+    .slice(0, 5);
+
+  const iconMap = {
+    proposal: 'file-text',
+    email: 'mail',
+    audit: 'sparkles',
+    invoice: 'receipt-text',
+    paid: 'badge-dollar-sign',
+    client: 'users',
+    closed: 'badge-check',
+    lead: 'target'
+  };
+
+  host.innerHTML = activity.length ? activity.map(item => `
+    <div class="activity-feed-row">
+      <div class="activity-icon"><i data-lucide="${iconMap[item.type] || 'sparkles'}" style="width:16px;height:16px"></i></div>
+      <div class="activity-text">${escapeHtml(item.text || 'Workspace updated')}</div>
+      <div class="activity-time">${escapeHtml(formatRelativeTime(item.created_at))}</div>
+    </div>
+  `).join('') : '<div class="empty-state centered" style="min-height:180px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No activity yet</div><p class="empty-state-copy">Your recent proposals, audits, clients, and invoices will appear here.</p></div>';
+}
+
+function renderHomeTopClients(){
+  const host = el('home-top-clients');
+  if (!host) return;
+  const clientMap = new Map();
+
+  userLeads.forEach(lead => {
+    const name = String(lead.client_name || '').trim();
+    if (!name) return;
+    const existing = clientMap.get(name) || { name, total: 0, status: 'active' };
+    existing.total += Number(lead.project_value || 0);
+    if ((lead.status || '').toLowerCase() === 'won') existing.status = 'closed';
+    clientMap.set(name, existing);
+  });
+
+  userInvoices.forEach(inv => {
+    const name = String(inv.client_name || '').trim();
+    if (!name) return;
+    const existing = clientMap.get(name) || { name, total: 0, status: 'pending' };
+    existing.total += Number(inv.amount || 0);
+    if ((inv.status || '').toLowerCase() === 'paid') existing.status = 'closed';
+    else if ((inv.status || '').toLowerCase() === 'sent') existing.status = existing.status === 'closed' ? 'closed' : 'pending';
+    clientMap.set(name, existing);
+  });
+
+  const top = [...clientMap.values()].sort((a, b) => b.total - a.total).slice(0, 3);
+  host.innerHTML = top.length ? top.map(client => `
+    <div class="top-client-row">
+      <div class="client-avatar">${escapeHtml(client.name.split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase())}</div>
+      <div>
+        <div class="client-name">${escapeHtml(client.name)}</div>
+        <div class="client-total">${escapeHtml(formatCurrency(client.total || 0))} total paid</div>
+      </div>
+      <span class="status-pill ${escapeHtml(client.status || 'inactive')}">${escapeHtml((client.status || 'inactive').replace(/^\w/, m => m.toUpperCase()))}</span>
+    </div>
+  `).join('') : '<div class="empty-state centered" style="min-height:180px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No top clients yet</div><p class="empty-state-copy">Close a deal or send your first invoice to start building client history.</p></div>';
+}
+
+function renderHomeRoadmapTeaser(activeDeals, totalClients, followUpsDue){
+  let title = 'Protect this week for follow-ups';
+  let copy = 'Your next step: send 3 follow-up emails this week so warm leads do not go cold.';
+  if (!totalClients) {
+    title = 'Build your first client pipeline';
+    copy = 'Your next step: save 3 strong leads and generate one audit so outreach feels precise, not generic.';
+  } else if (followUpsDue > 0) {
+    title = 'Follow up while momentum is warm';
+    copy = `Your next step: send ${Math.min(3, followUpsDue)} follow-up email${followUpsDue === 1 ? '' : 's'} this week to unblock active conversations.`;
+  } else if (activeDeals > 0) {
+    title = 'Move active deals to close';
+    copy = 'Your next step: draft one proposal and one proof-backed email to move open conversations forward.';
+  }
+  setText('home-roadmap-title', title);
+  setText('home-roadmap-copy', copy);
 }
 
 function updateHomeHeroContext(activeDeals, totalClients, savedCount){
@@ -9191,6 +10623,7 @@ async function addLead(seedMeta = {}){
   setVal('lead-platform', 'Instagram');
   setVal('lead-priority', 'medium');
 
+  recordActivity('client', `${seedMeta.fromSaved ? 'Moved' : 'Added'} ${clientName} to the pipeline`);
   renderPipeline();
   showToast(seedMeta.fromSaved ? 'Lead moved to pipeline.' : 'Client added to pipeline.');
   return true;
@@ -9901,24 +11334,16 @@ function renderBusinessDashboard(){
   const outstandingAll = userInvoices.filter(inv => (inv.status || '').toLowerCase() !== 'paid').reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
   const totalClientsAll = userLeads.length + opportunityClients.length;
 
-  // Improvement 4: Promote stats to top if data exists
-  const hasData = totalClientsAll > 0 || wonRevenue > 0 || outstandingAll > 0 || localStorage.getItem('lancify_has_data') === 'true';
-  if (hasData && !sessionStorage.getItem('lancify_stats_promoted')) {
-    const statsDiv = el('home-biz-dashboard');
-    const checklistDiv = el('home-start-here');
-    if (statsDiv && checklistDiv) {
-      checklistDiv.parentNode.insertBefore(statsDiv, checklistDiv);
-      sessionStorage.setItem('lancify_stats_promoted', 'true');
-    }
-  }
-
   setText('home-total-clients', String(totalClientsAll));
   setText('home-active-deals', String(activeDeals));
   setText('home-won-revenue', formatCurrency(wonRevenue || 0));
   setText('home-outstanding', formatCurrency(outstandingAll || 0));
   updateHomeHeroContext(activeDeals, totalClientsAll, opportunityClients.length);
   updateChecklistUi();
-  _renderEarningsBars('home-earnings-bars','home-bar-labels');
+  renderHomeEarningsChart();
+  renderHomeCreditsWidget(Number(billingState.total || 1000), Number(billingState.remaining || 0));
+  renderHomeActivityFeed();
+  renderHomeTopClients();
 
   const filteredLeads = userLeads.filter(lead => isWithinAccountingWindow(lead.created_at));
   const filteredSaved = opportunityClients.filter(client => isWithinAccountingWindow(client.created_at));
@@ -9934,6 +11359,7 @@ function renderBusinessDashboard(){
   const responseRate = filteredLeads.length ? Math.round((filteredLeads.filter(lead => ['replied','won'].includes((lead.status || '').toLowerCase())).length / filteredLeads.length) * 100) : 0;
   const avgTicket = filteredWonLeads.length ? Math.round(bookedRevenue / filteredWonLeads.length) : 0;
   const followUpsDue = openFilteredLeads.filter(lead => isLeadFollowUpDue(getLeadMeta(lead.id))).length;
+  renderHomeRoadmapTeaser(activeDeals, totalClientsAll, followUpsDue);
 
   setText('acc-total-clients', String(totalClients));
   setText('acc-range-copy', getAccountingWindow().label);
@@ -10138,6 +11564,24 @@ function copyEl(id){
   navigator.clipboard.writeText(txt).then(()=>showToast('Copied to clipboard!')).catch(()=>{
     const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('Copied!');
   });
+}
+
+function downloadEmailDraft(){
+  const subject = latestEmailDraft.subject || 'Lancify Email Draft';
+  const body = latestEmailDraft.body || '';
+  if (!body) {
+    showToast('Generate an email first.');
+    return;
+  }
+  const blob = new Blob([`Subject: ${subject}\n\n${body}`], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${subject.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'email-draft'}.txt`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 function autoResize(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,200)+'px'; }
@@ -10710,6 +12154,7 @@ async function checkCredits(cost, callback) {
   }
 }
 
+enhanceProfileBanners();
 initApp();
 </script>
        <div id="toast"></div>
