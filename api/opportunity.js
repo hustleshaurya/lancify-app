@@ -7,7 +7,9 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const MARKETPLACE_BLOCKLIST = [
   'fiverr', 'upwork', 'freelancer', 'guru', 'toptal', '99designs',
   'canva', 'veed', 'template', 'theme', 'tool', 'software', 'platform',
-  'list', 'top 10', 'best ', 'reddit', 'quora', 'agency'
+  'list', 'top 10', 'best ', 'reddit', 'quora', 'agency',
+  'hubspot', 'squarespace', 'wix', 'wordpress.org',
+  'clutch', 'goodfirms', 'bark.com', 'thumbtack', 'sortlist'
 ];
 
 const PRICE_HINTS = {
@@ -44,6 +46,17 @@ const PLAN_CONFIG = {
     aiMultiplier: 1.0,
   },
 };
+
+function withTimeout(promise, ms = 8000) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(`API call timed out after ${ms}ms`)), ms)
+    )
+  ]);
+}
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function parseUsdNumber(v) {
   const raw = String(v ?? '').replace(/,/g, '').trim();
@@ -128,6 +141,21 @@ function estimateScanCredits({ isQuickMode, leadCount, planTier, usedAi }) {
   return Math.max(1, Math.ceil(withAi));
 }
 
+let INTERNAL_API_BASE = '';
+
+function resolveInternalApiBase(req) {
+  const proto = cleanText(req?.headers?.['x-forwarded-proto'] || '').split(',')[0];
+  const host = cleanText(req?.headers?.['x-forwarded-host'] || req?.headers?.host || '').split(',')[0];
+  if (proto && host) return `${proto}://${host}`;
+  if (host) return `https://${host}`;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return 'http://127.0.0.1:3000';
+}
+
+function internalApiUrl(path) {
+  return new URL(path, INTERNAL_API_BASE || resolveInternalApiBase()).toString();
+}
+
 function buildOutreachAssets(lead, skill) {
   const name = cleanText(lead?.name || 'there');
   const problem = cleanText(lead?.problem || `I found a clear ${skill || 'growth'} gap`);
@@ -165,7 +193,6 @@ function buildOutreachAssets(lead, skill) {
   const proposal = [
     `Subject: Quick ${skill || 'Growth'} Improvement Plan for ${name}`,
     ``,
-    `Hi ${name},`,
     `I reviewed your current setup and found: ${problem}`,
     `My plan: ${strategy}`,
     ``,
@@ -181,9 +208,77 @@ function buildOutreachAssets(lead, skill) {
   return { quickDm, loomScript, audit, proposal };
 }
 
-function attachOutreachAssets(leads, skill) {
-  return (leads || []).map((lead) => {
-    const assets = buildOutreachAssets(lead, skill);
+async function callInternalWriter(path, payload) {
+  const data = await fetchJson(
+    internalApiUrl(path),
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    },
+    12000
+  );
+
+  if (data?.error) throw new Error(data.error);
+  return data;
+}
+
+async function buildOutreachAssetsAI(lead, skill) {
+  const fallback = buildOutreachAssets(lead, skill);
+  const name = cleanText(lead?.name || 'there');
+  const deal = normalizeDealValue(cleanText(lead?.dealValue || PRICE_HINTS[skill] || PRICE_HINTS.default), PRICE_HINTS[skill] || PRICE_HINTS.default);
+  const profileUrl = cleanText(lead?.profileUrl || '');
+  const tipsFallback = cleanText(lead?.closingHint || 'Offer a tiny first deliverable to reduce risk.');
+
+  try {
+    const [proposalData, emailData] = await Promise.all([
+      callInternalWriter('/api/proposal', {
+        jobDesc: `${lead.name} runs a ${lead.platform} channel. Problem: ${lead.problem}. Why now: ${lead.whyNow}. Strategy: ${lead.strategy}.`,
+        platform: lead.platform || 'general',
+        niche: skill,
+        experience: lead.strategy
+      }),
+      callInternalWriter('/api/email', {
+        emailType: 'Cold outreach with a specific insight',
+        tone: 'calm and confident',
+        context: `Client: ${lead.name}. Problem: ${lead.problem}. Why now: ${lead.whyNow}. Offer: ${lead.dealValue}.`,
+        niche: skill
+      }),
+    ]);
+
+    if (!proposalData?.proposal || !emailData?.body) {
+      throw new Error('Missing writer output');
+    }
+
+    const quickDm = String(emailData.body || fallback.quickDm).trim();
+    const proposal = String(proposalData.proposal || fallback.proposal).trim();
+    const loomScript = [
+      `Quick teardown for ${name}.`,
+      `What I noticed: ${cleanText(lead?.problem || '')}`,
+      `Why now: ${cleanText(lead?.whyNow || '')}`,
+      proposal,
+      `Starter offer: ${deal}.`,
+    ].filter(Boolean).join('\n');
+    const audit = [
+      `Lead: ${name}`,
+      `URL: ${profileUrl || 'N/A'}`,
+      `Skill: ${skill || 'General'}`,
+      `Email subject: ${cleanText(emailData.subject || '') || 'N/A'}`,
+      `Quick DM: ${quickDm}`,
+      `Proposal angle: ${proposal}`,
+      `Reply cues: ${(Array.isArray(emailData.tips) ? emailData.tips : []).map((tip) => cleanText(tip)).filter(Boolean).join(' | ') || tipsFallback}`,
+    ].join('\n');
+
+    return { quickDm, loomScript, audit, proposal };
+  } catch (e) {
+    console.warn('AI outreach asset generation failed, using fallback:', e.message || e);
+    return fallback;
+  }
+}
+
+async function attachOutreachAssets(leads, skill) {
+  return Promise.all((leads || []).map(async (lead) => {
+    const assets = await buildOutreachAssetsAI(lead, skill);
     return {
       ...lead,
       assets,
@@ -192,7 +287,7 @@ function attachOutreachAssets(leads, skill) {
       audit: assets.audit,
       proposal: assets.proposal,
     };
-  });
+  }));
 }
 
 const SKILL_INTENT_RULES = {
@@ -266,6 +361,48 @@ const GENERIC_PHRASES = [
   'help them succeed',
   'enhance visibility',
 ];
+
+function hasGenericPhrase(text = '') {
+  const value = lower(text);
+  return GENERIC_PHRASES.some((phrase) => value.includes(phrase));
+}
+
+async function rewriteGenericField({ GROQ, value }) {
+  const raw = cleanText(value);
+  if (!raw || !GROQ || !hasGenericPhrase(raw)) return raw;
+
+  try {
+    const data = await fetchJson(
+      'https://api.groq.com/openai/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ}`,
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          max_tokens: 80,
+          temperature: 0.2,
+          response_format: { type: 'json_object' },
+          messages: [
+            {
+              role: 'user',
+              content: `Rewrite this in one specific, non-generic sentence: ${raw}. Return {"sentence":"..."} only.`,
+            },
+          ],
+        }),
+      },
+      10000
+    );
+
+    const parsed = JSON.parse(data?.choices?.[0]?.message?.content || '{}');
+    return cleanText(parsed?.sentence || raw);
+  } catch (e) {
+    console.warn('Generic field rewrite failed:', e.message || e);
+    return raw;
+  }
+}
 
 const SKILL_CONFIG = {
   'Thumbnail Design': {
@@ -1522,8 +1659,8 @@ Return raw JSON only.`;
       ai = [];
     }
 
-    const leads = (Array.isArray(ai) ? ai : [])
-      .map((x) => {
+    const leads = (await Promise.all((Array.isArray(ai) ? ai : [])
+      .map(async (x) => {
         const p = byId.get(x?.sourceId);
         if (!p) return null;
 
@@ -1548,8 +1685,13 @@ Return raw JSON only.`;
           dealValue: normalizeDealValue(cleanText(x?.dealValue) || PRICE_HINTS[skill] || PRICE_HINTS.default, PRICE_HINTS[skill] || PRICE_HINTS.default),
         };
 
+        [lead.problem, lead.strategy] = await Promise.all([
+          rewriteGenericField({ GROQ, value: lead.problem }),
+          rewriteGenericField({ GROQ, value: lead.strategy }),
+        ]);
+
         return applyIntentRules(lead, p, skill, cfg, p.siteSignal || null);
-      })
+      })))
       .filter(Boolean)
       .sort((a, b) => b.match - a.match);
 
@@ -1589,6 +1731,7 @@ function ensureQuickMinimumLeads(leads, rankedProfiles, skill, cfg, minCount = 3
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  INTERNAL_API_BASE = resolveInternalApiBase(req);
 
   const body = req.body || {};
   const {
@@ -1630,18 +1773,23 @@ export default async function handler(req, res) {
 
     if (isQuickMode && skill && cfg) {
       if (cfg.method === 'youtube') {
-        rawProfiles = await searchYouTubeCreators({
-          YOUTUBE,
-          queries: cfg.ytQueries,
-          location,
-          minSubs: cfg.minSubs,
-          maxSubs: cfg.maxSubs,
-          maxInactiveDays: cfg.maxInactiveDays || 60,
-          minAvgViews: cfg.minAvgViews || 250,
-          minViewSubRatio: cfg.minViewSubRatio || 0.01,
-          searchOrder: cfg.searchOrder || 'date',
-          publishedAfterDays: cfg.publishedAfterDays || 90,
-        });
+        try {
+          rawProfiles = await withTimeout(searchYouTubeCreators({
+            YOUTUBE,
+            queries: cfg.ytQueries,
+            location,
+            minSubs: cfg.minSubs,
+            maxSubs: cfg.maxSubs,
+            maxInactiveDays: cfg.maxInactiveDays || 60,
+            minAvgViews: cfg.minAvgViews || 250,
+            minViewSubRatio: cfg.minViewSubRatio || 0.01,
+            searchOrder: cfg.searchOrder || 'date',
+            publishedAfterDays: cfg.publishedAfterDays || 90,
+          }), 8000);
+        } catch (e) {
+          console.warn('YouTube search timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
 
         // Retry with broader creator discovery if strict pass returns too few leads.
         if (rawProfiles.length < Number(cfg.minLeadCount || 3)) {
@@ -1652,41 +1800,71 @@ export default async function handler(req, res) {
             cleanText(effectivePrompt).replace(/\bin [^,]+$/i, ''),
           ].filter(Boolean);
 
-          const retryProfiles = await searchYouTubeCreators({
-            YOUTUBE,
-            queries: broaderQueries,
-            location,
-            minSubs: Math.max(500, Number(cfg.minSubs || 2000) - 1500),
-            maxSubs: Number(cfg.maxSubs || 70000) + 40000,
-            maxInactiveDays: Math.max(120, Number(cfg.maxInactiveDays || 60)),
-            minAvgViews: Math.max(80, Number(cfg.minAvgViews || 250) - 120),
-            minViewSubRatio: Math.max(0.003, Number(cfg.minViewSubRatio || 0.01) - 0.004),
-            searchOrder: 'relevance',
-            publishedAfterDays: Math.max(270, Number(cfg.publishedAfterDays || 90)),
-          });
+          let retryProfiles = [];
+          try {
+            await wait(300);
+            retryProfiles = await withTimeout(searchYouTubeCreators({
+              YOUTUBE,
+              queries: broaderQueries,
+              location,
+              minSubs: Math.max(500, Number(cfg.minSubs || 2000) - 1500),
+              maxSubs: Number(cfg.maxSubs || 70000) + 40000,
+              maxInactiveDays: Math.max(120, Number(cfg.maxInactiveDays || 60)),
+              minAvgViews: Math.max(80, Number(cfg.minAvgViews || 250) - 120),
+              minViewSubRatio: Math.max(0.003, Number(cfg.minViewSubRatio || 0.01) - 0.004),
+              searchOrder: 'relevance',
+              publishedAfterDays: Math.max(270, Number(cfg.publishedAfterDays || 90)),
+            }), 8000);
+          } catch (e) {
+            console.warn('YouTube retry timed out, trying fallback:', e.message);
+          }
 
           rawProfiles = dedupeProfiles([...rawProfiles, ...retryProfiles]);
         }
 
         // Important: for creator skills we avoid generic web fallback by default.
         if (!rawProfiles.length && cfg.allowWebFallback) {
-          rawProfiles = await runSerpGoogle(`${skill} creator ${location} -agency -fiverr -upwork`, {
-            SERP,
-            excludeTerms: ['agency', 'fiverr', 'upwork', 'template', 'tool', 'software'],
-            allowDomains: ['youtube.com', 'instagram.com', 'tiktok.com'],
-          });
+          try {
+            await wait(300);
+            rawProfiles = await withTimeout(runSerpGoogle(`${skill} creator ${location} -agency -fiverr -upwork`, {
+              SERP,
+              excludeTerms: ['agency', 'fiverr', 'upwork', 'template', 'tool', 'software'],
+              allowDomains: ['youtube.com', 'instagram.com', 'tiktok.com'],
+            }), 8000);
+          } catch (e) {
+            console.warn('Creator SERP fallback timed out, trying fallback:', e.message);
+            rawProfiles = [];
+          }
         }
       } else if (cfg.method === 'maps') {
         const mapsQ = location ? `${cfg.apifyMaps} in ${location}` : cfg.apifyMaps;
-        rawProfiles = await runSerpMaps(cfg.serpQuery + (location ? ` in ${location}` : ''), SERP);
-        if (!rawProfiles.length) rawProfiles = await runApifyMaps(mapsQ, APIFY);
+        try {
+          rawProfiles = await withTimeout(runSerpMaps(cfg.serpQuery + (location ? ` in ${location}` : ''), SERP), 8000);
+        } catch (e) {
+          console.warn('SERP maps timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
+        if (!rawProfiles.length) {
+          try {
+            await wait(300);
+            rawProfiles = await withTimeout(runApifyMaps(mapsQ, APIFY), 8000);
+          } catch (e) {
+            console.warn('Apify maps timed out, trying fallback:', e.message);
+            rawProfiles = [];
+          }
+        }
       } else if (cfg.method === 'serp') {
         const serpQ = location ? `${cfg.serpQuery} ${location}` : cfg.serpQuery;
-        rawProfiles = await runSerpGoogle(serpQ, {
-          SERP,
-          excludeTerms: cfg.exclude || [],
-          allowDomains: cfg.allowDomains || [],
-        });
+        try {
+          rawProfiles = await withTimeout(runSerpGoogle(serpQ, {
+            SERP,
+            excludeTerms: cfg.exclude || [],
+            allowDomains: cfg.allowDomains || [],
+          }), 8000);
+        } catch (e) {
+          console.warn('SERP search timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
 
         // Quick-find resilience for SEO/Content Writing: broaden to website-heavy queries when needed.
         if ((skill === 'SEO' || skill === 'Content Writing') && rawProfiles.length < 3) {
@@ -1702,11 +1880,17 @@ export default async function handler(req, res) {
 
           const extra = [];
           for (const q of altQueries) {
-            const chunked = await runSerpGoogle(q, {
-              SERP,
-              excludeTerms: cfg.exclude || [],
-              allowDomains: [],
-            });
+            let chunked = [];
+            try {
+              await wait(300);
+              chunked = await withTimeout(runSerpGoogle(q, {
+                SERP,
+                excludeTerms: cfg.exclude || [],
+                allowDomains: [],
+              }), 8000);
+            } catch (e) {
+              console.warn('SERP alt query timed out, trying fallback:', e.message);
+            }
             extra.push(...chunked);
             if (extra.length >= 12) break;
           }
@@ -1718,70 +1902,132 @@ export default async function handler(req, res) {
       // Last quick fallback: one broad pass so skill-only quick mode doesn't go empty too easily.
       if (!rawProfiles.length) {
         if (cfg.targetType === 'creator') {
-          rawProfiles = await searchYouTubeCreators({
-            YOUTUBE,
-            queries: [
-              `${cleanText(skill)} youtube`,
-              `small youtube creator ${cleanText(skill)}`,
-              'youtube creator channel',
-            ],
-            location: '',
-            minSubs: 600,
-            maxSubs: 180000,
-            maxInactiveDays: 180,
-            minAvgViews: 60,
-            minViewSubRatio: 0.002,
-            searchOrder: 'relevance',
-            publishedAfterDays: 365,
-          });
+          try {
+            await wait(300);
+            rawProfiles = await withTimeout(searchYouTubeCreators({
+              YOUTUBE,
+              queries: [
+                `${cleanText(skill)} youtube`,
+                `small youtube creator ${cleanText(skill)}`,
+                'youtube creator channel',
+              ],
+              location: '',
+              minSubs: 600,
+              maxSubs: 180000,
+              maxInactiveDays: 180,
+              minAvgViews: 60,
+              minViewSubRatio: 0.002,
+              searchOrder: 'relevance',
+              publishedAfterDays: 365,
+            }), 8000);
+          } catch (e) {
+            console.warn('YouTube broad fallback timed out, trying fallback:', e.message);
+            rawProfiles = [];
+          }
         } else if (cfg.method === 'maps') {
-          rawProfiles = await runSerpMaps(`${cleanText(skill)} services ${location || ''}`.trim(), SERP);
+          try {
+            await wait(300);
+            rawProfiles = await withTimeout(runSerpMaps(`${cleanText(skill)} services ${location || ''}`.trim(), SERP), 8000);
+          } catch (e) {
+            console.warn('Maps broad fallback timed out, trying fallback:', e.message);
+            rawProfiles = [];
+          }
           if (!rawProfiles.length) {
-            rawProfiles = await runSerpGoogle(`${cleanText(skill)} business website ${location || ''}`.trim(), {
+            try {
+              await wait(300);
+              rawProfiles = await withTimeout(runSerpGoogle(`${cleanText(skill)} business website ${location || ''}`.trim(), {
+                SERP,
+                excludeTerms: cfg.exclude || [],
+                allowDomains: [],
+              }), 8000);
+            } catch (e) {
+              console.warn('Maps-to-SERP fallback timed out, trying fallback:', e.message);
+              rawProfiles = [];
+            }
+          }
+        } else {
+          try {
+            await wait(300);
+            rawProfiles = await withTimeout(runSerpGoogle(`${cleanText(skill)} business website ${location || ''}`.trim(), {
               SERP,
               excludeTerms: cfg.exclude || [],
               allowDomains: [],
-            });
+            }), 8000);
+          } catch (e) {
+            console.warn('SERP broad fallback timed out, trying fallback:', e.message);
+            rawProfiles = [];
           }
-        } else {
-          rawProfiles = await runSerpGoogle(`${cleanText(skill)} business website ${location || ''}`.trim(), {
-            SERP,
-            excludeTerms: cfg.exclude || [],
-            allowDomains: [],
-          });
         }
       }
     } else {
       // Deep mode keeps broad categories, but still passes through quality gate + ranking.
       if (type === 'Local Businesses') {
-        rawProfiles = await runApifyMaps(effectivePrompt, APIFY);
-        if (!rawProfiles.length) rawProfiles = await runSerpMaps(effectivePrompt, SERP);
+        try {
+          rawProfiles = await withTimeout(runApifyMaps(effectivePrompt, APIFY), 8000);
+        } catch (e) {
+          console.warn('Apify deep scan timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
+        if (!rawProfiles.length) {
+          try {
+            await wait(300);
+            rawProfiles = await withTimeout(runSerpMaps(effectivePrompt, SERP), 8000);
+          } catch (e) {
+            console.warn('SERP maps deep fallback timed out, trying fallback:', e.message);
+            rawProfiles = [];
+          }
+        }
       } else if (type === 'Content Creators') {
-        rawProfiles = await searchYouTubeCreators({
-          YOUTUBE,
-          queries: [effectivePrompt],
-          location,
-          minSubs: 2000,
-          maxSubs: platform === 'youtube' ? 100000 : 70000,
-        });
+        try {
+          rawProfiles = await withTimeout(searchYouTubeCreators({
+            YOUTUBE,
+            queries: [effectivePrompt],
+            location,
+            minSubs: 2000,
+            maxSubs: platform === 'youtube' ? 100000 : 70000,
+          }), 8000);
+        } catch (e) {
+          console.warn('Content creator search timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
       } else if (type === 'Startups') {
-        rawProfiles = await runSerpGoogle(`site:producthunt.com/products ${effectivePrompt}`, {
-          SERP,
-          allowDomains: ['producthunt.com'],
-        });
+        try {
+          rawProfiles = await withTimeout(runSerpGoogle(`site:producthunt.com/products ${effectivePrompt}`, {
+            SERP,
+            allowDomains: ['producthunt.com'],
+          }), 8000);
+        } catch (e) {
+          console.warn('Startup search timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
       } else if (type === 'E-commerce Brands') {
-        rawProfiles = await runSerpGoogle(`site:myshopify.com ${effectivePrompt} -blog -list -template`, {
-          SERP,
-          allowDomains: ['myshopify.com'],
-          excludeTerms: ['blog', 'template', 'top 10'],
-        });
+        try {
+          rawProfiles = await withTimeout(runSerpGoogle(`site:myshopify.com ${effectivePrompt} -blog -list -template`, {
+            SERP,
+            allowDomains: ['myshopify.com'],
+            excludeTerms: ['blog', 'template', 'top 10'],
+          }), 8000);
+        } catch (e) {
+          console.warn('E-commerce search timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
       } else if (type === 'Coaches & Consultants') {
-        rawProfiles = await runSerpGoogle(`site:linkedin.com/in ${effectivePrompt} coach OR consultant -recruiter`, {
-          SERP,
-          allowDomains: ['linkedin.com'],
-        });
+        try {
+          rawProfiles = await withTimeout(runSerpGoogle(`site:linkedin.com/in ${effectivePrompt} coach OR consultant -recruiter`, {
+            SERP,
+            allowDomains: ['linkedin.com'],
+          }), 8000);
+        } catch (e) {
+          console.warn('Coach search timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
       } else {
-        rawProfiles = await runSerpGoogle(effectivePrompt, { SERP });
+        try {
+          rawProfiles = await withTimeout(runSerpGoogle(effectivePrompt, { SERP }), 8000);
+        } catch (e) {
+          console.warn('Generic SERP search timed out, trying fallback:', e.message);
+          rawProfiles = [];
+        }
       }
     }
 
@@ -1857,7 +2103,7 @@ export default async function handler(req, res) {
       leads = ensureQuickMinimumLeads(leads, ranked, skill, cfg, leadTarget.requestedLeadCount);
     }
 
-    leads = attachOutreachAssets(leads, skill);
+    leads = await attachOutreachAssets(leads, skill);
 
     const estimatedCredits = estimateScanCredits({
       isQuickMode,
