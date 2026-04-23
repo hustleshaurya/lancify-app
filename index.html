@@ -11840,7 +11840,8 @@ function renderHomeEarningsChart(){
   `;
   yLabels.innerHTML = [max, max / 2, 0].map(value => `<div class="chart-y-label">${escapeHtml(formatChartAxisValue(value))}</div>`).join('');
   labels.innerHTML = points.map(point => `<div class="chart-x-label">${escapeHtml(point.label)}</div>`).join('');
-
+}
+  
 function renderHomeCreditsWidget(total, remaining){
   const ring = el('home-credits-ring');
   if (!ring) return;
