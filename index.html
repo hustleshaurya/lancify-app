@@ -9233,18 +9233,26 @@ function applyTheme(theme) {
 }
 
 function _themeStorageKey(uid) {
-  uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
+  uid = uid ?? _getThemeUserId() ?? 'guest';
   return `lancify-theme-${uid || 'guest'}`;
 }
 
+function _getThemeUserId() {
+  try {
+    return currentUser?.id || null;
+  } catch {
+    return null;
+  }
+}
+
 function persistThemePreference(theme, uid) {
-  uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
+  uid = uid ?? _getThemeUserId() ?? 'guest';
   localStorage.setItem('lancify-theme', theme);
   localStorage.setItem(_themeStorageKey(uid), theme);
 }
 
 function getSavedThemePreference(uid) {
-  uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
+  uid = uid ?? _getThemeUserId() ?? 'guest';
   return localStorage.getItem(_themeStorageKey(uid)) || localStorage.getItem('lancify-theme');
 }
 
@@ -14058,11 +14066,3 @@ async function checkCredits(cost, callback) {
     showToast('Action failed. Credits were refunded.');
     return false;
   }
-}
-
-enhanceProfileBanners();
-initApp();
-</script>
-       <div id="toast"></div>
-</body>
-</html>
