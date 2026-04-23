@@ -5966,7 +5966,6 @@ html.dark .roadmap-teaser{
 <body>
 
 <div id="loading-screen">
-  <img src="Favicon_new_logo-removebg-preview.png" alt="Lancify" style="height:32px;width:auto;object-fit:contain;margin-bottom:8px;opacity:.7">
   <div class="spin"></div>
   <span style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.01em">Loading workspace…</span>
 </div>
@@ -9164,16 +9163,19 @@ function applyTheme(theme) {
   }
 }
 
-function _themeStorageKey(uid = currentUser?.id || 'guest') {
-  return `lancify-theme-${uid || 'guest'}`;
+function _themeStorageKey(uid) {
+  const safeUid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
+  return `lancify-theme-${safeUid}`;
 }
 
-function persistThemePreference(theme, uid = currentUser?.id || 'guest') {
+function persistThemePreference(theme, uid) {
+  uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
   localStorage.setItem('lancify-theme', theme);
   localStorage.setItem(_themeStorageKey(uid), theme);
 }
 
-function getSavedThemePreference(uid = currentUser?.id || 'guest') {
+function getSavedThemePreference(uid) {
+  uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
   return localStorage.getItem(_themeStorageKey(uid)) || localStorage.getItem('lancify-theme');
 }
 
