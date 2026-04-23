@@ -34,19 +34,12 @@ STRICT RULES:
 
 OUTPUT FORMAT (STRICT JSON):
 {
-  "analysis": {
-    "problem": "string",
-    "value": "string",
-    "nudge": "string"
-  },
-  "output": {
-    "subject": "3-5 word subject line (lowercase feels more human)",
-    "body": "The actual email text. Use \\n\\n for paragraph breaks.",
-    "tips": [
-      "Why this subject works",
-      "Why this CTA gets replies"
-    ]
-  }
+  "subject": "3-5 word subject line (lowercase feels more human)",
+  "body": "The actual email text. Use \\n\\n for paragraph breaks.",
+  "tips": [
+    "Why this subject works",
+    "Why this CTA gets replies"
+  ]
 }`;
 
   try {
@@ -72,9 +65,9 @@ OUTPUT FORMAT (STRICT JSON):
     const parsedJson = JSON.parse(data.choices[0].message.content);
 
     res.status(200).json({
-      subject: parsedJson.output.subject,
-      body: parsedJson.output.body,
-      tips: parsedJson.output.tips
+      subject: parsedJson.subject,
+      body: parsedJson.body,
+      tips: parsedJson.tips
     });
 
   } catch (error) {
