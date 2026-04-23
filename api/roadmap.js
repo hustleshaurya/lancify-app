@@ -85,7 +85,7 @@ Return ONLY a valid JSON object, no markdown, no backticks:
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.7,
-        max_tokens: 4000,
+        max_tokens: 5000,
         response_format: { type: 'json_object' }
       })
     });
@@ -96,6 +96,14 @@ Return ONLY a valid JSON object, no markdown, no backticks:
     if (!data.choices || !data.choices[0]) throw new Error('Model returned empty response');
 
     const result = JSON.parse(data.choices[0].message.content);
+
+    const totalDays = (result.weeks || []).reduce((sum, week) => sum + (week.days || []).length, 0);
+    if (totalDays < 25) {
+      console.warn(`[Roadmap] Incomplete plan - only ${totalDays} days generated`);
+      return res.status(500).json({
+        error: 'Roadmap generation was incomplete. Please try again.'
+      });
+    }
 
     res.status(200).json(result);
   } catch (error) {
