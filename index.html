@@ -4637,6 +4637,1045 @@ html.dark .btn-secondary .btn-spinner{
     font-size:28px;
   }
 }
+
+/* Lancify redesign overrides */
+:root{
+  --sidebar-w:232px;
+  --header-h:48px;
+  --radius:7px;
+  --radius-lg:10px;
+  --bg:#ffffff;
+  --bg-panel:#ffffff;
+  --bg-hover:#f7f7f5;
+  --bg2:#f7f7f5;
+  --bg3:#f0efec;
+  --text-main:#0a0a0a;
+  --text-muted:#6b6b6b;
+  --text:#0a0a0a;
+  --text2:#6b6b6b;
+  --text3:#8a8a8a;
+  --accent:#e8500a;
+  --accent-primary:#e8500a;
+  --accent-secondary:#f5a623;
+  --accent-soft:#fff0eb;
+  --border:#e4e4e0;
+  --border2:#c8c8c2;
+  --btn-bg:#e8500a;
+  --btn-text:#ffffff;
+  --shadow-sm:0 1px 2px rgba(10,10,10,0.04);
+  --shadow-md:0 8px 24px rgba(10,10,10,0.06);
+  --shadow-lg:0 18px 40px rgba(10,10,10,0.08);
+}
+html.dark{
+  --bg:#0d0d0d;
+  --bg-panel:#0d0d0d;
+  --bg-hover:#161616;
+  --bg2:#161616;
+  --bg3:#1e1e1e;
+  --text-main:#f5f5f3;
+  --text-muted:#8a8a8a;
+  --text:#f5f5f3;
+  --text2:#8a8a8a;
+  --text3:#707070;
+  --accent:#e8500a;
+  --accent-primary:#e8500a;
+  --accent-secondary:#f5a623;
+  --accent-soft:#1f1208;
+  --border:#2a2a2a;
+  --border2:#3a3a3a;
+  --btn-bg:#e8500a;
+  --btn-text:#ffffff;
+  --shadow-sm:none;
+  --shadow-md:none;
+  --shadow-lg:none;
+}
+html{
+  font-size:14px;
+  background:var(--bg);
+}
+html,body{
+  background:var(--bg);
+  color:var(--text-main);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:14px;
+  line-height:1.6;
+  letter-spacing:0;
+}
+body,
+.main,
+.content-scroll,
+.content-inner,
+.header,
+.sidebar{
+  background:var(--bg);
+}
+html:not(.dark) body,
+html:not(.dark) .content-scroll,
+html:not(.dark) .main,
+html:not(.dark) .header{
+  background:var(--bg);
+}
+::-webkit-scrollbar{
+  width:4px;
+  height:4px;
+}
+::-webkit-scrollbar-thumb{
+  background:var(--accent);
+}
+button,
+a,
+input,
+select,
+textarea,
+.btn,
+.nav-item,
+.nav-folder-head,
+.header-icon-btn,
+.dashboard-panel,
+.pulse-card,
+.tool-card,
+.quick-action-card,
+.acct-menu-item,
+.stage-btn,
+.opp-action-btn,
+.qf-skill-card{
+  transition:all .15s ease !important;
+}
+button:focus-visible,
+a:focus-visible,
+.nav-item:focus-visible,
+.nav-folder-head:focus-visible,
+.header-icon-btn:focus-visible,
+.header-avatar:focus-visible,
+.sb-workspace-btn:focus-visible,
+.sb-theme-toggle:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=url],
+input[type=number],
+input[type=date],
+select,
+textarea{
+  background:var(--bg-panel) !important;
+  border:1px solid var(--border) !important;
+  border-radius:7px !important;
+  color:var(--text-main) !important;
+  box-shadow:none !important;
+}
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=url],
+input[type=number],
+input[type=date],
+select{
+  height:36px !important;
+  padding:0 12px !important;
+}
+textarea{
+  padding:10px 12px !important;
+}
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--accent) !important;
+  box-shadow:none !important;
+  outline:none !important;
+}
+.page-hd{
+  margin-bottom:20px;
+}
+.page-hd h1,
+.workspace-title,
+.dashboard-banner-title,
+.empty-state-heading,
+.tool-output-heading,
+.brand-wordmark,
+.header-title,
+.dashboard-panel-title,
+.analytics-panel-title,
+.section-title,
+.settings-section-title{
+  font-family:'Inter',system-ui,sans-serif !important;
+  font-weight:600 !important;
+}
+.page-hd h1{
+  font-size:20px !important;
+  line-height:1.2;
+  margin-bottom:4px;
+}
+.page-hd p,
+.dashboard-panel-copy,
+.analytics-panel-copy,
+.workspace-context,
+.empty-state-copy{
+  font-size:13px !important;
+  color:var(--text-muted) !important;
+}
+#hero-greeting,
+#page-home .workspace-title{
+  font-family:'Instrument Serif',serif !important;
+  font-size:30px !important;
+  font-weight:400 !important;
+  line-height:1.05;
+  letter-spacing:-0.02em;
+}
+#page-home .workspace-context{
+  font-size:14px !important;
+}
+.header{
+  height:48px !important;
+  padding:0 16px 0 20px !important;
+  border-bottom:1px solid var(--border);
+  background:var(--bg) !important;
+  backdrop-filter:none;
+}
+.header-title{
+  font-size:15px !important;
+  font-weight:500 !important;
+  letter-spacing:0;
+}
+.header-actions{
+  gap:6px !important;
+}
+.header .btn-ghost,
+.topbar-link{
+  height:30px !important;
+  padding:0 8px !important;
+  border:none !important;
+  border-radius:7px !important;
+  color:var(--text-muted) !important;
+  font-size:13px !important;
+  background:transparent !important;
+}
+.header .btn-ghost:hover,
+.topbar-link:hover{
+  background:var(--bg2) !important;
+  color:var(--text-main) !important;
+}
+.header-icon-btn{
+  width:30px !important;
+  height:30px !important;
+  border-radius:7px !important;
+  border:1px solid transparent !important;
+  background:transparent !important;
+  color:var(--text-muted) !important;
+}
+.header-icon-btn:hover{
+  background:var(--bg2) !important;
+  border-color:var(--border) !important;
+  color:var(--text-main) !important;
+}
+.header-avatar{
+  width:30px !important;
+  height:30px !important;
+  border-radius:999px !important;
+  background:var(--bg2) !important;
+  color:var(--text-muted) !important;
+  border:1px solid var(--border) !important;
+  font-size:13px;
+  font-weight:600;
+}
+.sidebar{
+  width:232px !important;
+  background:var(--bg) !important;
+  border-right:1px solid var(--border) !important;
+}
+.sb-logo{
+  height:54px !important;
+  padding:0 14px !important;
+}
+.brand-monogram{
+  display:none !important;
+}
+.brand-wordmark{
+  font-size:18px !important;
+  font-weight:700 !important;
+  letter-spacing:0 !important;
+  text-transform:lowercase;
+}
+.sb-collapse-btn{
+  width:30px;
+  height:30px;
+  border-radius:7px !important;
+  border:1px solid var(--border) !important;
+  background:var(--bg-panel) !important;
+}
+.sb-workspace{
+  padding:6px 10px 10px !important;
+  border-bottom:1px solid var(--border) !important;
+}
+.sb-workspace-btn{
+  height:34px !important;
+  padding:0 10px !important;
+  border-radius:7px !important;
+  border:1px solid var(--border) !important;
+  background:var(--bg2) !important;
+}
+.ws-dot{
+  width:8px !important;
+  height:8px !important;
+  background:var(--accent) !important;
+}
+.ws-name{
+  font-size:13px !important;
+}
+.sb-nav{
+  padding:8px 8px 14px !important;
+}
+.sb-section{
+  padding:16px 8px 6px !important;
+  margin-top:0 !important;
+  font-size:10px !important;
+  font-weight:600 !important;
+  letter-spacing:.1em !important;
+  text-transform:uppercase;
+  color:var(--text-muted) !important;
+}
+.nav-folder-head,
+.nav-item{
+  min-height:34px !important;
+  height:34px !important;
+  border-radius:6px !important;
+  font-size:13px !important;
+}
+.nav-folder-head{
+  padding:0 10px !important;
+}
+.nav-item{
+  padding:0 10px 0 12px !important;
+  border:1px solid transparent !important;
+  color:var(--text-muted) !important;
+}
+.nav-item:hover,
+.nav-folder-head:hover{
+  background:var(--bg2) !important;
+  color:var(--text-main) !important;
+}
+.nav-item.active{
+  background:var(--accent-soft) !important;
+  color:var(--accent) !important;
+  border-left:2px solid var(--accent) !important;
+  font-weight:500 !important;
+}
+.nav-item.active::before{
+  display:none !important;
+}
+.nav-item .icon,
+.nav-folder-head .icon{
+  width:16px !important;
+  height:16px !important;
+}
+.sb-bottom{
+  padding:12px 10px !important;
+  gap:8px !important;
+  border-top:1px solid var(--border) !important;
+  background:var(--bg) !important;
+}
+.sb-credits{
+  padding:10px 12px !important;
+  border-radius:8px !important;
+  background:var(--bg3) !important;
+  border:1px solid var(--border) !important;
+}
+.sb-credits-label{
+  margin-bottom:6px !important;
+  font-size:10px !important;
+  letter-spacing:.08em !important;
+  color:var(--text-muted) !important;
+}
+.sb-credits-bar-wrap{
+  height:3px !important;
+  margin-bottom:7px !important;
+  background:var(--bg2) !important;
+}
+.sb-credits-bar{
+  background:var(--accent) !important;
+}
+.sb-credits-num{
+  font-size:12px !important;
+  color:var(--text-muted) !important;
+}
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-upgrade{
+  height:36px !important;
+  border-radius:7px !important;
+  box-shadow:none !important;
+  font-size:13px !important;
+}
+.btn-primary,
+.btn-upgrade,
+.opp-btn-primary{
+  background:var(--accent) !important;
+  border:1px solid var(--accent) !important;
+  color:#fff !important;
+}
+.btn-primary:hover:not(:disabled),
+.btn-upgrade:hover,
+.opp-btn-primary:hover{
+  background:#c94008 !important;
+  border-color:#c94008 !important;
+}
+.btn-secondary{
+  background:var(--bg-panel) !important;
+  border:1px solid var(--border) !important;
+  color:var(--text-main) !important;
+}
+.btn-secondary:hover:not(:disabled),
+.copy-btn:hover{
+  background:var(--bg2) !important;
+  border-color:var(--border2) !important;
+}
+.btn-ghost{
+  color:var(--text-muted) !important;
+}
+.sb-theme-toggle{
+  height:30px !important;
+  justify-content:flex-start !important;
+  border:none !important;
+  background:transparent !important;
+  color:var(--text-muted) !important;
+  padding:0 8px !important;
+  font-size:12px !important;
+}
+.sb-theme-toggle:hover{
+  background:var(--bg2) !important;
+  color:var(--text-main) !important;
+}
+.field-label,
+.dashboard-panel-kicker,
+.dashboard-section-label,
+.tool-section-kicker,
+.analytics-metric-label,
+.analytics-mini-stat-label,
+.roadmap-teaser-label,
+.settings-section-title{
+  font-size:10px !important;
+  font-weight:600 !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase;
+  color:var(--text-muted) !important;
+}
+.section-title{
+  font-size:10px !important;
+  font-weight:600 !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase;
+  color:var(--text-muted) !important;
+  border-bottom:1px solid var(--border) !important;
+  padding-bottom:8px !important;
+  margin-bottom:12px !important;
+}
+.card,
+.result-box,
+.biz-card,
+.summary-stat,
+.saved-clients-panel,
+.pipeline-composer,
+.pipeline-toolbar,
+.analytics-panel,
+.kanban-board-col,
+.tool-card,
+.fin-card,
+.dashboard-panel,
+.analytics-metric-card,
+.qf-skill-card,
+.file-upload,
+.audit-download-card,
+.roadmap-teaser{
+  background:var(--bg2) !important;
+  border:1px solid var(--border) !important;
+  border-radius:10px !important;
+  box-shadow:none !important;
+}
+html.dark .card,
+html.dark .result-box,
+html.dark .biz-card,
+html.dark .summary-stat,
+html.dark .saved-clients-panel,
+html.dark .pipeline-composer,
+html.dark .pipeline-toolbar,
+html.dark .analytics-panel,
+html.dark .kanban-board-col,
+html.dark .tool-card,
+html.dark .fin-card,
+html.dark .dashboard-panel,
+html.dark .analytics-metric-card,
+html.dark .qf-skill-card,
+html.dark .file-upload,
+html.dark .audit-download-card,
+html.dark .roadmap-teaser{
+  box-shadow:none !important;
+}
+.tool-form-card,
+.tool-output-card,
+.dashboard-panel,
+.analytics-panel,
+.fin-card{
+  padding:14px 16px !important;
+}
+.tool-grid{
+  gap:16px !important;
+}
+.tool-output-heading{
+  font-size:16px !important;
+  line-height:1.3;
+}
+.result-box-header{
+  margin-bottom:12px !important;
+}
+.result-box-body{
+  font-size:14px !important;
+  line-height:1.6 !important;
+}
+.dashboard-banner,
+.challenge-progress,
+.invoice-prefill-bar{
+  background:var(--bg2) !important;
+  border:1px solid var(--border) !important;
+}
+.dashboard-banner{
+  padding:14px 16px !important;
+  margin-bottom:16px !important;
+}
+.dashboard-banner-title{
+  font-size:18px !important;
+}
+.dashboard-banner-sub,
+.invoice-prefill-sub{
+  color:var(--text-muted) !important;
+}
+.invoice-prefill-label{
+  color:var(--accent) !important;
+}
+.badge-sent{
+  background:var(--accent-soft) !important;
+  color:var(--accent) !important;
+  border-color:rgba(232,80,10,0.22) !important;
+}
+.badge-paid{
+  background:rgba(34,197,94,.12) !important;
+  color:#15803d !important;
+  border-color:rgba(34,197,94,.22) !important;
+}
+.badge-overdue{
+  background:rgba(239,68,68,.1) !important;
+  color:#dc2626 !important;
+  border-color:rgba(239,68,68,.2) !important;
+}
+.qf-skill-card.active{
+  background:var(--accent-soft) !important;
+  border-color:rgba(232,80,10,0.2) !important;
+  box-shadow:none !important;
+}
+.qf-skill-card.active .qf-skill-icon{
+  background:var(--accent-soft) !important;
+  border-color:rgba(232,80,10,0.22) !important;
+  color:var(--accent) !important;
+}
+.qf-other-input:focus,
+.qf-income-wrap input:focus{
+  border-color:var(--accent) !important;
+  box-shadow:none !important;
+}
+.roadmap-day-tip,
+.score-cool{
+  color:var(--accent) !important;
+}
+.reply-low,
+.kanban-chip.priority-medium{
+  color:var(--accent) !important;
+  background:var(--accent-soft) !important;
+  border-color:rgba(232,80,10,0.18) !important;
+}
+.page-hd-note,
+.subject-pill,
+.word-count-badge,
+.activity-badge{
+  border-radius:999px !important;
+}
+.empty-state{
+  min-height:300px !important;
+}
+.empty-state.centered{
+  align-items:center !important;
+  text-align:center !important;
+}
+.empty-state-icon{
+  width:44px !important;
+  height:44px !important;
+  border-radius:12px !important;
+  background:var(--bg-panel) !important;
+  border:1px solid var(--border) !important;
+  color:var(--accent) !important;
+}
+.empty-state-heading{
+  font-size:20px !important;
+  line-height:1.2 !important;
+}
+.home-hero{
+  margin-bottom:16px !important;
+}
+.home-dashboard-stack,
+.dashboard-shell{
+  display:grid;
+  gap:16px !important;
+  margin-bottom:18px !important;
+}
+.dashboard-section-label{
+  margin-bottom:8px;
+}
+.business-pulse-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px !important;
+}
+.pulse-card{
+  min-height:88px;
+  padding:12px 14px !important;
+  border-left:2px solid var(--accent) !important;
+}
+.pulse-card-top{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 40px;
+  gap:10px;
+  align-items:end;
+}
+.pulse-label{
+  margin-bottom:6px !important;
+  font-size:10px !important;
+  font-weight:600 !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase;
+  color:var(--text-muted) !important;
+}
+.pulse-value{
+  font-family:'Inter',system-ui,sans-serif !important;
+  font-size:26px !important;
+  font-weight:600 !important;
+  line-height:1.05 !important;
+  color:var(--text-main) !important;
+}
+.pulse-change{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  margin-top:8px;
+  font-size:11px;
+  font-weight:600;
+  line-height:1;
+}
+.pulse-change.positive{color:#15803d}
+.pulse-change.negative{color:#dc2626}
+.pulse-change.neutral{color:var(--text-muted)}
+.pulse-sparkline{
+  width:40px;
+  height:24px;
+  align-self:end;
+}
+.pulse-sparkline svg{
+  width:40px;
+  height:24px;
+  display:block;
+}
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
+  gap:16px !important;
+}
+.dashboard-grid-lower{
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(280px,.8fr);
+  gap:16px;
+}
+.dashboard-panel-head{
+  margin-bottom:14px !important;
+  gap:10px !important;
+}
+.dashboard-panel-title,
+.analytics-panel-title{
+  font-size:16px !important;
+  line-height:1.3 !important;
+}
+.chart-toggle{
+  padding:3px !important;
+  gap:4px !important;
+  background:var(--bg-panel) !important;
+  border:1px solid var(--border) !important;
+}
+.range-chip{
+  height:28px !important;
+  padding:0 10px !important;
+  border-radius:999px !important;
+  font-size:12px !important;
+}
+.range-chip.active{
+  background:var(--accent) !important;
+  color:#fff !important;
+}
+.earnings-chart-wrap{
+  padding:12px !important;
+  background:var(--bg-panel) !important;
+  border-radius:10px !important;
+}
+.earnings-chart-svg{
+  height:220px !important;
+}
+.chart-label{
+  font-size:11px !important;
+}
+.credits-widget{
+  display:grid !important;
+  grid-template-columns:80px minmax(0,1fr);
+  gap:14px !important;
+  align-items:center !important;
+}
+.credits-ring{
+  width:80px !important;
+  height:80px !important;
+}
+.credits-ring svg{
+  width:80px !important;
+  height:80px !important;
+}
+.credits-ring-track,
+.credits-ring-progress{
+  stroke-width:8 !important;
+}
+.credits-ring-value strong{
+  font-family:'Inter',system-ui,sans-serif !important;
+  font-size:14px !important;
+  font-weight:600 !important;
+  letter-spacing:.04em;
+}
+.credits-ring-value span{
+  font-size:10px !important;
+  color:var(--text-muted) !important;
+  letter-spacing:.08em !important;
+}
+.credits-copy{
+  font-size:13px !important;
+}
+.credits-upgrade-note{
+  color:var(--accent) !important;
+  font-size:12px !important;
+}
+.monthly-target-panel{
+  display:grid;
+  gap:12px;
+}
+.goal-progress-track{
+  height:6px;
+  border-radius:999px;
+  background:var(--bg3);
+  overflow:hidden;
+}
+.goal-progress-fill{
+  height:100%;
+  width:0;
+  border-radius:999px;
+  background:var(--accent);
+}
+.goal-progress-copy{
+  font-size:13px;
+  color:var(--text-main);
+}
+.goal-progress-sub{
+  font-size:13px;
+  color:var(--text-muted);
+}
+.top-client-list,
+.activity-feed{
+  display:grid;
+  gap:0 !important;
+}
+.top-client-row,
+.activity-feed-row{
+  padding:12px 0 !important;
+  border-bottom:1px solid var(--border) !important;
+}
+.top-client-row:last-child,
+.activity-feed-row:last-child{
+  border-bottom:0 !important;
+}
+.client-avatar{
+  width:34px !important;
+  height:34px !important;
+  background:var(--accent) !important;
+  color:#fff !important;
+  font-size:11px !important;
+}
+.client-name{
+  font-size:14px !important;
+  font-weight:600 !important;
+}
+.client-total{
+  font-size:13px !important;
+  color:var(--text-muted) !important;
+}
+.status-pill{
+  padding:4px 10px !important;
+  border-radius:999px !important;
+  font-size:11px !important;
+  font-weight:600 !important;
+}
+.status-pill.active{
+  background:rgba(34,197,94,.12) !important;
+  color:#15803d !important;
+}
+.status-pill.pending{
+  background:rgba(245,166,35,.16) !important;
+  color:#b45309 !important;
+}
+.status-pill.closed{
+  background:var(--accent-soft) !important;
+  color:var(--accent) !important;
+}
+.activity-icon{
+  width:30px !important;
+  height:30px !important;
+  border-radius:8px !important;
+  background:var(--accent-soft) !important;
+  border:1px solid rgba(232,80,10,0.16) !important;
+  color:var(--accent) !important;
+}
+.activity-text{
+  font-size:13px !important;
+}
+.activity-time{
+  font-size:13px !important;
+  color:var(--text-muted) !important;
+}
+.activity-feed-link{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  margin-top:12px;
+  color:var(--accent);
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  text-decoration:none;
+}
+.analytics-shell{
+  gap:16px !important;
+}
+.analytics-hero-grid{
+  gap:12px !important;
+}
+.analytics-metric-card{
+  padding:12px 14px !important;
+  border-left:2px solid var(--accent) !important;
+}
+.analytics-metric-value{
+  font-size:26px !important;
+  font-weight:600 !important;
+  line-height:1.05 !important;
+  margin-bottom:4px !important;
+}
+.analytics-metric-sub,
+.analytics-row-sub,
+.activity-date{
+  font-size:12px !important;
+  color:var(--text-muted) !important;
+}
+.analytics-mini-stat{
+  padding:12px 14px !important;
+  border-radius:10px !important;
+}
+.trend-bar{
+  background:var(--accent) !important;
+}
+#acc-channel-mix .analytics-track span{
+  background:var(--accent-secondary) !important;
+}
+#acc-funnel-list .analytics-track span,
+#acc-collections-list .analytics-track span{
+  background:var(--accent) !important;
+}
+.analytics-track{
+  height:6px !important;
+  background:var(--bg3) !important;
+}
+.analytics-row-title{
+  font-size:13px !important;
+  font-weight:600 !important;
+}
+.analytics-table th{
+  font-size:10px !important;
+  color:var(--text-muted) !important;
+}
+.analytics-table td{
+  font-size:13px !important;
+}
+.activity-badge{
+  background:var(--accent-soft) !important;
+  color:var(--accent) !important;
+  border:1px solid rgba(232,80,10,0.16) !important;
+}
+.tool-card:hover,
+.dashboard-panel:hover,
+.pulse-card:hover,
+.quick-action-card:hover,
+.qf-skill-card:hover,
+.kanban-card:hover,
+.kanban-board-col:hover,
+.analytics-panel:hover,
+.card:hover{
+  border-color:var(--border2) !important;
+  box-shadow:none !important;
+  transform:none !important;
+}
+@media(max-width:1180px){
+  .dashboard-grid,
+  .dashboard-grid-lower{
+    grid-template-columns:1fr !important;
+  }
+}
+@media(max-width:900px){
+  .business-pulse-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+@media(max-width:768px){
+  .header{
+    padding:0 14px !important;
+  }
+  .business-pulse-grid{
+    grid-template-columns:1fr !important;
+  }
+  .credits-widget{
+    grid-template-columns:1fr !important;
+    justify-items:start !important;
+  }
+  .sidebar{
+    height:68px !important;
+    width:100% !important;
+  }
+  .nav-item{
+    min-width:max-content !important;
+  }
+}
+
+/* Theme fix overrides */
+:root{
+  --accent-primary:#E8500A;
+  --accent-secondary:#F5A623;
+  --accent:#E8500A;
+  --btn-bg:#E8500A;
+  --btn-text:#ffffff;
+  --accent-soft:#FFF0EB;
+  --bg-hover:#FFF5F0;
+}
+html.dark{
+  --accent:#E8500A;
+  --accent-soft:#1F1208;
+  --bg-hover:#1A0F08;
+}
+html:not(.dark) body{
+  background:linear-gradient(180deg, #FAFAF8 0%, #F5F3F0 100%) !important;
+}
+html:not(.dark) .main,
+html:not(.dark) .content-scroll,
+html:not(.dark) .content-inner{
+  background:transparent !important;
+}
+#login-screen{
+  background:linear-gradient(135deg, #FFF8F5 0%, #FFF0EB 46%, #FAFAF8 100%) !important;
+}
+#hero-greeting,
+.hero-greeting,
+#page-home .workspace-title{
+  font-family:'Instrument Serif',serif !important;
+  font-size:30px !important;
+  font-weight:400 !important;
+}
+.nav-item.active{
+  background:var(--accent-soft) !important;
+  color:var(--accent-primary) !important;
+  border-left:2px solid var(--accent-primary) !important;
+}
+.nav-item.active::before{
+  display:none !important;
+}
+.btn-upgrade{
+  background:#E8500A !important;
+  color:#ffffff !important;
+  border-color:#E8500A !important;
+}
+.sb-credits-bar-wrap{
+  height:3px !important;
+}
+.sb-credits-bar{
+  background:#E8500A !important;
+}
+input:focus,
+select:focus,
+textarea:focus,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible{
+  outline:2px solid #E8500A !important;
+  border-color:#E8500A !important;
+  box-shadow:none !important;
+}
+.analytics-track span,
+.trend-bar,
+.biz-bar,
+.sb-credits-bar,
+.checklist-fill,
+.floating-fill,
+.credits-ring-progress{
+  background:#E8500A !important;
+  stroke:#E8500A !important;
+}
+#acc-channel-mix .analytics-track span,
+.status-pill.pending{
+  background:#F5A623 !important;
+}
+.status-pill.closed,
+.badge-sent,
+.kanban-chip.priority-medium,
+.reply-low,
+.qf-skill-card.active .qf-skill-icon{
+  background:var(--accent-soft) !important;
+  color:#E8500A !important;
+  border-color:rgba(232,80,10,0.22) !important;
+}
+.saved-opportunity-count,
+.score-cool,
+.roadmap-day-tip,
+.invoice-prefill-label,
+.credits-upgrade-note,
+.activity-feed-link{
+  color:#E8500A !important;
+}
+.kanban-board-col.drag-over,
+.qf-skill-card.active,
+.qf-other-input:focus,
+.qf-income-wrap input:focus{
+  border-color:#E8500A !important;
+  box-shadow:none !important;
+}
+.page-hd-note,
+.summary-stat,
+.saved-clients-panel,
+.pipeline-toolbar,
+.analytics-panel,
+.biz-metric-card,
+.opp-radar-card,
+.opp-radar-icon,
+.login-kicker-dot,
+.login-showcase,
+.login-showcase::before{
+  box-shadow:none !important;
+}
 </style>
 </head>
 <body>
@@ -4941,7 +5980,7 @@ html.dark .btn-secondary .btn-spinner{
     <div class="sb-logo">
       <div class="brand-lockup">
         <span class="brand-monogram">L</span>
-        <span class="brand-wordmark">Lancify</span>
+        <span class="brand-wordmark">lancify</span>
       </div>
 
       <button class="sb-collapse-btn" id="sb-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
@@ -5125,8 +6164,8 @@ html.dark .btn-secondary .btn-spinner{
                 <button id="checklist-minimize-btn" class="icon-btn" onclick="toggleChecklistCollapse()" style="background:var(--bg-panel); border:1px solid var(--border);" aria-label="Toggle checklist">
                   <i data-lucide="chevron-up" id="checklist-chevron" style="width:16px; height:16px;"></i>
                 </button>
-                <button onclick="window.open('https://loom.com','_blank')" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; background:rgba(99,102,241,0.07); color:#6366f1; border:1px solid rgba(99,102,241,0.18); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">
-                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+                <button onclick="window.open('https://loom.com','_blank')" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; background:var(--accent-soft); color:var(--accent); border:1px solid rgba(232,80,10,0.18); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">
+                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
                   Watch 2-min walkthrough
                 </button>
               </div>
@@ -5148,13 +6187,13 @@ html.dark .btn-secondary .btn-spinner{
                 <div id="pb-check-1" class="checklist-check" onclick="event.stopPropagation();togglePb(1)">
                   <i data-lucide="check"></i>
                 </div>
-                <div class="checklist-icon" style="background:rgba(99,102,241,0.08)">
-                  <i data-lucide="target" style="width:15px;height:15px;color:#6366f1"></i>
+                <div class="checklist-icon" style="background:var(--accent-soft)">
+                  <i data-lucide="target" style="width:15px;height:15px;color:var(--accent)"></i>
                 </div>
                 <div class="checklist-main">
                   <div class="checklist-meta">
                     <span class="checklist-step-label">Step 1</span>
-                    <span class="checklist-chip" style="color:#6366f1;background:rgba(99,102,241,0.08)">Opportunity Engine</span>
+                    <span class="checklist-chip" style="color:var(--accent);background:var(--accent-soft)">Opportunity Engine</span>
                     <span class="checklist-chip time">3 min</span>
                   </div>
                   <div class="checklist-step-title">Find one lead worth pitching today</div>
@@ -9328,7 +10367,7 @@ function _renderOppCard(lead) {
   const loomText = lead.loomScript || lead.assets?.loomScript || `Hi ${lead.name}, quick teardown for your ${lead.platform}. I noticed ${problem}. The first move I'd make is ${strategy}.`;
   const proposalText = lead.proposal || lead.assets?.proposal || `Write a proposal for ${lead.name}. Problem: ${problem}. Strategy: ${strategy}. Price: ${dealValue}.`;
   const objectionReply = `The prospect ${lead.name} replied: "I don't have the budget right now." Write a short reply that lowers risk, keeps the tone calm, and offers a smaller starter scope around ${dealValue}.`;
-  const scoreTone = score >= 92 ? '#ef4444' : score >= 85 ? '#f59e0b' : '#5b8def';
+  const scoreTone = score >= 92 ? '#ef4444' : score >= 85 ? '#f59e0b' : '#e8500a';
 
   return `
   <div class="opp-card">
@@ -9844,12 +10883,48 @@ function injectBusinessDashboardWidgets(){
   host.innerHTML = `
     <div id="home-biz-dashboard" class="dashboard-shell">
       <div>
-        <div class="dashboard-panel-kicker">Business Pulse</div>
+        <div class="dashboard-section-label">Business Pulse</div>
         <div class="business-pulse-grid">
-          <div class="pulse-card"><div class="pulse-label">Clients</div><div class="pulse-value" id="home-total-clients">0</div></div>
-          <div class="pulse-card"><div class="pulse-label">Active</div><div class="pulse-value" id="home-active-deals">0</div></div>
-          <div class="pulse-card"><div class="pulse-label">Closed</div><div class="pulse-value" id="home-won-revenue">$0</div></div>
-          <div class="pulse-card"><div class="pulse-label">Outstanding</div><div class="pulse-value" id="home-outstanding">$0</div></div>
+          <div class="pulse-card">
+            <div class="pulse-card-top">
+              <div>
+                <div class="pulse-label">Clients</div>
+                <div class="pulse-value" id="home-total-clients">0</div>
+                <div class="pulse-change neutral" id="home-total-clients-change">-> 0%</div>
+              </div>
+              <div class="pulse-sparkline" id="home-total-clients-spark"></div>
+            </div>
+          </div>
+          <div class="pulse-card">
+            <div class="pulse-card-top">
+              <div>
+                <div class="pulse-label">Active</div>
+                <div class="pulse-value" id="home-active-deals">0</div>
+                <div class="pulse-change neutral" id="home-active-deals-change">-> 0%</div>
+              </div>
+              <div class="pulse-sparkline" id="home-active-deals-spark"></div>
+            </div>
+          </div>
+          <div class="pulse-card">
+            <div class="pulse-card-top">
+              <div>
+                <div class="pulse-label">Closed</div>
+                <div class="pulse-value" id="home-won-revenue">$0</div>
+                <div class="pulse-change neutral" id="home-won-revenue-change">-> 0%</div>
+              </div>
+              <div class="pulse-sparkline" id="home-won-revenue-spark"></div>
+            </div>
+          </div>
+          <div class="pulse-card">
+            <div class="pulse-card-top">
+              <div>
+                <div class="pulse-label">Outstanding</div>
+                <div class="pulse-value" id="home-outstanding">$0</div>
+                <div class="pulse-change neutral" id="home-outstanding-change">-> 0%</div>
+              </div>
+              <div class="pulse-sparkline" id="home-outstanding-spark"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="dashboard-grid">
@@ -9883,9 +10958,9 @@ function injectBusinessDashboardWidgets(){
           </div>
           <div class="credits-widget">
             <div class="credits-ring">
-              <svg viewBox="0 0 120 120" aria-hidden="true">
-                <circle class="credits-ring-track" cx="60" cy="60" r="46"></circle>
-                <circle class="credits-ring-progress" id="home-credits-ring" cx="60" cy="60" r="46"></circle>
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="credits-ring-track" cx="50" cy="50" r="36"></circle>
+                <circle class="credits-ring-progress" id="home-credits-ring" cx="50" cy="50" r="36"></circle>
               </svg>
               <div class="credits-ring-value">
                 <strong id="home-credits-pct">100%</strong>
@@ -9893,40 +10968,35 @@ function injectBusinessDashboardWidgets(){
               </div>
             </div>
             <div class="credits-meta">
-              <div class="credits-copy" id="home-credits-copy">1,000 credits remaining this month.</div>
+              <div class="credits-copy" id="home-credits-copy">1,000 of 1,000 credits remaining this month.</div>
               <div class="credits-upgrade-note" id="home-credits-warning" style="display:none">Running low this month. Upgrade to Pro to keep momentum high.</div>
               <button class="btn btn-primary" id="home-credits-cta" style="width:max-content;display:none" onclick="showUpgradeModal()">Upgrade to Pro</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="dashboard-grid-secondary">
+      <div class="dashboard-panel monthly-target-panel">
+        <div class="dashboard-panel-head">
+          <div>
+            <div class="dashboard-panel-kicker">Goal</div>
+            <div class="dashboard-panel-title">Monthly Earnings Target</div>
+            <div class="dashboard-panel-copy">Stay on pace with a simple monthly revenue checkpoint.</div>
+          </div>
+        </div>
+        <div class="goal-progress-track"><div class="goal-progress-fill" id="home-target-progress"></div></div>
+        <div class="goal-progress-copy" id="home-target-summary">$0 of $2,000 - 0% there</div>
+        <div class="goal-progress-sub" id="home-target-copy">You need $2,000 more to hit your goal this month</div>
+      </div>
+      <div class="dashboard-grid-lower">
         <div class="dashboard-panel">
           <div class="dashboard-panel-head">
             <div>
-              <div class="dashboard-panel-kicker">Actions</div>
-              <div class="dashboard-panel-title">Quick Actions</div>
-              <div class="dashboard-panel-copy">Jump straight into the next revenue move.</div>
+              <div class="dashboard-panel-kicker">Relationships</div>
+              <div class="dashboard-panel-title">Top Clients</div>
+              <div class="dashboard-panel-copy">Your highest-value clients by booked and invoiced revenue.</div>
             </div>
           </div>
-          <div class="quick-actions-grid">
-            <div class="quick-action-card" onclick="navigate('invoices')">
-              <div class="quick-action-copy"><div class="quick-action-title">Send an Invoice</div><div class="quick-action-sub">Turn finished work into collected cash.</div></div>
-              <div class="quick-action-icon"><i data-lucide="receipt-text" style="width:18px;height:18px"></i></div>
-            </div>
-            <div class="quick-action-card" onclick="navigate('proposal')">
-              <div class="quick-action-copy"><div class="quick-action-title">Draft a Proposal</div><div class="quick-action-sub">Write a sharper pitch for the next opportunity.</div></div>
-              <div class="quick-action-icon"><i data-lucide="file-text" style="width:18px;height:18px"></i></div>
-            </div>
-            <div class="quick-action-card" onclick="navigate('opportunity')">
-              <div class="quick-action-copy"><div class="quick-action-title">Find New Clients</div><div class="quick-action-sub">Pull fresh leads into your pipeline.</div></div>
-              <div class="quick-action-icon"><i data-lucide="target" style="width:18px;height:18px"></i></div>
-            </div>
-            <div class="quick-action-card" onclick="navigate('audit')">
-              <div class="quick-action-copy"><div class="quick-action-title">Generate Audit</div><div class="quick-action-sub">Lead with insight before you ask for the call.</div></div>
-              <div class="quick-action-icon"><i data-lucide="sparkles" style="width:18px;height:18px"></i></div>
-            </div>
-          </div>
+          <div class="top-client-list" id="home-top-clients"></div>
         </div>
         <div class="dashboard-panel">
           <div class="dashboard-panel-head">
@@ -9935,41 +11005,15 @@ function injectBusinessDashboardWidgets(){
               <div class="dashboard-panel-title">Recent Activity</div>
               <div class="dashboard-panel-copy">The last 5 moves across your workspace.</div>
             </div>
-            <button class="btn btn-ghost" onclick="navigate('accounting')">View all activity</button>
           </div>
           <div class="activity-feed" id="home-activity-feed"></div>
-        </div>
-      </div>
-      <div class="dashboard-grid-secondary">
-        <div class="dashboard-panel">
-          <div class="dashboard-panel-head">
-            <div>
-              <div class="dashboard-panel-kicker">Relationships</div>
-              <div class="dashboard-panel-title">Top Clients</div>
-              <div class="dashboard-panel-copy">Your highest-value client relationships right now.</div>
-            </div>
-          </div>
-          <div class="top-client-list" id="home-top-clients"></div>
-        </div>
-        <div class="dashboard-panel">
-          <div class="dashboard-panel-head">
-            <div>
-              <div class="dashboard-panel-kicker">Next Move</div>
-              <div class="dashboard-panel-title">Growth Roadmap Teaser</div>
-              <div class="dashboard-panel-copy">The next action Lancify recommends this week.</div>
-            </div>
-          </div>
-          <div class="roadmap-teaser">
-            <div class="roadmap-teaser-label">Recommended Action</div>
-            <div class="roadmap-teaser-title" id="home-roadmap-title">Keep your pipeline moving</div>
-            <div class="roadmap-teaser-copy" id="home-roadmap-copy">Open Growth Roadmap and build the next 30 days around one clear client acquisition loop.</div>
-            <button class="btn btn-secondary" style="width:max-content" onclick="navigate('roadmap')">Open Roadmap -></button>
-          </div>
         </div>
       </div>
     </div>
   `;
 }
+
+const HOME_MONTHLY_TARGET = 2000;
 
 function _monthlyEarningsBuckets(){
   const now = new Date();
@@ -10117,6 +11161,136 @@ function getHomeTimeline(range = '30d'){
   return buckets;
 }
 
+function getDashboardMetricValue(metricKey, start, end){
+  const inRange = (dateLike) => {
+    const ts = new Date(dateLike || Date.now()).getTime();
+    return ts >= start.getTime() && ts <= end.getTime();
+  };
+
+  if (metricKey === 'clients') {
+    return userLeads.filter(lead => inRange(lead.created_at)).length + opportunityClients.filter(client => inRange(client.created_at)).length;
+  }
+  if (metricKey === 'active') {
+    return userLeads.filter(lead => ['pitched','replied'].includes((lead.status || '').toLowerCase()) && inRange(lead.created_at)).length;
+  }
+  if (metricKey === 'closed') {
+    return userLeads
+      .filter(lead => (lead.status || '').toLowerCase() === 'won' && inRange(lead.created_at))
+      .reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+  }
+  if (metricKey === 'outstanding') {
+    return userInvoices
+      .filter(inv => (inv.status || '').toLowerCase() !== 'paid' && inRange(inv.created_at || inv.due_date))
+      .reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
+  }
+  return 0;
+}
+
+function buildDashboardMetricSeries(metricKey, fromDaysAgo, toDaysAgo = 0){
+  const series = [];
+  for (let offset = fromDaysAgo; offset >= toDaysAgo; offset--) {
+    const day = new Date();
+    day.setHours(0, 0, 0, 0);
+    day.setDate(day.getDate() - offset);
+    const start = _dayStart(day);
+    const end = _dayEnd(day);
+    series.push({
+      label: day.toLocaleDateString('en-US', { weekday: 'short' }),
+      value: getDashboardMetricValue(metricKey, start, end)
+    });
+  }
+  return series;
+}
+
+function renderMiniSparkline(id, values = []){
+  const host = el(id);
+  if (!host) return;
+  const points = values.map(value => Number(value || 0));
+  const width = 40;
+  const height = 24;
+  const pad = 2;
+  const max = Math.max(...points, 1);
+  const min = Math.min(...points, 0);
+  const range = Math.max(max - min, 1);
+  const polyline = points.map((value, index) => {
+    const x = pad + ((width - (pad * 2)) * index / Math.max(points.length - 1, 1));
+    const y = height - pad - (((value - min) / range) * (height - (pad * 2)));
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+
+  host.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">
+      <polyline points="${polyline}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+    </svg>
+  `;
+}
+
+function getDashboardChangeBadge(change, inverse = false){
+  const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '->';
+  let cls = 'neutral';
+  if (change !== 0) {
+    const isPositive = inverse ? change < 0 : change > 0;
+    cls = isPositive ? 'positive' : 'negative';
+  }
+  return { text: `${arrow} ${Math.abs(change)}%`, cls };
+}
+
+function renderHomePulseMeta(){
+  [
+    { base: 'home-total-clients', key: 'clients', inverse: false },
+    { base: 'home-active-deals', key: 'active', inverse: false },
+    { base: 'home-won-revenue', key: 'closed', inverse: false },
+    { base: 'home-outstanding', key: 'outstanding', inverse: true }
+  ].forEach(metric => {
+    const currentSeries = buildDashboardMetricSeries(metric.key, 6, 0);
+    const previousSeries = buildDashboardMetricSeries(metric.key, 13, 7);
+    const currentTotal = currentSeries.reduce((sum, item) => sum + Number(item.value || 0), 0);
+    const previousTotal = previousSeries.reduce((sum, item) => sum + Number(item.value || 0), 0);
+    const change = previousTotal === 0
+      ? (currentTotal > 0 ? 100 : 0)
+      : Math.round(((currentTotal - previousTotal) / previousTotal) * 100);
+    const badge = getDashboardChangeBadge(change, metric.inverse);
+    const badgeEl = el(`${metric.base}-change`);
+    if (badgeEl) {
+      badgeEl.className = `pulse-change ${badge.cls}`;
+      badgeEl.textContent = badge.text;
+    }
+    renderMiniSparkline(`${metric.base}-spark`, currentSeries.map(item => item.value));
+  });
+}
+
+function getHomeMonthlyRevenue(){
+  const now = new Date();
+  const inCurrentMonth = (dateLike) => {
+    const dt = new Date(dateLike || Date.now());
+    return dt.getFullYear() === now.getFullYear() && dt.getMonth() === now.getMonth();
+  };
+
+  const wonRevenue = userLeads
+    .filter(lead => (lead.status || '').toLowerCase() === 'won' && inCurrentMonth(lead.created_at))
+    .reduce((sum, lead) => sum + Number(lead.project_value || 0), 0);
+  const paidRevenue = userInvoices
+    .filter(inv => (inv.status || '').toLowerCase() === 'paid' && inCurrentMonth(inv.created_at || inv.due_date))
+    .reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
+
+  return Math.max(wonRevenue, paidRevenue);
+}
+
+function renderHomeMonthlyTarget(){
+  const current = getHomeMonthlyRevenue();
+  const pct = Math.max(0, Math.min(100, Math.round((current / HOME_MONTHLY_TARGET) * 100)));
+  const fill = el('home-target-progress');
+  if (fill) fill.style.width = `${pct}%`;
+  setText('home-target-summary', `${formatCurrency(current)} of ${formatCurrency(HOME_MONTHLY_TARGET)} - ${pct}% there`);
+  const remaining = Math.max(HOME_MONTHLY_TARGET - current, 0);
+  setText(
+    'home-target-copy',
+    remaining > 0
+      ? `You need ${formatCurrency(remaining)} more to hit your goal this month`
+      : `You're past your goal by ${formatCurrency(current - HOME_MONTHLY_TARGET)} this month`
+  );
+}
+
 function renderHomeEarningsChart(){
   const host = el('home-earnings-chart');
   const labels = el('home-chart-labels');
@@ -10166,11 +11340,11 @@ function renderHomeCreditsWidget(total, remaining){
   const ring = el('home-credits-ring');
   if (!ring) return;
   const pct = Math.max(0, Math.min(100, Math.round((remaining / Math.max(total, 1)) * 100)));
-  const circumference = 2 * Math.PI * 46;
+  const circumference = 2 * Math.PI * 36;
   ring.style.strokeDasharray = `${circumference}`;
   ring.style.strokeDashoffset = `${circumference - ((pct / 100) * circumference)}`;
   setText('home-credits-pct', `${pct}%`);
-  setText('home-credits-copy', `${remaining.toLocaleString()} credits remaining this month`);
+  setText('home-credits-copy', `${remaining.toLocaleString()} of ${total.toLocaleString()} credits remaining this month`);
   const warning = el('home-credits-warning');
   const cta = el('home-credits-cta');
   const low = pct <= 20;
@@ -10225,6 +11399,7 @@ function renderHomeActivityFeed(){
       <div class="activity-time">${escapeHtml(formatRelativeTime(item.created_at))}</div>
     </div>
   `).join('') : '<div class="empty-state centered" style="min-height:180px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No activity yet</div><p class="empty-state-copy">Your recent proposals, audits, clients, and invoices will appear here.</p></div>';
+  host.innerHTML += `<button class="btn btn-ghost activity-feed-link" onclick="navigate('accounting')">View all -></button>`;
 }
 
 function renderHomeTopClients(){
@@ -10257,7 +11432,7 @@ function renderHomeTopClients(){
       <div class="client-avatar">${escapeHtml(client.name.split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase())}</div>
       <div>
         <div class="client-name">${escapeHtml(client.name)}</div>
-        <div class="client-total">${escapeHtml(formatCurrency(client.total || 0))} total paid</div>
+        <div class="client-total">${escapeHtml(formatCurrency(client.total || 0))} total earned</div>
       </div>
       <span class="status-pill ${escapeHtml(client.status || 'inactive')}">${escapeHtml((client.status || 'inactive').replace(/^\w/, m => m.toUpperCase()))}</span>
     </div>
@@ -10289,20 +11464,11 @@ function updateHomeHeroContext(activeDeals, totalClients, savedCount){
   const firstName = String(rawName).split(' ')[0] || 'Shaurya';
   const h = new Date().getHours();
   const timeGreeting = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
-  let copy = 'No active clients yet. Start with one strong lead and close your first deal.';
+  let copy = `You have ${activeDeals} active client${activeDeals === 1 ? '' : 's'}. Ready to close more?`;
+  if (activeDeals === 0 && totalClients > 0) copy = `You have 0 active clients. ${totalClients} client${totalClients === 1 ? '' : 's'} are in the workspace.`;
+  if (activeDeals === 0 && totalClients === 0 && savedCount > 0) copy = `You have 0 active clients. ${savedCount} saved opportunit${savedCount === 1 ? 'y is' : 'ies are'} ready for outreach.`;
+  if (activeDeals === 0 && totalClients === 0 && savedCount === 0) copy = 'You have 0 active clients. Ready to close more?';
   if (greetingEl) greetingEl.textContent = `${timeGreeting}, ${firstName}`;
-  if (totalClients === 0 && activeDeals === 0 && savedCount === 0) {
-    if (greetingEl) greetingEl.textContent = `${timeGreeting}, ${firstName}. Let's get your first client this week.`;
-    contextEl.textContent = `You're 1 outreach away from changing everything.`;
-    return;
-  }
-  if (activeDeals > 0) {
-    copy = `You have ${activeDeals} active client${activeDeals === 1 ? '' : 's'}. Ready to close more?`;
-  } else if (totalClients > 0) {
-    copy = `You already have ${totalClients} client${totalClients === 1 ? '' : 's'} in the workspace. Time to move the next one forward.`;
-  } else if (savedCount > 0) {
-    copy = `You have ${savedCount} saved opportunit${savedCount === 1 ? 'y' : 'ies'} waiting. Turn one into your first client.`;
-  }
   contextEl.textContent = copy;
 }
 
@@ -11340,8 +12506,10 @@ function renderBusinessDashboard(){
   setText('home-outstanding', formatCurrency(outstandingAll || 0));
   updateHomeHeroContext(activeDeals, totalClientsAll, opportunityClients.length);
   updateChecklistUi();
+  renderHomePulseMeta();
   renderHomeEarningsChart();
   renderHomeCreditsWidget(Number(billingState.total || 1000), Number(billingState.remaining || 0));
+  renderHomeMonthlyTarget();
   renderHomeActivityFeed();
   renderHomeTopClients();
 
