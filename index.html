@@ -9227,7 +9227,7 @@ function applyTheme(theme) {
     document.documentElement.classList.remove('dark');
   }
 }
-
+let currentUser = null, userProfile = {is_pro:false}, userLeads = [], userInvoices = [], opportunityClients = [];
 function _themeStorageKey(uid) {
   uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
   return `lancify-theme-${uid || 'guest'}`;
@@ -9239,9 +9239,8 @@ function persistThemePreference(theme, uid) {
   localStorage.setItem(_themeStorageKey(uid), theme);
 }
 
-function getSavedThemePreference(uid) {
-  uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
-  return localStorage.getItem(_themeStorageKey(uid)) || localStorage.getItem('lancify-theme');
+function getSavedThemePreference() {
+  return localStorage.getItem('lancify-theme-guest') || localStorage.getItem('lancify-theme');
 }
 
 function toggleTheme() {
@@ -9357,7 +9356,6 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY'
 );
 
-let currentUser = null, userProfile = {is_pro:false}, userLeads = [], userInvoices = [], opportunityClients = [];
 let leadMetaStore = {}, crmFilters = { search:'', platform:'all', sort:'newest' }, accountingState = { range:'30d', start:'', end:'' }, draggedLeadId = null;
 let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
