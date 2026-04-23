@@ -15,6 +15,22 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(() => {
+  try {
+    const savedTheme =
+      localStorage.getItem('lancify-theme') ||
+      localStorage.getItem('lancify-theme-guest');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+      return;
+    }
+    if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+  } catch (_) {}
+})();
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -47,10 +63,10 @@
   --bg3:    var(--bg-hover);
   --text:   var(--text-main);
   --text2:  var(--text-muted);
-  --text3:  #94a3b8;
+  --text3:  #9a9a9a;
   --accent:  #0f172a;
-  --accent-primary: #5b8def;
-  --accent-secondary: #14b8a6;
+  --accent-primary: #E8500A;
+  --accent-secondary: #E8500A;
   --accent-amber: #f59e0b;
   --page-max: min(1320px, calc(100vw - 88px));
   --page-max-wide: min(1700px, calc(100vw - 36px));
@@ -1115,7 +1131,7 @@ html.dark .profile-banner:hover{background:#14532d}
   border:1px solid var(--border);border-radius:24px;padding:20px;box-shadow:var(--shadow-sm)
 }
 .section-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.saved-opportunity-count{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2563eb}
+.saved-opportunity-count{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#E8500A}
 .saved-opportunity-sub{font-size:13px;color:var(--text-muted);line-height:1.6;max-width:58ch}
 .saved-opportunity-empty{font-size:12.5px;color:var(--text3);padding:16px;border:1px dashed var(--border2);border-radius:16px;background:var(--bg-panel)}
 .opp-managed-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;max-height:none;overflow:visible}
@@ -1157,7 +1173,7 @@ html.dark .profile-banner:hover{background:#14532d}
   border-radius:22px;padding:16px;border:1px solid var(--border);min-height:440px;transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease
 }
 .kanban-board-col{min-width:0}
-.kanban-board-col.drag-over{border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,0.12);transform:translateY(-2px)}
+.kanban-board-col.drag-over{border-color:#E8500A;box-shadow:0 0 0 3px rgba(232,80,10,0.12);transform:translateY(-2px)}
 .kanban-col-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
 .kanban-col-eyebrow{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
 .kanban-col-title{font-size:18px;font-weight:700;color:var(--text-main);letter-spacing:-.5px}
@@ -1181,7 +1197,7 @@ html.dark .profile-banner:hover{background:#14532d}
   background:var(--bg-panel);border:1px solid var(--border);font-size:11.5px;color:var(--text-muted)
 }
 .kanban-chip.priority-high{background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.22);color:#b45309}
-.kanban-chip.priority-medium{background:rgba(59,130,246,0.10);border-color:rgba(59,130,246,0.18);color:#2563eb}
+.kanban-chip.priority-medium{background:rgba(232,80,10,0.10);border-color:rgba(232,80,10,0.18);color:#E8500A}
 .kanban-chip.priority-low{background:rgba(148,163,184,0.14);border-color:rgba(148,163,184,0.18);color:#475569}
 .kanban-chip.danger{background:rgba(239,68,68,0.10);border-color:rgba(239,68,68,0.16);color:#dc2626}
 .kanban-card-note{font-size:12.5px;line-height:1.6;color:var(--text-muted);padding:10px 12px;background:var(--bg-panel);border-radius:14px;border:1px solid var(--border);margin-bottom:10px}
@@ -1264,7 +1280,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .analytics-row-title{font-size:13px;font-weight:700;color:var(--text-main)}
 .analytics-row-sub{font-size:12px;color:var(--text-muted)}
 .analytics-track{height:8px;border-radius:999px;background:rgba(148,163,184,0.16);overflow:hidden}
-.analytics-track span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg, #2563eb, #14b8a6)}
+.analytics-track span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg, #E8500A, #F59B72)}
 .analytics-row-value{font-size:13px;font-weight:700;color:var(--text-main);text-align:right}
 .analytics-table{width:100%;border-collapse:collapse}
 .analytics-table th,.analytics-table td{padding:12px 0;border-bottom:1px solid var(--border);text-align:left}
@@ -1289,17 +1305,17 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .nav-folder-chevron{width:12px;height:12px;transition:transform .15s ease;opacity:.7}
 .nav-folder:not(.open) .nav-folder-chevron{transform:rotate(-90deg)}
 .nav-folder.spotlight .nav-folder-head{
-  background:linear-gradient(135deg, rgba(91,141,239,0.12), rgba(20,184,166,0.07));
-  border:1px solid rgba(91,141,239,0.18);
+  background:var(--bg2);
+  border:1px solid var(--border2);
   color:var(--text-main);
 }
 .nav-folder.spotlight .nav-folder-head:hover{
-  background:linear-gradient(135deg, rgba(91,141,239,0.18), rgba(20,184,166,0.10));
+  background:var(--bg3);
 }
 .nav-folder-badge{
   display:inline-flex;align-items:center;justify-content:center;
   min-width:52px;height:20px;padding:0 8px;border-radius:999px;
-  background:rgba(91,141,239,0.14);color:#2563eb;border:1px solid rgba(91,141,239,0.18);
+  background:var(--bg3);color:var(--text-main);border:1px solid var(--border);
   font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
 }
 .nav-folder-children{
@@ -1337,9 +1353,9 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .earnings-empty{
   display:grid;place-items:center;text-align:left;height:100%;
   border:1px dashed var(--border2);border-radius:18px;padding:22px;
-  background:linear-gradient(145deg, rgba(91,141,239,0.08), rgba(20,184,166,0.03))
+  background:linear-gradient(145deg, rgba(232,80,10,0.08), rgba(232,80,10,0.02))
 }
-.earnings-empty-kicker{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2563eb;margin-bottom:8px}
+.earnings-empty-kicker{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#E8500A;margin-bottom:8px}
 .earnings-empty-title{font-size:20px;font-weight:800;letter-spacing:-.7px;color:var(--text-main);margin-bottom:8px}
 .earnings-empty-copy{font-size:13px;line-height:1.7;color:var(--text-muted);max-width:34ch;margin-bottom:14px}
 
@@ -1401,7 +1417,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
   padding: 0 18px;
   background: #0a0a0a;
   color: #fff;
-  border-left: 3px solid #5b8def;
+  border-left: 3px solid #E8500A;
   font-size: 13px;
   font-weight: 500;
   margin-bottom: 20px;
@@ -1601,7 +1617,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
   background:linear-gradient(145deg, rgba(91,141,239,0.10), rgba(20,184,166,0.06) 58%, rgba(255,255,255,0.02))
 }
 .invoice-prefill-copy{display:grid;gap:4px}
-.invoice-prefill-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2563eb}
+.invoice-prefill-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#E8500A}
 .invoice-prefill-sub{font-size:12.5px;color:var(--text-muted);max-width:58ch;line-height:1.6}
 .invoice-prefill-controls{display:grid;grid-template-columns:minmax(240px,320px) auto;gap:10px;align-items:center}
 .invoice-prefill-actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -1610,7 +1626,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .fin-table th{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
 .badge-pill{padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid var(--border)}
 .badge-paid{background:rgba(16,185,129,.08);color:#10b981;border-color:rgba(16,185,129,.26)}
-.badge-sent{background:rgba(59,130,246,.08);color:#3b82f6;border-color:rgba(59,130,246,.26)}
+.badge-sent{background:rgba(232,80,10,.08);color:#E8500A;border-color:rgba(232,80,10,.26)}
 .badge-overdue{background:rgba(239,68,68,.08);color:#ef4444;border-color:rgba(239,68,68,.24)}
 /* Opportunity empty state alignment fix */
 .opp-results-grid .opp-empty{
@@ -2520,7 +2536,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
 }
 .score-hot  { color: #ef4444; }
 .score-warm { color: #f59e0b; }
-.score-cool { color: #3b82f6; }
+.score-cool { color: #E8500A; }
 
 .opp-meta-row {
   display: flex;
@@ -3341,15 +3357,15 @@ html.dark .credits-warning-banner {
 }
 .qf-skill-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadow-md)}
 .qf-skill-card.active{
-  border-color:#5b8def;
-  background:linear-gradient(180deg, rgba(91,141,239,0.16), rgba(20,184,166,0.05)),var(--bg);
-  box-shadow:0 16px 34px rgba(37,99,235,0.14)
+  border-color:#E8500A;
+  background:linear-gradient(180deg, rgba(232,80,10,0.12), rgba(232,80,10,0.03)),var(--bg);
+  box-shadow:0 16px 34px rgba(232,80,10,0.10)
 }
 .qf-skill-icon{
   width:44px;height:44px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;
   border:1px solid var(--border);background:var(--bg-panel);color:var(--text-main)
 }
-.qf-skill-card.active .qf-skill-icon{border-color:rgba(91,141,239,0.22);background:rgba(91,141,239,0.12);color:#2563eb}
+.qf-skill-card.active .qf-skill-icon{border-color:rgba(232,80,10,0.22);background:rgba(232,80,10,0.12);color:#E8500A}
 .qf-skill-copy{min-width:0;display:grid;gap:5px;align-content:center}
 .qf-skill-name,.qf-skill-sub{display:block}
 .qf-skill-name{font-size:13px;font-weight:700;color:var(--text-main);line-height:1.35;margin:0}
@@ -3358,7 +3374,7 @@ html.dark .credits-warning-banner {
   width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--border);background:var(--bg);
   color:var(--text-main);font-size:13px;font-family:inherit;margin-bottom:18px;display:none
 }
-.qf-other-input:focus{outline:none;border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,0.10)}
+.qf-other-input:focus{outline:none;border-color:#E8500A;box-shadow:0 0 0 3px rgba(232,80,10,0.10)}
 .qf-other-input.show{display:block}
 .qf-bottom-row{
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end;margin-bottom:8px
@@ -3368,7 +3384,7 @@ html.dark .credits-warning-banner {
   width:100%;padding:12px 14px 12px 30px;border-radius:14px;border:1px solid var(--border2);background:var(--bg);
   color:var(--text-main);font-size:13px;font-family:inherit
 }
-.qf-income-wrap input:focus{outline:none;border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,0.10)}
+.qf-income-wrap input:focus{outline:none;border-color:#E8500A;box-shadow:0 0 0 3px rgba(232,80,10,0.10)}
 .qf-currency-symbol{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none}
 .qf-find-btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 20px;height:46px;
@@ -4600,7 +4616,8 @@ html.dark .btn-secondary .btn-spinner{
   .sb-nav{
     display:flex;
     align-items:center;
-    gap:10px;
+    justify-content:space-between;
+    gap:6px;
     height:100%;
     overflow-x:auto;
     padding:12px;
@@ -4609,22 +4626,28 @@ html.dark .btn-secondary .btn-spinner{
   .nav-folder-children{
     display:flex!important;
     align-items:center;
-    gap:10px;
+    gap:6px;
     max-height:none!important;
     overflow:visible!important;
     padding:0!important;
   }
   .nav-item{
-    min-width:max-content;
+    justify-content:center !important;
+    min-width:40px;
+    width:40px;
     margin:0;
-    padding:10px 12px;
+    padding:0;
     background:var(--bg-panel);
     border:1px solid var(--border);
   }
   .nav-item.active::before{display:none}
   .nav-item .nav-label{
-    opacity:1!important;
-    width:auto!important;
+    display:none !important;
+    opacity:0!important;
+    width:0!important;
+  }
+  .nav-item .icon{
+    margin:0 auto !important;
   }
   .header{
     padding:0 18px;
@@ -4690,14 +4713,14 @@ html.dark{
   --shadow-lg:none;
 }
 html{
-  font-size:14px;
+  font-size:13px;
   background:var(--bg);
 }
 html,body{
   background:var(--bg);
   color:var(--text-main);
   font-family:'Inter',system-ui,sans-serif;
-  font-size:14px;
+  font-size:13px;
   line-height:1.6;
   letter-spacing:0;
 }
@@ -4794,7 +4817,6 @@ textarea:focus{
 .dashboard-banner-title,
 .empty-state-heading,
 .tool-output-heading,
-.brand-wordmark,
 .header-title,
 .dashboard-panel-title,
 .analytics-panel-title,
@@ -4818,11 +4840,11 @@ textarea:focus{
 }
 #hero-greeting,
 #page-home .workspace-title{
-  font-family:'Instrument Serif',serif !important;
-  font-size:30px !important;
-  font-weight:400 !important;
-  line-height:1.05;
-  letter-spacing:-0.02em;
+  font-family:'Inter',system-ui,sans-serif !important;
+  font-size:28px !important;
+  font-weight:600 !important;
+  line-height:1.15;
+  letter-spacing:-0.03em;
 }
 #page-home .workspace-context{
   font-size:14px !important;
@@ -4892,10 +4914,15 @@ textarea:focus{
 .brand-monogram{
   display:none !important;
 }
-.brand-wordmark{
-  font-size:18px !important;
-  font-weight:700 !important;
-  letter-spacing:0 !important;
+.brand-wordmark,
+.logo-text,
+#logo,
+.sidebar-logo{
+  font-family:'Instrument Serif',serif !important;
+  font-size:20px !important;
+  font-weight:400 !important;
+  letter-spacing:-0.3px !important;
+  line-height:1;
   text-transform:lowercase;
 }
 .sb-collapse-btn{
@@ -4938,8 +4965,8 @@ textarea:focus{
 }
 .nav-folder-head,
 .nav-item{
-  min-height:34px !important;
-  height:34px !important;
+  min-height:32px !important;
+  height:32px !important;
   border-radius:6px !important;
   font-size:13px !important;
 }
@@ -4947,7 +4974,7 @@ textarea:focus{
   padding:0 10px !important;
 }
 .nav-item{
-  padding:0 10px 0 12px !important;
+  padding:0 10px !important;
   border:1px solid transparent !important;
   color:var(--text-muted) !important;
 }
@@ -4957,9 +4984,10 @@ textarea:focus{
   color:var(--text-main) !important;
 }
 .nav-item.active{
-  background:var(--accent-soft) !important;
+  background:rgba(232,80,10,0.08) !important;
   color:var(--accent) !important;
   border-left:2px solid var(--accent) !important;
+  border-radius:0 6px 6px 0 !important;
   font-weight:500 !important;
 }
 .nav-item.active::before{
@@ -4976,38 +5004,46 @@ textarea:focus{
   border-top:1px solid var(--border) !important;
   background:var(--bg) !important;
 }
-.sb-credits{
-  padding:10px 12px !important;
+.sb-credits,
+.ai-credits-block{
+  padding:8px 10px !important;
   border-radius:8px !important;
   background:var(--bg3) !important;
   border:1px solid var(--border) !important;
+  margin:8px !important;
 }
-.sb-credits-label{
+.sb-credits-label,
+.ai-credits-block .credits-label{
   margin-bottom:6px !important;
   font-size:10px !important;
   letter-spacing:.08em !important;
   color:var(--text-muted) !important;
+  text-transform:uppercase !important;
 }
-.sb-credits-bar-wrap{
+.sb-credits-bar-wrap,
+.ai-credits-bar{
   height:3px !important;
   margin-bottom:7px !important;
   background:var(--bg2) !important;
+  border-radius:99px !important;
+  overflow:hidden;
 }
 .sb-credits-bar{
   background:var(--accent) !important;
 }
-.sb-credits-num{
-  font-size:12px !important;
+.sb-credits-num,
+.ai-credits-text{
+  font-size:11px !important;
   color:var(--text-muted) !important;
 }
 .btn,
 .btn-primary,
 .btn-secondary,
 .btn-upgrade{
-  height:36px !important;
+  height:32px !important;
   border-radius:7px !important;
   box-shadow:none !important;
-  font-size:13px !important;
+  font-size:12px !important;
 }
 .btn-primary,
 .btn-upgrade,
@@ -5035,18 +5071,9 @@ textarea:focus{
 .btn-ghost{
   color:var(--text-muted) !important;
 }
-.sb-theme-toggle{
-  height:30px !important;
-  justify-content:flex-start !important;
-  border:none !important;
-  background:transparent !important;
-  color:var(--text-muted) !important;
-  padding:0 8px !important;
-  font-size:12px !important;
-}
-.sb-theme-toggle:hover{
-  background:var(--bg2) !important;
-  color:var(--text-main) !important;
+.btn-upgrade,
+.upgrade-btn{
+  margin:6px 8px 8px !important;
 }
 .field-label,
 .dashboard-panel-kicker,
@@ -5094,6 +5121,27 @@ textarea:focus{
   border-radius:10px !important;
   box-shadow:none !important;
 }
+html:not(.dark) .card,
+html:not(.dark) .result-box,
+html:not(.dark) .biz-card,
+html:not(.dark) .summary-stat,
+html:not(.dark) .saved-clients-panel,
+html:not(.dark) .pipeline-composer,
+html:not(.dark) .pipeline-toolbar,
+html:not(.dark) .analytics-panel,
+html:not(.dark) .kanban-board-col,
+html:not(.dark) .tool-card,
+html:not(.dark) .fin-card,
+html:not(.dark) .dashboard-panel,
+html:not(.dark) .analytics-metric-card,
+html:not(.dark) .qf-skill-card,
+html:not(.dark) .file-upload,
+html:not(.dark) .audit-download-card,
+html:not(.dark) .roadmap-teaser{
+  background:#ffffff !important;
+  border:1px solid #ebebeb !important;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05) !important;
+}
 html.dark .card,
 html.dark .result-box,
 html.dark .biz-card,
@@ -5117,6 +5165,11 @@ html.dark .roadmap-teaser{
 .tool-output-card,
 .dashboard-panel,
 .analytics-panel,
+.fin-card{
+  padding:14px 16px !important;
+}
+.stat-card,
+.biz-card,
 .fin-card{
   padding:14px 16px !important;
 }
@@ -5237,9 +5290,10 @@ html.dark .roadmap-teaser{
   gap:12px !important;
 }
 .pulse-card{
-  min-height:88px;
+  min-height:auto;
   padding:12px 14px !important;
-  border-left:2px solid var(--accent) !important;
+  border-top:2px solid var(--border) !important;
+  border-left:none !important;
 }
 .pulse-card-top{
   display:grid;
@@ -5287,12 +5341,12 @@ html.dark .roadmap-teaser{
 .dashboard-grid{
   display:grid;
   grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
-  gap:16px !important;
+  gap:12px !important;
 }
 .dashboard-grid-lower{
   display:grid;
   grid-template-columns:minmax(0,1.4fr) minmax(280px,.8fr);
-  gap:16px;
+  gap:12px;
 }
 .dashboard-panel-head{
   margin-bottom:14px !important;
@@ -5320,44 +5374,89 @@ html.dark .roadmap-teaser{
   color:#fff !important;
 }
 .earnings-chart-wrap{
+  display:grid !important;
+  grid-template-columns:40px minmax(0,1fr);
+  gap:10px !important;
   padding:12px !important;
   background:var(--bg-panel) !important;
   border-radius:10px !important;
 }
+.chart-y-labels{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:8px 0 28px;
+}
+.earnings-chart-stage{
+  min-width:0;
+}
+.earnings-chart{
+  transition:opacity .25s ease !important;
+}
 .earnings-chart-svg{
   height:220px !important;
 }
-.chart-label{
+.chart-label-row{
+  margin-top:8px !important;
+  grid-template-columns:repeat(var(--chart-points, 7), minmax(0, 1fr)) !important;
+}
+.chart-label,
+.chart-x-label,
+.chart-y-label{
   font-size:11px !important;
+  color:var(--text-muted) !important;
+  display:block !important;
+}
+.chart-x-label{
+  text-align:center;
 }
 .credits-widget{
   display:grid !important;
-  grid-template-columns:80px minmax(0,1fr);
+  grid-template-columns:72px minmax(0,1fr);
   gap:14px !important;
   align-items:center !important;
 }
-.credits-ring{
-  width:80px !important;
-  height:80px !important;
+.credits-ring,
+.credits-ring-container{
+  position:relative !important;
+  width:72px !important;
+  height:72px !important;
+  flex-shrink:0 !important;
 }
 .credits-ring svg{
-  width:80px !important;
-  height:80px !important;
+  width:72px !important;
+  height:72px !important;
 }
 .credits-ring-track,
 .credits-ring-progress{
   stroke-width:8 !important;
 }
-.credits-ring-value strong{
+.credits-ring-value,
+.credits-ring-label{
+  position:absolute !important;
+  inset:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  font-size:11px !important;
+  font-weight:600 !important;
+  line-height:1.1 !important;
+}
+.credits-ring-value strong,
+.credits-ring-label .pct{
   font-family:'Inter',system-ui,sans-serif !important;
   font-size:14px !important;
-  font-weight:600 !important;
-  letter-spacing:.04em;
+  font-weight:700 !important;
+  letter-spacing:0 !important;
 }
-.credits-ring-value span{
-  font-size:10px !important;
+.credits-ring-value span,
+.credits-ring-label .remaining-text{
+  font-size:8px !important;
   color:var(--text-muted) !important;
-  letter-spacing:.08em !important;
+  letter-spacing:.05em !important;
+  text-transform:uppercase !important;
 }
 .credits-copy{
   font-size:13px !important;
@@ -5471,7 +5570,8 @@ html.dark .roadmap-teaser{
 }
 .analytics-metric-card{
   padding:12px 14px !important;
-  border-left:2px solid var(--accent) !important;
+  border-top:2px solid var(--border) !important;
+  border-left:none !important;
 }
 .analytics-metric-value{
   font-size:26px !important;
@@ -5565,21 +5665,43 @@ html.dark .roadmap-teaser{
 
 /* Theme fix overrides */
 :root{
+  --sidebar-w-collapsed:52px;
   --accent-primary:#E8500A;
-  --accent-secondary:#F5A623;
+  --accent-secondary:#E8500A;
   --accent:#E8500A;
   --btn-bg:#E8500A;
   --btn-text:#ffffff;
   --accent-soft:#FFF0EB;
-  --bg-hover:#FFF5F0;
+  --bg-hover:#f3f1ed;
+  --bg:#FAFAF8;
+  --bg-panel:#ffffff;
+  --bg2:#ffffff;
+  --bg3:#f3f1ed;
+  --text-main:#171717;
+  --text-muted:#6b6b6b;
+  --text3:#9a9a9a;
+  --border:#ebebeb;
+  --border2:#d7d7d7;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md:0 1px 3px rgba(0,0,0,0.05);
+  --shadow-lg:0 1px 3px rgba(0,0,0,0.05);
 }
 html.dark{
+  --bg:#0f0f0f;
+  --bg-panel:#151515;
+  --bg2:#151515;
+  --bg3:#1c1c1c;
+  --text-main:#f5f5f5;
+  --text-muted:#a3a3a3;
+  --text3:#737373;
+  --border:#2a2a2a;
+  --border2:#363636;
   --accent:#E8500A;
   --accent-soft:#1F1208;
-  --bg-hover:#1A0F08;
+  --bg-hover:#1c1c1c;
 }
 html:not(.dark) body{
-  background:linear-gradient(180deg, #FAFAF8 0%, #F5F3F0 100%) !important;
+  background:#FAFAF8 !important;
 }
 html:not(.dark) .main,
 html:not(.dark) .content-scroll,
@@ -5587,19 +5709,20 @@ html:not(.dark) .content-inner{
   background:transparent !important;
 }
 #login-screen{
-  background:linear-gradient(135deg, #FFF8F5 0%, #FFF0EB 46%, #FAFAF8 100%) !important;
+  background:linear-gradient(135deg, #FFF8F5 0%, #FAFAF8 100%) !important;
 }
 #hero-greeting,
 .hero-greeting,
 #page-home .workspace-title{
-  font-family:'Instrument Serif',serif !important;
-  font-size:30px !important;
-  font-weight:400 !important;
+  font-family:'Inter',system-ui,sans-serif !important;
+  font-size:28px !important;
+  font-weight:600 !important;
 }
 .nav-item.active{
-  background:var(--accent-soft) !important;
+  background:rgba(232,80,10,0.08) !important;
   color:var(--accent-primary) !important;
   border-left:2px solid var(--accent-primary) !important;
+  border-radius:0 6px 6px 0 !important;
 }
 .nav-item.active::before{
   display:none !important;
@@ -5671,10 +5794,172 @@ textarea:focus-visible{
 .biz-metric-card,
 .opp-radar-card,
 .opp-radar-icon,
-.login-kicker-dot,
 .login-showcase,
 .login-showcase::before{
   box-shadow:none !important;
+}
+html.dark .card,
+html.dark .result-box,
+html.dark .biz-card,
+html.dark .summary-stat,
+html.dark .saved-clients-panel,
+html.dark .pipeline-composer,
+html.dark .pipeline-toolbar,
+html.dark .analytics-panel,
+html.dark .kanban-board-col,
+html.dark .tool-card,
+html.dark .fin-card,
+html.dark .dashboard-panel,
+html.dark .analytics-metric-card,
+html.dark .qf-skill-card,
+html.dark .file-upload,
+html.dark .audit-download-card,
+html.dark .roadmap-teaser{
+  box-shadow:none !important;
+  border:1px solid var(--border) !important;
+}
+#login-screen,
+#onboarding-screen{
+  background:linear-gradient(135deg, #FFF8F5 0%, #FAFAF8 100%) !important;
+}
+#login-screen::before,
+#login-screen::after,
+#onboarding-screen::before,
+#onboarding-screen::after,
+.login-showcase::before,
+#ob-logo-intro::before{
+  display:none !important;
+  background:none !important;
+}
+#onboarding-wizard,
+.onboarding-card{
+  max-width:480px !important;
+  width:min(480px, 100%) !important;
+  background:#ffffff !important;
+  border:1px solid #ebebeb !important;
+  box-shadow:0 8px 32px rgba(0,0,0,0.08) !important;
+  border-radius:18px !important;
+  padding:28px !important;
+}
+.ob-progress-fill{
+  background:#E8500A !important;
+}
+.ob-chip.selected{
+  background:rgba(232,80,10,0.08) !important;
+  border-color:#E8500A !important;
+  color:#E8500A !important;
+}
+.ob-title{
+  font-family:'Inter',system-ui,sans-serif !important;
+  font-size:26px !important;
+  font-weight:600 !important;
+  line-height:1.15 !important;
+  color:#171717 !important;
+}
+.ob-title.welcome-title{
+  font-family:'Instrument Serif',serif !important;
+  font-size:42px !important;
+  font-weight:400 !important;
+  letter-spacing:-0.04em !important;
+}
+.ob-subtitle{
+  font-size:14px !important;
+  color:var(--text-muted) !important;
+}
+.ob-step-label{
+  font-size:11px !important;
+  font-weight:600 !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+  color:var(--text-muted) !important;
+}
+.ob-chip{
+  border-radius:999px !important;
+  border:1px solid var(--border) !important;
+  background:#ffffff !important;
+  color:#171717 !important;
+}
+.kanban-col-header,
+.pipeline-col-header,
+.kanban-header,
+.client-status-badge.active,
+.pipeline-stage-label{
+  background:rgba(232,80,10,0.08) !important;
+  color:#E8500A !important;
+  border-color:rgba(232,80,10,0.2) !important;
+}
+.kanban-col-badge{
+  background:rgba(232,80,10,0.08) !important;
+  color:#E8500A !important;
+  border:1px solid rgba(232,80,10,0.2) !important;
+}
+.stage-lead{
+  background:rgba(232,80,10,0.08) !important;
+  color:#E8500A !important;
+}
+.stage-active{
+  background:rgba(34,197,94,0.08) !important;
+  color:#16a34a !important;
+}
+.stage-closed{
+  background:rgba(107,114,128,0.08) !important;
+  color:#6b7280 !important;
+}
+.clients-page .btn-primary,
+.manage-clients .btn-blue,
+.pipeline-add-btn{
+  background:#E8500A !important;
+  border-color:#E8500A !important;
+  color:#ffffff !important;
+}
+.login-kicker-dot{
+  background:#E8500A !important;
+  box-shadow:none !important;
+}
+.client-avatar,
+.activity-icon,
+.status-pill.closed{
+  background:var(--bg3) !important;
+  color:var(--text-main) !important;
+  border-color:var(--border) !important;
+}
+.header-avatar{
+  background:var(--bg2) !important;
+  color:var(--text-main) !important;
+}
+.upgrade-btn-text{
+  display:inline !important;
+}
+.sidebar.collapsed{
+  width:52px !important;
+}
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .ws-name,
+.sidebar.collapsed .ws-chevron,
+.sidebar.collapsed .sb-section,
+.sidebar.collapsed .ai-credits-block,
+.sidebar.collapsed .upgrade-btn-text{
+  opacity:0 !important;
+  width:0 !important;
+  overflow:hidden !important;
+  pointer-events:none !important;
+}
+.sidebar.collapsed .nav-item{
+  justify-content:center !important;
+  padding:0 !important;
+}
+.sidebar.collapsed .nav-item i,
+.sidebar.collapsed .nav-item svg{
+  margin:0 auto !important;
+}
+.sidebar.collapsed .upgrade-btn{
+  width:36px !important;
+  height:36px !important;
+  padding:0 !important;
+  border-radius:8px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
 }
 </style>
 </head>
@@ -5836,27 +6121,27 @@ textarea:focus-visible{
   <div id="onboarding-wizard">
 
     <div class="ob-progress-bar">
-      <div class="ob-progress-fill" id="ob-progress-fill" style="width:25%"></div>
+      <div class="ob-progress-fill" id="ob-progress-fill" style="width:20%"></div>
     </div>
 
     <div class="ob-body">
 
-      <!-- STEP 1: Identity + Skill -->
+      <!-- STEP 1: Welcome -->
       <div class="ob-step active" id="ob-step-1">
         <div class="ob-step-label">
           <span class="ob-step-dot active"></span>
           <span class="ob-step-dot"></span>
           <span class="ob-step-dot"></span>
           <span class="ob-step-dot"></span>
-          &nbsp;Step 1 of 4
+          &nbsp;Step 1 of 5
         </div>
-        <div class="ob-title">Let's build your<br>Freelance OS.</div>
-        <div class="ob-subtitle">60 seconds. Every AI tool becomes smarter for you.</div>
-        <div class="field-group">
+        <div class="ob-title welcome-title">Welcome to Lancify</div>
+        <div class="ob-subtitle">Let's set up your workspace in 60 seconds.</div>
+        <div class="field-group" style="display:none">
           <label class="field-label">Your name</label>
           <input type="text" id="ob-name" placeholder="e.g. Rahul Sharma" style="height:40px">
         </div>
-        <div class="field-group" style="margin-bottom:0">
+        <div class="field-group" style="display:none;margin-bottom:0">
           <label class="field-label">Your primary skill — be specific</label>
           <input type="text" id="ob-skills" placeholder="e.g. Short-form video editing, UI design, Copywriting" style="height:40px">
         </div>
@@ -5961,13 +6246,21 @@ textarea:focus-visible{
         </div>
       </div>
 
+      <div class="ob-step" id="ob-step-5">
+        <div class="ob-step-label">Step 5 of 5</div>
+        <div class="ob-title">Which platform<br>do you use?</div>
+        <div class="ob-subtitle">We'll tailor proposals, outreach, and examples around where you work today.</div>
+        <div class="field-group" id="ob-platform-slot"></div>
+        <div class="field-group" id="ob-niche-slot" style="margin-bottom:0"></div>
+      </div>
+
     </div><!-- /ob-body -->
 
     <div class="ob-footer">
       <button id="ob-back-btn" onclick="obBack()" style="visibility:hidden">← Back</button>
       <div style="display:flex;align-items:center;gap:16px">
-        <span class="ob-step-counter" id="ob-step-counter">1 / 4</span>
-        <button id="ob-next-btn" onclick="obNext()">Continue →</button>
+        <span class="ob-step-counter" id="ob-step-counter">1 / 5</span>
+        <button id="ob-next-btn" onclick="obNext()">Get Started →</button>
       </div>
     </div>
 
@@ -5980,7 +6273,7 @@ textarea:focus-visible{
     <div class="sb-logo">
       <div class="brand-lockup">
         <span class="brand-monogram">L</span>
-        <span class="brand-wordmark">lancify</span>
+        <span id="logo" class="brand-wordmark sidebar-logo logo-text">lancify</span>
       </div>
 
       <button class="sb-collapse-btn" id="sb-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
@@ -6057,18 +6350,14 @@ textarea:focus-visible{
     </nav>
 
     <div class="sb-bottom">
-      <div class="sb-credits">
-        <div class="sb-credits-label">AI Credits</div>
-        <div class="sb-credits-bar-wrap"><div class="sb-credits-bar" id="credits-bar"></div></div>
-        <div class="sb-credits-num"><span id="credits-remaining">850</span> / <span id="credits-total">1,000</span> remaining</div>
+      <div class="sb-credits ai-credits-block">
+        <div class="sb-credits-label credits-label">AI Credits</div>
+        <div class="sb-credits-bar-wrap ai-credits-bar"><div class="sb-credits-bar" id="credits-bar"></div></div>
+        <div class="sb-credits-num ai-credits-text"><span id="credits-remaining">850</span> / <span id="credits-total">1,000</span> remaining</div>
       </div>
-      <button class="btn-upgrade" onclick="showUpgradeModal()">
+      <button class="btn-upgrade upgrade-btn" onclick="showUpgradeModal()">
         <i data-lucide="zap" style="width:13px;height:13px"></i>
-        <span class="upgrade-label">Upgrade to Pro</span>
-      </button>
-      <button class="btn sb-theme-toggle" onclick="toggleTheme()">
-        <i data-lucide="sun-moon" style="width:14px;height:14px"></i>
-        <span>Toggle Theme</span>
+        <span class="upgrade-label upgrade-btn-text">Upgrade to Pro</span>
       </button>
     </div>
   </aside>
@@ -6945,17 +7234,17 @@ textarea:focus-visible{
         
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
           <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">BILL TO</div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;">BILL TO</div>
             <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
             <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
           </div>
           <div style="text-align:right;">
             <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DATE ISSUED</span><br>
+              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;">DATE ISSUED</span><br>
               <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
             </div>
             <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;">DUE DATE</span><br>
+              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;">DUE DATE</span><br>
               <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
             </div>
           </div>
@@ -6987,13 +7276,13 @@ textarea:focus-visible{
         </div>
         
         <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">NOTES</div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:6px;">NOTES</div>
           <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
         </div>
         
         <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#94a3b8;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#94a3b8;" id="pdf-footer-email"></div>
+          <div style="font-size:11px;color:#9a9a9a;">Generated by Lancify</div>
+          <div style="font-size:11px;color:#9a9a9a;" id="pdf-footer-email"></div>
         </div>
       </div>
 
@@ -7152,17 +7441,17 @@ textarea:focus-visible{
           <div><label class="field-label">Main Niche</label><input type="text" id="prof-niche" placeholder="e.g. YouTube Thumbnails"></div>
           <div><label class="field-label">Target Platform</label>
             <select id="prof-platform">
-              <option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Both</option>
+              <option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Direct Clients</option><option>Other</option>
             </select>
           </div>
           <div><label class="field-label">Experience Level</label>
             <select id="prof-exp-level">
-              <option>Complete Beginner</option><option>Had 1-2 clients</option><option>3-6 months experience</option><option>6+ months experience</option>
+              <option>Complete Beginner</option><option>Some Experience</option><option>Already Freelancing</option>
             </select>
           </div>
           <div><label class="field-label">Monthly Income Goal</label>
             <select id="prof-goal">
-              <option>$500-$1,000</option><option>$1,000-$2,500</option><option>$2,500-$5,000</option><option>$5,000+</option>
+              <option>$500/mo</option><option>$1,000/mo</option><option>$2,500/mo</option><option>$5,000+/mo</option>
             </select>
           </div>
           <div><label class="field-label">Hours Available / Day</label>
@@ -8875,22 +9164,34 @@ function applyTheme(theme) {
   }
 }
 
+function _themeStorageKey(uid = currentUser?.id || 'guest') {
+  return `lancify-theme-${uid || 'guest'}`;
+}
+
+function persistThemePreference(theme, uid = currentUser?.id || 'guest') {
+  localStorage.setItem('lancify-theme', theme);
+  localStorage.setItem(_themeStorageKey(uid), theme);
+}
+
+function getSavedThemePreference(uid = currentUser?.id || 'guest') {
+  return localStorage.getItem(_themeStorageKey(uid)) || localStorage.getItem('lancify-theme');
+}
+
 function toggleTheme() {
   const isDark = document.documentElement.classList.contains('dark');
   const newTheme = isDark ? 'light' : 'dark';
   applyTheme(newTheme);
-  const themeKey = `lancify-theme-${currentUser?.id || 'guest'}`;
-  localStorage.setItem(themeKey, newTheme);
+  persistThemePreference(newTheme);
   lucide.createIcons();
 }
 
 (function initTheme() {
-  // Theme applied in onLogin to ensure user context
+  const saved = getSavedThemePreference();
+  if (saved) applyTheme(saved);
 })();
 
 function applySavedTheme() {
-  const themeKey = `lancify-theme-${currentUser?.id || 'guest'}`;
-  const saved = localStorage.getItem(themeKey);
+  const saved = getSavedThemePreference();
   if (saved) {
     applyTheme(saved);
   } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -8995,6 +9296,7 @@ let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
 let billingState = { total: 1000, remaining: 1000, cycleStart: null, usage: {} };
 let homeEarningsRange = '30d';
+let currentPage = 'home';
 let latestEmailDraft = { subject: '', body: '' };
 const CRM_STAGE_ORDER = ['pitched','replied','won'];
 const CRM_STAGE_META = {
@@ -9416,6 +9718,7 @@ function dismissGuideBanner(page) {
 }
 
 function navigate(page) {
+  currentPage = page;
   if (_isPageLocked(page)) {
     showToast('This feature is available on Pro plan.');
     showUpgradeModal();
@@ -9477,6 +9780,7 @@ function navigate(page) {
   setText('header-title', titles[page]||'Dashboard');
   if (page === 'invoices') renderInvoices();
   if (page === 'accounting' || page === 'home') renderBusinessDashboard();
+  if (page === 'home') setTimeout(initDashboardCharts, 50);
   if (page === 'pipeline') { 
     renderManagedOpportunityClients(); 
     renderPipeline(); 
@@ -9515,7 +9819,7 @@ function openStartHere(){
     const section = el('home-start-here');
     if (!section) return;
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    section.style.boxShadow = '0 0 0 2px rgba(91,141,239,0.22), var(--shadow-lg)';
+    section.style.boxShadow = '0 0 0 2px rgba(232,80,10,0.22), var(--shadow-lg)';
     setTimeout(() => { section.style.boxShadow = ''; }, 1400);
   }, 120);
 }
@@ -9914,7 +10218,7 @@ async function findGigs(){
         skills,
         platform:   val('gig-platform'),
         experience: userProfile.exp_level  || 'Beginner — no reviews yet',
-        budget:     userProfile.income_goal|| '$1,000-$2,500/month to start'
+        budget:     userProfile.income_goal|| '$1,000/mo to start'
       })
     });
     const data=await res.json();
@@ -10159,7 +10463,7 @@ async function findGigs(){
         skills,
         platform:   val('gig-platform'),
         experience: userProfile.exp_level  || 'Beginner - no reviews yet',
-        budget:     userProfile.income_goal|| '$1,000-$2,500/month to start'
+        budget:     userProfile.income_goal|| '$1,000/mo to start'
       })
     });
     const data=await res.json();
@@ -10413,7 +10717,7 @@ function _renderOppCard(lead) {
           <div style="font-size:12.5px;line-height:1.65;color:var(--text-main)">${escapeHtml(strategy)}</div>
         </div>
       </div>
-      <div style="padding:11px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(20,184,166,0.07)">
+      <div style="padding:11px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg3)">
         <div class="ai-result-label" style="margin-bottom:8px">Why now</div>
         <div style="font-size:12.5px;line-height:1.7;color:var(--text-main)">${escapeHtml(whyNow)}</div>
       </div>
@@ -10943,8 +11247,11 @@ function injectBusinessDashboardWidgets(){
           </div>
           <div class="earnings-shell">
             <div class="earnings-chart-wrap">
-              <div id="home-earnings-chart"></div>
-              <div class="chart-label-row" id="home-chart-labels"></div>
+              <div class="chart-y-labels" id="home-chart-y-labels"></div>
+              <div class="earnings-chart-stage">
+                <div id="home-earnings-chart" class="earnings-chart"></div>
+                <div class="chart-label-row" id="home-chart-labels"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -10957,14 +11264,14 @@ function injectBusinessDashboardWidgets(){
             </div>
           </div>
           <div class="credits-widget">
-            <div class="credits-ring">
+            <div class="credits-ring credits-ring-container">
               <svg viewBox="0 0 100 100" aria-hidden="true">
                 <circle class="credits-ring-track" cx="50" cy="50" r="36"></circle>
                 <circle class="credits-ring-progress" id="home-credits-ring" cx="50" cy="50" r="36"></circle>
               </svg>
-              <div class="credits-ring-value">
-                <strong id="home-credits-pct">100%</strong>
-                <span>Remaining</span>
+              <div class="credits-ring-value credits-ring-label">
+                <strong id="home-credits-pct" class="pct">100%</strong>
+                <span class="remaining-text">Remaining</span>
               </div>
             </div>
             <div class="credits-meta">
@@ -11126,8 +11433,7 @@ function enhanceProfileBanners(){
 }
 
 function setHomeEarningsRange(range){
-  homeEarningsRange = range;
-  renderBusinessDashboard();
+  switchChartPeriod(range);
 }
 
 function getHomeTimeline(range = '30d'){
@@ -11225,14 +11531,33 @@ function renderMiniSparkline(id, values = []){
   `;
 }
 
-function getDashboardChangeBadge(change, inverse = false){
-  const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '->';
-  let cls = 'neutral';
-  if (change !== 0) {
-    const isPositive = inverse ? change < 0 : change > 0;
-    cls = isPositive ? 'positive' : 'negative';
+function hasDashboardMetricHistory(metricKey, minimumDaysAgo = 7){
+  const cutoff = _dayStart(new Date(Date.now() - (minimumDaysAgo * 86400000))).getTime();
+  if (metricKey === 'clients') {
+    return [...userLeads, ...opportunityClients].some(item => new Date(item.created_at || Date.now()).getTime() < cutoff);
   }
-  return { text: `${arrow} ${Math.abs(change)}%`, cls };
+  if (metricKey === 'active') {
+    return userLeads.some(lead => ['pitched','replied'].includes((lead.status || '').toLowerCase()) && new Date(lead.created_at || Date.now()).getTime() < cutoff);
+  }
+  if (metricKey === 'closed') {
+    return userLeads.some(lead => (lead.status || '').toLowerCase() === 'won' && new Date(lead.created_at || Date.now()).getTime() < cutoff);
+  }
+  if (metricKey === 'outstanding') {
+    return userInvoices.some(inv => (inv.status || '').toLowerCase() !== 'paid' && new Date(inv.created_at || inv.due_date || Date.now()).getTime() < cutoff);
+  }
+  return false;
+}
+
+function renderStatChange(current, previous, inverse = false, hasHistory = true){
+  if (!hasHistory) return { text: '—', cls: 'neutral' };
+  if (!previous || previous === 0) return { text: '— New', cls: 'neutral' };
+  const pct = Math.round(((current - previous) / previous) * 100);
+  if (pct === 0) return { text: '→ 0%', cls: 'neutral' };
+  const improved = inverse ? pct < 0 : pct > 0;
+  return {
+    text: `${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct)}%`,
+    cls: improved ? 'positive' : 'negative'
+  };
 }
 
 function renderHomePulseMeta(){
@@ -11246,10 +11571,7 @@ function renderHomePulseMeta(){
     const previousSeries = buildDashboardMetricSeries(metric.key, 13, 7);
     const currentTotal = currentSeries.reduce((sum, item) => sum + Number(item.value || 0), 0);
     const previousTotal = previousSeries.reduce((sum, item) => sum + Number(item.value || 0), 0);
-    const change = previousTotal === 0
-      ? (currentTotal > 0 ? 100 : 0)
-      : Math.round(((currentTotal - previousTotal) / previousTotal) * 100);
-    const badge = getDashboardChangeBadge(change, metric.inverse);
+    const badge = renderStatChange(currentTotal, previousTotal, metric.inverse, hasDashboardMetricHistory(metric.key, 7));
     const badgeEl = el(`${metric.base}-change`);
     if (badgeEl) {
       badgeEl.className = `pulse-change ${badge.cls}`;
@@ -11257,6 +11579,65 @@ function renderHomePulseMeta(){
     }
     renderMiniSparkline(`${metric.base}-spark`, currentSeries.map(item => item.value));
   });
+}
+
+const _chartInstances = {};
+
+function destroyChart(key) {
+  const instance = _chartInstances[key];
+  if (!instance) return;
+  if (instance.timer) clearTimeout(instance.timer);
+  delete _chartInstances[key];
+}
+
+function formatChartAxisValue(value){
+  const amount = Number(value || 0);
+  if (amount >= 1000) {
+    const short = amount >= 10000 ? Math.round(amount / 1000) : Math.round(amount / 100) / 10;
+    return `$${short}k`;
+  }
+  return formatCurrency(amount);
+}
+
+function switchChartPeriod(period, options = {}){
+  const { force = false } = options;
+  if (!force && period === homeEarningsRange) return;
+  homeEarningsRange = period;
+
+  ['7d','30d','90d'].forEach(range => el(`home-range-${range}`)?.classList.toggle('active', homeEarningsRange === range));
+
+  const chartEl = el('home-earnings-chart');
+  const xLabels = el('home-chart-labels');
+  const yLabels = el('home-chart-y-labels');
+  if (!chartEl || !xLabels || !yLabels) return;
+
+  destroyChart('earnings');
+  chartEl.style.opacity = '0';
+  xLabels.style.opacity = '0';
+  yLabels.style.opacity = '0';
+
+  const timer = setTimeout(() => {
+    renderHomeEarningsChart();
+    chartEl.style.opacity = '1';
+    xLabels.style.opacity = '1';
+    yLabels.style.opacity = '1';
+    _chartInstances.earnings = {};
+  }, 250);
+
+  _chartInstances.earnings = { timer };
+}
+
+function initDashboardCharts(){
+  if (!isDashboardVisible()) return;
+  destroyChart('earnings');
+  const chartEl = el('home-earnings-chart');
+  const xLabels = el('home-chart-labels');
+  const yLabels = el('home-chart-y-labels');
+  if (chartEl) chartEl.style.opacity = '1';
+  if (xLabels) xLabels.style.opacity = '1';
+  if (yLabels) yLabels.style.opacity = '1';
+  renderHomeEarningsChart();
+  _chartInstances.earnings = {};
 }
 
 function getHomeMonthlyRevenue(){
@@ -11294,11 +11675,13 @@ function renderHomeMonthlyTarget(){
 function renderHomeEarningsChart(){
   const host = el('home-earnings-chart');
   const labels = el('home-chart-labels');
-  if (!host || !labels) return;
+  const yLabels = el('home-chart-y-labels');
+  if (!host || !labels || !yLabels) return;
 
   ['7d','30d','90d'].forEach(range => el(`home-range-${range}`)?.classList.toggle('active', homeEarningsRange === range));
 
   const points = getHomeTimeline(homeEarningsRange);
+  labels.style.setProperty('--chart-points', String(points.length));
   const max = Math.max(...points.map(item => item.value), 1);
   const w = 720;
   const h = 220;
@@ -11315,6 +11698,7 @@ function renderHomeEarningsChart(){
   if (!coords.some(point => point.value > 0)) {
     host.innerHTML = `<div class="empty-state centered" style="min-height:220px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No earnings yet</div><p class="empty-state-copy">Once deals close and invoices are paid, your revenue trend will appear here.</p></div>`;
     labels.innerHTML = '';
+    yLabels.innerHTML = '';
     return;
   }
 
@@ -11333,7 +11717,8 @@ function renderHomeEarningsChart(){
       ${coords.map(point => `<circle cx="${point.x}" cy="${point.y}" r="4" fill="var(--accent)"></circle>`).join('')}
     </svg>
   `;
-  labels.innerHTML = points.map(point => `<div class="chart-label">${escapeHtml(point.label)}</div>`).join('');
+  yLabels.innerHTML = [max, max / 2, 0].map(value => `<div class="chart-y-label">${escapeHtml(formatChartAxisValue(value))}</div>`).join('');
+  labels.innerHTML = points.map(point => `<div class="chart-x-label">${escapeHtml(point.label)}</div>`).join('');
 }
 
 function renderHomeCreditsWidget(total, remaining){
@@ -12120,7 +12505,7 @@ function previewInvoicePdf() {
   const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   const dueDateFormatted = dueDate ? new Date(dueDate).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) : 'On receipt';
   
-  const statusStyles = { paid: 'background:#dcfce7;color:#166534;', sent: 'background:#dbeafe;color:#1d4ed8;', overdue: 'background:#fee2e2;color:#dc2626;' };
+  const statusStyles = { paid: 'background:#dcfce7;color:#166534;', sent: 'background:rgba(232,80,10,0.08);color:#E8500A;', overdue: 'background:#fee2e2;color:#dc2626;' };
   
   setText('pdf-invoice-number', invNum);
   setText('pdf-freelancer-name', freelancerName);
@@ -12507,7 +12892,7 @@ function renderBusinessDashboard(){
   updateHomeHeroContext(activeDeals, totalClientsAll, opportunityClients.length);
   updateChecklistUi();
   renderHomePulseMeta();
-  renderHomeEarningsChart();
+  initDashboardCharts();
   renderHomeCreditsWidget(Number(billingState.total || 1000), Number(billingState.remaining || 0));
   renderHomeMonthlyTarget();
   renderHomeActivityFeed();
@@ -12895,7 +13280,7 @@ document.addEventListener('click',e=>{
    ══════════════════════════════════════════════════════════ */
 
 let _obStep = 1;
-const OB_TOTAL = 4;
+const OB_TOTAL = 5;
 
 /* ── Quote bank — personalised per goal ── */
 const _obQuotes = {
@@ -12904,27 +13289,170 @@ const _obQuotes = {
     { q: "Your first client won't come from perfection. They'll come from action.", a: "Lancify" },
     { q: "Every expert was once a beginner. Every pro was once unpaid.", a: "Lancify" },
   ],
-  "$500-$1,000": [
-    { q: "$1,000 starts with one 'yes'. Your workspace is ready.", a: "Lancify" },
+  "$500/mo": [
+    { q: "$500 starts with one 'yes'. Your workspace is ready.", a: "Lancify" },
     { q: "Small goals, executed daily, create extraordinary results.", a: "Lancify" },
     { q: "Your first income from freelancing changes everything. Let's go get it.", a: "Lancify" },
   ],
-  "$1,000-$2,500": [
-    { q: "$2,500 a month can come from a few strong retainers. That's achievable starting today.", a: "Lancify" },
+  "$1,000/mo": [
+    { q: "$1,000 a month can start with one solid retainer. That's achievable starting today.", a: "Lancify" },
     { q: "Consistency beats talent when talent doesn't show up.", a: "Lancify" },
     { q: "The workspace is set. The strategy is ready. The move is yours.", a: "Lancify" },
   ],
-  "$2,500-$5,000": [
-    { q: "$5,000 months are built on systems, not luck. You're building yours now.", a: "Lancify" },
+  "$2,500/mo": [
+    { q: "$2,500 months are built on systems, not luck. You're building yours now.", a: "Lancify" },
     { q: "You don't need more skills. You need the right system to sell them.", a: "Lancify" },
     { q: "Professionals build processes. Your OS is now live.", a: "Lancify" },
   ],
-  "$5,000+": [
+  "$5,000+/mo": [
     { q: "Six-figure freelancers don't work harder. They work with better systems.", a: "Lancify" },
     { q: "The freelancers who win are the ones who treat it like a business.", a: "Lancify" },
     { q: "You're not just a freelancer. You're a one-person studio. Act like it.", a: "Lancify" },
   ]
 };
+
+function setupOnboardingFlow() {
+  const step1 = el('ob-step-1');
+  const step2 = el('ob-step-2');
+  const step3 = el('ob-step-3');
+  const step4 = el('ob-step-4');
+  if (!step1 || !step2 || !step3 || !step4) return;
+
+  let step5 = el('ob-step-5');
+  if (!step5) {
+    step5 = document.createElement('div');
+    step5.className = 'ob-step';
+    step5.id = 'ob-step-5';
+    step5.innerHTML = `
+      <div class="ob-step-label">Step 5 of 5</div>
+      <div class="ob-title">Which platform<br>do you use?</div>
+      <div class="ob-subtitle">We'll tailor proposals, outreach, and examples around where you work today.</div>
+      <div class="field-group" id="ob-platform-slot"></div>
+      <div class="field-group" id="ob-niche-slot" style="margin-bottom:0"></div>
+    `;
+    step4.insertAdjacentElement('afterend', step5);
+  }
+
+  const setStepCopy = (step, number, title, subtitle, titleClass = '') => {
+    const label = step.querySelector('.ob-step-label');
+    const heading = step.querySelector('.ob-title');
+    const copy = step.querySelector('.ob-subtitle');
+    if (label) label.textContent = `Step ${number} of ${OB_TOTAL}`;
+    if (heading) {
+      heading.innerHTML = title;
+      heading.classList.toggle('welcome-title', titleClass === 'welcome-title');
+    }
+    if (copy) copy.textContent = subtitle;
+  };
+
+  setStepCopy(step1, 1, 'Welcome to Lancify', "Let's set up your workspace in 60 seconds.", 'welcome-title');
+  setStepCopy(step2, 2, "What's your name and<br>primary skill?", 'This helps Lancify personalize your workspace, prompts, and recommendations.');
+  setStepCopy(step3, 3, "What's your<br>experience level?", "We'll tune the product around where you're starting from today.");
+  setStepCopy(step4, 4, "What's your<br>income goal?", "We'll use this to shape the way Lancify frames opportunities and momentum.");
+  setStepCopy(step5, 5, 'Which platform<br>do you use?', "We'll tailor proposals, outreach, and examples around where you work today.");
+
+  const step1Groups = step1.querySelectorAll('.field-group');
+  const nameGroup = step1Groups[0];
+  const skillGroup = step1Groups[1];
+  if (nameGroup && skillGroup) {
+    nameGroup.style.display = '';
+    skillGroup.style.display = '';
+    const firstField = step2.querySelector('.field-group');
+    if (!step2.querySelector('#ob-name')) step2.insertBefore(nameGroup, firstField);
+    if (!step2.querySelector('#ob-skills')) nameGroup.insertAdjacentElement('afterend', skillGroup);
+  }
+
+  const step2Groups = step2.querySelectorAll('.field-group');
+  const expGroup = [...step2Groups].find(group => group.querySelector('#ob-exp'));
+  const hoursGroup = [...step2Groups].find(group => group.querySelector('#ob-hours'));
+  const challengeGroup = [...step2Groups].find(group => group.querySelector('#ob-challenge'));
+  if (hoursGroup) hoursGroup.style.display = 'none';
+  if (challengeGroup) challengeGroup.style.display = 'none';
+
+  const step3Groups = step3.querySelectorAll('.field-group');
+  const platformGroup = [...step3Groups].find(group => group.querySelector('#ob-platform'));
+  const nicheGroup = [...step3Groups].find(group => group.querySelector('#ob-niche'));
+  if (expGroup && !step3.querySelector('#ob-exp')) {
+    expGroup.style.display = '';
+    step3.appendChild(expGroup);
+  }
+
+  const expChips = step3.querySelectorAll('#ob-exp-chips .ob-chip');
+  if (expChips[0]) {
+    expChips[0].dataset.val = 'Complete Beginner';
+    expChips[0].textContent = 'Complete Beginner';
+  }
+  if (expChips[1]) {
+    expChips[1].dataset.val = 'Some Experience';
+    expChips[1].textContent = 'Some Experience';
+  }
+  if (expChips[2]) {
+    expChips[2].dataset.val = 'Already Freelancing';
+    expChips[2].textContent = 'Already Freelancing';
+  }
+  if (expChips[3]) expChips[3].remove();
+
+  const step4Fields = step4.querySelectorAll('.field-group');
+  const goalGroup = [...step4Fields].find(group => group.querySelector('#ob-goal'));
+  const extraGroup = [...step4Fields].find(group => group.querySelector('#ob-extra'));
+  if (extraGroup) extraGroup.style.display = 'none';
+  const goalLabel = goalGroup?.querySelector('.field-label');
+  if (goalLabel) goalLabel.textContent = 'Monthly income goal';
+  const goalChips = step4.querySelectorAll('#ob-goal-chips .ob-chip');
+  if (goalChips[0]) {
+    goalChips[0].dataset.val = '$500/mo';
+    goalChips[0].textContent = '$500/mo';
+  }
+  if (goalChips[1]) {
+    goalChips[1].dataset.val = '$1,000/mo';
+    goalChips[1].textContent = '$1,000/mo';
+  }
+  if (goalChips[2]) {
+    goalChips[2].dataset.val = '$2,500/mo';
+    goalChips[2].textContent = '$2,500/mo';
+  }
+  if (goalChips[3]) {
+    goalChips[3].dataset.val = '$5,000+/mo';
+    goalChips[3].textContent = '$5,000+/mo';
+  }
+
+  const platformSlot = step5.querySelector('#ob-platform-slot');
+  const nicheSlot = step5.querySelector('#ob-niche-slot');
+  if (platformGroup && platformSlot && !step5.querySelector('#ob-platform')) {
+    platformGroup.style.display = '';
+    platformSlot.replaceWith(platformGroup);
+  }
+  if (nicheGroup && nicheSlot && !step5.querySelector('#ob-niche')) {
+    nicheGroup.style.display = '';
+    nicheSlot.replaceWith(nicheGroup);
+  }
+  const platformLabel = step5.querySelector('#ob-platform-chips')?.closest('.field-group')?.querySelector('.field-label');
+  if (platformLabel) platformLabel.textContent = 'Primary platform';
+  const nicheLabel = step5.querySelector('#ob-niche')?.closest('.field-group')?.querySelector('.field-label');
+  if (nicheLabel) nicheLabel.innerHTML = 'Your niche / target client — <span style="color:#3a3a3a">optional</span>';
+
+  const platformChips = step5.querySelectorAll('#ob-platform-chips .ob-chip');
+  if (platformChips[0]) {
+    platformChips[0].dataset.val = 'Upwork';
+    platformChips[0].textContent = 'Upwork';
+  }
+  if (platformChips[1]) {
+    platformChips[1].dataset.val = 'Fiverr';
+    platformChips[1].textContent = 'Fiverr';
+  }
+  if (platformChips[2]) {
+    platformChips[2].dataset.val = 'LinkedIn';
+    platformChips[2].textContent = 'LinkedIn';
+  }
+  if (platformChips[3]) {
+    platformChips[3].dataset.val = 'Direct Clients';
+    platformChips[3].textContent = 'Direct Clients';
+  }
+  if (platformChips[4]) {
+    platformChips[4].dataset.val = 'Other';
+    platformChips[4].textContent = 'Other';
+  }
+}
 
 function toggleGuideModeSetting() {
   const current = localStorage.getItem('lancify_guide_mode') || 'on';
@@ -12985,6 +13513,12 @@ async function onLogin(user) {
 
 window.addEventListener('focus', () => {
   if (isDashboardVisible()) renderFloatingChecklistWidget();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && currentPage === 'home') {
+    setTimeout(initDashboardCharts, 50);
+  }
 });
 /* ──────────────────────────────────────────────────────────
    AURORA MESH BACKGROUND
@@ -13088,6 +13622,7 @@ async function _decideRoute(uid) {
     }
     el('app-layout').classList.add('show');
     requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
+    setTimeout(initDashboardCharts, 50);
     if (isPlanRoute()) showUpgradeModal({ pushRoute: false });
   } else {
     if (localStorage.getItem(ONBOARDING_SEEN_KEY) === 'yes') {
@@ -13099,6 +13634,7 @@ async function _decideRoute(uid) {
   }
 }
 function _showOnboarding() {
+  setupOnboardingFlow();
   _obStep = 1;
   _obRenderStep();
   el('signup-onboarding-modal')?.classList.remove('show');
@@ -13117,7 +13653,14 @@ function _obRenderStep() {
   if (backBtn) backBtn.style.visibility = _obStep > 1 ? 'visible' : 'hidden';
 
   const nextBtn = el('ob-next-btn');
-  if (nextBtn) nextBtn.textContent = _obStep === OB_TOTAL ? 'Enter Workspace →' : 'Continue →';
+  if (nextBtn) {
+    nextBtn.textContent =
+      _obStep === 1
+        ? 'Get Started →'
+        : _obStep === OB_TOTAL
+          ? 'Enter Workspace →'
+          : 'Continue →';
+  }
 }
 
 function obBack() {
@@ -13125,9 +13668,21 @@ function obBack() {
 }
 
 function obNext() {
-  if (_obStep === 1) {
+  if (_obStep === 2) {
     const skill = val('ob-skills').trim();
     if (!skill) { showToast('Please tell us your primary skill.'); el('ob-skills').focus(); return; }
+  }
+  if (_obStep === 3 && !val('ob-exp')) {
+    showToast('Choose your experience level to continue.');
+    return;
+  }
+  if (_obStep === 4 && !val('ob-goal')) {
+    showToast('Choose your income goal to continue.');
+    return;
+  }
+  if (_obStep === 5 && !val('ob-platform')) {
+    showToast('Choose your primary platform to continue.');
+    return;
   }
   if (_obStep < OB_TOTAL) { _obStep++; _obRenderStep(); }
   else { _obFinish(); }
@@ -13151,7 +13706,7 @@ async function _obFinish() {
     niche:       val('ob-niche').trim(),
     exp_level:   val('ob-exp')       || 'Complete Beginner',
     platform:    val('ob-platform')  || 'Upwork',
-    income_goal: val('ob-goal')      || '$1,000-$2,500',
+    income_goal: val('ob-goal')      || '$1,000/mo',
     experience:  val('ob-exp')       || 'Complete Beginner',
     hours_per_day:      val('ob-hours')     || '2 hours',
     biggest_challenge:  val('ob-challenge') || 'Finding clients',
@@ -13239,6 +13794,7 @@ function _runQuoteScreen(goal, firstName) {
           
           el('app-layout').classList.add('show');
           requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
+          setTimeout(initDashboardCharts, 50);
           el('loading-screen').style.display = 'none';
           
           _pendingPostPlanAction = 'dashboard_entrance';
@@ -13287,7 +13843,7 @@ function switchSettingsTab(tabId){
 
 function setThemePref(theme){
   applyTheme(theme);
-  localStorage.setItem('lancify-theme', theme);
+  persistThemePreference(theme);
   lucide.createIcons();
   const btnL = el('theme-btn-light'), btnD = el('theme-btn-dark');
   if(btnL) btnL.classList.toggle('active', theme==='light');
