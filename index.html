@@ -4743,7 +4743,7 @@ html:not(.dark) .header{
   height:4px;
 }
 ::-webkit-scrollbar-thumb{
-  background:var(--border2);
+  background:var(--accent);
 }
 button,
 a,
@@ -4919,7 +4919,7 @@ textarea:focus{
 #logo,
 .sidebar-logo{
   font-family:'Instrument Serif',serif !important;
-  font-size:22px !important;
+  font-size:20px !important;
   font-weight:400 !important;
   letter-spacing:-0.3px !important;
   line-height:1;
@@ -5979,7 +5979,7 @@ html:not(.dark) body{
 .hero-greeting{
   font-family:'Inter',sans-serif !important;
   font-weight:600 !important;
-  font-size:24px !important;
+  font-size:26px !important;
 }
 .pipeline-col-header,
 .kanban-col-header,
@@ -5987,7 +5987,7 @@ html:not(.dark) body{
 .stage-badge,
 .pipeline-add-btn,
 .clients-page .btn-primary{
-  background:var(--bg2) !important;
+  background:rgba(232,80,10,0.08) !important;
   color:#E8500A !important;
   border-color:rgba(232,80,10,0.2) !important;
 }
@@ -7224,7 +7224,7 @@ html:not(.dark) body{
         <div class="content-inner wide">
           <div class="page-hd"><h1>Invoices</h1><p>Generate polished invoices fast and pull client details straight from your CRM.</p></div>
           <div class="fin-grid">
-            <div class="fin-card">
+            <div class="fin-card" id="invoice-form-card">
               <div class="section-title" style="margin-bottom:10px">Create Invoice</div>
               <div class="invoice-prefill-bar">
                 <div class="invoice-prefill-copy">
@@ -7253,10 +7253,8 @@ html:not(.dark) body{
                 <textarea id="inv-notes" rows="3" placeholder="Optional: payment terms, revision policy, etc."></textarea>
               </div>
               <div style="display:flex;gap:8px">
-                <button class="btn btn-primary" onclick="createInvoice()">Create Invoice</button>
-                <button class="btn btn-secondary" onclick="copyInvoiceDraft()">Copy Invoice Draft</button>
-                <button class="btn btn-secondary" onclick="previewInvoicePdf()" style="display:flex;align-items:center;gap:6px;">
-                  <i data-lucide="file-down" style="width:14px;height:14px"></i> Download PDF
+                <button class="btn btn-primary" onclick="createAndDownloadInvoice()" style="display:flex;align-items:center;gap:6px;">
+                  <i data-lucide="file-down" style="width:14px;height:14px"></i> Create & Download Invoice
                 </button>
               </div>
             </div>
@@ -7284,69 +7282,75 @@ html:not(.dark) body{
         </div>
       </div>
       
-      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:60px;font-family:'Geist','Inter',sans-serif;color:#0f172a;z-index:-1;visibility:hidden;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;">
+      <div id="invoice-pdf-preview" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:56px 64px;font-family:Inter,system-ui,sans-serif;color:#111827;z-index:-1;visibility:hidden;box-sizing:border-box;">
+        <div style="position:absolute;left:0;top:0;right:0;height:4px;background:#E8500A;"></div>
+        <div id="pdf-company-name" style="display:none;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:40px;margin-bottom:40px;">
           <div>
-            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;margin-bottom:4px;">INVOICE</div>
-            <div style="font-size:13px;color:#64748b;" id="pdf-invoice-number">Invoice #001</div>
+            <div style="font-size:30px;font-weight:800;letter-spacing:-0.03em;color:#111827;" id="pdf-freelancer-display-name">Freelancer</div>
+            <div style="font-size:13px;color:#6b7280;margin-top:8px;" id="pdf-freelancer-name"></div>
           </div>
-          <div style="text-align:right;">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;" id="pdf-company-name">Lancify</div>
-            <div style="font-size:12px;color:#64748b;margin-top:4px;" id="pdf-freelancer-name"></div>
+          <div style="text-align:right;min-width:210px;">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;">Invoice</div>
+            <div style="font-size:15px;font-weight:700;color:#111827;margin-top:8px;" id="pdf-invoice-number">INV-001</div>
+            <div style="font-size:13px;color:#4b5563;margin-top:8px;" id="pdf-date-issued"></div>
+            <div style="font-size:13px;color:#6b7280;margin-top:4px;">Due <span id="pdf-due-date"></span></div>
+            <div style="display:inline-flex;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:14px;" id="pdf-status-badge"></div>
           </div>
         </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:36px;">
           <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;">BILL TO</div>
-            <div style="font-size:15px;font-weight:600;color:#0f172a;" id="pdf-client-name"></div>
-            <div style="font-size:13px;color:#64748b;margin-top:2px;" id="pdf-client-email"></div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;">Bill To</div>
+            <div style="font-size:16px;font-weight:700;color:#111827;" id="pdf-client-name"></div>
+            <div style="font-size:13px;color:#6b7280;margin-top:6px;" id="pdf-client-email"></div>
           </div>
           <div style="text-align:right;">
-            <div style="margin-bottom:8px;">
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;">DATE ISSUED</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-date-issued"></span>
-            </div>
-            <div>
-              <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;">DUE DATE</span><br>
-              <span style="font-size:13px;color:#0f172a;" id="pdf-due-date"></span>
-            </div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;">Sender</div>
+            <div style="font-size:14px;color:#111827;" id="pdf-sender-copy"></div>
           </div>
         </div>
-        
-        <table style="width:100%;border-collapse:collapse;margin-bottom:32px;">
+
+        <table style="width:100%;border-collapse:collapse;margin-bottom:28px;">
           <thead>
-            <tr style="border-bottom:2px solid #0f172a;">
-              <th style="text-align:left;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">DESCRIPTION</th>
-              <th style="text-align:right;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;">AMOUNT</th>
+            <tr style="border-bottom:1px solid #e5e7eb;">
+              <th style="text-align:left;padding:0 0 14px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;">Description</th>
+              <th style="text-align:right;padding:0 0 14px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;">Qty</th>
+              <th style="text-align:right;padding:0 0 14px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;">Unit Price</th>
+              <th style="text-align:right;padding:0 0 14px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;">Total</th>
             </tr>
           </thead>
           <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;" id="pdf-service"></td>
-              <td style="padding:16px 0;font-size:14px;color:#0f172a;text-align:right;" id="pdf-amount-row"></td>
+            <tr style="border-bottom:1px solid #f3f4f6;">
+              <td style="padding:18px 0;font-size:14px;color:#111827;" id="pdf-service"></td>
+              <td style="padding:18px 0;font-size:14px;color:#111827;text-align:right;" id="pdf-qty">1</td>
+              <td style="padding:18px 0;font-size:14px;color:#111827;text-align:right;" id="pdf-unit-price"></td>
+              <td style="padding:18px 0;font-size:14px;color:#111827;text-align:right;" id="pdf-amount-row"></td>
             </tr>
           </tbody>
         </table>
-        
-        <div style="display:flex;justify-content:flex-end;margin-bottom:40px;">
-          <div style="width:220px;">
-            <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid #0f172a;">
-              <span style="font-size:15px;font-weight:700;">Total Due</span>
-              <span style="font-size:15px;font-weight:700;" id="pdf-total"></span>
+
+        <div style="display:flex;justify-content:flex-end;margin-bottom:32px;">
+          <div style="width:260px;">
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #e5e7eb;">
+              <span style="font-size:13px;color:#6b7280;">Subtotal</span>
+              <span style="font-size:13px;color:#111827;" id="pdf-subtotal"></span>
             </div>
-            <div style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.06em;margin-top:8px;" id="pdf-status-badge"></div>
+            <div style="display:flex;justify-content:space-between;padding:14px 0 0;">
+              <span style="font-size:15px;font-weight:800;color:#111827;">Total Due</span>
+              <span style="font-size:15px;font-weight:800;color:#111827;" id="pdf-total"></span>
+            </div>
           </div>
         </div>
-        
-        <div style="border-top:1px solid #e2e8f0;padding-top:24px;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:6px;">NOTES</div>
-          <div style="font-size:13px;color:#64748b;line-height:1.6;" id="pdf-notes">Thank you for your business.</div>
+
+        <div id="pdf-notes-wrap" style="border-top:1px solid #e5e7eb;padding-top:22px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;">Notes</div>
+          <div style="font-size:13px;color:#4b5563;line-height:1.7;" id="pdf-notes"></div>
         </div>
-        
-        <div style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:11px;color:#9a9a9a;">Generated by Lancify</div>
-          <div style="font-size:11px;color:#9a9a9a;" id="pdf-footer-email"></div>
+
+        <div style="margin-top:36px;padding-top:18px;border-top:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:12px;color:#6b7280;" id="pdf-footer-email"></div>
+          <div style="font-size:9px;color:#d1d5db;">powered by lancify</div>
         </div>
       </div>
 
@@ -9227,7 +9231,7 @@ function applyTheme(theme) {
     document.documentElement.classList.remove('dark');
   }
 }
-let currentUser = null, userProfile = {is_pro:false}, userLeads = [], userInvoices = [], opportunityClients = [];
+
 function _themeStorageKey(uid) {
   uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
   return `lancify-theme-${uid || 'guest'}`;
@@ -9239,8 +9243,9 @@ function persistThemePreference(theme, uid) {
   localStorage.setItem(_themeStorageKey(uid), theme);
 }
 
-function getSavedThemePreference() {
-  return localStorage.getItem('lancify-theme-guest') || localStorage.getItem('lancify-theme');
+function getSavedThemePreference(uid) {
+  uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
+  return localStorage.getItem(_themeStorageKey(uid)) || localStorage.getItem('lancify-theme');
 }
 
 function toggleTheme() {
@@ -9356,6 +9361,7 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY'
 );
 
+let currentUser = null, userProfile = {is_pro:false}, userLeads = [], userInvoices = [], opportunityClients = [];
 let leadMetaStore = {}, crmFilters = { search:'', platform:'all', sort:'newest' }, accountingState = { range:'30d', start:'', end:'' }, draggedLeadId = null;
 let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
@@ -11144,6 +11150,19 @@ function applyInvoicePrefill(prefill = {}, opts = {}){
   if (!silent) showToast(`Invoice draft ready for ${prefill.clientName || 'client'}.`);
 }
 
+function flashInvoiceForm(){
+  const formCard = el('invoice-form-card');
+  if (!formCard) return;
+  formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  formCard.style.transition = 'box-shadow .2s ease, background-color .2s ease';
+  formCard.style.boxShadow = '0 0 0 2px rgba(34,197,94,0.22), var(--shadow-lg)';
+  formCard.style.backgroundColor = '#f0fdf4';
+  setTimeout(() => {
+    formCard.style.boxShadow = '';
+    formCard.style.backgroundColor = '';
+  }, 800);
+}
+
 function prefillInvoiceFromPipeline(id){
   if (!id) {
     clearInvoiceForm();
@@ -11170,12 +11189,14 @@ function routeToInvoice(clientName, service = '', dealValue = '', clientEmail = 
     clientName: clientName || '',
     clientEmail: clientEmail || '',
     service: service || '',
-    amount: getDealFloor(dealValue || '', 0) || '',
+    amount: getDealAverage(dealValue || '', 0) || '',
     notes: notes || ''
   }, { navigateToPage: true, silent: false, pickerValue: '' });
+  setTimeout(() => flashInvoiceForm(), 120);
 }
 
-async function createInvoice(){
+async function createInvoice(opts = {}){
+  const { keepForm = false, silentSuccess = false, resetPicker = true } = opts;
   if (!currentUser) return;
   const clientName = val('inv-client-name').trim();
   const clientEmail = val('inv-client-email').trim();
@@ -11202,21 +11223,31 @@ async function createInvoice(){
     notes,
     created_at: new Date().toISOString(),
   };
+  let savedInvoice = payload;
 
   try {
     const { data, error } = await sb.from('invoices').insert([payload]).select().single();
     if (error) throw error;
-    userInvoices.unshift(data || payload);
+    savedInvoice = data || payload;
+    userInvoices.unshift(savedInvoice);
   } catch {
     userInvoices.unshift(payload);
     persistInvoicesLocal();
   }
 
-  clearInvoiceForm({ resetPicker: true });
+  if (!keepForm) clearInvoiceForm({ resetPicker });
   recordActivity('invoice', `Created an invoice for ${clientName}`);
   renderInvoices();
   renderBusinessDashboard();
-  showToast('Invoice created.');
+  if (!silentSuccess) showToast('Invoice created.');
+  return savedInvoice;
+}
+
+async function createAndDownloadInvoice(){
+  const created = await createInvoice({ keepForm: true, silentSuccess: true, resetPicker: true });
+  if (!created) return;
+  previewInvoicePdf();
+  clearInvoiceForm({ resetPicker: true });
 }
 
 async function setInvoiceStatus(id, status){
@@ -11346,6 +11377,7 @@ function injectBusinessDashboardWidgets(){
               </svg>
               <div class="credits-ring-value credits-ring-label">
                 <strong id="home-credits-pct" class="pct">100%</strong>
+                <span class="remaining-text">Remaining</span>
               </div>
             </div>
             <div class="credits-meta">
@@ -11600,7 +11632,7 @@ function renderMiniSparkline(id, values = []){
 
   host.innerHTML = `
     <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">
-      <polyline points="${polyline}" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+      <polyline points="${polyline}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
     </svg>
   `;
 }
@@ -11758,6 +11790,15 @@ function switchChartPeriod(period, options = {}){
   _chartInstances.earnings = { timer };
 }
 
+function initDashboardCharts(){
+  if (!isDashboardVisible()) return;
+  destroyChart('earnings');
+  const chart = document.querySelector('.chart-wrapper');
+  if (chart) chart.style.opacity = '1';
+  updateChartData(homeEarningsRange);
+  _chartInstances.earnings = {};
+}
+
 function getHomeMonthlyRevenue(){
   const now = new Date();
   const inCurrentMonth = (dateLike) => {
@@ -11800,7 +11841,7 @@ function renderHomeEarningsChart(){
 
   const points = getHomeTimeline(homeEarningsRange);
   labels.style.setProperty('--chart-points', String(points.length));
-  const max = Math.max(...points.map(item => item.value), 100);
+  const max = Math.max(...points.map(item => item.value), 1);
   const w = 720;
   const h = 220;
   const padX = 18;
@@ -11815,8 +11856,6 @@ function renderHomeEarningsChart(){
 
   if (!coords.some(point => point.value > 0)) {
     host.innerHTML = `<div class="empty-state centered" style="min-height:220px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No earnings yet</div><p class="empty-state-copy">Once deals close and invoices are paid, your revenue trend will appear here.</p></div>`;
-    labels.innerHTML = '';
-    yLabels.innerHTML = '';
     labels.innerHTML = '';
     yLabels.innerHTML = '';
     return;
@@ -11840,7 +11879,7 @@ function renderHomeEarningsChart(){
   yLabels.innerHTML = [max, max / 2, 0].map(value => `<div class="chart-y-label">${escapeHtml(formatChartAxisValue(value))}</div>`).join('');
   labels.innerHTML = points.map(point => `<div class="chart-x-label">${escapeHtml(point.label)}</div>`).join('');
 }
-  
+
 function renderHomeCreditsWidget(total, remaining){
   const ring = el('home-credits-ring');
   if (!ring) return;
@@ -12614,13 +12653,16 @@ function previewInvoicePdf() {
   const service = val('inv-service') || 'Freelance Service';
   const amount = val('inv-amount') || '0';
   const dueDate = val('inv-due-date') || '';
-  const notes = val('inv-notes') || 'Thank you for your business.';
+  const notes = val('inv-notes') || '';
   const status = val('inv-status') || 'sent';
   
   if (!clientName || clientName === 'Client') { showToast('Please enter a client name first.'); return; }
   if (!amount || amount === '0') { showToast('Please enter an amount first.'); return; }
   
-  const freelancerName = userProfile?.full_name || currentUser?.email || 'Freelancer';
+  const freelancerName = userProfile?.name || userProfile?.full_name || currentUser?.email || 'Freelancer';
+  const freelancerEmail = currentUser?.email || userProfile?.email || '';
+  const amountNumber = parseFloat(amount) || 0;
+  const amountText = `${getCurrencySymbol()}${amountNumber.toFixed(2)}`;
   const invNum = `INV-${Date.now().toString().slice(-6)}`;
   const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   const dueDateFormatted = dueDate ? new Date(dueDate).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) : 'On receipt';
@@ -12628,22 +12670,31 @@ function previewInvoicePdf() {
   const statusStyles = { paid: 'background:#dcfce7;color:#166534;', sent: 'background:rgba(232,80,10,0.08);color:#E8500A;', overdue: 'background:#fee2e2;color:#dc2626;' };
   
   setText('pdf-invoice-number', invNum);
-  setText('pdf-freelancer-name', freelancerName);
+  setText('pdf-company-name', freelancerName);
+  setText('pdf-freelancer-display-name', freelancerName);
+  setText('pdf-freelancer-name', freelancerEmail || freelancerName);
+  setText('pdf-sender-copy', freelancerName);
   setText('pdf-client-name', clientName);
   setText('pdf-client-email', clientEmail);
   setText('pdf-date-issued', today);
   setText('pdf-due-date', dueDateFormatted);
   setText('pdf-service', service);
-  setText('pdf-amount-row', `${getCurrencySymbol()}${parseFloat(amount).toFixed(2)}`);
-  setText('pdf-total', `${getCurrencySymbol()}${parseFloat(amount).toFixed(2)}`);
+  setText('pdf-qty', '1');
+  setText('pdf-unit-price', amountText);
+  setText('pdf-amount-row', amountText);
+  setText('pdf-subtotal', amountText);
+  setText('pdf-total', amountText);
   setText('pdf-notes', notes);
-  setText('pdf-footer-email', clientEmail);
+  setText('pdf-footer-email', freelancerEmail);
   
   const badge = el('pdf-status-badge');
   if (badge) {
     badge.textContent = status.toUpperCase();
     badge.style.cssText = statusStyles[status] || statusStyles.sent;
   }
+
+  const notesWrap = el('pdf-notes-wrap');
+  if (notesWrap) notesWrap.style.display = notes.trim() ? 'block' : 'none';
   
   const preview = el('invoice-pdf-preview');
   preview.style.position = 'absolute';
@@ -13119,6 +13170,17 @@ function getDealFloor(raw, fallback=0){
   if (!nums.length) return fallback;
   const first = Number(nums[0].replace(/,/g, ''));
   return Number.isFinite(first) ? first : fallback;
+}
+function getDealAverage(raw, fallback=0){
+  const normalized = normalizeDealValue(raw, '');
+  const nums = normalized.match(/\d+(?:,\d{3})*(?:\.\d+)?/g) || [];
+  if (!nums.length) return fallback;
+  const parsed = nums
+    .map(n => Number(String(n).replace(/,/g, '')))
+    .filter(n => Number.isFinite(n));
+  if (!parsed.length) return fallback;
+  if (parsed.length === 1) return parsed[0];
+  return Math.round((parsed[0] + parsed[1]) / 2);
 }
 function summarizeDealValue(raw){
   const normalized = normalizeDealValue(raw, '');
