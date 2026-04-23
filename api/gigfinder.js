@@ -4,6 +4,7 @@ export default async function handler(req, res) {
   const { skills, platform, experience, budget } = req.body;
 
   if (!skills) return res.status(400).json({ error: 'Skills are required' });
+  if (skills.trim().length < 3) return res.status(400).json({ error: 'Please describe your skills in more detail' });
 
   const systemPrompt = `You are a sharp freelance market strategist who specializes in helping emerging freelancers land their first $500-$5,000/month on freelance platforms.
 
