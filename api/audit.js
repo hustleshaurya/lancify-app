@@ -18,7 +18,11 @@ export default async function handler(req, res) {
       const jinaResponse = await fetch(`https://r.jina.ai/${websiteUrl}`);
       if (jinaResponse.ok) {
         const fullText = await jinaResponse.text();
-        scrapedContent = fullText.substring(0, 6000); // 6k chars is perfect for Llama
+        scrapedContent = fullText
+          .replace(/<[^>]*>/g, '')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .substring(0, 6000); // 6k chars is perfect for Llama
         contextSnippet = `
 The client's website was scraped. Here is the actual page content:
 """${scrapedContent}"""
