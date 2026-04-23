@@ -4742,8 +4742,15 @@ html:not(.dark) .header{
   width:4px;
   height:4px;
 }
+::-webkit-scrollbar-track{
+  background:transparent;
+}
 ::-webkit-scrollbar-thumb{
-  background:var(--accent);
+  background:var(--border2);
+  border-radius:99px;
+}
+::-webkit-scrollbar-thumb:hover{
+  background:var(--text3);
 }
 button,
 a,
@@ -4911,6 +4918,14 @@ textarea:focus{
   height:54px !important;
   padding:0 14px !important;
 }
+.brand-favicon{
+  display:none;
+  width:22px;
+  height:22px;
+  border-radius:7px;
+  object-fit:contain;
+  flex-shrink:0;
+}
 .brand-monogram{
   display:none !important;
 }
@@ -5003,14 +5018,17 @@ textarea:focus{
   gap:8px !important;
   border-top:1px solid var(--border) !important;
   background:var(--bg) !important;
+  align-items:center !important;
 }
 .sb-credits,
 .ai-credits-block{
-  padding:8px 10px !important;
+  width:100%;
+  max-width:176px;
+  padding:7px 9px !important;
   border-radius:8px !important;
   background:var(--bg3) !important;
   border:1px solid var(--border) !important;
-  margin:8px !important;
+  margin:6px auto 2px !important;
 }
 .sb-credits-label,
 .ai-credits-block .credits-label{
@@ -5033,8 +5051,16 @@ textarea:focus{
 }
 .sb-credits-num,
 .ai-credits-text{
-  font-size:11px !important;
+  font-size:10.5px !important;
   color:var(--text-muted) !important;
+}
+.upgrade-btn{
+  width:100%;
+  max-width:176px;
+  height:30px !important;
+  margin:0 auto !important;
+  font-size:11.5px !important;
+  gap:5px !important;
 }
 .btn,
 .btn-primary,
@@ -6001,6 +6027,9 @@ html:not(.dark) body{
 .credits-ring-label{
   font-size:9px !important;
 }
+.credits-ring-label .remaining-text{
+  display:none !important;
+}
 .credits-ring-container{
   width:70px !important;
   height:70px !important;
@@ -6025,6 +6054,29 @@ html:not(.dark) body{
 }
 .sidebar.collapsed .upgrade-btn{
   margin:4px auto !important;
+}
+html,
+body,
+.sb-nav,
+.content-scroll{
+  scrollbar-color: var(--border2) transparent;
+}
+.sidebar.collapsed .brand-favicon{
+  display:block;
+}
+.sidebar.collapsed .brand-lockup{
+  justify-content:center;
+}
+.sidebar.collapsed .sb-logo{
+  padding:0 !important;
+}
+.sidebar.collapsed .sb-bottom{
+  padding:10px 6px !important;
+}
+.sidebar.collapsed .upgrade-btn{
+  width:32px !important;
+  height:32px !important;
+  margin:2px auto 0 !important;
 }
 </style>
 </head>
@@ -6336,6 +6388,7 @@ html:not(.dark) body{
 
     <div class="sb-logo">
       <div class="brand-lockup">
+        <img src="Favicon_new_logo-removebg-preview.png" alt="Lancify" class="brand-favicon">
         <span class="brand-monogram">L</span>
         <span id="logo" class="brand-wordmark sidebar-logo logo-text">lancify</span>
       </div>
@@ -11385,7 +11438,6 @@ function injectBusinessDashboardWidgets(){
               </svg>
               <div class="credits-ring-value credits-ring-label">
                 <strong id="home-credits-pct" class="pct">100%</strong>
-                <span class="remaining-text">Remaining</span>
               </div>
             </div>
             <div class="credits-meta">
