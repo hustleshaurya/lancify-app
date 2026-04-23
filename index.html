@@ -11815,10 +11815,9 @@ function renderHomeEarningsChart(){
   });
 
   if (!coords.some(point => point.value > 0)) {
-    coords.forEach((c, i) => { c.value = [0,0,0,0,0,0,0][i] || 0; });
-    // continue to render chart below with flat line
-    // DELETE the early return/innerHTML and let chart render normally
-}
+    host.innerHTML = `<div class="empty-state centered" style="min-height:220px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No earnings yet</div><p class="empty-state-copy">Once deals close and invoices are paid, your revenue trend will appear here.</p></div>`;
+    labels.innerHTML = '';
+    yLabels.innerHTML = '';
     labels.innerHTML = '';
     yLabels.innerHTML = '';
     return;
