@@ -11761,15 +11761,6 @@ function switchChartPeriod(period, options = {}){
   _chartInstances.earnings = { timer };
 }
 
-function initDashboardCharts(){
-  if (!isDashboardVisible()) return;
-  destroyChart('earnings');
-  const chart = document.querySelector('.chart-wrapper');
-  if (chart) chart.style.opacity = '1';
-  updateChartData(homeEarningsRange);
-  _chartInstances.earnings = {};
-}
-
 function getHomeMonthlyRevenue(){
   const now = new Date();
   const inCurrentMonth = (dateLike) => {
