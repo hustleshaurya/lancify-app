@@ -5961,6 +5961,71 @@ html.dark .roadmap-teaser{
   align-items:center !important;
   justify-content:center !important;
 }
+.stat-card{
+  padding:12px 14px !important;
+}
+.stat-card .stat-val,
+.stat-card .stat-value{
+  font-size:22px !important;
+}
+.chart-wrapper{
+  transition:opacity 0.2s ease !important;
+}
+html:not(.dark) body{
+  background:#FAFAF8 !important;
+  background-image:none !important;
+}
+#hero-greeting,
+.hero-greeting{
+  font-family:'Inter',sans-serif !important;
+  font-weight:600 !important;
+  font-size:26px !important;
+}
+.pipeline-col-header,
+.kanban-col-header,
+.client-badge,
+.stage-badge,
+.pipeline-add-btn,
+.clients-page .btn-primary{
+  background:rgba(232,80,10,0.08) !important;
+  color:#E8500A !important;
+  border-color:rgba(232,80,10,0.2) !important;
+}
+.clients-page .btn-primary{
+  background:#E8500A !important;
+  color:#fff !important;
+}
+.credits-ring-label .pct{
+  font-size:13px !important;
+}
+.credits-ring-label{
+  font-size:9px !important;
+}
+.credits-ring-container{
+  width:70px !important;
+  height:70px !important;
+}
+.credits-ring svg{
+  width:70px !important;
+  height:70px !important;
+}
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .ws-name,
+.sidebar.collapsed .ws-chevron,
+.sidebar.collapsed .sb-section,
+.sidebar.collapsed .sb-section-label,
+.sidebar.collapsed .ai-credits-block,
+.sidebar.collapsed .upgrade-btn span,
+.sidebar.collapsed .upgrade-btn-text{
+  display:none !important;
+}
+.sidebar.collapsed .nav-item{
+  justify-content:center !important;
+  padding:0 8px !important;
+}
+.sidebar.collapsed .upgrade-btn{
+  margin:4px auto !important;
+}
 </style>
 </head>
 <body>
@@ -9164,8 +9229,8 @@ function applyTheme(theme) {
 }
 
 function _themeStorageKey(uid) {
-  const safeUid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
-  return `lancify-theme-${safeUid}`;
+  uid = uid ?? (typeof currentUser !== 'undefined' ? currentUser?.id : null) ?? 'guest';
+  return `lancify-theme-${uid || 'guest'}`;
 }
 
 function persistThemePreference(theme, uid) {
@@ -9782,7 +9847,17 @@ function navigate(page) {
   setText('header-title', titles[page]||'Dashboard');
   if (page === 'invoices') renderInvoices();
   if (page === 'accounting' || page === 'home') renderBusinessDashboard();
-  if (page === 'home') setTimeout(initDashboardCharts, 50);
+  if (page === 'home') {
+    setTimeout(() => {
+      if (typeof Chart !== 'undefined') {
+        document.querySelectorAll('canvas').forEach(c => {
+          const chart = Chart.getChart(c);
+          if (chart) chart.resize();
+        });
+      }
+      if (typeof initDashboardCharts === 'function') initDashboardCharts();
+    }, 80);
+  }
   if (page === 'pipeline') { 
     renderManagedOpportunityClients(); 
     renderPipeline(); 
@@ -11248,7 +11323,7 @@ function injectBusinessDashboardWidgets(){
             </div>
           </div>
           <div class="earnings-shell">
-            <div class="earnings-chart-wrap">
+            <div class="earnings-chart-wrap chart-wrapper">
               <div class="chart-y-labels" id="home-chart-y-labels"></div>
               <div class="earnings-chart-stage">
                 <div id="home-earnings-chart" class="earnings-chart"></div>
@@ -11562,6 +11637,18 @@ function renderStatChange(current, previous, inverse = false, hasHistory = true)
   };
 }
 
+function renderStatChange(current, previous, inverse = false, hasHistory = true){
+  if (!hasHistory) return { text: '—', cls: 'neutral' };
+  if (!previous || previous === 0 || current === 0) return { text: '—', cls: 'neutral' };
+  const pct = Math.round(((current - previous) / previous) * 100);
+  if (pct === 0) return { text: '—', cls: 'neutral' };
+  const improved = inverse ? pct < 0 : pct > 0;
+  return {
+    text: `${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct)}%`,
+    cls: improved ? 'positive' : 'negative'
+  };
+}
+
 function renderHomePulseMeta(){
   [
     { base: 'home-total-clients', key: 'clients', inverse: false },
@@ -11639,6 +11726,47 @@ function initDashboardCharts(){
   if (xLabels) xLabels.style.opacity = '1';
   if (yLabels) yLabels.style.opacity = '1';
   renderHomeEarningsChart();
+  _chartInstances.earnings = {};
+}
+
+function safeInitChart(canvasId, config) {
+  if (typeof Chart === 'undefined') return null;
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
+  const existing = Chart.getChart(canvas);
+  if (existing) existing.destroy();
+  return new Chart(canvas, config);
+}
+
+function updateChartData(period){
+  homeEarningsRange = period;
+  ['7d','30d','90d'].forEach(range => el(`home-range-${range}`)?.classList.toggle('active', homeEarningsRange === range));
+  renderHomeEarningsChart();
+}
+
+function switchChartPeriod(period, options = {}){
+  const { force = false } = options;
+  if (!force && period === homeEarningsRange) return;
+  const chart = document.querySelector('.chart-wrapper');
+
+  destroyChart('earnings');
+  if (chart) chart.style.opacity = '0';
+
+  const timer = setTimeout(() => {
+    updateChartData(period);
+    if (chart) chart.style.opacity = '1';
+    _chartInstances.earnings = {};
+  }, 200);
+
+  _chartInstances.earnings = { timer };
+}
+
+function initDashboardCharts(){
+  if (!isDashboardVisible()) return;
+  destroyChart('earnings');
+  const chart = document.querySelector('.chart-wrapper');
+  if (chart) chart.style.opacity = '1';
+  updateChartData(homeEarningsRange);
   _chartInstances.earnings = {};
 }
 
