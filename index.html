@@ -3102,6 +3102,118 @@ html.dark .credits-warning-banner {
   color: #71717a;
   stroke-width: 2.5;
 }
+.pricing-card.recommended {
+  border-color: rgba(245, 158, 11, 0.7);
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.32), 0 18px 40px rgba(0,0,0,0.45);
+}
+.pricing-card.current-plan {
+  border-color: rgba(255,255,255,0.18);
+}
+.pricing-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.pricing-pill.recommended {
+  background: linear-gradient(135deg,#f59e0b,#fb923c);
+  color: #111827;
+}
+.pricing-pill.current {
+  background: rgba(255,255,255,0.08);
+  color: #f4f4f5;
+  border: 1px solid rgba(255,255,255,0.14);
+}
+.pricing-annual-note {
+  display: none;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #fbbf24;
+}
+.pricing-annual-note.show {
+  display: block;
+}
+.pricing-reco-copy {
+  font-size: 12px;
+  color: #fbbf24;
+  margin-top: 14px;
+}
+.tool-limit-note {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.tool-limit-note.hidden {
+  display: none;
+}
+.sequence-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-panel);
+  padding: 18px;
+}
+.sequence-day-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--bg3);
+  color: var(--text-main);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+.sequence-msg {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.sequence-saved-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-panel);
+  color: var(--text-main);
+  font: inherit;
+  cursor: pointer;
+}
+.sequence-saved-body {
+  display: none;
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-panel);
+  padding: 8px 16px;
+}
+.sequence-saved-body.show {
+  display: block;
+}
+.sequence-import-wrap {
+  display: none;
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg2);
+}
+.sequence-import-wrap.show {
+  display: block;
+}
 
 /* Badges */
 .discount-badge {
@@ -6491,6 +6603,11 @@ body,
           <div class="nav-item" data-page="audit" data-tooltip="Audit Generator" onclick="navigate('audit')"><i data-lucide="sparkles" class="icon"></i><span class="nav-label"> Audit Generator</span></div>
           <div class="nav-item" data-page="proposal" data-tooltip="Proposal Writer" onclick="navigate('proposal')"><i data-lucide="file-text" class="icon"></i><span class="nav-label"> Proposal Writer</span></div>
           <div class="nav-item" data-page="email" data-tooltip="Email Writer" onclick="navigate('email')"><i data-lucide="mail" class="icon"></i><span class="nav-label"> Email Writer</span></div>
+          <div class="nav-item plan-locked" data-page="sequence" data-tooltip="Sequence Builder" onclick="navigate('sequence')">
+            <i data-lucide="git-branch" class="icon"></i>
+            <span class="nav-label"> Sequence Builder</span>
+            <span class="pro-badge" style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;letter-spacing:.04em;">ELITE</span>
+          </div>
           <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span></div>
         </div>
       </div>
@@ -6597,6 +6714,10 @@ body,
     </div>
 
     <div class="content-scroll" id="content-scroll">
+      <div id="credits-warning-banner" class="credits-warning-banner" onclick="showUpgradeModal()">
+        <i data-lucide="triangle-alert" style="width:14px;height:14px"></i>
+        <span class="credits-warning-text" id="credits-warning-text">Low credits left this month.</span>
+      </div>
 
       <div id="page-home" class="page active">
         <div class="content-inner home-shell">
@@ -6768,11 +6889,12 @@ body,
               </div>
               <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="$250"></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(120, generateAudit)">
+              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(4, generateAudit)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">Generate Audit Dossier</span>
                 <span class="btn-text-loading">Generating...</span>
               </button>
+              <div class="tool-limit-note hidden" id="audit-daily-limit"></div>
               <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
             </div>
             <div class="result-panel">
@@ -6834,11 +6956,12 @@ body,
               </div>
               <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing here…"></textarea></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Experience</label><input type="text" id="prop-exp" placeholder="e.g. I designed thumbnails for a 100k channel"></div>
-              <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:18px" onclick="checkCredits(30, generateProposal)">
+              <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:18px" onclick="checkCredits(3, generateProposal)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">Write My Proposal</span>
                 <span class="btn-text-loading">Generating...</span>
               </button>
+              <div class="tool-limit-note hidden" id="proposal-daily-limit"></div>
               <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposal…</span></div>
             </div>
             <div class="result-panel">
@@ -6876,11 +6999,12 @@ body,
               <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Cold outreach with a specific insight">Cold Outreach With Insight</option><option value="Follow-up">Follow Up</option><option value="Invoice reminder">Invoice Reminder</option><option value="Proposal follow up">Proposal Follow Up</option><option value="Thank you">Thank You</option></select></div>
               <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly">Friendly</option><option value="Direct">Direct</option><option value="Assertive">Assertive</option></select></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(20, generateEmail)">
+              <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(2, generateEmail)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">Generate Draft</span>
                 <span class="btn-text-loading">Generating...</span>
               </button>
+              <div class="tool-limit-note hidden" id="email-daily-limit"></div>
               <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
             </div>
             <div class="result-panel">
@@ -6896,7 +7020,7 @@ body,
                 <div class="result-box-body" id="email-result-text"></div>
                 <div class="output-actions">
                   <button class="btn btn-secondary" onclick="copyEl('email-result-text')">Copy</button>
-                  <button class="btn btn-secondary" onclick="checkCredits(20, generateEmail)">Regenerate</button>
+                  <button class="btn btn-secondary" onclick="checkCredits(2, generateEmail)">Regenerate</button>
                   <button class="btn btn-secondary" onclick="downloadEmailDraft()">Download</button>
                 </div>
               </div>
@@ -6912,6 +7036,97 @@ body,
       
 
 
+      <div id="page-sequence" class="page">
+        <div class="content-inner wide">
+          <div class="page-hd">
+            <h1>Outreach Sequence Builder</h1>
+            <p>Pick a lead â†’ get a ready-to-send 3-touch outreach sequence. Day 0, Day 3, Day 7.</p>
+          </div>
+          <div class="tool-grid" style="grid-template-columns:minmax(320px,420px) minmax(0,1fr);align-items:start;">
+            <div class="card tool-form-card">
+              <div class="tool-section-kicker">Lead Inputs</div>
+              <div class="field-group"><label class="field-label">Lead Name</label><input type="text" id="seq-lead-name" placeholder="e.g. Fit With Aisha"></div>
+              <div class="field-group"><label class="field-label">Lead Platform</label><select id="seq-lead-platform"><option>YouTube</option><option>LinkedIn</option><option>Instagram</option><option>Shopify</option><option>Website</option><option>Google Maps</option></select></div>
+              <div class="field-group"><label class="field-label">Lead Problem</label><textarea id="seq-lead-problem" rows="5" placeholder="What friction are they dealing with right now?"></textarea></div>
+              <div class="field-group"><label class="field-label">Your Niche / Skill</label><input type="text" id="seq-niche" placeholder="e.g. YouTube thumbnail design"></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Offer / Price</label><input type="text" id="seq-offer" placeholder="e.g. 3 thumbnail refreshes for $350"></div>
+              <div style="margin-top:16px">
+                <button class="btn btn-secondary" type="button" onclick="toggleSequenceLeadImporter()">Import from saved lead</button>
+                <div class="sequence-import-wrap" id="seq-import-wrap">
+                  <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Pull a lead from your saved Opportunity Engine list.</div>
+                  <select id="seq-lead-select" onchange="importSelectedSequenceLead()">
+                    <option value="">Choose a saved lead...</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-full" style="margin-top:18px" onclick="generateSequence()">Generate Sequence â†’</button>
+            </div>
+            <div>
+              <div id="seq-output" style="display:none">
+                <div class="card" style="margin-bottom:16px;padding:18px 20px;">
+                  <div class="tool-section-kicker">Why this sequence works</div>
+                  <div style="font-size:14px;line-height:1.7;color:var(--text-main);" id="seq-strategy">Sequence strategy will appear here.</div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+                  <div class="sequence-card">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
+                      <span class="sequence-day-tag">DAY 0</span>
+                      <span class="opp-meta-tag" id="seq-day0-type">Direct Message</span>
+                    </div>
+                    <div style="font-size:18px;font-weight:700;color:var(--text-main);margin-bottom:8px;">Day 0: First Contact</div>
+                    <div id="seq-day0-subject-wrap" style="display:none;margin-bottom:10px;font-size:12px;color:var(--text-muted);">Subject: <span id="seq-day0-subject"></span></div>
+                    <textarea id="seq-day0-message" class="sequence-msg" readonly></textarea>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;">
+                      <button class="btn btn-secondary" type="button" onclick="copySequenceMessage('seq-day0-message')">Copy</button>
+                      <span style="font-size:12px;color:var(--text-muted);" id="seq-day0-count">0 chars</span>
+                    </div>
+                  </div>
+                  <div class="sequence-card">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
+                      <span class="sequence-day-tag">DAY 3</span>
+                      <span class="opp-meta-tag" id="seq-day3-type">Follow-up</span>
+                    </div>
+                    <div style="font-size:18px;font-weight:700;color:var(--text-main);margin-bottom:8px;">Day 3: Follow-up</div>
+                    <textarea id="seq-day3-message" class="sequence-msg" readonly></textarea>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;">
+                      <button class="btn btn-secondary" type="button" onclick="copySequenceMessage('seq-day3-message')">Copy</button>
+                      <span style="font-size:12px;color:var(--text-muted);" id="seq-day3-count">0 chars</span>
+                    </div>
+                    <div style="margin-top:10px;font-size:12px;color:var(--text-muted);">Send if no reply after 3 days</div>
+                  </div>
+                  <div class="sequence-card">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
+                      <span class="sequence-day-tag">DAY 7</span>
+                      <span class="opp-meta-tag" id="seq-day7-type">Final Touch</span>
+                    </div>
+                    <div style="font-size:18px;font-weight:700;color:var(--text-main);margin-bottom:8px;">Day 7: Final Nudge</div>
+                    <textarea id="seq-day7-message" class="sequence-msg" readonly></textarea>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;">
+                      <button class="btn btn-secondary" type="button" onclick="copySequenceMessage('seq-day7-message')">Copy</button>
+                      <span style="font-size:12px;color:var(--text-muted);" id="seq-day7-count">0 chars</span>
+                    </div>
+                    <div style="margin-top:10px;font-size:12px;color:var(--text-muted);">Last message â€” keep it short</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+                  <button class="btn btn-primary" type="button" onclick="saveSequence()">Save Sequence</button>
+                  <button class="btn btn-secondary" type="button" onclick="resetSequenceBuilder()">Use for New Lead</button>
+                </div>
+              </div>
+              <div style="margin-top:18px;">
+                <button class="sequence-saved-toggle" type="button" onclick="toggleSavedSequences()">
+                  <span>Saved Sequences</span>
+                  <i data-lucide="chevron-down" style="width:14px;height:14px"></i>
+                </button>
+                <div class="sequence-saved-body" id="seq-saved-wrap">
+                  <div id="seq-saved-list"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="page-gig" class="page">
         <div class="content-inner">
           <div class="page-hd"><h1>Gig Opportunity Finder</h1><p>Enter your skills and get data-driven niche recommendations.</p></div>
@@ -6920,7 +7135,7 @@ body,
             <div style="display:grid;grid-template-columns:1fr 1fr 160px;gap:12px;align-items:end">
               <div><label class="field-label">Your Skills</label><input type="text" id="gig-skills" placeholder="e.g. Canva, video editing, copywriting"></div>
               <div><label class="field-label">Target Platform</label><select id="gig-platform"><option value="Both Upwork and Fiverr">Upwork & Fiverr</option><option>Fiverr</option><option>Upwork</option><option>LinkedIn</option></select></div>
-              <button class="btn btn-primary btn-full" id="gig-btn" onclick="checkCredits(25, findGigs)">Scan Market</button>
+              <button class="btn btn-primary btn-full" id="gig-btn" onclick="checkCredits(2, findGigs)">Scan Market</button>
             </div>
             <div class="inline-loader" id="gig-loader" style="margin-top:10px"><div class="spin"></div><span>Analysing market demand…</span></div>
           </div>
@@ -6946,7 +7161,7 @@ body,
               <div><label class="field-label">Current Level</label><input type="text" id="rm-level" placeholder="e.g. Complete Beginner"></div>
               <div><label class="field-label">Biggest Fear</label><input type="text" id="rm-fear" placeholder="e.g. Getting scammed, no clients"></div>
             </div>
-            <button class="btn btn-primary btn-full" id="rm-btn" onclick="checkCredits(40, generateRoadmap)">Generate 30-Day Roadmap</button>
+            <button class="btn btn-primary btn-full" id="rm-btn" onclick="checkCredits(8, generateRoadmap)">Generate 30-Day Roadmap</button>
             <div class="inline-loader" id="rm-loader"><div class="spin"></div><span>Building your custom roadmap…</span></div>
           </div>
           <div id="rm-result" style="display:none;margin-top:22px">
@@ -7144,11 +7359,12 @@ body,
           <label class="field-label">Target location <span style="color:var(--text3)">(optional)</span></label>
           <input type="text" id="qf-location" placeholder="e.g. New York, London, or worldwide">
         </div>
-        <button class="qf-find-btn" id="qf-find-btn" onclick="checkCredits(300, quickFindClients)">
+        <button class="qf-find-btn" id="qf-find-btn" onclick="checkCredits(2, quickFindClients)">
           <i data-lucide="target" style="width:14px;height:14px"></i>
           Find Clients
         </button>
       </div>
+      <div class="tool-limit-note hidden" id="opp-daily-limit"></div>
       <div style="font-size:11px;color:var(--text3);margin-top:4px">
         We scan Instagram, YouTube, LinkedIn, Google Maps & more to find real clients who need your skill right now
       </div>
@@ -7161,7 +7377,7 @@ body,
 
   <!-- Row 1: Target + Lead description + Scan -->
   <div class="ps-top-row">
-    <div>
+    <div class="pro-lock-wrap" style="border-radius:16px;">
       <label class="field-label">Target Type</label>
       <select id="opp-type">
         <option value="Content Creators">Content Creators</option>
@@ -7178,7 +7394,7 @@ body,
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
       <button class="btn-opp-scan" id="opp-scan-btn"
-        onclick="checkCredits(300, scanOpportunities)">
+        onclick="checkCredits(2, scanOpportunities)">
         <i data-lucide="radar" style="width:13px;height:13px"></i>
         Run Deep Scan
       </button>
@@ -7242,6 +7458,10 @@ body,
           <span class="ps-toggle-sub">Burning money with no conversion system</span>
         </span>
       </label>
+      <div class="pro-lock-overlay" id="hot-leads-lock" onclick="showUpgradeModal()">
+        <span class="pro-lock-badge">Elite only</span>
+        <span class="pro-lock-hint">Unlock hot lead targeting on Elite.</span>
+      </div>
     </div>
   </div>
 
@@ -7305,14 +7525,20 @@ body,
 </div><!-- /pre-scan-panel -->
           </div><!-- /opp-deep-panel -->
 
-          <div class="opp-filters" style="margin-top: 8px;">
-                <span class="opp-filter-label">Filter By:</span>
-                <div class="opp-chip-group">
-                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')"><i data-lucide="flame" style="width:12px;height:12px;display:inline-block;margin-right:4px;"></i> High Pain Score (>90)</div>
-                  <div class="opp-filter-chip active" onclick="this.classList.toggle('active')"><i data-lucide="clock" style="width:12px;height:12px;display:inline-block;margin-right:4px;"></i> Active (Last 7 Days)</div>
-                  <div class="opp-filter-chip" onclick="this.classList.toggle('active')">No Monetization Link</div>
+          <div class="pro-lock-wrap" style="border-radius:18px;">
+            <div class="opp-filters" style="margin-top: 8px;">
+                  <span class="opp-filter-label">Filter By:</span>
+                  <div class="opp-chip-group">
+                    <div class="opp-filter-chip active" onclick="this.classList.toggle('active')"><i data-lucide="flame" style="width:12px;height:12px;display:inline-block;margin-right:4px;"></i> High Pain Score (>90)</div>
+                    <div class="opp-filter-chip active" onclick="this.classList.toggle('active')"><i data-lucide="clock" style="width:12px;height:12px;display:inline-block;margin-right:4px;"></i> Active (Last 7 Days)</div>
+                    <div class="opp-filter-chip" onclick="this.classList.toggle('active')">No Monetization Link</div>
+                  </div>
                 </div>
-              </div>
+            <div class="pro-lock-overlay" id="advanced-filters-lock" onclick="showUpgradeModal()">
+              <span class="pro-lock-badge">Elite only</span>
+              <span class="pro-lock-hint">Advanced filtering unlocks on Elite.</span>
+            </div>
+          </div>
 
               <div class="opp-presets-wrap">
                 <div class="opp-presets-title">1-Click Niche Targeting</div>
@@ -7473,7 +7699,7 @@ body,
 
         <div style="margin-top:36px;padding-top:18px;border-top:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;">
           <div style="font-size:12px;color:#6b7280;" id="pdf-footer-email"></div>
-          <div style="font-size:9px;color:#d1d5db;">powered by lancify</div>
+            <div style="font-size:9px;color:#d1d5db;" id="pdf-footer-watermark">powered by lancify</div>
         </div>
       </div>
 
@@ -7720,7 +7946,7 @@ body,
             <div class="billing-bar-fill" id="billing-credits-bar" style="width:85%"></div>
           </div>
         </div>
-        <button class="btn btn-primary btn-full" style="height:40px;font-size:14px" onclick="window.open('https://lancify.framer.website/#pricing','_blank');closeModal('settings-modal')">
+        <button class="btn btn-primary btn-full" id="billing-upgrade-btn" style="height:40px;font-size:14px" onclick="closeModal('settings-modal');showUpgradeModal()">
           ⚡ Upgrade to Pro — Unlimited Credits
         </button>
         <div style="margin-top:14px;font-size:12px;color:var(--text3);text-align:center">Pro includes: Unlimited AI credits · PDF exports · Priority support</div>
@@ -8041,7 +8267,7 @@ async function quickFindClients() {
         Try changing your location, or switch to <strong>Deep Scan</strong> to customise your search further.
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="checkCredits(300, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
+        <button onclick="checkCredits(2, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
           Try Again
         </button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
@@ -8064,6 +8290,11 @@ function switchOppMode(mode) {
   const deepPanel  = el('opp-deep-panel');
   const tabQuick   = el('tab-quick');
   const tabDeep    = el('tab-deep');
+  if (mode === 'deep' && !_planRules().deepScan) {
+    showToast('Deep Scan is available on Pro plan and above.');
+    showUpgradeModal();
+    return;
+  }
   if (mode === 'quick') {
     quickPanel.classList.remove('hidden');
     deepPanel.classList.remove('visible');
@@ -8226,7 +8457,7 @@ async function quickFindClients() {
         skill:      skillRaw,
         mode:       'quick',
         incomeGoal: income ? parseInt(income) : null,
-        plan:       userProfile?.is_pro ? 'pro' : 'free',
+        plan:       _currentPlanKey(),
       }),
     });
     apiData  = await apiRes.json();
@@ -8245,10 +8476,9 @@ async function quickFindClients() {
         <div style="font-size:13px;color:var(--text-muted)">
           Found <strong style="color:var(--text-main)">${apiLeads.length} clients</strong> who need <strong style="color:var(--text-main)">${skillRaw}</strong>
           ${income ? ` · Target: <strong style="color:#10b981">$${income}/mo</strong>` : ''}
-          ${apiData?.usage?.estimatedCredits ? ` · Estimated credits: <strong style="color:#f59e0b">${apiData.usage.estimatedCredits}</strong>` : ''}
+          </div>
         </div>
-      </div>
-      <div class="qf-results-grid">${apiLeads.map(_renderQfCard).join('')}</div>`;
+        <div class="qf-results-grid">${apiLeads.map(_renderQfCard).join('')}</div>`;
     lucide.createIcons();
     ingestOpportunityClients(apiLeads, skillRaw);
     renderManagedOpportunityClients();
@@ -8265,7 +8495,7 @@ async function quickFindClients() {
         ${apiError ? 'Something went wrong. Please try again.' : 'Try adding a location like "Mumbai" or "New York", or switch to Advanced mode.'}
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="checkCredits(300, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Again</button>
+        <button onclick="checkCredits(2, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Again</button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Advanced</button>
       </div>
     </div>`;
@@ -8893,6 +9123,11 @@ function _deriveRedFlag(lead) {
 }
 /* ── Main scan function ── */
 async function scanOpportunities() {
+  if (!_planRules().deepScan) {
+    showToast('Deep Scan is available on Pro plan and above.');
+    showUpgradeModal();
+    return false;
+  }
   const btn       = el('opp-scan-btn');
   const loader    = el('opp-loader');
   const loaderTxt = el('opp-loader-text');
@@ -8944,7 +9179,7 @@ async function scanOpportunities() {
         serviceMatch: serviceFilter,
         hotLeadsOnly: hotOnly,
         filters: activeFilters,
-        plan: userProfile?.is_pro ? 'pro' : 'free'
+        plan: _currentPlanKey()
       }),
     });
     const apiData = await apiRes.json();
@@ -9048,6 +9283,14 @@ const CHECKLIST_WIDGET_MIN_KEY = 'lancify_widget_minimized';
 const CHECKLIST_WIDGET_SESSION_KEY = 'lancify_widget_message';
 const ONBOARDING_SEEN_KEY = 'onboarding_seen';
 const PLAN_PATH = '/plan';
+const WHOP_URLS = {
+  pro_monthly: 'https://whop.com/checkout/plan_R0hZsM2GwvXDJ',
+  pro_annual: 'https://whop.com/checkout/REPLACE_WITH_ANNUAL_PRO_PLAN_ID',
+  elite_monthly: 'https://whop.com/checkout/plan_7xGVl6SIy0Fc7',
+  elite_annual: 'https://whop.com/checkout/REPLACE_WITH_ANNUAL_ELITE_PLAN_ID',
+};
+let pricingBillingPeriod = 'monthly';
+let pricingModalRendered = false;
 const CHECKLIST_STEPS = [
   { id: 1, route: 'opportunity', label: 'Opportunity Engine', title: 'Find one lead worth pitching today', desc: 'Run Opportunity Engine, save the best match, and use Quick DM so your first move happens now instead of later.', widgetDesc: 'Find a real lead and send the first move.', action: 'Open' },
   { id: 2, route: 'audit', label: 'Audit Generator', title: 'Prove value before you ask for money', desc: 'Generate a sharp audit for your best lead so your pitch feels researched, premium, and much harder to ignore.', widgetDesc: 'Generate proof before you pitch.', action: 'Build' },
@@ -9492,11 +9735,11 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHlxdHlud2J2anNzcnFhbm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzEzNjksImV4cCI6MjA5MDQ0NzM2OX0.INAaApS6CqlzeOmRq-Yux3QkzDt4etQrklSnmX9droY'
 );
 
-let currentUser = null, userProfile = {is_pro:false}, userLeads = [], userInvoices = [], opportunityClients = [];
+let currentUser = null, userProfile = {is_pro:false, is_elite:false}, userLeads = [], userInvoices = [], opportunityClients = [];
 let leadMetaStore = {}, crmFilters = { search:'', platform:'all', sort:'newest' }, accountingState = { range:'30d', start:'', end:'' }, draggedLeadId = null;
 let authMode = 'signin';
 let chatStep = 0, chatAnswers = {}, savedKitData = null; savedAuditData = null;
-let billingState = { total: 1000, remaining: 1000, cycleStart: null, usage: {} };
+let billingState = { total: 200, remaining: 200, cycleStart: null, usage: {}, dailyUsage: {}, dailyResetDate: null };
 let homeEarningsRange = '30d';
 let currentPage = 'home';
 let latestEmailDraft = { subject: '', body: '' };
@@ -9510,25 +9753,70 @@ const CRM_STAGE_META = {
 const PLAN_RULES = {
   free: {
     name: 'Free Plan',
-    monthlyCredits: 1000,
-    lockedPages: ['gig', 'roadmap'],
+    monthlyCredits: 200,
+    lockedPages: ['gig', 'roadmap', 'sequence'],
     usageLimits: {
       opportunity_scan: 3,
-      audit_generate: 3,
-      proposal_generate: 3,
-      pipeline_leads: 5
-    }
+      proposal_generate: 2,
+      email_generate: 2,
+      audit_generate: 1,
+      pipeline_leads: 5,
+      invoice_create: 3,
+      gig_scan: 0,
+      roadmap_generate: 0,
+      sequence_generate: 0,
+    },
+    deepScan: false,
+    hotLeadsFilter: false,
+    advancedFilters: false,
+    whitelabelInvoice: false,
   },
   pro: {
     name: 'Pro Plan',
-    monthlyCredits: 15000,
+    monthlyCredits: 3000,
+    lockedPages: ['sequence'],
+    usageLimits: {
+      opportunity_scan: 20,
+      proposal_generate: Infinity,
+      email_generate: Infinity,
+      audit_generate: Infinity,
+      pipeline_leads: Infinity,
+      invoice_create: Infinity,
+      gig_scan: Infinity,
+      roadmap_generate: Infinity,
+      sequence_generate: 0,
+    },
+    deepScan: true,
+    hotLeadsFilter: false,
+    advancedFilters: false,
+    whitelabelInvoice: false,
+  },
+  elite: {
+    name: 'Elite Plan',
+    monthlyCredits: 10000,
     lockedPages: [],
-    usageLimits: {}
-  }
+    usageLimits: {
+      opportunity_scan: Infinity,
+      proposal_generate: Infinity,
+      email_generate: Infinity,
+      audit_generate: Infinity,
+      pipeline_leads: Infinity,
+      invoice_create: Infinity,
+      gig_scan: Infinity,
+      roadmap_generate: Infinity,
+      sequence_generate: Infinity,
+    },
+    deepScan: true,
+    hotLeadsFilter: true,
+    advancedFilters: true,
+    whitelabelInvoice: true,
+  },
 };
 
 function _currentPlanKey(){
-  return userProfile?.is_pro ? 'pro' : 'free';
+  if (userProfile?.is_elite) return 'elite';
+  if (userProfile?.is_pro) return 'pro';
+  return 'free';
 }
 
 function _planRules(){
@@ -9538,6 +9826,10 @@ function _planRules(){
 function _monthStartIso(){
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+}
+
+function _todayIso(){
+  return new Date().toISOString().split('T')[0];
 }
 
 function _sameBillingCycle(a, b){
@@ -9558,7 +9850,8 @@ function _featureFromCallbackName(name){
     generateProposal: 'proposal_generate',
     generateEmail: 'email_generate',
     findGigs: 'gig_scan',
-    generateRoadmap: 'roadmap_generate'
+    generateRoadmap: 'roadmap_generate',
+    generateSequence: 'sequence_generate'
   };
   return map[name] || '';
 }
@@ -9571,15 +9864,63 @@ function _usageCount(feature){
   return Number(billingState?.usage?.[feature] || 0);
 }
 
+function _dailyUsageCount(feature){
+  return Number(billingState?.dailyUsage?.[feature] || 0);
+}
+
 function _featureLimit(feature){
   const limits = _planRules().usageLimits || {};
   const val = limits[feature];
   return Number.isFinite(val) ? val : Infinity;
 }
 
+function _isDailyLimitedFeature(feature){
+  return ['opportunity_scan', 'proposal_generate', 'email_generate', 'audit_generate'].includes(feature);
+}
+
+function _featureUsageCount(feature){
+  return _isDailyLimitedFeature(feature) ? _dailyUsageCount(feature) : _usageCount(feature);
+}
+
+function _featureRemaining(feature){
+  const limit = _featureLimit(feature);
+  if (!Number.isFinite(limit)) return Infinity;
+  return Math.max(0, limit - _featureUsageCount(feature));
+}
+
+function _updateDailyLimitUi(){
+  const meta = {
+    opportunity_scan: { id: 'opp-daily-limit', label: 'lead scans' },
+    proposal_generate: { id: 'proposal-daily-limit', label: 'proposals' },
+    email_generate: { id: 'email-daily-limit', label: 'emails' },
+    audit_generate: { id: 'audit-daily-limit', label: 'audits' },
+  };
+  Object.entries(meta).forEach(([feature, config]) => {
+    const node = el(config.id);
+    if (!node) return;
+    if (_currentPlanKey() !== 'free') {
+      node.classList.add('hidden');
+      node.textContent = '';
+      return;
+    }
+    const limit = _featureLimit(feature);
+    const remaining = _featureRemaining(feature);
+    node.textContent = `${remaining} of ${limit} ${config.label} remaining today`;
+    node.classList.remove('hidden');
+  });
+}
+
+function _syncPlanGatedUi(){
+  const rules = _planRules();
+  const hotLock = el('hot-leads-lock');
+  const advancedLock = el('advanced-filters-lock');
+  if (hotLock) hotLock.classList.toggle('show', !rules.hotLeadsFilter);
+  if (advancedLock) advancedLock.classList.toggle('show', !rules.advancedFilters);
+}
+
 function _setPlanUi(){
   const rules = _planRules();
-  const total = Number(billingState.total || rules.monthlyCredits || 1000);
+  const total = Number(billingState.total || rules.monthlyCredits || 200);
   const remaining = Math.max(0, Number(billingState.remaining || 0));
   const pct = Math.max(0, Math.min(100, Math.round((remaining / Math.max(total, 1)) * 100)));
 
@@ -9597,13 +9938,41 @@ function _setPlanUi(){
 
   setText('acct-plan-label', rules.name);
   setText('billing-plan-name', rules.name);
-  setText(
-    'billing-plan-desc',
-    rules.name === 'Pro Plan'
-      ? `${total.toLocaleString()} AI credits included. Premium feature limits unlocked.`
-      : `${total.toLocaleString()} AI credits included. Resets monthly.`
-  );
+  const planKey = _currentPlanKey();
+  const descMap = {
+    free: `${total.toLocaleString()} AI credits included. Resets monthly.`,
+    pro: `${total.toLocaleString()} AI credits included. Premium features unlocked.`,
+    elite: `${total.toLocaleString()} AI credits included. Every feature. Every filter. Unlimited.`,
+  };
+  setText('billing-plan-desc', descMap[planKey] || descMap.free);
+
+  const upgradeBtn = el('billing-upgrade-btn');
+  if (upgradeBtn) upgradeBtn.textContent = planKey === 'free' ? 'Upgrade to Pro' : planKey === 'pro' ? 'Upgrade to Elite' : 'You have the top plan';
+  const upgradeCopyNode = document.getElementById('billing-upgrade-copy');
+  if (upgradeCopyNode) {
+    upgradeCopyNode.textContent = planKey === 'free'
+      ? 'Pro unlocks deep scan, gigs, roadmaps, and unlimited core workflows.'
+      : planKey === 'pro'
+        ? 'Elite unlocks sequence builder, hot lead filters, advanced filters, and white-label invoices.'
+        : 'Elite includes every feature, every filter, and the full monthly credit allocation.';
+  }
+
+  const warningBanner = el('credits-warning-banner');
+  if (warningBanner) {
+    const show = pct <= 20 && pct > 0;
+    warningBanner.classList.toggle('show', show);
+    if (show) {
+      const upgradeTarget = planKey === 'free' ? 'Pro ($19/mo)' : 'Elite ($49/mo)';
+      const warningText = el('credits-warning-text');
+      if (warningText) {
+        warningText.textContent = `${remaining} credits left this month — upgrade to ${upgradeTarget} for more.`;
+      }
+    }
+  }
+
   renderHomeCreditsWidget(total, remaining);
+  _updateDailyLimitUi();
+  _syncPlanGatedUi();
 }
 
 function _applyPlanLocks(){
@@ -9620,11 +9989,30 @@ function _isPageLocked(page){
 
 function _canUseFeature(feature, showFeedback = true){
   if (!feature) return true;
+  if (_isDailyLimitedFeature(feature)) {
+    return _canUseDailyFeature(feature, showFeedback);
+  }
   const limit = _featureLimit(feature);
   const used = _usageCount(feature);
   if (used < limit) return true;
   if (showFeedback) {
-    showToast(`Free limit reached for this feature (${used}/${limit}). Upgrade to Pro to continue.`);
+    const planKey = _currentPlanKey();
+    const upgradeTarget = planKey === 'free' ? 'Pro' : 'Elite';
+    showToast(`Daily limit reached. Upgrade to ${upgradeTarget} to continue.`);
+    showUpgradeModal();
+  }
+  return false;
+}
+
+function _canUseDailyFeature(feature, showFeedback = true){
+  const limit = _featureLimit(feature);
+  if (!Number.isFinite(limit)) return true;
+  const used = _dailyUsageCount(feature);
+  if (used < limit) return true;
+  if (showFeedback) {
+    const planKey = _currentPlanKey();
+    const upgradeTarget = planKey === 'free' ? 'Pro' : 'Elite';
+    showToast(`Daily limit reached. Upgrade to ${upgradeTarget} to continue.`);
     showUpgradeModal();
   }
   return false;
@@ -9648,7 +10036,11 @@ async function _persistBillingState(){
     credits_total: Number(billingState.total || _planRules().monthlyCredits),
     credits_remaining: Number(billingState.remaining || 0),
     credits_cycle_start: billingState.cycleStart || _monthStartIso(),
-    billing_usage: billingState.usage || {}
+    billing_usage: {
+      monthlyUsage: billingState.usage || {},
+      dailyUsage: billingState.dailyUsage || {},
+      dailyResetDate: billingState.dailyResetDate || _todayIso(),
+    }
   };
   localStorage.setItem(_billingLocalKey(currentUser.id), JSON.stringify(payload));
   try {
@@ -9664,6 +10056,8 @@ async function loadBillingState(uid){
   let remaining = plan.monthlyCredits;
   let cycleStart = _monthStartIso();
   let usage = {};
+  let dailyUsage = {};
+  let dailyResetDate = _todayIso();
 
   try {
     const localRaw = localStorage.getItem(_billingLocalKey(uid));
@@ -9672,23 +10066,40 @@ async function loadBillingState(uid){
       if (Number.isFinite(Number(local.credits_total))) total = Number(local.credits_total);
       if (Number.isFinite(Number(local.credits_remaining))) remaining = Number(local.credits_remaining);
       if (local.credits_cycle_start) cycleStart = local.credits_cycle_start;
-      if (local.billing_usage && typeof local.billing_usage === 'object') usage = local.billing_usage;
+      if (local.billing_usage && typeof local.billing_usage === 'object') {
+        if (local.billing_usage.monthlyUsage || local.billing_usage.dailyUsage) {
+          usage = local.billing_usage.monthlyUsage || {};
+          dailyUsage = local.billing_usage.dailyUsage || {};
+          dailyResetDate = local.billing_usage.dailyResetDate || dailyResetDate;
+        } else {
+          usage = local.billing_usage;
+        }
+      }
     }
   } catch {}
 
   try {
     const { data, error } = await sb
       .from('profiles')
-      .select('is_pro,credits_total,credits_remaining,credits_cycle_start,billing_usage')
+      .select('is_pro,is_elite,credits_total,credits_remaining,credits_cycle_start,billing_usage')
       .eq('user_id', uid)
       .single();
     if (!error && data) {
       if (typeof data.is_pro === 'boolean') userProfile.is_pro = data.is_pro;
+      if (typeof data.is_elite === 'boolean') userProfile.is_elite = data.is_elite;
       const planFromDb = _planRules();
       total = planFromDb.monthlyCredits;
       if (Number.isFinite(Number(data.credits_remaining))) remaining = Number(data.credits_remaining);
       if (data.credits_cycle_start) cycleStart = data.credits_cycle_start;
-      if (data.billing_usage && typeof data.billing_usage === 'object') usage = data.billing_usage;
+      if (data.billing_usage && typeof data.billing_usage === 'object') {
+        if (data.billing_usage.monthlyUsage || data.billing_usage.dailyUsage) {
+          usage = data.billing_usage.monthlyUsage || {};
+          dailyUsage = data.billing_usage.dailyUsage || {};
+          dailyResetDate = data.billing_usage.dailyResetDate || dailyResetDate;
+        } else {
+          usage = data.billing_usage;
+        }
+      }
     }
   } catch {}
 
@@ -9699,9 +10110,14 @@ async function loadBillingState(uid){
     remaining = total;
     usage = {};
   }
+  const today = _todayIso();
+  if (dailyResetDate !== today) {
+    dailyUsage = {};
+    dailyResetDate = today;
+  }
   remaining = Math.max(0, Math.min(total, Number(remaining || 0)));
 
-  billingState = { total, remaining, cycleStart, usage };
+  billingState = { total, remaining, cycleStart, usage, dailyUsage, dailyResetDate };
   _setPlanUi();
   _applyPlanLocks();
   await _persistBillingState();
@@ -9712,27 +10128,30 @@ async function _consumeCredits(cost, featureKey = ''){
   if (!currentUser) return false;
   await loadBillingState(currentUser.id);
 
-  const featurePageMap = { gig_scan: 'gig', roadmap_generate: 'roadmap' };
+  const featurePageMap = { gig_scan: 'gig', roadmap_generate: 'roadmap', sequence_generate: 'sequence' };
   const targetPage = featurePageMap[featureKey];
   if (targetPage && _isPageLocked(targetPage)) {
-    showToast('This feature is available on Pro plan.');
+    const targetPlan = targetPage === 'sequence' ? 'Elite' : 'Pro';
+    showToast(`This feature is available on ${targetPlan} plan.`);
     showUpgradeModal();
     return false;
   }
 
   if (featureKey && !_canUseFeature(featureKey, true)) return false;
   if (numericCost <= 0) return true;
+  if (billingState.remaining === 0) {
+    showToast(`You've used all your credits for this month. Upgrade to keep going.`);
+    showUpgradeModal({ message: `You've used all your credits for this month. Upgrade to keep going.` });
+    return false;
+  }
   if (billingState.remaining < numericCost) {
-    showToast('Not enough credits. Upgrade to Pro or wait for monthly reset.');
-    showUpgradeModal();
+    showToast('Not enough credits left this month. Upgrade to keep going.');
+    showUpgradeModal({ message: `You've used all your credits for this month. Upgrade to keep going.` });
     return false;
   }
 
   billingState.remaining -= numericCost;
   _setPlanUi();
-  if (billingState.remaining <= _creditWarningThreshold(billingState.total)) {
-    showToast(`Low credits: ${billingState.remaining} remaining this month.`);
-  }
   await _persistBillingState();
   return true;
 }
@@ -9747,8 +10166,13 @@ async function _refundCredits(cost){
 
 async function _markFeatureUsage(featureKey){
   if (!currentUser || !featureKey) return;
-  const current = _usageCount(featureKey);
-  billingState.usage = { ...(billingState.usage || {}), [featureKey]: current + 1 };
+  if (_isDailyLimitedFeature(featureKey)) {
+    const current = _dailyUsageCount(featureKey);
+    billingState.dailyUsage = { ...(billingState.dailyUsage || {}), [featureKey]: current + 1 };
+  } else {
+    const current = _usageCount(featureKey);
+    billingState.usage = { ...(billingState.usage || {}), [featureKey]: current + 1 };
+  }
   await _persistBillingState();
 }
 
@@ -9795,6 +10219,9 @@ async function initApp() {
   applySidebarState();
   const {data:{session}} = await sb.auth.getSession();
   hide('loading-screen');
+  renderSavedSequences();
+  renderSequenceLeadOptions();
+  updateSequenceCounts();
   setTimeout(() => initChecklistCollapse(), 500);
   setTimeout(() => _syncNavFolderHeights(), 100);
   if (session?.user) onLogin(session.user);
@@ -9818,7 +10245,7 @@ window.addEventListener('popstate', () => {
 });
 
 function showLogin() {
-  billingState = { total: 1000, remaining: 1000, cycleStart: null, usage: {} };
+  billingState = { total: 200, remaining: 200, cycleStart: null, usage: {}, dailyUsage: {}, dailyResetDate: _todayIso() };
   pbProgress = [false, false, false, false];
   const ls = el('login-screen');
   if(ls) ls.style.display='flex';
@@ -9922,7 +10349,8 @@ function dismissGuideBanner(page) {
 function navigate(page) {
   currentPage = page;
   if (_isPageLocked(page)) {
-    showToast('This feature is available on Pro plan.');
+    const targetPlan = page === 'sequence' ? 'Elite' : 'Pro';
+    showToast(`This feature is available on ${targetPlan} plan.`);
     showUpgradeModal();
     return;
   }
@@ -10789,6 +11217,208 @@ function routeToDraftEmail(leadName, contextBody, emailType = 'Cold outreach wit
   showToast(`Email context pre-filled for "${leadName}".`);
 }
 
+function renderSequenceLeadOptions() {
+  const select = el('seq-lead-select');
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = '<option value="">Choose a saved lead...</option>';
+  (opportunityClients || []).slice(0, 50).forEach((lead, index) => {
+    const option = document.createElement('option');
+    option.value = String(index);
+    option.textContent = `${lead.name || 'Untitled lead'} · ${lead.platform || 'Website'}`;
+    select.appendChild(option);
+  });
+  if ([...select.options].some(opt => opt.value === current)) select.value = current;
+}
+
+function toggleSequenceLeadImporter() {
+  const wrap = el('seq-import-wrap');
+  if (!wrap) return;
+  renderSequenceLeadOptions();
+  wrap.classList.toggle('show');
+  if (wrap.classList.contains('show') && !(opportunityClients || []).length) {
+    showToast('No saved opportunity leads yet.');
+  }
+}
+
+function importSelectedSequenceLead() {
+  const select = el('seq-lead-select');
+  if (!select || !select.value) return;
+  const lead = opportunityClients[Number(select.value)];
+  if (lead) importLeadToSequence(lead);
+}
+
+function importLeadToSequence(lead) {
+  if (!_planRules().usageLimits.sequence_generate) {
+    showToast('Outreach Sequence Builder is an Elite feature.');
+    showUpgradeModal();
+    return;
+  }
+  setVal('seq-lead-name', lead.name || '');
+  setVal('seq-lead-platform', lead.platform || 'Website');
+  setVal('seq-lead-problem', lead.problem || '');
+  navigate('sequence');
+  const importWrap = el('seq-import-wrap');
+  if (importWrap) importWrap.classList.remove('show');
+  setTimeout(() => showToast('Lead imported — add your niche and offer to generate.'), 300);
+}
+
+function copySequenceMessage(id) {
+  const text = val(id).trim();
+  if (!text) return;
+  copyDirectText(text, 'Sequence copied.');
+}
+
+function updateSequenceCounts() {
+  ['day0', 'day3', 'day7'].forEach(day => {
+    const text = val(`seq-${day}-message`) || '';
+    setText(`seq-${day}-count`, `${text.length} chars`);
+  });
+}
+
+async function generateSequence() {
+  if (!_planRules().usageLimits.sequence_generate) {
+    showToast('Outreach Sequence Builder is an Elite feature.');
+    showUpgradeModal();
+    return;
+  }
+
+  const leadName = val('seq-lead-name').trim();
+  const platform = val('seq-lead-platform');
+  const problem = val('seq-lead-problem').trim();
+  const niche = val('seq-niche').trim();
+  const offer = val('seq-offer').trim();
+
+  if (!leadName || !problem || !niche) {
+    showToast('Please fill in lead name, problem, and your niche.');
+    return;
+  }
+
+  const ok = await _consumeCredits(5, 'sequence_generate');
+  if (!ok) return;
+
+  const btn = document.querySelector('[onclick="generateSequence()"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating sequence...'; }
+
+  try {
+    const response = await fetch('/api/sequence', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ leadName, platform, problem, niche, offer }),
+    });
+
+    const data = await response.json();
+    if (data.error) throw new Error(data.error);
+
+    setText('seq-day0-type', data.day0?.type || 'Direct Message');
+    setVal('seq-day0-message', data.day0?.message || '');
+    const day0SubjectWrap = el('seq-day0-subject-wrap');
+    if (data.day0?.subject) {
+      setText('seq-day0-subject', data.day0.subject);
+      if (day0SubjectWrap) day0SubjectWrap.style.display = 'block';
+    } else if (day0SubjectWrap) {
+      day0SubjectWrap.style.display = 'none';
+    }
+
+    setText('seq-day3-type', data.day3?.type || 'Follow-up');
+    setVal('seq-day3-message', data.day3?.message || '');
+
+    setText('seq-day7-type', data.day7?.type || 'Final Nudge');
+    setVal('seq-day7-message', data.day7?.message || '');
+
+    if (data.strategy) setText('seq-strategy', data.strategy);
+    updateSequenceCounts();
+
+    const output = el('seq-output');
+    if (output) {
+      output.style.display = 'block';
+      output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    await _markFeatureUsage('sequence_generate');
+    showToast('Sequence generated ✓');
+    recordActivity('sequence', `Generated outreach sequence for ${leadName}`);
+  } catch (err) {
+    await _refundCredits(5);
+    showToast('Failed to generate sequence. Credits refunded.');
+    console.error('Sequence error:', err);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Generate Sequence →'; }
+  }
+}
+
+function resetSequenceBuilder() {
+  ['seq-lead-name', 'seq-lead-problem', 'seq-niche', 'seq-offer', 'seq-day0-message', 'seq-day3-message', 'seq-day7-message'].forEach(id => setVal(id, ''));
+  setVal('seq-lead-platform', 'YouTube');
+  setText('seq-day0-type', 'Direct Message');
+  setText('seq-day3-type', 'Follow-up');
+  setText('seq-day7-type', 'Final Touch');
+  setText('seq-strategy', 'Sequence strategy will appear here.');
+  const subjectWrap = el('seq-day0-subject-wrap');
+  if (subjectWrap) subjectWrap.style.display = 'none';
+  const output = el('seq-output');
+  if (output) output.style.display = 'none';
+  updateSequenceCounts();
+}
+
+function saveSequence() {
+  if (!val('seq-day0-message').trim()) {
+    showToast('Generate a sequence first.');
+    return;
+  }
+  const sequences = JSON.parse(localStorage.getItem('lancify-sequences') || '[]');
+  sequences.unshift({
+    id: `seq-${Date.now()}`,
+    leadName: val('seq-lead-name'),
+    platform: val('seq-lead-platform'),
+    createdAt: new Date().toISOString(),
+    day0: val('seq-day0-message'),
+    day3: val('seq-day3-message'),
+    day7: val('seq-day7-message'),
+  });
+  localStorage.setItem('lancify-sequences', JSON.stringify(sequences.slice(0, 20)));
+  showToast('Sequence saved ✓');
+  renderSavedSequences();
+  el('seq-saved-wrap')?.classList.add('show');
+}
+
+function toggleSavedSequences() {
+  el('seq-saved-wrap')?.classList.toggle('show');
+}
+
+function toggleSavedSequenceItem(id) {
+  document.getElementById(`saved-seq-${id}`)?.classList.toggle('show');
+}
+
+function renderSavedSequences() {
+  const sequences = JSON.parse(localStorage.getItem('lancify-sequences') || '[]');
+  const container = el('seq-saved-list');
+  if (!container) return;
+  if (!sequences.length) {
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:8px 0;">No saved sequences yet.</p>';
+    return;
+  }
+  container.innerHTML = sequences.map(s => `
+    <div style="padding:12px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div>
+          <div style="font-weight:600;font-size:13px;">${escapeHtml(s.leadName || 'Untitled lead')}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${escapeHtml(s.platform || 'Website')} · ${new Date(s.createdAt).toLocaleDateString()}</div>
+        </div>
+        <button class="btn btn-secondary" type="button" style="height:32px;padding:0 12px;" onclick="toggleSavedSequenceItem('${escapeJsAttr(s.id)}')">Expand</button>
+      </div>
+      <div class="sequence-saved-body" id="saved-seq-${escapeHtml(s.id)}" style="margin-top:12px;">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Day 0</div>
+        <div style="font-size:13px;line-height:1.7;color:var(--text-main);margin-bottom:12px;white-space:pre-wrap;">${escapeHtml(s.day0 || '')}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Day 3</div>
+        <div style="font-size:13px;line-height:1.7;color:var(--text-main);margin-bottom:12px;white-space:pre-wrap;">${escapeHtml(s.day3 || '')}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Day 7</div>
+        <div style="font-size:13px;line-height:1.7;color:var(--text-main);white-space:pre-wrap;">${escapeHtml(s.day7 || '')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
 function routeToLead(name, platform, service = '', dealValue = ''){
   setVal('lead-name', name);
   if (service) setVal('lead-service', service);
@@ -10865,6 +11495,7 @@ function _renderQfCard(lead) {
       <button class="qf-action-btn" onclick="copyDirectText('${escapeJsAttr(loomText)}','Loom script copied.')"><i data-lucide="video" style="width:11px;height:11px"></i> Loom Script</button>
       <button class="qf-action-btn" onclick="routeToAudit('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(auditObservation)}','${escapeJsAttr(deal)}','${escapeJsAttr(skill)}')"><i data-lucide="file-check-2" style="width:11px;height:11px"></i> Audit</button>
       <button class="qf-action-btn" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(skill)}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal</button>
+      <button class="qf-action-btn" onclick="importLeadToSequence({name:'${escapeJsAttr(lead.name || '')}',platform:'${escapeJsAttr(lead.platform || '')}',problem:'${escapeJsAttr(lead.problem || '')}'})"><i data-lucide="git-branch" style="width:11px;height:11px"></i> Sequence</button>
     </div>
   </div>`;
 }
@@ -10958,6 +11589,7 @@ function _renderOppCard(lead) {
         <span class="opp-action-group-label">Close</span>
         <div class="opp-action-btns">
           <button class="opp-action-btn opp-btn-outline" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal Brief</button>
+          <button class="opp-action-btn opp-btn-outline" onclick="importLeadToSequence({name:'${escapeJsAttr(lead.name || '')}',platform:'${escapeJsAttr(lead.platform || '')}',problem:'${escapeJsAttr(problem)}'})"><i data-lucide="git-branch" style="width:11px;height:11px"></i> Sequence</button>
           <button class="opp-action-btn opp-btn-outline" onclick="routeToInvoice('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(service)}','${escapeJsAttr(dealValue)}','','Opportunity Engine lead')"><i data-lucide="receipt-text" style="width:11px;height:11px"></i> Quick Invoice</button>
           <button class="opp-action-btn opp-btn-won" onclick="markLeadWon(this.closest('.opp-card'),'${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}','${escapeJsAttr(dealValue)}')"><i data-lucide="trophy" style="width:11px;height:11px"></i> Save as Won</button>
         </div>
@@ -11049,6 +11681,7 @@ async function loadOpportunityClients(uid){
       opportunityClients = [];
     }
   }
+  renderSequenceLeadOptions();
   renderManagedOpportunityClients();
 }
 
@@ -11339,6 +11972,13 @@ async function createInvoice(opts = {}){
 
   if (!clientName || !service || !amount) {
     showToast('Add client, service, and amount.');
+    return;
+  }
+
+  const invoiceLimit = _featureLimit('invoice_create');
+  if (Number.isFinite(invoiceLimit) && userInvoices.length >= invoiceLimit) {
+    showToast(`Free plan allows ${invoiceLimit} invoices total. Upgrade to Pro for unlimited.`);
+    showUpgradeModal();
     return;
   }
 
@@ -12014,6 +12654,7 @@ function renderHomeCreditsWidget(total, remaining){
   const ring = el('home-credits-ring');
   if (!ring) return;
   const pct = Math.max(0, Math.min(100, Math.round((remaining / Math.max(total, 1)) * 100)));
+  const planKey = _currentPlanKey();
   const circumference = 2 * Math.PI * 36;
   ring.style.strokeDasharray = `${circumference}`;
   ring.style.strokeDashoffset = `${circumference - ((pct / 100) * circumference)}`;
@@ -12022,8 +12663,16 @@ function renderHomeCreditsWidget(total, remaining){
   const warning = el('home-credits-warning');
   const cta = el('home-credits-cta');
   const low = pct <= 20;
-  if (warning) warning.style.display = low ? 'block' : 'none';
-  if (cta) cta.style.display = low ? 'inline-flex' : 'none';
+  if (warning) {
+    warning.style.display = low ? 'block' : 'none';
+    warning.textContent = low
+      ? `Running low this month. Upgrade to ${planKey === 'free' ? 'Pro' : 'Elite'} to keep momentum high.`
+      : '';
+  }
+  if (cta) {
+    cta.style.display = low ? 'inline-flex' : 'none';
+    cta.textContent = planKey === 'free' ? 'Upgrade to Pro' : 'Upgrade to Elite';
+  }
 }
 
 function renderHomeActivityFeed(){
@@ -12059,6 +12708,7 @@ function renderHomeActivityFeed(){
     proposal: 'file-text',
     email: 'mail',
     audit: 'sparkles',
+    sequence: 'git-branch',
     invoice: 'receipt-text',
     paid: 'badge-dollar-sign',
     client: 'users',
@@ -12822,6 +13472,9 @@ function previewInvoicePdf() {
     badge.textContent = status.toUpperCase();
     badge.style.cssText = statusStyles[status] || statusStyles.sent;
   }
+  const showWatermark = !_planRules().whitelabelInvoice;
+  const watermarkEl = el('pdf-footer-watermark');
+  if (watermarkEl) watermarkEl.style.display = showWatermark ? 'block' : 'none';
 
   const notesWrap = el('pdf-notes-wrap');
   if (notesWrap) notesWrap.style.display = notes.trim() ? 'block' : 'none';
@@ -13451,6 +14104,188 @@ function downloadEmailDraft(){
 
 function autoResize(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,200)+'px'; }
 
+function renderUpgradeModalShell() {
+  const modal = el('upgrade-modal');
+  if (!modal || pricingModalRendered) return;
+  modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:900;background:radial-gradient(circle at top, rgba(232,80,10,0.16), transparent 24%), radial-gradient(circle at bottom right, rgba(245,158,11,0.14), transparent 22%), linear-gradient(180deg,#0f1116 0%,#090b10 100%);overflow-y:auto;animation:fadeUp .22s ease;';
+  modal.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;background:rgba(9,11,16,0.88);backdrop-filter:blur(18px);z-index:10;">
+      <button onclick="closeUpgrade()" style="display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;color:#a1a1aa;font-size:14px;font-family:inherit;padding:6px 10px;border-radius:8px;transition:background .15s;" onmouseover="this.style.background='#1c1c1f'" onmouseout="this.style.background='none'">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+      </button>
+      <img src="lightthemelogo.png" alt="Lancify" style="height:22px;filter:invert(1);opacity:.85;">
+      <div style="width:80px"></div>
+    </div>
+    <div style="max-width:1120px;margin:0 auto;padding:52px 24px 72px;">
+      <div class="pricing-header">
+        <h3 style="font-size:40px;font-family:'Instrument Serif',serif;font-weight:400;letter-spacing:-.02em;">Simple plans for serious freelancers</h3>
+        <p style="max-width:620px;margin:0 auto;">Hit a limit, upgrade in one click, and unlock the next tier instantly after Whop confirms payment.</p>
+        <div class="pricing-toggle-row" style="margin-top:28px;">
+          <button class="pricing-toggle-btn active" id="pricing-toggle-monthly" onclick="setPricingBillingPeriod('monthly')">Monthly</button>
+          <button class="pricing-toggle-btn" id="pricing-toggle-annual" onclick="setPricingBillingPeriod('annual')">Annual (Save 20%)</button>
+        </div>
+        <div class="pricing-reco-copy" id="pricing-recommendation-copy">Recommended upgrade: Pro</div>
+        <div class="pricing-reco-copy" id="pricing-upgrade-message" style="display:none;color:#fde68a;"></div>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card" data-plan-card="free">
+          <div class="pricing-icon"><i data-lucide="sparkles" style="width:20px;height:20px"></i></div>
+          <div class="pricing-name">Free</div>
+          <div class="pricing-sub">Start landing clients without a card.</div>
+          <div class="pricing-price">
+            <span class="pricing-price-big">$0</span>
+            <div class="pricing-price-meta">Forever<br>no card needed</div>
+          </div>
+          <button class="pricing-btn btn-free" type="button" id="pricing-free-cta" onclick="closeUpgrade()">Stay on Free</button>
+          <div class="pricing-features-title">What's included</div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><i data-lucide="check"></i><span>200 AI credits every month</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>3 lead scans per day</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>2 proposals per day</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>2 emails per day</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>1 audit per day</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>5 CRM clients and 3 invoices total</span></div>
+          </div>
+        </div>
+        <div class="pricing-card card-featured" data-plan-card="pro">
+          <div class="pricing-pill recommended" id="pricing-pro-pill">Most Popular</div>
+          <div class="pricing-icon" style="color:#fbbf24;"><i data-lucide="zap" style="width:20px;height:20px"></i></div>
+          <div class="pricing-name">Pro</div>
+          <div class="pricing-sub">Close more clients. Faster.</div>
+          <div class="pricing-price">
+            <span class="pricing-price-big" id="pricing-pro-price">$19</span>
+            <div class="pricing-price-meta">/mo<br><span id="pricing-pro-meta">billed monthly</span></div>
+          </div>
+          <div class="pricing-annual-note" id="pricing-pro-note">Billed $182/year — save $46</div>
+          <button class="pricing-btn btn-pro" type="button" id="pricing-pro-cta" onclick="openWhopCheckout('pro')">Start 7-day free trial</button>
+          <div class="pricing-features-title">Everything in Free, plus</div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><i data-lucide="check"></i><span>3,000 AI credits every month</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>Unlimited leads and unlimited AI tools</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>Gig Finder and Growth Roadmap</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>Full CRM and unlimited invoices</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>Deep scan mode</span></div>
+          </div>
+        </div>
+        <div class="pricing-card" data-plan-card="elite">
+          <div class="pricing-pill" id="pricing-elite-pill" style="display:none;"></div>
+          <div class="pricing-icon" style="color:#f59e0b;"><i data-lucide="crown" style="width:20px;height:20px"></i></div>
+          <div class="pricing-name">Elite</div>
+          <div class="pricing-sub">Run your freelance business like a machine.</div>
+          <div class="pricing-price">
+            <span class="pricing-price-big" id="pricing-elite-price">$49</span>
+            <div class="pricing-price-meta">/mo<br><span id="pricing-elite-meta">billed monthly</span></div>
+          </div>
+          <div class="pricing-annual-note" id="pricing-elite-note">Billed $468/year — save $120</div>
+          <button class="pricing-btn btn-pro" type="button" id="pricing-elite-cta" onclick="openWhopCheckout('elite')">Unlock Elite</button>
+          <div class="pricing-features-title">Everything in Pro, plus</div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><i data-lucide="check"></i><span>Outreach Sequence Builder</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>Hot leads filter</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>Advanced lead filters</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>White-label invoices</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>10,000 AI credits</span></div>
+            <div class="pricing-feature"><i data-lucide="check"></i><span>Priority support</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;padding-top:28px;font-size:12px;color:#52525b;">No commitment · Cancel anytime · Secure checkout via Whop</div>
+    </div>`;
+  pricingModalRendered = true;
+  lucide.createIcons();
+}
+
+function setPricingBillingPeriod(period) {
+  pricingBillingPeriod = period === 'annual' ? 'annual' : 'monthly';
+  updatePricingModal();
+}
+
+function openWhopCheckout(plan) {
+  const url = WHOP_URLS[`${plan}_${pricingBillingPeriod}`];
+  if (!url || url.includes('REPLACE_WITH')) {
+    showToast(`Add the ${plan === 'pro' ? 'Pro' : 'Elite'} ${pricingBillingPeriod} Whop plan ID first.`);
+    return;
+  }
+  window.open(url, '_blank');
+}
+
+function updatePricingModal(options = {}) {
+  renderUpgradeModalShell();
+  const message = options.message || '';
+  const planKey = _currentPlanKey();
+  const recommendedPlan = planKey === 'pro' ? 'elite' : 'pro';
+  const annual = pricingBillingPeriod === 'annual';
+  const proPrice = annual ? '$15' : '$19';
+  const elitePrice = annual ? '$39' : '$49';
+
+  el('pricing-toggle-monthly')?.classList.toggle('active', !annual);
+  el('pricing-toggle-annual')?.classList.toggle('active', annual);
+  setText('pricing-pro-price', proPrice);
+  setText('pricing-elite-price', elitePrice);
+  setText('pricing-pro-meta', annual ? 'billed $182/year' : 'billed monthly');
+  setText('pricing-elite-meta', annual ? 'billed $468/year' : 'billed monthly');
+  el('pricing-pro-note')?.classList.toggle('show', annual);
+  el('pricing-elite-note')?.classList.toggle('show', annual);
+
+  const recommendationCopy = el('pricing-recommendation-copy');
+  if (recommendationCopy) {
+    recommendationCopy.textContent = planKey === 'free'
+      ? 'Recommended upgrade: Pro'
+      : planKey === 'pro'
+        ? 'Recommended upgrade: Elite'
+        : 'You already have the full Elite workspace';
+  }
+
+  const messageNode = el('pricing-upgrade-message');
+  if (messageNode) {
+    messageNode.style.display = message ? 'block' : 'none';
+    messageNode.textContent = message;
+  }
+
+  document.querySelectorAll('[data-plan-card]').forEach(card => {
+    const plan = card.getAttribute('data-plan-card');
+    card.classList.toggle('recommended', recommendedPlan === plan && planKey !== 'elite');
+    card.classList.toggle('current-plan', planKey === plan);
+  });
+
+  const freeCta = el('pricing-free-cta');
+  if (freeCta) {
+    freeCta.textContent = planKey === 'free' ? 'Current plan' : 'Stay on Free';
+    freeCta.disabled = planKey === 'free';
+    freeCta.style.opacity = planKey === 'free' ? '.7' : '1';
+    freeCta.style.cursor = planKey === 'free' ? 'default' : 'pointer';
+  }
+  const proCta = el('pricing-pro-cta');
+  if (proCta) {
+    proCta.textContent = planKey === 'free' ? 'Start 7-day free trial' : planKey === 'pro' ? 'Current plan' : 'Downgrade not needed';
+    proCta.disabled = planKey === 'pro' || planKey === 'elite';
+    proCta.style.opacity = proCta.disabled ? '.7' : '1';
+    proCta.style.cursor = proCta.disabled ? 'default' : 'pointer';
+  }
+  const eliteCta = el('pricing-elite-cta');
+  if (eliteCta) {
+    eliteCta.textContent = planKey === 'elite' ? 'Current plan' : annual ? 'Unlock Elite Annual' : 'Unlock Elite';
+    eliteCta.disabled = planKey === 'elite';
+    eliteCta.style.opacity = eliteCta.disabled ? '.7' : '1';
+    eliteCta.style.cursor = eliteCta.disabled ? 'default' : 'pointer';
+  }
+
+  const proPill = el('pricing-pro-pill');
+  if (proPill) {
+    proPill.textContent = planKey === 'pro' ? 'Current Plan' : 'Most Popular';
+    proPill.className = `pricing-pill ${planKey === 'pro' ? 'current' : 'recommended'}`;
+  }
+  const elitePill = el('pricing-elite-pill');
+  if (elitePill) {
+    const showElitePill = planKey === 'pro' || planKey === 'elite';
+    elitePill.style.display = showElitePill ? 'inline-flex' : 'none';
+    elitePill.textContent = planKey === 'elite' ? 'Current Plan' : 'Recommended';
+    elitePill.className = `pricing-pill ${planKey === 'elite' ? 'current' : 'recommended'}`;
+  }
+  lucide.createIcons();
+}
+
 function openPlanRoute(options = {}) {
   showUpgradeModal({ pushRoute: true, ...options });
 }
@@ -13463,6 +14298,8 @@ function handleSignupOnboardingCta() {
 }
 
 function showUpgradeModal(options = {}){
+  renderUpgradeModalShell();
+  updatePricingModal(options);
   const m = el('upgrade-modal');
   if (m) { m.style.display = 'block'; m.style.opacity = '1'; }
   document.body.style.overflow = 'hidden';
@@ -13806,6 +14643,8 @@ async function onLogin(user) {
   loadLeads(user.id);
   loadInvoices(user.id);
   loadOpportunityClients(user.id);
+  renderSavedSequences();
+  updateSequenceCounts();
   
   applySavedTheme();
   
