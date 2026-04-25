@@ -34,9 +34,9 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    THEME SYSTEM â€” Light (default) + Dark (.dark on <html>)
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ═══════════════════════════════════════════════════════════ */
 :root {
   --sidebar-w: 248px;
   --sidebar-w-collapsed: 60px;
@@ -418,9 +418,9 @@ input[type=date]::-webkit-calendar-picker-indicator {
 #app-layout{display:none;height:100vh;width:100vw}
 #app-layout.show{display:flex}
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════════════════════
    SIDEBAR
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ══════════════════════════════════════════════════════════ */
 .sidebar{
   width:var(--sidebar-w);
   height:100vh;
@@ -1921,9 +1921,9 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
 .billing-credits-label strong { color: var(--text-main); font-weight: 600; }
 .billing-bar-track { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
 .billing-bar-fill { height: 100%; background: var(--text-main); border-radius: 99px; transition: width .4s ease; }
-  /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  /* ══════════════════════════════════════════════════════════
      ONBOARDING â€” Premium animated flow
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+     ══════════════════════════════════════════════════════════ */
 
 /* â”€â”€ 0. AURORA CANVAS â€” lives at the very bottom of the z-stack â”€â”€ */
 #ob-aurora-canvas {
@@ -1938,7 +1938,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
 /* â”€â”€ 1. LOGO INTRO SCREEN â€” transparent so aurora shows through â”€â”€ */
 #ob-logo-intro {
   position: fixed; inset: 0; z-index: 10000;
-  background: transparent;          /* â† KEY FIX: was #000 */
+  background: transparent;          /* ← KEY FIX: was #000 */
   display: none;                    /* JS sets to flex */
   flex-direction: column;
   align-items: center; justify-content: center;
@@ -2218,9 +2218,9 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   background: #222; transition: background .3s, width .3s;
 }
 .ob-quote-dot.active { background: #fff; width: 20px; border-radius: 2px; }
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    OPPORTUNITY ENGINE
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ═══════════════════════════════════════════════════════════ */
 
 /* Search card top row */
 .opp-search-panel { display: flex; flex-direction: column; gap: 16px; }
@@ -2342,7 +2342,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   background: var(--bg-hover);
 }
 
-/* âœ… Active state â€” driven by :has(input:checked), no JS class needed */
+/* ✅ Active state â€” driven by :has(input:checked), no JS class needed */
 .ps-toggle:has(input:checked) {
   border-color: var(--text-main);
   background: var(--bg-panel);
@@ -6269,7 +6269,7 @@ body,
 
 <div id="loading-screen">
   <div class="spin"></div>
-  <span style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.01em">Loading workspaceâ€¦</span>
+  <span style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.01em">Loading workspace…</span>
 </div>
 
 <div id="login-screen">
@@ -6349,7 +6349,7 @@ body,
     </div>
     <div class="field-group" style="margin-bottom:0">
       <label class="field-label">Password</label>
-      <input type="password" id="auth-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" onkeydown="if(event.key==='Enter')authSubmit()">
+      <input type="password" id="auth-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
     </div>
     <div class="field-group" id="name-field" style="display:none;margin-top:12px;margin-bottom:0">
       <label class="field-label">Full Name</label>
@@ -6558,7 +6558,7 @@ body,
     </div><!-- /ob-body -->
 
     <div class="ob-footer">
-      <button id="ob-back-btn" onclick="obBack()" style="visibility:hidden">â† Back</button>
+      <button id="ob-back-btn" onclick="obBack()" style="visibility:hidden">← Back</button>
       <div style="display:flex;align-items:center;gap:16px">
         <span class="ob-step-counter" id="ob-step-counter">1 / 5</span>
         <button id="ob-next-btn" onclick="obNext()">Get Started â†’</button>
@@ -6576,7 +6576,6 @@ body,
         <img src="Favicon_new_logo-removebg-preview.png" alt="Lancify" class="brand-favicon">
         <span class="brand-monogram">L</span>
         <span id="logo" class="brand-wordmark sidebar-logo logo-text">lancify</span>
-        <span id="sidebar-plan-badge" style="display:none;font-size:9px;font-weight:800;letter-spacing:.06em;padding:2px 6px;border-radius:4px;text-transform:uppercase;margin-left:4px;"></span>
       </div>
 
       <button class="sb-collapse-btn" id="sb-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
@@ -6587,7 +6586,10 @@ body,
     <div class="sb-workspace">
       <button class="sb-workspace-btn" onclick="toggleAccountDropdown()">
         <div class="ws-dot"></div>
-        <span class="ws-name" id="ws-name">My Workspace</span>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;flex:1">
+          <span class="ws-name" id="ws-name">My Workspace</span>
+          <span id="sidebar-plan-badge" style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);">Free Plan</span>
+        </div>
         <i data-lucide="chevron-down" class="ws-chevron" style="width:13px;height:13px;stroke-width:2"></i>
       </button>
     </div>
@@ -6892,14 +6894,14 @@ body,
                 </div>
               </div>
               <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="$250"></div>
-              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclearâ€¦"></textarea></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
               <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(4, generateAudit)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">Generate Audit Dossier</span>
                 <span class="btn-text-loading">Generating...</span>
               </button>
               <div class="tool-limit-note hidden" id="audit-daily-limit"></div>
-              <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence reportâ€¦</span></div>
+              <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
             </div>
             <div class="result-panel">
               <div id="audit-result-box" class="tool-output-card" style="display:none">
@@ -6958,7 +6960,7 @@ body,
                   <div><label class="field-label">Your Niche</label><input type="text" id="prop-niche" placeholder="e.g. YouTube Thumbnails"></div>
                 </div>
               </div>
-              <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing hereâ€¦"></textarea></div>
+              <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing here…"></textarea></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Experience</label><input type="text" id="prop-exp" placeholder="e.g. I designed thumbnails for a 100k channel"></div>
               <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:18px" onclick="checkCredits(3, generateProposal)">
                 <span class="btn-spinner"></span>
@@ -6966,7 +6968,7 @@ body,
                 <span class="btn-text-loading">Generating...</span>
               </button>
               <div class="tool-limit-note hidden" id="proposal-daily-limit"></div>
-              <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposalâ€¦</span></div>
+              <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposal…</span></div>
             </div>
             <div class="result-panel">
               <div class="result-box tool-output-card" id="prop-result-box" style="display:none">
@@ -7002,14 +7004,14 @@ body,
               <div class="tool-section-kicker">Email Inputs</div>
               <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Cold outreach with a specific insight">Cold Outreach With Insight</option><option value="Follow-up">Follow Up</option><option value="Invoice reminder">Invoice Reminder</option><option value="Proposal follow up">Proposal Follow Up</option><option value="Thank you">Thank You</option></select></div>
               <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly">Friendly</option><option value="Direct">Direct</option><option value="Assertive">Assertive</option></select></div>
-              <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for $350 is 5 days overdueâ€¦"></textarea></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea></div>
               <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(2, generateEmail)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">Generate Draft</span>
                 <span class="btn-text-loading">Generating...</span>
               </button>
               <div class="tool-limit-note hidden" id="email-daily-limit"></div>
-              <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your emailâ€¦</span></div>
+              <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
             </div>
             <div class="result-panel">
               <div class="result-box tool-output-card" id="email-result-box" style="display:none">
@@ -7044,7 +7046,7 @@ body,
         <div class="content-inner wide">
           <div class="page-hd">
             <h1>Outreach Sequence Builder</h1>
-            <p>Pick a lead Ã¢â€ â€™ get a ready-to-send 3-touch outreach sequence. Day 0, Day 3, Day 7.</p>
+            <p>Pick a lead Ã¢â€ ’ get a ready-to-send 3-touch outreach sequence. Day 0, Day 3, Day 7.</p>
           </div>
           <div class="tool-grid" style="grid-template-columns:minmax(320px,420px) minmax(0,1fr);align-items:start;">
             <div class="card tool-form-card">
@@ -7063,7 +7065,7 @@ body,
                   </select>
                 </div>
               </div>
-              <button class="btn btn-primary btn-full" style="margin-top:18px" onclick="generateSequence()">Generate Sequence Ã¢â€ â€™</button>
+              <button class="btn btn-primary btn-full" style="margin-top:18px" onclick="generateSequence()">Generate Sequence Ã¢â€ ’</button>
             </div>
             <div>
               <div id="seq-output" style="display:none">
@@ -7109,7 +7111,7 @@ body,
                       <button class="btn btn-secondary" type="button" onclick="copySequenceMessage('seq-day7-message')">Copy</button>
                       <span style="font-size:12px;color:var(--text-muted);" id="seq-day7-count">0 chars</span>
                     </div>
-                    <div style="margin-top:10px;font-size:12px;color:var(--text-muted);">Last message Ã¢â‚¬â€ keep it short</div>
+                    <div style="margin-top:10px;font-size:12px;color:var(--text-muted);">Last message Ã¢—” keep it short</div>
                   </div>
                 </div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
@@ -7141,7 +7143,7 @@ body,
               <div><label class="field-label">Target Platform</label><select id="gig-platform"><option value="Both Upwork and Fiverr">Upwork & Fiverr</option><option>Fiverr</option><option>Upwork</option><option>LinkedIn</option></select></div>
               <button class="btn btn-primary btn-full" id="gig-btn" onclick="checkCredits(2, findGigs)">Scan Market</button>
             </div>
-            <div class="inline-loader" id="gig-loader" style="margin-top:10px"><div class="spin"></div><span>Analysing market demandâ€¦</span></div>
+            <div class="inline-loader" id="gig-loader" style="margin-top:10px"><div class="spin"></div><span>Analysing market demand…</span></div>
           </div>
           <div id="gig-results" style="display:none">
             <div class="section-title">Top Recommendations</div>
@@ -7166,7 +7168,7 @@ body,
               <div><label class="field-label">Biggest Fear</label><input type="text" id="rm-fear" placeholder="e.g. Getting scammed, no clients"></div>
             </div>
             <button class="btn btn-primary btn-full" id="rm-btn" onclick="checkCredits(8, generateRoadmap)">Generate 30-Day Roadmap</button>
-            <div class="inline-loader" id="rm-loader"><div class="spin"></div><span>Building your custom roadmapâ€¦</span></div>
+            <div class="inline-loader" id="rm-loader"><div class="spin"></div><span>Building your custom roadmap…</span></div>
           </div>
           <div id="rm-result" style="display:none;margin-top:22px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
@@ -7328,7 +7330,7 @@ body,
       <button class="opp-mode-tab" id="tab-deep" onclick="switchOppMode('deep')"><i data-lucide="radar" style="width:14px;height:14px"></i> Advanced</button>
     </div>
 
-    <!-- â•â• QUICK FIND PANEL â•â• -->
+    <!-- ══ QUICK FIND PANEL ══ -->
     <div class="card opp-quick-panel" id="opp-quick-panel" style="margin-bottom:22px;padding:22px">
 
       <div class="ps-section-label" style="margin-bottom:12px">What's your freelance skill?</div>
@@ -7375,7 +7377,7 @@ body,
 
     </div><!-- /opp-quick-panel -->
 
-    <!-- â•â• DEEP SCAN PANEL â•â• -->
+    <!-- ══ DEEP SCAN PANEL ══ -->
     <div class="card opp-deep-panel" id="opp-deep-panel" style="margin-bottom:22px">
       <div class="pre-scan-panel">
 
@@ -7556,7 +7558,7 @@ body,
             
             <div class="inline-loader" id="opp-loader" style="margin-top:16px; justify-content: center;">
               <div class="spin" style="border-top-color: #7c3aed;"></div>
-              <span id="opp-loader-text" style="color:#7c3aed; font-weight:500;">Initializing Apify nodesâ€¦</span>
+              <span id="opp-loader-text" style="color:#7c3aed; font-weight:500;">Initializing Apify nodes…</span>
             </div>
           </div>
 
@@ -7823,9 +7825,9 @@ body,
       </div>
 </div>
    
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+<!-- ═══════════════════════════════════════════
      SETTINGS MODAL â€” Claude-style left nav
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+     ═══════════════════════════════════════════ -->
 <div class="modal-backdrop" id="settings-modal">
   <div class="modal" style="position:relative">
     <button class="settings-close" onclick="closeModal('settings-modal')">
@@ -7886,7 +7888,7 @@ body,
             </select>
           </div>
         </div>
-        <div style="margin-bottom:18px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuberâ€¦"></textarea></div>
+        <div style="margin-bottom:18px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuber…"></textarea></div>
         <button class="btn btn-primary" id="save-prof-btn" onclick="saveProfile()">Save Profile</button>
       </div>
 
@@ -7908,7 +7910,7 @@ body,
           </div>
           <select id="inv-currency-pref" onchange="localStorage.setItem('lancify_currency', this.value)" style="width:120px">
             <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (â‚¬)</option>
+            <option value="EUR">EUR (—)</option>
             <option value="GBP">GBP (Â£)</option>
             <option value="INR">INR (â‚¹)</option>
             <option value="AUD">AUD (A$)</option>
@@ -7985,10 +7987,10 @@ body,
        <div id="toast"></div>
        
 <script>
-   /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   /* ═══════════════════════════════════════════════════════════════
    OPPORTUNITY ENGINE â€” COMPLETE CLEAN JS (Phase 2)
    All duplicates removed. This is the single source of truth.
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════════ */
 /* â”€â”€ Audience size filter â”€â”€ */
    /* â”€â”€ Platform filter â”€â”€ */
 let _activePlatformFilter = 'all';
@@ -7997,7 +7999,7 @@ function setPlatformFilter(btn) {
   btn.classList.add('active');
   _activePlatformFilter = btn.dataset.platform;
 }
-   /* â•â• OPPORTUNITY ENGINE â€” MODE SWITCHING â•â• */
+   /* ══ OPPORTUNITY ENGINE â€” MODE SWITCHING ══ */
 
 function switchOppMode(mode) {
   const quickPanel = el('opp-quick-panel');
@@ -8119,11 +8121,11 @@ async function quickFindClients() {
     </div>`;
 
   const phrases = [
-    `Finding clients who need ${_activeSkill}â€¦`,
-    'Scanning real businessesâ€¦',
-    'Detecting pain pointsâ€¦',
-    'Scoring opportunitiesâ€¦',
-    'Preparing your leadsâ€¦'
+    `Finding clients who need ${_activeSkill}…`,
+    'Scanning real businesses…',
+    'Detecting pain points…',
+    'Scoring opportunities…',
+    'Preparing your leads…'
   ];
   let tIdx = 0;
   loaderTxt.textContent = phrases[0];
@@ -8194,7 +8196,7 @@ async function quickFindClients() {
    Paste ALL of this BEFORE that line
    ================================================================ */
 
-/* â•â• OPPORTUNITY ENGINE MODE SWITCHING â•â• */
+/* ══ OPPORTUNITY ENGINE MODE SWITCHING ══ */
 let _activeSkill = null;
 
 function switchOppMode(mode) {
@@ -8233,14 +8235,14 @@ function selectSkill(btn) {
   }
 }
 
-/* â•â• QUICK FIND LOADING STEPS â•â• */
+/* ══ QUICK FIND LOADING STEPS ══ */
 const _qfSteps = [
-  'Detecting skill requirementsâ€¦',
-  'Scanning Instagram & YouTubeâ€¦',
-  'Checking LinkedIn profilesâ€¦',
-  'Searching Google Mapsâ€¦',
-  'Scoring opportunities with AIâ€¦',
-  'Preparing your client listâ€¦',
+  'Detecting skill requirements…',
+  'Scanning Instagram & YouTube…',
+  'Checking LinkedIn profiles…',
+  'Searching Google Maps…',
+  'Scoring opportunities with AI…',
+  'Preparing your client list…',
 ];
 
 function _startQfLoader(wrap) {
@@ -8249,7 +8251,7 @@ function _startQfLoader(wrap) {
       <div class="qf-radar-pulse">
         <div class="qf-radar-core"><i data-lucide="target" style="width:18px;height:18px"></i></div>
       </div>
-      <div class="qf-loading-text" id="qf-loading-title">Finding clients who need your skillâ€¦</div>
+      <div class="qf-loading-text" id="qf-loading-title">Finding clients who need your skill…</div>
       <div class="qf-loading-sub" id="qf-loading-sub">This takes about 10 seconds</div>
       <div class="qf-loading-steps" id="qf-loading-steps">
         ${_qfSteps.map((s, i) => `
@@ -8276,14 +8278,14 @@ function _startQfLoader(wrap) {
   return interval;
 }
 
-/* â•â• RENDER A SIMPLE QUICK FIND LEAD CARD â•â• */
+/* ══ RENDER A SIMPLE QUICK FIND LEAD CARD ══ */
 function _renderQfCard(lead) {
   const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const jsEsc = s => String(s || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n').replace(/\r/g,'');
   const skill = _activeSkill === 'other' ? (val('qf-other-skill') || 'your skill') : (_activeSkill || 'your skill');
 
   const firstName  = (lead.name || '').split(/[\s@]/)[0] || 'there';
-  const dmText = lead.quickDm || lead.assets?.quickDm || `Hey ${firstName}! I checked out your ${lead.platform} and noticed ${(lead.problem || '').slice(0, 60)}â€¦ I specialize in ${skill} and think I can help. Can I send you a quick example?`;
+  const dmText = lead.quickDm || lead.assets?.quickDm || `Hey ${firstName}! I checked out your ${lead.platform} and noticed ${(lead.problem || '').slice(0, 60)}… I specialize in ${skill} and think I can help. Can I send you a quick example?`;
   const loomCtx = lead.loomScript || lead.assets?.loomScript || `Write a 90-second Loom video script reaching out to ${lead.name} on ${lead.platform}. Problem: ${lead.problem}. Skill offered: ${skill}. Keep it friendly and under 200 words.`;
   const auditCtx = lead.audit || lead.assets?.audit || `Client: ${lead.name}\nPlatform: ${lead.platform}\nGap: ${lead.problem}\nFix direction: ${lead.strategy}\nOffer range: ${lead.dealValue || '$150 - $450'}`;
   const proposalCtx = lead.proposal || lead.assets?.proposal || lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${skill}. Problem: ${lead.problem}. Price: ${lead.dealValue || '$200 - $500'}.`;
@@ -8332,7 +8334,7 @@ function _renderQfCard(lead) {
   </div>`;
 }
 
-/* â•â• MAIN QUICK FIND FUNCTION â•â• */
+/* ══ MAIN QUICK FIND FUNCTION ══ */
 async function quickFindClients() {
   const skillRaw  = _activeSkill === 'other' ? val('qf-other-skill').trim() : _activeSkill;
   const income    = val('qf-income').trim();
@@ -8869,7 +8871,7 @@ function _renderOppCard(lead) {
   // â”€â”€ Action context strings â”€â”€
   const firstName   = lead.name.split(/[\s@]/)[0] || 'there';
   const beforeText  = lead.problem || 'Conversion gaps detected.';
-  const rawDmText   = `Hey ${firstName}! I noticed your ${lead.platform} has a specific gap â€” "${(lead.problem||'').slice(0,55)}â€¦" â€” that I\'ve fixed for similar accounts. Mind if I send a free mockup to show you what\'s possible?`;
+  const rawDmText   = `Hey ${firstName}! I noticed your ${lead.platform} has a specific gap â€” "${(lead.problem||'').slice(0,55)}…" â€” that I\'ve fixed for similar accounts. Mind if I send a free mockup to show you what\'s possible?`;
   const loomCtx     = `Write a 90-second Loom video script reaching out to ${lead.name} on ${lead.platform}. Their main problem: ${lead.problem}. Why now: ${whyNow}. Start with a specific observation about their account, show you can fix it, end with soft CTA. Conversational tone, under 200 words.`;
   const objCtx      = `The prospect ${lead.name} replied: "I don\'t have the budget right now." Write a 2-sentence empathetic response that validates their concern and offers a risk-free entry point â€” a free audit or small starter project at ${dealValue.split('â€“')[0].trim()} to prove ROI first. Under 40 words.`;
   const proposalCtx = lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${service}. Problem: ${lead.problem}. Clear scope, 5-7 day timeline, ${dealValue} pricing. Include the ROI case.`;
@@ -9075,9 +9077,9 @@ async function scanOpportunities() {
       <div class="opp-skeleton"></div>
     </div>`;
 
-  const phrases = ['Scanning target platformsâ€¦','Running AI gap-analysisâ€¦','Matching pain signalsâ€¦','Scoring opportunitiesâ€¦','Compiling outreach dossiersâ€¦'];
+  const phrases = ['Scanning target platforms…','Running AI gap-analysis…','Matching pain signals…','Scoring opportunities…','Compiling outreach dossiers…'];
   let tIdx = 0;
-  loaderTxt.textContent = 'Initializing scan nodesâ€¦';
+  loaderTxt.textContent = 'Initializing scan nodes…';
   const txtInt = setInterval(() => { if (tIdx < phrases.length) loaderTxt.textContent = phrases[tIdx++]; }, 700);
 
   let apiLeads = [];
@@ -9190,9 +9192,9 @@ async function scanOpportunities() {
   return true;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════════
    END OPPORTUNITY ENGINE JS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════════ */
 /* â”€â”€â”€ PLAYBOOK GAMIFICATION â”€â”€â”€ */
 const CHECKLIST_STORAGE_KEY = 'lancify_checklist_progress';
 const CHECKLIST_WIDGET_DISMISS_KEY = 'lancify_widget_dismissed';
@@ -9505,9 +9507,9 @@ function toggleFloatingChecklistMinimize() {
   localStorage.setItem(CHECKLIST_WIDGET_MIN_KEY, next === 'yes' ? 'yes' : 'no');
   renderFloatingChecklistWidget();
 }
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════
    THEME SYSTEM
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ═══════════════════════════════════════════════════════ */
 function applyTheme(theme) {
   if (theme === 'dark') {
     document.documentElement.classList.add('dark');
@@ -9562,9 +9564,9 @@ function applySavedTheme() {
   }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════
    COLLAPSIBLE SIDEBAR
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ═══════════════════════════════════════════════════════ */
 let sidebarCollapsed = localStorage.getItem('lancify-sidebar') === 'collapsed';
 
 function applySidebarState() {
@@ -9882,21 +9884,18 @@ function _setPlanUi(){
   const upgradeBtn = el('billing-upgrade-btn');
   if (upgradeBtn) upgradeBtn.textContent = planKey === 'free' ? 'Upgrade to Pro' : planKey === 'pro' ? 'Upgrade to Elite' : 'You have the top plan';
 
-  // Sidebar plan badge next to logo
+  // Plan badge in workspace block
   const planBadge = el('sidebar-plan-badge');
   if (planBadge) {
-    if (planKey === 'pro') {
-      planBadge.style.display = 'inline';
-      planBadge.textContent = 'PRO';
-      planBadge.style.background = 'rgba(232,80,10,0.15)';
-      planBadge.style.color = '#E8500A';
-    } else if (planKey === 'elite') {
-      planBadge.style.display = 'inline';
-      planBadge.textContent = 'ELITE';
-      planBadge.style.background = 'rgba(245,158,11,0.15)';
+    if (planKey === 'elite') {
+      planBadge.textContent = '⚡ Elite Plan';
       planBadge.style.color = '#f59e0b';
+    } else if (planKey === 'pro') {
+      planBadge.textContent = '🔥 Pro Plan';
+      planBadge.style.color = '#E8500A';
     } else {
-      planBadge.style.display = 'none';
+      planBadge.textContent = 'Free Plan';
+      planBadge.style.color = 'var(--text-muted)';
     }
   }
   const sidebarUpgradeBtn = document.querySelector('.btn-upgrade.upgrade-btn');
@@ -10251,7 +10250,7 @@ async function authSubmit() {
   const pw    = el('auth-password').value;
   if(!email||!pw) return showAuthError('Please fill in all fields.');
   el('auth-btn').disabled=true;
-  el('auth-btn').textContent=authMode==='signin'?'Signing inâ€¦':'Creating accountâ€¦';
+  el('auth-btn').textContent=authMode==='signin'?'Signing in…':'Creating account…';
   clearAuthMessages();
   try {
     let res;
@@ -10501,7 +10500,7 @@ async function saveProfile(){
     biggest_challenge:val('prof-challenge')||'Finding clients'
   };
   const btn=el('save-prof-btn');
-  btn.disabled=true; btn.textContent='Savingâ€¦';
+  btn.disabled=true; btn.textContent='Saving…';
   try {
     await sb.from('profiles').upsert([p],{onConflict:'user_id'});
     userProfile={...userProfile,...p}; checkProfileBanners(); showToast('Profile saved!');
@@ -14456,12 +14455,12 @@ document.addEventListener('click',e=>{
   if(acctOpen&&!el('account-dropdown')?.contains(e.target)&&!el('header-avatar')?.contains(e.target)&&!document.querySelector('.sb-workspace-btn')?.contains(e.target))
     closeAccountDropdown();
 });
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════════════════════
    ONBOARDING â€” shown ONCE, never again
    Gate 1: localStorage flag 'lancify-onboarded'
    Gate 2: Supabase profiles.skills column exists & â‰  'Skipped'
    Both must agree before we skip onboarding.
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ══════════════════════════════════════════════════════════ */
 
 let _obStep = 1;
 const OB_TOTAL = 5;
@@ -14889,7 +14888,7 @@ function selectChip(groupId, chipEl, hiddenId) {
 
 async function _obFinish() {
   const btn = el('ob-next-btn');
-  btn.disabled = true; btn.textContent = 'Savingâ€¦';
+  btn.disabled = true; btn.textContent = 'Saving…';
 
   const pd = {
     user_id:     currentUser.id,
@@ -15000,7 +14999,7 @@ function _runQuoteScreen(goal, firstName) {
 
 /* â”€â”€â”€ SETTINGS MODAL â”€â”€â”€ */
 function getCurrencySymbol() {
-  const currencies = { USD:'$', EUR:'â‚¬', GBP:'Â£', INR:'â‚¹', AUD:'A$' };
+  const currencies = { USD:'$', EUR:'—', GBP:'Â£', INR:'â‚¹', AUD:'A$' };
   return currencies[localStorage.getItem('lancify_currency') || 'USD'] || '$';
 }
 
