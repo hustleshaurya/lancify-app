@@ -6019,16 +6019,20 @@ html.dark .roadmap-teaser{
 .kanban-col-header,
 .pipeline-col-header,
 .kanban-header,
-.client-status-badge.active,
 .pipeline-stage-label{
+  background:transparent !important;
+  color:var(--text-main) !important;
+  border-color:var(--border) !important;
+}
+.client-status-badge.active{
   background:rgba(232,80,10,0.08) !important;
   color:#E8500A !important;
   border-color:rgba(232,80,10,0.2) !important;
 }
 .kanban-col-badge{
-  background:rgba(232,80,10,0.08) !important;
-  color:#E8500A !important;
-  border:1px solid rgba(232,80,10,0.2) !important;
+  background:var(--bg) !important;
+  color:var(--text-main) !important;
+  border:1px solid var(--border) !important;
 }
 .stage-lead{
   background:rgba(232,80,10,0.08) !important;
@@ -6572,6 +6576,7 @@ body,
         <img src="Favicon_new_logo-removebg-preview.png" alt="Lancify" class="brand-favicon">
         <span class="brand-monogram">L</span>
         <span id="logo" class="brand-wordmark sidebar-logo logo-text">lancify</span>
+        <span id="sidebar-plan-badge" style="display:none;font-size:9px;font-weight:800;letter-spacing:.06em;padding:2px 6px;border-radius:4px;text-transform:uppercase;margin-left:4px;"></span>
       </div>
 
       <button class="sb-collapse-btn" id="sb-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
@@ -9876,6 +9881,33 @@ function _setPlanUi(){
 
   const upgradeBtn = el('billing-upgrade-btn');
   if (upgradeBtn) upgradeBtn.textContent = planKey === 'free' ? 'Upgrade to Pro' : planKey === 'pro' ? 'Upgrade to Elite' : 'You have the top plan';
+
+  // Sidebar plan badge next to logo
+  const planBadge = el('sidebar-plan-badge');
+  if (planBadge) {
+    if (planKey === 'pro') {
+      planBadge.style.display = 'inline';
+      planBadge.textContent = 'PRO';
+      planBadge.style.background = 'rgba(232,80,10,0.15)';
+      planBadge.style.color = '#E8500A';
+    } else if (planKey === 'elite') {
+      planBadge.style.display = 'inline';
+      planBadge.textContent = 'ELITE';
+      planBadge.style.background = 'rgba(245,158,11,0.15)';
+      planBadge.style.color = '#f59e0b';
+    } else {
+      planBadge.style.display = 'none';
+    }
+  }
+  const sidebarUpgradeText = document.querySelector('.upgrade-label.upgrade-btn-text');
+  if (sidebarUpgradeBtn && sidebarUpgradeText) {
+    if (planKey === 'elite') {
+      sidebarUpgradeBtn.style.display = 'none';
+    } else {
+      sidebarUpgradeBtn.style.display = '';
+      sidebarUpgradeText.textContent = planKey === 'pro' ? 'Upgrade to Elite' : 'Upgrade to Pro';
+    }
+  }
   const upgradeCopyNode = document.getElementById('billing-upgrade-copy');
   if (upgradeCopyNode) {
     upgradeCopyNode.textContent = planKey === 'free'
