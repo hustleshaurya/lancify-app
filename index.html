@@ -2909,8 +2909,9 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
 .pricing-page-shell {
   width: min(1000px, 100%);
   margin: 0 auto;
-  padding: 48px 32px;
+  padding: 64px 32px 48px;
   color: var(--text-main);
+  position: relative;
 }
 .pricing-header { text-align: center; margin-bottom: 30px; }
 .pricing-header h3 {
@@ -3069,8 +3070,8 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
   justify-content: center;
   cursor: pointer;
   font-family: inherit;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   margin: 22px 0 8px;
   transition: opacity .15s ease, border-color .15s ease, color .15s ease;
 }
@@ -14116,6 +14117,11 @@ function renderUpgradeModalShell() {
   modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:900;background:var(--bg);overflow-y:auto;animation:fadeUp .22s ease;';
   modal.innerHTML = `
     <div class="pricing-page-shell">
+      <div style="position:absolute;top:18px;left:24px;">
+        <button onclick="closeUpgrade()" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--text-muted);font-size:13px;font-weight:500;cursor:pointer;padding:6px 10px;border-radius:8px;transition:color .15s,background .15s;font-family:inherit;" onmouseover="this.style.color='var(--text-main)';this.style.background='var(--bg-panel)'" onmouseout="this.style.color='var(--text-muted)';this.style.background='none'">
+          ← Back to Dashboard
+        </button>
+      </div>
       <div class="pricing-header">
         <h3>Simple plans for serious freelancers</h3>
         <p>Start free. Upgrade when you're ready to scale.</p>
@@ -14200,9 +14206,9 @@ function renderUpgradeModalShell() {
       <div class="pricing-footer">
         <div>No commitment &middot; Cancel anytime &middot; Secure checkout via Whop</div>
         <div class="pricing-trust-row">
-          <span>&#128274; Secure payment</span>
-          <span>&#9889; Instant access</span>
-          <span>&#128260; Cancel anytime</span>
+          <span>🔒 Secure payment</span>
+          <span>⚡ Instant access</span>
+          <span>🔄 Cancel anytime</span>
         </div>
       </div>
     </div>`;
@@ -14271,7 +14277,7 @@ function updatePricingModal(options = {}) {
   }
   const proCta = el('pricing-pro-cta');
   if (proCta) {
-    proCta.textContent = planKey === 'free' ? (annual ? 'Start Pro \u2014 $15/month \u2192' : 'Start Pro \u2014 $19/month \u2192') : planKey === 'pro' ? 'Current Plan' : 'Downgrade not needed';
+    proCta.textContent = planKey === 'free' ? (annual ? 'Start Pro · $15/month →' : 'Start Pro · $19/month →') : planKey === 'pro' ? 'Current Plan' : 'Downgrade not needed';
     proCta.disabled = planKey === 'pro' || planKey === 'elite';
     proCta.style.opacity = proCta.disabled ? '.7' : '1';
     proCta.style.cursor = proCta.disabled ? 'default' : 'pointer';
