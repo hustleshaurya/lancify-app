@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   // Re-enable after sandbox is confirmed working
 
   const { action, data } = req.body || {};
-
+const action = req.body?.action || req.headers['x-whop-event'] || req.body?.type || '';
   console.log('[Whop Webhook] action:', action);
   console.log('[Whop Webhook] data:', JSON.stringify(data));
 
