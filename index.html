@@ -14116,12 +14116,12 @@ function renderUpgradeModalShell() {
   if (!modal || pricingModalRendered) return;
   modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:900;background:var(--bg);overflow-y:auto;animation:fadeUp .22s ease;';
   modal.innerHTML = `
+    <div style="position:fixed;top:16px;left:20px;z-index:1000;">
+      <button onclick="closeUpgrade()" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--text-muted);font-size:13px;font-weight:500;cursor:pointer;padding:6px 10px;border-radius:8px;transition:color .15s,background .15s;font-family:inherit;" onmouseover="this.style.color='var(--text-main)';this.style.background='var(--bg-panel)'" onmouseout="this.style.color='var(--text-muted)';this.style.background='none'">
+        ← Back to Dashboard
+      </button>
+    </div>
     <div class="pricing-page-shell">
-      <div style="position:absolute;top:18px;left:24px;">
-        <button onclick="closeUpgrade()" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--text-muted);font-size:13px;font-weight:500;cursor:pointer;padding:6px 10px;border-radius:8px;transition:color .15s,background .15s;font-family:inherit;" onmouseover="this.style.color='var(--text-main)';this.style.background='var(--bg-panel)'" onmouseout="this.style.color='var(--text-muted)';this.style.background='none'">
-          ← Back to Dashboard
-        </button>
-      </div>
       <div class="pricing-header">
         <h3>Simple plans for serious freelancers</h3>
         <p>Start free. Upgrade when you're ready to scale.</p>
@@ -14130,7 +14130,6 @@ function renderUpgradeModalShell() {
           <button class="pricing-toggle-btn" id="pricing-toggle-annual" onclick="setPricingBillingPeriod('annual')">Annual &mdash; 2 months free</button>
         </div>
       </div>
-      <div class="pricing-reco-copy" id="pricing-recommendation-copy">Recommended upgrade: Pro</div>
       <div class="pricing-message" id="pricing-upgrade-message" style="display:none;"></div>
       <div class="pricing-grid">
         <div class="pricing-card-wrap">
@@ -14205,11 +14204,6 @@ function renderUpgradeModalShell() {
       </div>
       <div class="pricing-footer">
         <div>No commitment &middot; Cancel anytime &middot; Secure checkout via Whop</div>
-        <div class="pricing-trust-row">
-          <span>🔒 Secure payment</span>
-          <span>⚡ Instant access</span>
-          <span>🔄 Cancel anytime</span>
-        </div>
       </div>
     </div>`;
   pricingModalRendered = true;
