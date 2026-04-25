@@ -2950,18 +2950,18 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
 }
 .pricing-toggle-btn.active { background: #E8500A; color: var(--btn-text); }
 .pricing-reco-copy {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  text-align: center;
   width: max-content;
   max-width: 100%;
   margin: 24px auto 20px;
-  padding: 6px 12px;
+  padding: 5px 14px;
   border-radius: 999px;
-  background: #E8500A;
-  color: var(--btn-text);
+  background: rgba(232, 80, 10, 0.12);
+  border: 1px solid rgba(232, 80, 10, 0.35);
+  color: #E8500A;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: .04em;
   text-transform: uppercase;
 }
@@ -3084,10 +3084,10 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
 .btn-pro:hover { opacity: .88; }
 .btn-elite {
   background: var(--bg);
-  border: 1.5px solid var(--border);
-  color: var(--text-main);
+  border: 1.5px solid #f59e0b;
+  color: #f59e0b;
 }
-.btn-elite:hover { border-color: #E8500A; color: #E8500A; }
+.btn-elite:hover { border-color: #f59e0b; color: #fff; background: #f59e0b; }
 .pricing-cta-note {
   min-height: 16px;
   color: var(--text-muted);
@@ -14172,7 +14172,7 @@ function renderUpgradeModalShell() {
           </div>
         </div>
         <div class="pricing-card-wrap">
-          <div class="pricing-card" data-plan-card="elite">
+          <div class="pricing-card" data-plan-card="elite" style="border:2px solid #f59e0b;">
             <div class="pricing-name">Elite</div>
             <div class="pricing-sub">Run your freelance business like a machine.</div>
             <div class="pricing-price">
@@ -14617,6 +14617,8 @@ function toggleGuideModeSetting() {
 async function onLogin(user) {
   currentUser = user;
   el('login-screen').style.display = 'none';
+  // Safety net: always hide loading screen when login completes
+  hide('loading-screen');
   pbProgress = loadChecklistProgress(user.id);
 
   // Update guide indicator
@@ -14766,6 +14768,8 @@ async function _decideRoute(uid) {
       fullProfile = full;
     }
   } catch (_) { isReturning = false; }
+  // Safety net: always hide loading screen
+  hide('loading-screen');
 
   if (isReturning) {
     if (fullProfile) {
