@@ -3,13 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  // Temporarily skip signature check for sandbox testing
-  // Re-enable after sandbox is confirmed working
+  const body = req.body || {};
+  const action = body.action || req.headers['x-whop-event'] || body.type || '';
+  const data = body.data || body;
 
-  const { action, data } = req.body || {};
-const action = req.body?.action || req.headers['x-whop-event'] || req.body?.type || '';
   console.log('[Whop Webhook] action:', action);
-  console.log('[Whop Webhook] data:', JSON.stringify(data));
+  console.log('[Whop Webhook] full body keys:', Object.keys(body));
+  console.log('[Whop Webhook] data:', JSON.stringify(data).substring(0, 500));
 
   const supabase = createClient(
     process.env.SUPABASE_URL,
@@ -30,8 +30,8 @@ const action = req.body?.action || req.headers['x-whop-event'] || req.body?.type
 
   console.log('[Whop Webhook] email:', email, '| planId:', planId);
 
-  const PRO_MONTHLY_ID  = process.env.WHOP_PRO_MONTHLY_ID;
-  const PRO_ANNUAL_ID   = process.env.WHOP_PRO_ANNUAL_ID;
+  const PRO_MONTHLY_ID   = process.env.WHOP_PRO_MONTHLY_ID;
+  const PRO_ANNUAL_ID    = process.env.WHOP_PRO_ANNUAL_ID;
   const ELITE_MONTHLY_ID = process.env.WHOP_ELITE_MONTHLY_ID;
   const ELITE_ANNUAL_ID  = process.env.WHOP_ELITE_ANNUAL_ID;
 
@@ -61,7 +61,6 @@ const action = req.body?.action || req.headers['x-whop-event'] || req.body?.type
   const userId = user.id;
   console.log('[Whop Webhook] Found user:', userId);
 
-  // Handle both dot and underscore event formats
   const activateEvents = [
     'membership_activated',
     'membership.went_valid',
