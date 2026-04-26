@@ -10616,7 +10616,15 @@ async function authSubmit() {
     } else {
       const name = el('auth-name').value.trim();
       res = await sb.auth.signUp({email,password:pw,options:{data:{full_name:name}}});
-      if(!res.error){ 
+      if(!res.error){
+        // If email verification is ON, session will be null until user confirms
+        if(!res.data.session) {
+          el('auth-btn').disabled=false;
+          el('auth-btn').textContent='Create Account';
+          showAuthSuccess('Account created! Check your email and click the verification link before signing in.');
+          return;
+        }
+        // Email verification is OFF — go straight to onboarding
         let isLoading = true;
         const loadingTimeout = setTimeout(() => {
           if (isLoading) {
