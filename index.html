@@ -6705,7 +6705,7 @@ body,
           <input type="hidden" id="ob-goal">
         </div>
         <div class="field-group" style="margin-bottom:0">
-          <label class="field-label">Anything else we should know? Ã¢â‚¬â€ <span style="color:#3a3a3a">optional</span></label>
+          <label class="field-label">Anything else we should know? — <span style="color:#3a3a3a">optional</span></label>
           <textarea id="ob-extra" rows="3" placeholder="e.g. I'm a student with a laptop and no prior clients. I want to start on Fiverr." style="background:#111;border:1px solid #222;color:#fff;border-radius:9px;font-size:13px"></textarea>
         </div>
       </div>
@@ -8630,7 +8630,7 @@ async function quickFindClients() {
       <div style="margin-bottom:12px">
         <div style="font-size:13px;color:var(--text-muted)">
           Found <strong style="color:var(--text-main)">${apiLeads.length} clients</strong> who need <strong style="color:var(--text-main)">${skillRaw}</strong>
-          ${income ? ` Ã‚Â· Target: <strong style="color:#10b981">$${income}/mo</strong>` : ''}
+          ${income ? ` · Target: <strong style="color:#10b981">$${income}/mo</strong>` : ''}
           </div>
         </div>
         <div class="qf-results-grid">${apiLeads.map(_renderQfCard).join('')}</div>`;
@@ -9138,9 +9138,9 @@ function _renderOppCard(lead) {
   // Ã¢â€â‚¬Ã¢â€â‚¬ Action context strings Ã¢â€â‚¬Ã¢â€â‚¬
   const firstName   = lead.name.split(/[\s@]/)[0] || 'there';
   const beforeText  = lead.problem || 'Conversion gaps detected.';
-  const rawDmText   = `Hey ${firstName}! I noticed your ${lead.platform} has a specific gap Ã¢â‚¬â€ "${(lead.problem||'').slice(0,55)}â€¦" Ã¢â‚¬â€ that I\'ve fixed for similar accounts. Mind if I send a free mockup to show you what\'s possible?`;
+  const rawDmText   = `Hey ${firstName}! I noticed your ${lead.platform} has a specific gap — "${(lead.problem||'').slice(0,55)}…" — that I've fixed for similar accounts. Mind if I send a free mockup to show you what's possible?`;
   const loomCtx     = `Write a 90-second Loom video script reaching out to ${lead.name} on ${lead.platform}. Their main problem: ${lead.problem}. Why now: ${whyNow}. Start with a specific observation about their account, show you can fix it, end with soft CTA. Conversational tone, under 200 words.`;
-  const objCtx      = `The prospect ${lead.name} replied: "I don\'t have the budget right now." Write a 2-sentence empathetic response that validates their concern and offers a risk-free entry point Ã¢â‚¬â€ a free audit or small starter project at ${dealValue.split('Ã¢â‚¬â€œ')[0].trim()} to prove ROI first. Under 40 words.`;
+  const objCtx      = `The prospect ${lead.name} replied: "I don't have the budget right now." Write a 2-sentence empathetic response that validates their concern and offers a risk-free entry point — a free audit or small starter project at ${dealValue.split('–')[0].trim()} to prove ROI first. Under 40 words.`;
   const proposalCtx = lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${service}. Problem: ${lead.problem}. Clear scope, 5-7 day timeline, ${dealValue} pricing. Include the ROI case.`;
 
   return `
@@ -9454,7 +9454,7 @@ async function scanOpportunities() {
   lucide.createIcons();
   loader.classList.remove('show');
   btn.disabled = false;
-  const fs = checkedSignals.length > 0 ? ` Ã‚Â· ${checkedSignals.length} signal filter${checkedSignals.length > 1 ? 's' : ''}` : '';
+  const fs = checkedSignals.length > 0 ? ` · ${checkedSignals.length} signal filter${checkedSignals.length > 1 ? 's' : ''}` : '';
   showToast(`Found ${leads.length} lead${leads.length !== 1 ? 's' : ''}${fs}.`);
   return true;
 }
@@ -9590,7 +9590,7 @@ function renderFloatingChecklistWidget() {
       const justDone = _justCompletedStep === step.id;
       return `
         <div class="floating-step ${done ? 'completed' : ''} ${activeStep === step.id ? 'active' : ''} ${justDone ? 'fl-just-done' : ''}">
-          <button class="floating-step-num" onclick="event.stopPropagation();togglePb(${step.id})" aria-label="Mark step ${step.id} complete">${done ? 'Ã¢Å“â€œ' : step.id}</button>
+          <button class="floating-step-num" onclick="event.stopPropagation();togglePb(${step.id})" aria-label="Mark step ${step.id} complete">${done ? '✓' : step.id}</button>
           <div class="floating-step-main">
             <div class="floating-step-title">${escapeHtml(step.title)}</div>
             <div class="floating-step-copy">${escapeHtml(step.widgetDesc)}</div>
@@ -10403,7 +10403,7 @@ async function _markFeatureUsage(featureKey){
 */
 const chatQuestions = [
   {
-    q: 'What skill do you have, or are learning right now? Be specific Ã¢â‚¬â€ e.g. "video editing", "logo design", "social media posts".',
+    q: 'What skill do you have, or are learning right now? Be specific — e.g. "video editing", "logo design", "social media posts".',
     key: 'skills'
   },
   {
@@ -10411,7 +10411,7 @@ const chatQuestions = [
     key: 'target'
   },
   {
-    q: 'Have you done any work before Ã¢â‚¬â€ even for free, for a friend, or for yourself?',
+    q: 'Have you done any work before — even for free, for a friend, or for yourself?',
     key: 'experience'
   },
   {
@@ -10557,7 +10557,7 @@ async function authSubmit() {
   const pw    = el('auth-password').value;
   if(!email||!pw) return showAuthError('Please fill in all fields.');
   el('auth-btn').disabled=true;
-  el('auth-btn').textContent=authMode==='signin'?'Signing inâ€¦':'Creating accountâ€¦';
+  el('auth-btn').textContent=authMode==='signin'?'Signing in…':'Creating account…';
   clearAuthMessages();
   try {
     let res;
@@ -11092,7 +11092,7 @@ async function downloadAuditPDF() {
     addPremiumSection('2. The Primary Conversion Bottleneck', d.sec2_bottleneck);
     addPremiumSection('3. Estimated Opportunity Cost', d.sec3_impact);
 
-    const fixes = Array.isArray(d.sec4_fixes) ? d.sec4_fixes.map(f => `Ã¢Å“â€œ  ${f}`).join('\n') : (d.sec4_fixes||'');
+    const fixes = Array.isArray(d.sec4_fixes) ? d.sec4_fixes.map(f => `✓  ${f}`).join('\n') : (d.sec4_fixes||'');
     addPremiumSection('4. Recommended Action Plan', fixes);
     addPremiumSection('5. Implementation Strategy', d.sec5_pitch);
 
@@ -12927,24 +12927,24 @@ function hasDashboardMetricHistory(metricKey, minimumDaysAgo = 7){
 
 function renderStatChange(current, previous, inverse = false, hasHistory = true){
   if (!hasHistory) return { text: 'Ã¢â‚¬â€', cls: 'neutral' };
-  if (!previous || previous === 0) return { text: 'Ã¢â‚¬â€ New', cls: 'neutral' };
+  if (!previous || previous === 0) return { text: '— New', cls: 'neutral' };
   const pct = Math.round(((current - previous) / previous) * 100);
-  if (pct === 0) return { text: 'Ã¢â€ â€™ 0%', cls: 'neutral' };
+  if (pct === 0) return { text: '→ 0%', cls: 'neutral' };
   const improved = inverse ? pct < 0 : pct > 0;
   return {
-    text: `${pct >= 0 ? 'Ã¢â€ â€˜' : 'Ã¢â€ â€œ'} ${Math.abs(pct)}%`,
+    text: `${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct)}%`,
     cls: improved ? 'positive' : 'negative'
   };
 }
 
 function renderStatChange(current, previous, inverse = false, hasHistory = true){
-  if (!hasHistory) return { text: 'Ã¢â‚¬â€', cls: 'neutral' };
-  if (!previous || previous === 0 || current === 0) return { text: 'Ã¢â‚¬â€', cls: 'neutral' };
+  if (!hasHistory) return { text: '—', cls: 'neutral' };
+  if (!previous || previous === 0 || current === 0) return { text: '—', cls: 'neutral' };
   const pct = Math.round(((current - previous) / previous) * 100);
-  if (pct === 0) return { text: 'Ã¢â‚¬â€', cls: 'neutral' };
+  if (pct === 0) return { text: '—', cls: 'neutral' };
   const improved = inverse ? pct < 0 : pct > 0;
   return {
-    text: `${pct >= 0 ? 'Ã¢â€ â€˜' : 'Ã¢â€ â€œ'} ${Math.abs(pct)}%`,
+    text: `${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct)}%`,
     cls: improved ? 'positive' : 'negative'
   };
 }
@@ -13459,7 +13459,7 @@ function renderPipeline(){
           <div class="kanban-card-top">
             <div style="min-width:0">
               <div class="kanban-card-name">${escapeHtml(lead.client_name || '')}</div>
-              <div class="kanban-card-val">${lead.project_value ? formatCurrency(lead.project_value) : 'Custom quote'}${lead.service ? ` Ã‚Â· ${escapeHtml(lead.service)}` : ''}</div>
+              <div class="kanban-card-val">${lead.project_value ? formatCurrency(lead.project_value) : 'Custom quote'}${lead.service ? ` · ${escapeHtml(lead.service)}` : ''}</div>
             </div>
             <button class="icon-btn" onclick="openLeadEditor('${escapeJsAttr(lead.id)}')" aria-label="Edit client"><i data-lucide="pencil-line" style="width:14px;height:14px"></i></button>
           </div>
@@ -14195,7 +14195,7 @@ function renderAccountingActivity(filteredLeads, filteredInvoices, filteredSaved
   if (!wrap) return;
   const activity = [
     ...filteredLeads.map(lead => ({ type: (lead.status || '') === 'won' ? 'Deal won' : 'Client created', title: (lead.status || '') === 'won' ? `${lead.client_name || 'Client'} moved to Won` : `${lead.client_name || 'Client'} entered the pipeline`, date: lead.created_at })),
-    ...filteredInvoices.map(inv => ({ type: (inv.status || '').toLowerCase() === 'paid' ? 'Invoice paid' : 'Invoice logged', title: `${inv.client_name || 'Client'} Ã‚Â· ${formatCurrency(inv.amount || 0)}`, date: inv.created_at || inv.due_date })),
+    ...filteredInvoices.map(inv => ({ type: (inv.status || '').toLowerCase() === 'paid' ? 'Invoice paid' : 'Invoice logged', title: `${inv.client_name || 'Client'} · ${formatCurrency(inv.amount || 0)}`, date: inv.created_at || inv.due_date })),
     ...filteredSaved.map(client => ({ type: 'Opportunity saved', title: `${client.name || 'Client'} saved from Opportunity Engine`, date: client.created_at }))
   ].filter(item => item.date).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6);
 
@@ -14810,7 +14810,7 @@ function updatePricingModal(options = {}) {
   }
   const proCta = el('pricing-pro-cta');
   if (proCta) {
-    proCta.textContent = planKey === 'free' ? (annual ? 'Start Pro Â· $15/month â†’' : 'Start Pro Â· $19/month â†’') : planKey === 'pro' ? 'Current Plan' : 'Downgrade not needed';
+    proCta.textContent = planKey === 'free' ? (annual ? 'Start Pro · $15/month →' : 'Start Pro · $19/month →') : planKey === 'pro' ? 'Current Plan' : 'Downgrade not needed';
     proCta.disabled = planKey === 'pro' || planKey === 'elite';
     proCta.style.opacity = proCta.disabled ? '.7' : '1';
     proCta.style.cursor = proCta.disabled ? 'default' : 'pointer';
@@ -15355,10 +15355,10 @@ function _obRenderStep() {
   if (nextBtn) {
     nextBtn.textContent =
       _obStep === 1
-        ? 'Get Started Ã¢â€ â€™'
+        ? 'Get Started →'
         : _obStep === OB_TOTAL
-          ? 'Enter Workspace Ã¢â€ â€™'
-          : 'Continue Ã¢â€ â€™';
+          ? 'Enter Workspace →'
+          : 'Continue →';
   }
 }
 
