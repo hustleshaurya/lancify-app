@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lancify â€” Freelance OS</title>
+<title>Lancify</title>
 
 <link rel="icon" type="image/png" href="Favicon_new_logo-removebg-preview.png">
 
@@ -6586,10 +6586,7 @@ body,
     <div class="sb-workspace">
       <button class="sb-workspace-btn" onclick="toggleAccountDropdown()">
         <div class="ws-dot"></div>
-        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;flex:1">
-          <span class="ws-name" id="ws-name">My Workspace</span>
-          <span id="sidebar-plan-badge" style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);">Free Plan</span>
-        </div>
+        <span class="ws-name" id="ws-name">My Workspace</span>
         <i data-lucide="chevron-down" class="ws-chevron" style="width:13px;height:13px;stroke-width:2"></i>
       </button>
     </div>
@@ -9884,20 +9881,6 @@ function _setPlanUi(){
   const upgradeBtn = el('billing-upgrade-btn');
   if (upgradeBtn) upgradeBtn.textContent = planKey === 'free' ? 'Upgrade to Pro' : planKey === 'pro' ? 'Upgrade to Elite' : 'You have the top plan';
 
-  // Plan badge in workspace block
-  const planBadge = el('sidebar-plan-badge');
-  if (planBadge) {
-    if (planKey === 'elite') {
-      planBadge.textContent = '⚡ Elite Plan';
-      planBadge.style.color = '#f59e0b';
-    } else if (planKey === 'pro') {
-      planBadge.textContent = '🔥 Pro Plan';
-      planBadge.style.color = '#E8500A';
-    } else {
-      planBadge.textContent = 'Free Plan';
-      planBadge.style.color = 'var(--text-muted)';
-    }
-  }
   const sidebarUpgradeBtn = document.querySelector('.btn-upgrade.upgrade-btn');
   const sidebarUpgradeText = document.querySelector('.upgrade-label.upgrade-btn-text');
   if (sidebarUpgradeBtn && sidebarUpgradeText) {
