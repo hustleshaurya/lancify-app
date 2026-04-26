@@ -7332,6 +7332,56 @@ body,
       </div>
 
 
+      <div id="page-gig" class="page">
+        <div class="content-inner">
+          <div class="page-hd">
+            <h1>Gig Finder</h1>
+            <p>Discover high-demand freelance niches tailored to your skills and platform.</p>
+          </div>
+          <div class="tool-grid">
+            <div class="card tool-form-card">
+              <div class="tool-section-kicker">Your Skills</div>
+              <div class="field-group">
+                <label class="field-label">Skills / Expertise</label>
+                <input type="text" id="gig-skills" placeholder="e.g. Video editing, Copywriting, Web design…">
+              </div>
+              <div class="field-group" style="margin-bottom:0">
+                <label class="field-label">Platform</label>
+                <select id="gig-platform">
+                  <option value="Upwork">Upwork</option>
+                  <option value="Fiverr">Fiverr</option>
+                  <option value="Toptal">Toptal</option>
+                  <option value="LinkedIn">LinkedIn</option>
+                  <option value="PeoplePerHour">PeoplePerHour</option>
+                  <option value="99designs">99designs</option>
+                  <option value="Freelancer.com">Freelancer.com</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-full" id="gig-btn" style="margin-top:18px" onclick="checkCredits(2, findGigs)">
+                <span class="btn-spinner"></span>
+                <span class="btn-text-default">Find Gigs →</span>
+                <span class="btn-text-loading">Searching…</span>
+              </button>
+              <div class="inline-loader" id="gig-loader"><div class="spin"></div><span>Finding the best gigs for you…</span></div>
+            </div>
+            <div class="result-panel">
+              <div id="gig-results" style="display:none">
+                <div class="tool-section-kicker" style="margin-bottom:14px">Recommended Gigs</div>
+                <div class="gig-result-grid" id="gig-cards"></div>
+                <div style="margin-top:14px">
+                  <button class="btn btn-secondary" onclick="el('gig-results').style.display='none';el('gig-btn').disabled=false;">Search Again</button>
+                </div>
+              </div>
+              <div class="card-dashed empty-state centered" id="gig-empty" style="">
+                <div class="empty-state-icon"><i data-lucide="search" style="width:22px;height:22px"></i></div>
+                <div class="empty-state-heading">Find Your Perfect Gig</div>
+                <p class="empty-state-copy">Enter your skills and preferred platform. Lancify will surface high-demand, low-competition niches with pricing insights and a first action step.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="page-roadmap" class="page">
         <div class="content-inner">
           <div style="margin-bottom:28px;">
@@ -15583,6 +15633,3 @@ initApp();
        <div id="toast"></div>
 </body>
 </html>
-
-
-
