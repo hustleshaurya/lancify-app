@@ -34,9 +34,9 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
-   THEME SYSTEM Ã¢â‚¬â€ Light (default) + Dark (.dark on <html>)
-   â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
+/* ═══════════════════════════════════════════════════════════
+   THEME SYSTEM — Light (default) + Dark (.dark on <html>)
+   ═══════════════════════════════════════════════════════════ */
 :root {
   --sidebar-w: 248px;
   --sidebar-w-collapsed: 60px;
@@ -45,7 +45,7 @@
   --radius: 8px;
   --radius-lg: 10px;
 
-  /* Ã¢â€â‚¬Ã¢â€â‚¬ Light Theme Ã¢â€â‚¬Ã¢â€â‚¬ */
+  /* ── Light Theme ── */
   --bg:          #f3f7fc;
   --bg-panel:    #ffffff;
   --bg-hover:    #eaf1fb;
@@ -72,7 +72,7 @@
   --page-max-wide: min(1700px, calc(100vw - 36px));
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Dark Theme Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Dark Theme ── */
 html.dark {
   --bg:          #0a0a0a;
   --bg-panel:    #111111;
@@ -141,18 +141,18 @@ html:not(.dark) .page-hd p{color:#607086}
 .nav-item, .btn, .tool-card, .stat-card, .kanban-card, .acct-menu-item, .header-icon-btn, .sb-collapse-btn, .sb-workspace-btn { transition: background .15s ease, color .15s ease, border-color .12s, opacity .15s ease, transform .1s; }
 input, select, textarea { transition: border-color .15s, box-shadow .15s; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ SCROLLBAR Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── SCROLLBAR ─── */
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
 ::-webkit-scrollbar-thumb:hover{background:var(--text3)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ LOADING Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── LOADING ─── */
 #loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
 .spin{width:18px;height:18px;border:1.5px solid var(--border2);border-top-color:var(--text-main);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ LOGIN Ã¢â‚¬â€ Always white/light Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── LOGIN — Always white/light ─── */
 #login-screen{
   background:linear-gradient(135deg, #0f0f0f 0%, #1a1008 40%, #0f0c08 70%, #0a0a0a 100%);
   position:fixed;
@@ -281,7 +281,7 @@ input, select, textarea { transition: border-color .15s, box-shadow .15s; }
   .login-heading{font-size:26px}
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ INPUTS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── INPUTS ─── */
 .field-label{display:block;font-size:12px;font-weight:500;color:var(--text-muted);margin-bottom:5px;letter-spacing:.01em}
 .field-optional{font-size:11px;font-weight:400;color:var(--text3)}
 input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],input[type=date],select,textarea{
@@ -321,7 +321,7 @@ input[type=date]::-webkit-calendar-picker-indicator {
   opacity: 0.6;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ BUTTONS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── BUTTONS ─── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;border-radius:var(--radius);white-space:nowrap}
 .btn:active{transform:scale(0.97)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
@@ -349,13 +349,13 @@ input[type=date]::-webkit-calendar-picker-indicator {
 .btn-upgrade:active{transform:scale(0.97)}
 .btn-upgrade:hover{opacity:.85}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ APP LAYOUT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── APP LAYOUT ─── */
 #app-layout{display:none;height:100vh;width:100vw}
 #app-layout.show{display:flex}
 
-/* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
+/* ══════════════════════════════════════════════════════════
    SIDEBAR
-   â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
+   ══════════════════════════════════════════════════════════ */
 .sidebar{
   width:var(--sidebar-w);
   height:100vh;
@@ -365,7 +365,7 @@ input[type=date]::-webkit-calendar-picker-indicator {
   flex-shrink:0;overflow:hidden;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Logo area Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Logo area ── */
 .sb-logo{
   padding:0 12px;
   height:var(--header-h);
@@ -528,10 +528,10 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 .sidebar.collapsed .btn-upgrade{padding:0;justify-content:center;width:40px;height:40px;border-radius:10px;align-self:center}
 .sidebar.collapsed .btn-upgrade .upgrade-label{display:none}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MAIN Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── MAIN ─── */
 .main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--bg)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ HEADER Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── HEADER ─── */
 .header{
   height:var(--header-h);border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
@@ -561,7 +561,7 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 html.dark #theme-icon-sun{display:block}
 html.dark #theme-icon-moon{display:none}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ CONTENT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── CONTENT ─── */
 .content-scroll{
   flex:1;
   overflow-y:auto;
@@ -574,17 +574,17 @@ html.dark #theme-icon-moon{display:none}
 .content-inner.wide{max-width:var(--page-max-wide);padding-bottom:80px}
 .content-inner.home-shell{max-width:var(--page-max-wide);padding-bottom:80px}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PAGES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── PAGES ─── */
 .page{display:none;animation:fadeUp .2s ease}
 .page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PAGE HEADER Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── PAGE HEADER ─── */
 .page-hd{margin-bottom:28px}
 .page-hd h1{font-size:24px;font-weight:700;letter-spacing:-.5px;color:var(--text-main);margin-bottom:4px}
 .page-hd p{font-size:13.5px;color:var(--text-muted)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ CARDS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── CARDS ─── */
 .card{
   background:var(--bg);
   border:1px solid var(--border);
@@ -623,7 +623,7 @@ html.dark .premium-surface{
   padding:20px 22px;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ TOOL CARDS (home grid) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── TOOL CARDS (home grid) ─── */
 .tool-card{
   background:linear-gradient(180deg, rgba(91,141,239,0.07), transparent 34%),var(--bg);border:1px solid var(--border);
   border-radius:18px;
@@ -643,7 +643,7 @@ html:not(.dark) .tool-card:hover { border-color:#c0c0c0; box-shadow:0 6px 20px r
 .tool-card h3{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:2px}
 .tool-card p{font-size:12px;color:var(--text-muted);line-height:1.4}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ STAT CARDS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── STAT CARDS ─── */
 .stat-card{
   background:linear-gradient(180deg, rgba(91,141,239,0.07), transparent 34%),var(--bg);border:1px solid var(--border);
   border-radius:18px;padding:18px 22px;
@@ -654,10 +654,10 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
 .stat-label{font-size:12px;color:var(--text-muted);font-weight:500;letter-spacing:.01em}
 .stat-val{font-size:26px;font-weight:700;color:var(--text-main);letter-spacing:-.8px}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ SECTION TITLE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── SECTION TITLE ─── */
 .section-title{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ TWO-PANEL TOOL LAYOUT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── TWO-PANEL TOOL LAYOUT ─── */
 .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:900px){.tool-grid{grid-template-columns:1fr}}
 .panel-title{font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:18px}
@@ -1153,18 +1153,18 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;min-height:300px;color:var(--text3);text-align:center}
 .empty-state p{font-size:13px}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ INLINE LOADING Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── INLINE LOADING ─── */
 .inline-loader{display:none;align-items:center;gap:9px;padding:12px 0;font-size:13px;color:var(--text-muted)}
 .inline-loader.show{display:flex}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PROFILE BANNER Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── PROFILE BANNER ─── */
 .profile-banner{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:9px 12px;display:none;align-items:center;gap:8px;font-size:12.5px;color:#15803d;margin-bottom:16px;cursor:pointer}
 .profile-banner.show{display:flex}
 .profile-banner:hover{background:#dcfce7}
 html.dark .profile-banner{background:#052e16;border-color:#166534;color:#86efac}
 html.dark .profile-banner:hover{background:#14532d}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ CHAT PAGE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── CHAT PAGE ─── */
 .chat-wrap{max-width:620px;margin:0 auto}
 .chat-progress{margin-bottom:24px}
 .chat-progress-labels{display:flex;justify-content:space-between;font-size:10.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
@@ -1193,7 +1193,7 @@ html.dark .profile-banner:hover{background:#14532d}
 .send-btn:hover{opacity:.8}
 .send-btn:active{transform:scale(0.95)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PIPELINE / KANBAN Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── PIPELINE / KANBAN ─── */
 .page-hd-split{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
 .page-hd-note{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg, rgba(91,141,239,0.08), rgba(20,184,166,0.04));font-size:12px;color:var(--text-muted);white-space:nowrap}
 .pipeline-shell{display:grid;gap:18px;min-width:0}
@@ -1753,7 +1753,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
   .floating-checklist{display:none !important}
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MODALS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── MODALS ─── */
 .modal-backdrop{
   position:fixed;inset:0;
   background:rgba(0,0,0,0.55);
@@ -1776,7 +1776,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 }
 .modal-close:hover{background:var(--bg-hover)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ ACCOUNT DROPDOWN Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── ACCOUNT DROPDOWN ─── */
 .account-dropdown{
   position:absolute;top:calc(var(--header-h) + 5px);right:14px;
   background:var(--bg);border:1px solid var(--border);border-radius:12px;width:230px;
@@ -1804,7 +1804,7 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 html.dark .acct-menu-item.danger:hover{background:#3f1515}
 .acct-divider{height:1px;background:var(--border);margin:3px 0}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ FILE UPLOAD Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── FILE UPLOAD ─── */
 .file-upload{
   border:1px dashed var(--border2);border-radius:var(--radius);
   background:var(--bg-panel);padding:20px;text-align:center;
@@ -1814,7 +1814,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
 .file-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .file-upload-text{font-size:12.5px;color:var(--text-muted);margin-top:6px}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ TOAST Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── TOAST ─── */
 #toast{
   position:fixed;bottom:22px;right:22px;
   background:var(--text-main);color:var(--bg);
@@ -1826,7 +1826,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
 }
 #toast.show{opacity:1;transform:translateY(0)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ RESULT KIT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── RESULT KIT ─── */
 .kit-block{
   background:var(--bg);border:1px solid var(--border);
   border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:14px;
@@ -1839,13 +1839,13 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
 .price-tier-name{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:5px}
 .price-tier-val{font-size:20px;font-weight:700;color:var(--text-main)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ GIG CARDS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── GIG CARDS ─── */
 .gig-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow-sm)}
 .gig-card h4{font-size:13.5px;font-weight:600;color:var(--text-main);margin-bottom:7px}
 .gig-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
 .gig-tag{background:var(--bg-panel);border:1px solid var(--border);border-radius:99px;padding:2px 9px;font-size:11px;color:var(--text-muted)}
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ ROADMAP Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── ROADMAP ─── */
 .roadmap-day{border-left:2px solid var(--border);padding-left:18px;margin-bottom:20px;position:relative}
 .roadmap-day::before{
   content:attr(data-day);position:absolute;left:-14px;top:0;
@@ -1854,7 +1854,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
   display:flex;align-items:center;justify-content:center;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ RESPONSIVE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── RESPONSIVE ─── */
 @media(max-width:768px){
   .sidebar{position:fixed;z-index:200;left:0;top:0;transform:translateX(-100%)}
   .sidebar.mobile-open{transform:translateX(0)}
@@ -1865,7 +1865,7 @@ html.dark .acct-menu-item.danger:hover{background:#3f1515}
   .home-mini-stats,.home-tool-grid,.gig-result-grid,.ai-result-grid{grid-template-columns:1fr}
 }
 
-/* Light mode Ã¢â‚¬â€ stronger panel backgrounds */
+/* Light mode — stronger panel backgrounds */
 html:not(.dark) .content-scroll { background: #f7f7f7; }
 html:not(.dark) .main { background: #f7f7f7; }
 html:not(.dark) .header { background: #ffffff; }
@@ -1873,7 +1873,7 @@ html:not(.dark) .page-hd h1 { font-size: 26px; font-weight: 800; letter-spacing:
 html:not(.dark) .card { background: #ffffff; border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
 html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; font-weight: 700; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ SETTINGS MODAL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── SETTINGS MODAL ─── */
 #settings-modal .modal {
   max-width: 680px;
   padding: 0;
@@ -2000,11 +2000,11 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
 .billing-credits-label strong { color: var(--text-main); font-weight: 600; }
 .billing-bar-track { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
 .billing-bar-fill { height: 100%; background: var(--text-main); border-radius: 99px; transition: width .4s ease; }
-  /* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
-     ONBOARDING Ã¢â‚¬â€ Premium animated flow
-     â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
+  /* ══════════════════════════════════════════════════════════
+     ONBOARDING — Premium animated flow
+     ══════════════════════════════════════════════════════════ */
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 0. AURORA CANVAS Ã¢â‚¬â€ lives at the very bottom of the z-stack Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 0. AURORA CANVAS — lives at the very bottom of the z-stack ── */
 #ob-aurora-canvas {
   position: fixed; inset: 0;
   z-index: 9490;          /* below intro (10000), wizard (9500), quote (9600) */
@@ -2014,10 +2014,10 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
 }
 #ob-aurora-canvas.visible { opacity: 1; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 1. LOGO INTRO SCREEN Ã¢â‚¬â€ transparent so aurora shows through Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 1. LOGO INTRO SCREEN — transparent so aurora shows through ── */
 #ob-logo-intro {
   position: fixed; inset: 0; z-index: 10000;
-  background: transparent;          /* â† KEY FIX: was #000 */
+  background: transparent;          /* ← KEY FIX: was #000 */
   display: none;                    /* JS sets to flex */
   flex-direction: column;
   align-items: center; justify-content: center;
@@ -2035,7 +2035,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   pointer-events: none;
 }
 
-/* Logo + wordmark Ã¢â‚¬â€ blur-reveal entrance together */
+/* Logo + wordmark — blur-reveal entrance together */
 .ob-intro-content {
   display: flex; flex-direction: column;
   align-items: center; gap: 0;
@@ -2073,7 +2073,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 
-/* Dark overlay that sits between aurora and content Ã¢â‚¬â€ adds depth without hiding aurora */
+/* Dark overlay that sits between aurora and content — adds depth without hiding aurora */
 #ob-logo-intro::before {
   content: '';
   position: absolute; inset: 0;
@@ -2084,9 +2084,9 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   z-index: -1;
 }
 
-/* Remove all old ring/grid classes Ã¢â‚¬â€ they are no longer in HTML */
+/* Remove all old ring/grid classes — they are no longer in HTML */
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 1. MAIN ONBOARDING SCREEN Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 1. MAIN ONBOARDING SCREEN ── */
 #onboarding-screen {
   display: none; position: fixed; inset: 0;
   z-index: 9500; background: #000;
@@ -2114,7 +2114,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   background: radial-gradient(ellipse 70% 55% at 50% 40%, rgba(255,255,255,0.04) 0%, transparent 70%);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 2. WIZARD CARD Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 2. WIZARD CARD ── */
 #onboarding-wizard {
   width: 100%; max-width: 560px;
   max-height: 580px; overflow-y: auto;
@@ -2130,7 +2130,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 3. PROGRESS BAR Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 3. PROGRESS BAR ── */
 .ob-progress-bar { height: 2px; background: #1a1a1a; position: relative; }
 .ob-progress-fill {
   height: 100%; background: #fff;
@@ -2138,7 +2138,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   transition: width 0.45s cubic-bezier(0.16,1,0.3,1);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 4. CARD BODY Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 4. CARD BODY ── */
 .ob-body { padding: 38px 42px 32px; }
 
 /* Step indicator badge */
@@ -2161,7 +2161,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   font-size: 13px; color: #555; margin-bottom: 28px; line-height: 1.6;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 5. STEP PANELS Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 5. STEP PANELS ── */
 .ob-step { display: none; }
 .ob-step.active {
   display: block;
@@ -2172,7 +2172,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 6. ONBOARDING INPUTS (always dark) Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 6. ONBOARDING INPUTS (always dark) ── */
 #onboarding-wizard .field-label {
   font-size: 11.5px; font-weight: 500; color: #666;
   margin-bottom: 7px; letter-spacing: .02em;
@@ -2194,7 +2194,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   box-shadow: 0 0 0 3px rgba(255,255,255,0.07) !important;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 7. CHIP SELECTOR Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 7. CHIP SELECTOR ── */
 .ob-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
 .ob-chip {
   padding: 8px 14px; border-radius: 9px; cursor: pointer;
@@ -2206,7 +2206,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
 .ob-chip:hover { border-color: #444; color: #ccc; }
 .ob-chip.selected { border-color: #fff; background: #fff; color: #000; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 8. FOOTER Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 8. FOOTER ── */
 .ob-footer {
   display: flex; justify-content: space-between; align-items: center;
   padding: 18px 42px 26px;
@@ -2227,7 +2227,7 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
 #ob-next-btn:active:not(:disabled) { transform: scale(0.97); }
 #ob-next-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ 9. MOTIVATIONAL QUOTE SCREEN Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── 9. MOTIVATIONAL QUOTE SCREEN ── */
 #ob-quote-screen {
   position: fixed; inset: 0; z-index: 9600;
   background: #000; display: none;
@@ -2297,9 +2297,9 @@ html:not(.dark) .section-title { border-bottom-color: #e0e0e0; font-size: 15px; 
   background: #222; transition: background .3s, width .3s;
 }
 .ob-quote-dot.active { background: #fff; width: 20px; border-radius: 2px; }
-/* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
+/* ═══════════════════════════════════════════════════════════
    OPPORTUNITY ENGINE
-   â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
+   ═══════════════════════════════════════════════════════════ */
 
 /* Search card top row */
 .opp-search-panel { display: flex; flex-direction: column; gap: 16px; }
@@ -2375,7 +2375,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
 @media (max-width: 1100px) { .opp-results-grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 700px)  { .opp-results-grid { grid-template-columns: 1fr; } }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ V4 OPPORTUNITY ENGINE Ã¢â‚¬â€ PRE-SCAN PANEL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── V4 OPPORTUNITY ENGINE — PRE-SCAN PANEL ─── */
 
 .pre-scan-panel {
   display: flex;
@@ -2408,7 +2408,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   gap: 10px 24px;
 }
 
-/* Each checkbox row Ã¢â‚¬â€ state driven by real :checked, zero JS needed */
+/* Each checkbox row — state driven by real :checked, zero JS needed */
 .ps-toggle {
   display: flex;
   align-items: center;
@@ -2426,7 +2426,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   background: var(--bg-hover);
 }
 
-/* âœ… Active state Ã¢â‚¬â€ driven by :has(input:checked), no JS class needed */
+/* ✅ Active state ? driven by :has(input:checked), no JS class needed */
 .ps-toggle:has(input:checked) {
   border-color: var(--text-main);
   background: var(--bg-panel);
@@ -2442,7 +2442,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   display: block;
 }
 
-/* Hide the real checkbox visually Ã¢â‚¬â€ it still works, just invisible */
+/* Hide the real checkbox visually — it still works, just invisible */
 .ps-toggle input[type="checkbox"] {
   display: none;
 }
@@ -2535,7 +2535,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   margin-top: 1px;
 }
 
-/* Scan button Ã¢â‚¬â€ full weight, scan intent */
+/* Scan button — full weight, scan intent */
 .btn-opp-scan {
   height: 36px;
   padding: 0 18px;
@@ -2558,7 +2558,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
 .btn-opp-scan:active { transform: scale(0.97); }
 .btn-opp-scan:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ V4 OPPORTUNITY CARD (THE CLOSER CARD) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── V4 OPPORTUNITY CARD (THE CLOSER CARD) ─── */
 
 .opp-card {
   background: var(--bg-panel);
@@ -2577,7 +2577,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   border-color: var(--border2);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Card Header Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Card Header ── */
 .opp-card-header {
   padding: 16px 18px 12px;
   border-bottom: 1px solid var(--border);
@@ -2598,7 +2598,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   gap: 6px;
 }
 
-/* Ã°Å¸â€Â¥ Score Badge */
+/* 🔥 Score Badge */
 .opp-score-badge {
   display: flex;
   flex-direction: column;
@@ -2655,7 +2655,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   letter-spacing: .04em;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Money Block: Deal Value + Service Match Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Money Block: Deal Value + Service Match ── */
 .opp-money-block {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2680,7 +2680,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
 .opp-deal-value   { font-size: 14px; font-weight: 700; color: #10b981; }
 .opp-service-match { font-size: 13px; font-weight: 600; color: var(--text-main); }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Card Body Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Card Body ── */
 .opp-card-body {
   padding: 15px 18px;
   flex: 1;
@@ -2736,7 +2736,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   border-radius: 8px;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Action Buttons Ã¢â‚¬â€ 3-column grouped grid Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Action Buttons — 3-column grouped grid ── */
 .opp-card-actions {
   padding: 13px 18px;
   background: var(--bg-panel);
@@ -2853,7 +2853,7 @@ function routeToAudit(targetName, platform) {
   if (typeof toggleAuditUrl === 'function') toggleAuditUrl();
 
   navigate('audit');
-  showToast(`Audit pre-filled for "${targetName}" Ã¢â€ â€™ ${mappedPlatform}`);
+  showToast(`Audit pre-filled for "${targetName}" → ${mappedPlatform}`);
 }
 
 /**
@@ -2917,10 +2917,10 @@ function routeToLead(name, platform) {
   setVal('lead-platform', pipelineMap[platform] || 'Instagram');
 
   navigate('pipeline');
-  showToast(`"${name}" pre-filled in Pipeline Ã¢â‚¬â€ review and click Add Lead.`);
+  showToast(`"${name}" pre-filled in Pipeline — review and click Add Lead.`);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ PRO Lock Overlay for gated features Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── PRO Lock Overlay for gated features ── */
 .pro-lock-wrap {
   position: relative;
   pointer-events: none; /* child restores its own events */
@@ -2957,7 +2957,7 @@ html.dark .pro-lock-overlay {
   font-size: 12px; color: var(--text-muted);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Usage-limit banner (shown inline on tool pages near full) Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Usage-limit banner (shown inline on tool pages near full) ── */
 .credits-warning-banner {
   display: none;
   align-items: center; gap: 10px;
@@ -2975,7 +2975,7 @@ html.dark .credits-warning-banner {
   0%,100% { opacity:1; transform:scale(1); }
   50%      { opacity:.4; transform:scale(0.7); }
 }
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ CONVERSION PRICING PAGE / MODAL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── CONVERSION PRICING PAGE / MODAL ─── */
 #upgrade-modal.modal-backdrop,
 #upgrade-modal {
   align-items: flex-start !important;
@@ -3459,7 +3459,7 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
   transform: translateX(-50%);
   white-space: nowrap;
 }
-    /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ V5 CARD ADDITIONS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+    /* ─── V5 CARD ADDITIONS ─── */
 
 /* Why Now row */
 .opp-why-now {
@@ -3476,7 +3476,7 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
 }
 .opp-why-now-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
 
-/* Stats row Ã¢â‚¬â€ Reply % + Effort tag + Red Flag */
+/* Stats row — Reply % + Effort tag + Red Flag */
 .opp-stats-row {
   display: flex;
   align-items: center;
@@ -3544,7 +3544,7 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
 }
 .opp-close-hint strong { color: var(--text-main); font-weight: 600; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ V5 PRE-SCAN ADDITIONS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── V5 PRE-SCAN ADDITIONS ─── */
 
 /* Audience size toggle group */
 .ps-size-group {
@@ -3641,7 +3641,7 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
   text-align: center;
   margin-top: 4px;
 } 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Opportunity Workspace Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── Opportunity Workspace ─── */
 #page-opportunity .page-hd{
   display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap
 }
@@ -5763,6 +5763,54 @@ html.dark .roadmap-teaser{
 .chart-x-label{
   text-align:center;
 }
+.chart-context-copy{
+  margin-top:10px;
+  font-size:11px;
+  color:var(--text-muted);
+}
+.chart-tooltip{
+  position:fixed;
+  z-index:1200;
+  pointer-events:none;
+  min-width:112px;
+  padding:8px 10px;
+  border-radius:12px;
+  background:rgba(15,23,42,0.94);
+  color:#fff;
+  box-shadow:0 14px 34px rgba(15,23,42,0.26);
+  opacity:0;
+  transform:translate(-50%,-120%);
+  transition:opacity .12s ease;
+}
+.chart-tooltip.show{opacity:1}
+.chart-tooltip-kicker{
+  display:block;
+  margin-bottom:3px;
+  font-size:10px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.68);
+}
+.chart-tooltip-value{
+  font-size:13px;
+  font-weight:700;
+}
+.credits-stat-list{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+.credits-stat-item{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  font-size:12px;
+  color:var(--text-muted);
+}
+.credits-stat-item strong{
+  color:var(--text-main);
+  font-weight:700;
+}
 .credits-widget{
   display:grid !important;
   grid-template-columns:72px minmax(0,1fr);
@@ -6480,7 +6528,7 @@ body,
 
 <div id="loading-screen">
   <div class="spin"></div>
-  <span style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.01em">Loading workspaceâ€¦</span>
+  <span style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.01em">Loading workspace…</span>
 </div>
 
 <div id="login-screen">
@@ -6527,7 +6575,7 @@ body,
     </div>
   </div>
 </div>
-<!-- Aurora canvas Ã¢â‚¬â€ z-index 9490, always below everything -->
+<!-- Aurora canvas — z-index 9490, always below everything -->
 <canvas id="ob-aurora-canvas"></canvas>
 
 <div id="signup-onboarding-modal">
@@ -6606,7 +6654,7 @@ body,
           <input type="text" id="ob-name" placeholder="e.g. Rahul Sharma" style="height:40px">
         </div>
         <div class="field-group" style="display:none;margin-bottom:0">
-          <label class="field-label">Your primary skill Ã¢â‚¬â€ be specific</label>
+          <label class="field-label">Your primary skill — be specific</label>
           <input type="text" id="ob-skills" placeholder="e.g. Short-form video editing, UI design, Copywriting" style="height:40px">
         </div>
       </div>
@@ -6626,8 +6674,8 @@ body,
           <label class="field-label">Experience level</label>
           <div class="ob-chips" id="ob-exp-chips">
             <div class="ob-chip" data-val="Complete Beginner" onclick="selectChip('ob-exp-chips',this,'ob-exp')">Just starting out</div>
-            <div class="ob-chip" data-val="Had 1-2 clients" onclick="selectChip('ob-exp-chips',this,'ob-exp')">Done 1Ã¢â‚¬â€œ2 projects</div>
-            <div class="ob-chip" data-val="3-6 months experience" onclick="selectChip('ob-exp-chips',this,'ob-exp')">3Ã¢â‚¬â€œ6 months in</div>
+            <div class="ob-chip" data-val="Had 1-2 clients" onclick="selectChip('ob-exp-chips',this,'ob-exp')">Done 1–2 projects</div>
+            <div class="ob-chip" data-val="3-6 months experience" onclick="selectChip('ob-exp-chips',this,'ob-exp')">3–6 months in</div>
             <div class="ob-chip" data-val="Experienced" onclick="selectChip('ob-exp-chips',this,'ob-exp')">Experienced pro</div>
           </div>
           <input type="hidden" id="ob-exp">
@@ -6637,7 +6685,7 @@ body,
           <div class="ob-chips" id="ob-hours-chips">
             <div class="ob-chip" data-val="1 hour" onclick="selectChip('ob-hours-chips',this,'ob-hours')">1 hr</div>
             <div class="ob-chip" data-val="2 hours" onclick="selectChip('ob-hours-chips',this,'ob-hours')">2 hrs</div>
-            <div class="ob-chip" data-val="3-4 hours" onclick="selectChip('ob-hours-chips',this,'ob-hours')">3Ã¢â‚¬â€œ4 hrs</div>
+            <div class="ob-chip" data-val="3-4 hours" onclick="selectChip('ob-hours-chips',this,'ob-hours')">3–4 hrs</div>
             <div class="ob-chip" data-val="5+ hours" onclick="selectChip('ob-hours-chips',this,'ob-hours')">5+ hrs</div>
           </div>
           <input type="hidden" id="ob-hours">
@@ -6678,7 +6726,7 @@ body,
           <input type="hidden" id="ob-platform">
         </div>
         <div class="field-group" style="margin-bottom:0">
-          <label class="field-label">Your niche / target client Ã¢â‚¬â€ <span style="color:#3a3a3a">optional but powerful</span></label>
+          <label class="field-label">Your niche / target client — <span style="color:#3a3a3a">optional but powerful</span></label>
           <input type="text" id="ob-niche" placeholder="e.g. SaaS startups, fitness coaches, D2C brands" style="height:40px">
         </div>
       </div>
@@ -6721,10 +6769,10 @@ body,
     </div><!-- /ob-body -->
 
     <div class="ob-footer">
-      <button id="ob-back-btn" onclick="obBack()" style="visibility:hidden">â† Back</button>
+      <button id="ob-back-btn" onclick="obBack()" style="visibility:hidden">← Back</button>
       <div style="display:flex;align-items:center;gap:16px">
         <span class="ob-step-counter" id="ob-step-counter">1 / 5</span>
-        <button id="ob-next-btn" onclick="obNext()">Get Started Ã¢â€ â€™</button>
+        <button id="ob-next-btn" onclick="obNext()">Get Started →</button>
       </div>
     </div>
 
@@ -6760,7 +6808,7 @@ body,
       </div>
 
       <div class="sb-section">Features</div>
-      <div class="nav-folder open" data-folder="ai-tools">
+<div class="nav-folder" data-folder="ai-tools">
         <button class="nav-folder-head" onclick="toggleNavFolder('ai-tools')">
           <span class="nav-folder-title"><i data-lucide="sparkles" class="icon"></i><span class="nav-label">AI Tools</span></span>
           <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
@@ -6789,7 +6837,7 @@ body,
         </div>
       </div>
 
-      <div class="nav-folder open" data-folder="finance">
+<div class="nav-folder" data-folder="finance">
         <button class="nav-folder-head" onclick="toggleNavFolder('finance')">
           <span class="nav-folder-title"><i data-lucide="wallet" class="icon"></i><span class="nav-label">Finance</span></span>
           <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
@@ -6800,7 +6848,7 @@ body,
         </div>
       </div>
 
-      <div class="nav-folder open" data-folder="growth">
+<div class="nav-folder" data-folder="growth">
         <button class="nav-folder-head" onclick="toggleNavFolder('growth')">
           <span class="nav-folder-title">
             <i data-lucide="trending-up" class="icon"></i>
@@ -6858,22 +6906,19 @@ body,
         <div class="acct-credits-row"><span>Total</span><strong>1,000 credits</strong></div>
         <div class="acct-credits-row"><span>Remaining</span><strong id="acct-credits-remaining">850</strong></div>
       </div>
-      <div class="acct-ws">
-        <div class="acct-ws-label">Current workspace</div>
-        <div class="acct-ws-name" id="acct-ws-name">My Workspace</div>
-        <div class="acct-ws-plan" id="acct-plan-label">Free plan</div>
-      </div>
-      <div class="acct-menu">
-        <button class="acct-menu-item" onclick="openSettings('profile');toggleAccountDropdown()">Settings</button>
-        <button class="acct-menu-item" onclick="showToast('Workspace settings coming soon')">Workspace settings</button>
-        <button class="acct-menu-item" onclick="showUpgradeModal();toggleAccountDropdown()">Subscription</button>
-        <div class="acct-divider"></div>
-        <button class="acct-menu-item" onclick="showToast('Usage analytics coming soon')">Usage analytics</button>
-        <button class="acct-menu-item" onclick="window.open('https://lancify.framer.website','_blank');toggleAccountDropdown()">Become an affiliate</button>
-        <button class="acct-menu-item" onclick="toggleGuideModeSetting();toggleAccountDropdown()">
-          <span>Step-by-step guide</span>
-          <span id="guide-mode-indicator" style="float:right;">ON</span>
-        </button>
+        <div class="acct-ws">
+          <div class="acct-ws-label">Current workspace</div>
+          <div class="acct-ws-name" id="acct-ws-name">My Workspace</div>
+          <div class="acct-ws-plan" id="acct-plan-label">Free plan</div>
+        </div>
+        <div class="acct-menu">
+          <button class="acct-menu-item" onclick="openSettings('profile');toggleAccountDropdown()">Settings</button>
+          <button class="acct-menu-item" onclick="showUpgradeModal();toggleAccountDropdown()">Subscription</button>
+          <div class="acct-divider"></div>
+          <button class="acct-menu-item" onclick="toggleGuideModeSetting();toggleAccountDropdown()">
+            <span>Step-by-step guide</span>
+            <span id="guide-mode-indicator" style="float:right;">ON</span>
+          </button>
         <div class="acct-divider"></div>
         <button class="acct-menu-item danger" onclick="signOut();toggleAccountDropdown()">Sign out</button>
       </div>
@@ -6896,12 +6941,12 @@ body,
           <div id="dashboard-challenge-banner" class="dashboard-banner hidden">
             <div class="dashboard-banner-copy">
               <div class="dashboard-banner-eyebrow">7-Day Client Challenge</div>
-              <div class="dashboard-banner-title">7-Day Client Challenge Ã¢â‚¬â€ Follow these 4 steps. Land a client this week.</div>
+              <div class="dashboard-banner-title">7-Day Client Challenge — Follow these 4 steps. Land a client this week.</div>
               <div class="dashboard-banner-sub">Stay focused on the next move, not the whole mountain. Lancify already mapped the path.</div>
             </div>
             <div class="dashboard-banner-actions">
               <div id="dashboard-challenge-progress" class="challenge-progress"><strong>0/4</strong></div>
-              <button class="btn btn-primary" onclick="openStartHere()">Continue Ã¢â€ â€™</button>
+              <button class="btn btn-primary" onclick="openStartHere()">Continue →</button>
             </div>
           </div>
 
@@ -6920,7 +6965,7 @@ body,
                 </div>
                 <p class="checklist-copy">This is the fastest path from empty workspace to first outreach. Do these four actions and the app immediately starts feeling useful.</p>
                 <div id="checklist-summary" class="checklist-summary hidden" onclick="toggleChecklistCollapse()" style="margin-top:12px; font-size:13px; font-weight:600; color:var(--accent-primary); cursor:pointer;">
-                  <span id="checklist-summary-text">0/4 steps done Ã¢â‚¬â€ click to expand</span>
+                  <span id="checklist-summary-text">0/4 steps done — click to expand</span>
                 </div>
               </div>
               <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
@@ -7054,14 +7099,14 @@ body,
                 </div>
               </div>
               <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="$250"></div>
-              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclearâ€¦"></textarea></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
               <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(4, generateAudit)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">Generate Audit Dossier</span>
                 <span class="btn-text-loading">Generating...</span>
               </button>
               <div class="tool-limit-note hidden" id="audit-daily-limit"></div>
-              <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence reportâ€¦</span></div>
+              <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
             </div>
             <div class="result-panel">
               <div id="audit-result-box" class="tool-output-card" style="display:none">
@@ -7120,7 +7165,7 @@ body,
                   <div><label class="field-label">Your Niche</label><input type="text" id="prop-niche" placeholder="e.g. YouTube Thumbnails"></div>
                 </div>
               </div>
-              <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing hereâ€¦"></textarea></div>
+              <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing here…"></textarea></div>
               <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Experience</label><input type="text" id="prop-exp" placeholder="e.g. I designed thumbnails for a 100k channel"></div>
               <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:18px" onclick="checkCredits(3, generateProposal)">
                 <span class="btn-spinner"></span>
@@ -7128,7 +7173,7 @@ body,
                 <span class="btn-text-loading">Generating...</span>
               </button>
               <div class="tool-limit-note hidden" id="proposal-daily-limit"></div>
-              <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposalâ€¦</span></div>
+              <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposal…</span></div>
             </div>
             <div class="result-panel">
               <div class="result-box tool-output-card" id="prop-result-box" style="display:none">
@@ -7164,14 +7209,14 @@ body,
               <div class="tool-section-kicker">Email Inputs</div>
               <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Cold outreach with a specific insight">Cold Outreach With Insight</option><option value="Follow-up">Follow Up</option><option value="Invoice reminder">Invoice Reminder</option><option value="Proposal follow up">Proposal Follow Up</option><option value="Thank you">Thank You</option></select></div>
               <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly">Friendly</option><option value="Direct">Direct</option><option value="Assertive">Assertive</option></select></div>
-              <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for $350 is 5 days overdueâ€¦"></textarea></div>
+              <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea></div>
               <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(2, generateEmail)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">Generate Draft</span>
                 <span class="btn-text-loading">Generating...</span>
               </button>
               <div class="tool-limit-note hidden" id="email-daily-limit"></div>
-              <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your emailâ€¦</span></div>
+              <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
             </div>
             <div class="result-panel">
               <div class="result-box tool-output-card" id="email-result-box" style="display:none">
@@ -7222,7 +7267,7 @@ body,
                 <div class="sequence-platform-grid" id="seq-platform-grid">
                   <button class="sequence-platform-card active" type="button" data-platform="YouTube" onclick="selectSequencePlatform('YouTube', this)"><i data-lucide="play-circle" style="width:18px;height:18px"></i><span>YouTube</span></button>
                   <button class="sequence-platform-card" type="button" data-platform="LinkedIn" onclick="selectSequencePlatform('LinkedIn', this)"><i data-lucide="briefcase-business" style="width:18px;height:18px"></i><span>LinkedIn</span></button>
-                  <button class="sequence-platform-card" type="button" data-platform="Instagram" onclick="selectSequencePlatform('Instagram', this)"><i data-lucide="instagram" style="width:18px;height:18px"></i><span>Instagram</span></button>
+                  <button class="sequence-platform-card" type="button" data-platform="Instagram" onclick="selectSequencePlatform('Instagram', this)"><span style="display:flex;flex-direction:column;align-items:center;line-height:1.05"><span style="font-size:15px">🅾</span><span>Instagram</span></span></button>
                   <button class="sequence-platform-card" type="button" data-platform="Shopify" onclick="selectSequencePlatform('Shopify', this)"><i data-lucide="shopping-bag" style="width:18px;height:18px"></i><span>Shopify</span></button>
                   <button class="sequence-platform-card" type="button" data-platform="Website" onclick="selectSequencePlatform('Website', this)"><i data-lucide="globe" style="width:18px;height:18px"></i><span>Website</span></button>
                   <button class="sequence-platform-card" type="button" data-platform="Google Maps" onclick="selectSequencePlatform('Google Maps', this)"><i data-lucide="map-pinned" style="width:18px;height:18px"></i><span>Maps</span></button>
@@ -7618,7 +7663,7 @@ body,
       <button class="opp-mode-tab" id="tab-deep" onclick="switchOppMode('deep')"><i data-lucide="radar" style="width:14px;height:14px"></i> Advanced</button>
     </div>
 
-    <!-- â•Ââ•Â QUICK FIND PANEL â•Ââ•Â -->
+    <!-- ══ QUICK FIND PANEL ══ -->
     <div class="card opp-quick-panel" id="opp-quick-panel" style="margin-bottom:22px;padding:22px">
 
       <div class="ps-section-label" style="margin-bottom:12px">What's your freelance skill?</div>
@@ -7665,7 +7710,7 @@ body,
 
     </div><!-- /opp-quick-panel -->
 
-    <!-- â•Ââ•Â DEEP SCAN PANEL â•Ââ•Â -->
+    <!-- ══ DEEP SCAN PANEL ══ -->
     <div class="card opp-deep-panel" id="opp-deep-panel" style="margin-bottom:22px">
       <div class="pre-scan-panel">
 
@@ -7766,7 +7811,7 @@ body,
       <div class="ps-size-group" id="ps-size-group">
         <button class="ps-size-btn active" data-size="all" onclick="setSizeFilter(this)">All</button>
         <button class="ps-size-btn" data-size="beginner" onclick="setSizeFilter(this)">Beginner &lt;10k</button>
-        <button class="ps-size-btn" data-size="growing" onclick="setSizeFilter(this)">Growing 10kÃ¢â‚¬â€œ50k</button>
+        <button class="ps-size-btn" data-size="growing" onclick="setSizeFilter(this)">Growing 10k–50k</button>
         <button class="ps-size-btn" data-size="established" onclick="setSizeFilter(this)">Established 50k+</button>
       </div>
     </div>
@@ -7849,7 +7894,7 @@ body,
             
             <div class="inline-loader" id="opp-loader" style="margin-top:16px; justify-content: center;">
               <div class="spin" style="border-top-color: #7c3aed;"></div>
-              <span id="opp-loader-text" style="color:#7c3aed; font-weight:500;">Initializing Apify nodesâ€¦</span>
+              <span id="opp-loader-text" style="color:#7c3aed; font-weight:500;">Initializing Apify nodes…</span>
             </div>
           </div>
 
@@ -7910,7 +7955,7 @@ body,
                 <div class="biz-metric-card"><div class="biz-metric-label">Total</div><div class="biz-metric-value" id="inv-stat-total">0</div></div>
                 <div class="biz-metric-card"><div class="biz-metric-label">Paid</div><div class="biz-metric-value" id="inv-stat-paid">0</div></div>
                 <div class="biz-metric-card"><div class="biz-metric-label">Pending</div><div class="biz-metric-value" id="inv-stat-pending">0</div></div>
-                <div class="biz-metric-card"><div class="biz-metric-label">Outstanding</div><div class="biz-metric-value" id="inv-stat-outstanding">$0</div></div>
+<div class="biz-metric-card"><div class="biz-metric-label" title="Money waiting to be paid by clients">Pending Payments</div><div class="biz-metric-value" id="inv-stat-outstanding">$0</div></div>
               </div>
             </div>
           </div>
@@ -8028,7 +8073,7 @@ body,
             <div class="analytics-metric-card"><div class="analytics-metric-label">Open Pipeline</div><div class="analytics-metric-value" id="acc-open-pipeline">$0</div><div class="analytics-metric-sub">Open deal value still in motion.</div></div>
             <div class="analytics-metric-card"><div class="analytics-metric-label">Booked Revenue</div><div class="analytics-metric-value" id="acc-booked-revenue">$0</div><div class="analytics-metric-sub">Closed-won value recorded in the CRM.</div></div>
             <div class="analytics-metric-card"><div class="analytics-metric-label">Cash Collected</div><div class="analytics-metric-value" id="acc-collected-cash">$0</div><div class="analytics-metric-sub">Invoices marked paid in the selected range.</div></div>
-            <div class="analytics-metric-card"><div class="analytics-metric-label">Outstanding</div><div class="analytics-metric-value" id="acc-outstanding">$0</div><div class="analytics-metric-sub">Open invoice balance that still needs collection.</div></div>
+<div class="analytics-metric-card"><div class="analytics-metric-label" title="Money waiting to be paid by clients">Pending Payments</div><div class="analytics-metric-value" id="acc-outstanding">$0</div><div class="analytics-metric-sub">Money waiting to be paid by clients.</div></div>
             <div class="analytics-metric-card"><div class="analytics-metric-label">Close Rate</div><div class="analytics-metric-value" id="acc-close-rate">0%</div><div class="analytics-metric-sub">Won deals divided by created pipeline.</div></div>
           </div>
           <div class="analytics-grid">
@@ -8116,9 +8161,9 @@ body,
       </div>
 </div>
    
-<!-- â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
-     SETTINGS MODAL Ã¢â‚¬â€ Claude-style left nav
-     â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â -->
+<!-- ═══════════════════════════════════════════
+     SETTINGS MODAL — Claude-style left nav
+     ═══════════════════════════════════════════ -->
 <div class="modal-backdrop" id="settings-modal">
   <div class="modal" style="position:relative">
     <button class="settings-close" onclick="closeModal('settings-modal')">
@@ -8170,7 +8215,7 @@ body,
           </div>
           <div><label class="field-label">Hours Available / Day</label>
             <select id="prof-hours">
-              <option value="1 hour">1 hour/day</option><option value="2 hours" selected>2 hours/day</option><option value="3-4 hours">3Ã¢â‚¬â€œ4 hours/day</option><option value="5+ hours">5+ hours/day</option>
+              <option value="1 hour">1 hour/day</option><option value="2 hours" selected>2 hours/day</option><option value="3-4 hours">3–4 hours/day</option><option value="5+ hours">5+ hours/day</option>
             </select>
           </div>
           <div><label class="field-label">Biggest Challenge</label>
@@ -8179,7 +8224,7 @@ body,
             </select>
           </div>
         </div>
-        <div style="margin-bottom:18px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuberâ€¦"></textarea></div>
+        <div style="margin-bottom:18px"><label class="field-label">Past Work / Experience</label><textarea id="prof-exp" rows="3" placeholder="e.g. Edited reels for a local cafe, designed 20+ thumbnails for a YouTuber…"></textarea></div>
         <button class="btn btn-primary" id="save-prof-btn" onclick="saveProfile()">Save Profile</button>
       </div>
 
@@ -8190,7 +8235,7 @@ body,
         <div class="pref-row">
           <div>
             <div class="pref-label">Email me when a lead replies</div>
-            <div class="pref-desc">Coming soon Ã¢â‚¬â€ we'll notify you via email</div>
+            <div class="pref-desc">Coming soon — we'll notify you via email</div>
           </div>
           <input type="checkbox" id="notif-email" onchange="localStorage.setItem('lancify_notif_email', this.checked)" style="width:auto">
         </div>
@@ -8201,9 +8246,9 @@ body,
           </div>
           <select id="inv-currency-pref" onchange="localStorage.setItem('lancify_currency', this.value)" style="width:120px">
             <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (â€”)</option>
-            <option value="GBP">GBP (Ã‚Â£)</option>
-            <option value="INR">INR (Ã¢â€šÂ¹)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="INR">INR (₹)</option>
             <option value="AUD">AUD (A$)</option>
           </select>
         </div>
@@ -8244,11 +8289,52 @@ body,
           </div>
         </div>
         <button class="btn btn-primary btn-full" id="billing-upgrade-btn" style="height:40px;font-size:14px" onclick="closeModal('settings-modal');showUpgradeModal()">
-          Ã¢Å¡Â¡ Upgrade to Pro Ã¢â‚¬â€ Unlimited Credits
+          ⚡ Upgrade to Pro — Unlimited Credits
         </button>
-        <div style="margin-top:14px;font-size:12px;color:var(--text3);text-align:center">Pro includes: Unlimited AI credits Ã‚Â· PDF exports Ã‚Â· Priority support</div>
+        <div style="margin-top:14px;font-size:12px;color:var(--text3);text-align:center">Pro includes: Unlimited AI credits · PDF exports · Priority support</div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="lead-editor-modal">
+  <div class="modal" style="max-width:620px">
+    <button class="modal-close" onclick="closeModal('lead-editor-modal')">
+      <i data-lucide="x" style="width:15px;height:15px"></i>
+    </button>
+    <input type="hidden" id="lead-edit-id">
+    <h3 style="margin:0 0 6px;font-size:22px;font-weight:800;color:var(--text-main)">Edit Client</h3>
+    <p style="margin:0 0 18px;color:var(--text-muted);font-size:13px">Update client details, next follow-up, and notes from one clean place.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div><label class="field-label">Client Name</label><input type="text" id="lead-edit-name" placeholder="e.g. Northwind Studio"></div>
+      <div><label class="field-label">Service / Project</label><input type="text" id="lead-edit-service" placeholder="e.g. Retainer CRO sprint"></div>
+      <div><label class="field-label">Value</label><input type="number" id="lead-edit-value" placeholder="2400"></div>
+      <div><label class="field-label">Platform</label>
+        <select id="lead-edit-platform">
+          <option>Instagram</option><option>LinkedIn</option><option>Upwork</option><option>Fiverr</option><option>Website</option><option>Referral</option>
+        </select>
+      </div>
+      <div><label class="field-label">Stage</label>
+        <select id="lead-edit-status">
+          <option value="pitched">Pitched</option><option value="replied">In Talks</option><option value="won">Won</option>
+        </select>
+      </div>
+      <div><label class="field-label">Priority</label>
+        <select id="lead-edit-priority">
+          <option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
+        </select>
+      </div>
+      <div><label class="field-label">Next Follow-up</label><input type="date" id="lead-edit-followup"></div>
+      <div><label class="field-label">Client Email</label><input type="email" id="lead-edit-email" placeholder="client@email.com"></div>
+    </div>
+    <div style="margin-top:12px"><label class="field-label">Notes</label><textarea id="lead-edit-notes" rows="4" placeholder="Context, objections, promises, or next steps"></textarea></div>
+    <div style="display:flex;justify-content:space-between;gap:12px;margin-top:18px">
+      <button class="btn btn-secondary" onclick="deleteLeadFromEditor()" style="color:#dc2626;border-color:#fecaca">Delete Client</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-secondary" onclick="closeModal('lead-editor-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveLeadEdits()">Save Changes</button>
+      </div>
     </div>
   </div>
 </div>
@@ -8278,19 +8364,19 @@ body,
        <div id="toast"></div>
        
 <script>
-   /* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
-   OPPORTUNITY ENGINE Ã¢â‚¬â€ COMPLETE CLEAN JS (Phase 2)
+   /* ═══════════════════════════════════════════════════════════════
+   OPPORTUNITY ENGINE — COMPLETE CLEAN JS (Phase 2)
    All duplicates removed. This is the single source of truth.
-â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Audience size filter Ã¢â€â‚¬Ã¢â€â‚¬ */
-   /* Ã¢â€â‚¬Ã¢â€â‚¬ Platform filter Ã¢â€â‚¬Ã¢â€â‚¬ */
+═══════════════════════════════════════════════════════════════ */
+/* ── Audience size filter ── */
+   /* ── Platform filter ── */
 let _activePlatformFilter = 'all';
 function setPlatformFilter(btn) {
   document.querySelectorAll('#ps-platform-group .ps-size-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   _activePlatformFilter = btn.dataset.platform;
 }
-   /* â•Ââ•Â OPPORTUNITY ENGINE Ã¢â‚¬â€ MODE SWITCHING â•Ââ•Â */
+   /* ══ OPPORTUNITY ENGINE ? MODE SWITCHING ══ */
 
 function switchOppMode(mode) {
   const quickPanel = el('opp-quick-panel');
@@ -8317,7 +8403,7 @@ function selectSkill(btn) {
   _activeSkill = btn.dataset.skill;
 }
 
-/* Skill Ã¢â€ â€™ search config map */
+/* Skill → search config map */
 const _skillMap = {
   'Thumbnail Design': {
     type: 'Content Creators', platform: 'youtube',
@@ -8412,11 +8498,11 @@ async function quickFindClients() {
     </div>`;
 
   const phrases = [
-    `Finding clients who need ${_activeSkill}â€¦`,
-    'Scanning real businessesâ€¦',
-    'Detecting pain pointsâ€¦',
-    'Scoring opportunitiesâ€¦',
-    'Preparing your leadsâ€¦'
+    `Finding clients who need ${_activeSkill}…`,
+    'Scanning real businesses…',
+    'Detecting pain points…',
+    'Scoring opportunities…',
+    'Preparing your leads…'
   ];
   let tIdx = 0;
   loaderTxt.textContent = phrases[0];
@@ -8446,7 +8532,7 @@ async function quickFindClients() {
     apiLeads = apiData.leads || [];
   } catch(e) {
     apiError = true;
-    showToast('Scan failed Ã¢â‚¬â€ please try again.');
+    showToast('Scan failed — please try again.');
   }
 
   clearInterval(txtInt);
@@ -8482,12 +8568,12 @@ async function quickFindClients() {
     </div>`;
 }
    /* ================================================================
-   STEP 3 Ã¢â‚¬â€ ADD THIS JS
+   STEP 3 — ADD THIS JS
    Ctrl+F: let _activeSizeFilter = 'all';
    Paste ALL of this BEFORE that line
    ================================================================ */
 
-/* â•Ââ•Â OPPORTUNITY ENGINE MODE SWITCHING â•Ââ•Â */
+/* ══ OPPORTUNITY ENGINE MODE SWITCHING ══ */
 let _activeSkill = null;
 
 function switchOppMode(mode) {
@@ -8526,14 +8612,14 @@ function selectSkill(btn) {
   }
 }
 
-/* â•Ââ•Â QUICK FIND LOADING STEPS â•Ââ•Â */
+/* ══ QUICK FIND LOADING STEPS ══ */
 const _qfSteps = [
-  'Detecting skill requirementsâ€¦',
-  'Scanning Instagram & YouTubeâ€¦',
-  'Checking LinkedIn profilesâ€¦',
-  'Searching Google Mapsâ€¦',
-  'Scoring opportunities with AIâ€¦',
-  'Preparing your client listâ€¦',
+  'Detecting skill requirements…',
+  'Scanning Instagram & YouTube…',
+  'Checking LinkedIn profiles…',
+  'Searching Google Maps…',
+  'Scoring opportunities with AI…',
+  'Preparing your client list…',
 ];
 
 function _startQfLoader(wrap) {
@@ -8542,7 +8628,7 @@ function _startQfLoader(wrap) {
       <div class="qf-radar-pulse">
         <div class="qf-radar-core"><i data-lucide="target" style="width:18px;height:18px"></i></div>
       </div>
-      <div class="qf-loading-text" id="qf-loading-title">Finding clients who need your skillâ€¦</div>
+      <div class="qf-loading-text" id="qf-loading-title">Finding clients who need your skill…</div>
       <div class="qf-loading-sub" id="qf-loading-sub">This takes about 10 seconds</div>
       <div class="qf-loading-steps" id="qf-loading-steps">
         ${_qfSteps.map((s, i) => `
@@ -8569,14 +8655,14 @@ function _startQfLoader(wrap) {
   return interval;
 }
 
-/* â•Ââ•Â RENDER A SIMPLE QUICK FIND LEAD CARD â•Ââ•Â */
+/* ══ RENDER A SIMPLE QUICK FIND LEAD CARD ══ */
 function _renderQfCard(lead) {
   const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const jsEsc = s => String(s || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n').replace(/\r/g,'');
   const skill = _activeSkill === 'other' ? (val('qf-other-skill') || 'your skill') : (_activeSkill || 'your skill');
 
   const firstName  = (lead.name || '').split(/[\s@]/)[0] || 'there';
-  const dmText = lead.quickDm || lead.assets?.quickDm || `Hey ${firstName}! I checked out your ${lead.platform} and noticed ${(lead.problem || '').slice(0, 60)}â€¦ I specialize in ${skill} and think I can help. Can I send you a quick example?`;
+  const dmText = lead.quickDm || lead.assets?.quickDm || `Hey ${firstName}! I checked out your ${lead.platform} and noticed ${(lead.problem || '').slice(0, 60)}… I specialize in ${skill} and think I can help. Can I send you a quick example?`;
   const loomCtx = lead.loomScript || lead.assets?.loomScript || `Write a 90-second Loom video script reaching out to ${lead.name} on ${lead.platform}. Problem: ${lead.problem}. Skill offered: ${skill}. Keep it friendly and under 200 words.`;
   const auditCtx = lead.audit || lead.assets?.audit || `Client: ${lead.name}\nPlatform: ${lead.platform}\nGap: ${lead.problem}\nFix direction: ${lead.strategy}\nOffer range: ${lead.dealValue || '$150 - $450'}`;
   const proposalCtx = lead.proposal || lead.assets?.proposal || lead.jobDesc || `Write a proposal for ${lead.name}. Service: ${skill}. Problem: ${lead.problem}. Price: ${lead.dealValue || '$200 - $500'}.`;
@@ -8601,7 +8687,7 @@ function _renderQfCard(lead) {
       </div>
       <div class="qf-lead-deal">
         <span class="qf-deal-label">You can charge</span>
-        <span class="qf-deal-value">${esc(lead.dealValue || '$200 Ã¢â‚¬â€œ $500')}</span>
+        <span class="qf-deal-value">${esc(lead.dealValue || '$200 – $500')}</span>
       </div>
       <div class="qf-lead-strategy">
         <strong>How to get them:</strong> ${esc(lead.strategy)}
@@ -8625,7 +8711,7 @@ function _renderQfCard(lead) {
   </div>`;
 }
 
-/* â•Ââ•Â MAIN QUICK FIND FUNCTION â•Ââ•Â */
+/* ══ MAIN QUICK FIND FUNCTION ══ */
 async function quickFindClients() {
   const skillRaw  = _activeSkill === 'other' ? val('qf-other-skill').trim() : _activeSkill;
   const income    = val('qf-income').trim();
@@ -8713,14 +8799,14 @@ function setSizeFilter(btn) {
   _activeSizeFilter = btn.dataset.size;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Service match filter Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Service match filter ── */
 let _activeServiceFilter = 'all';
 function setServiceFilter(btn) {
   document.querySelectorAll('.ps-service-chip').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   _activeServiceFilter = btn.dataset.service;
 }
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Helpers Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Helpers ── */
 function setOppPreset(type, prompt) {
   setVal('opp-type', type);
   setVal('opp-prompt', prompt);
@@ -8758,7 +8844,7 @@ function copyDirectText(text, successMsg = 'Quick DM copied.') {
     .catch(() => showToast('Failed to copy.'));
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Won-state tracker (session memory) Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Won-state tracker (session memory) ── */
 const _wonLeads = new Set();
 
 function markLeadWon(cardEl, leadName, platform) {
@@ -8776,7 +8862,7 @@ function markLeadWon(cardEl, leadName, platform) {
       color:#10b981;border-radius:6px;padding:5px 10px;
       font-size:11.5px;font-weight:700;margin-top:10px;
     `;
-    badge.innerHTML = `<i data-lucide="check-circle-2" style="width:12px;height:12px"></i> Marked as Won Ã¢â‚¬â€ added to Pipeline`;
+    badge.innerHTML = `<i data-lucide="check-circle-2" style="width:12px;height:12px"></i> Marked as Won — added to Pipeline`;
     header.appendChild(badge);
     lucide.createIcons();
   }
@@ -8787,7 +8873,7 @@ function markLeadWon(cardEl, leadName, platform) {
   showToast('Deal won. Check your Client Pipeline.');
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Full 25-lead bank (5 per category, all with signals[]) Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Full 25-lead bank (5 per category, all with signals[]) ── */
 const _OPP_LEAD_BANK = {
 
   'Content Creators': [
@@ -8795,10 +8881,10 @@ const _OPP_LEAD_BANK = {
       name: 'FitWithNehaa',
       platform: 'YouTube',
       followers: '14.2k subscribers',
-      problem: 'Thumbnails are plain text on white Ã¢â‚¬â€ no contrast, no faces, no hooks. CTR likely below 2%.',
+      problem: 'Thumbnails are plain text on white — no contrast, no faces, no hooks. CTR likely below 2%.',
     strategy: 'Send a before/after thumbnail redesign mockup as the cold pitch. Offer 5 thumbnails for $300 as a starter package.',
       match: 96,
-      reason: 'Low CTR pattern detected Ã¢â‚¬â€ no face or contrast in last 12 thumbnails.',
+      reason: 'Low CTR pattern detected — no face or contrast in last 12 thumbnails.',
       jobDesc: 'Looking for a freelancer to redesign 5 YouTube thumbnails for a fitness channel.',
       signals: ['low_ctr', 'poor_design'],
       budget: ['monetised'],
@@ -8807,10 +8893,10 @@ const _OPP_LEAD_BANK = {
       name: 'TravelDiariesByKaran',
       platform: 'Instagram',
       followers: '8.7k followers',
-      problem: 'Posting inconsistently Ã¢â‚¬â€ 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
+      problem: 'Posting inconsistently — 3 posts last month, zero Reels. Engagement dropped 60% in 90 days.',
       strategy: 'Pitch a monthly content calendar + 8 Reels/month package. Lead with the engagement drop stat.',
       match: 91,
-      reason: 'Engagement velocity dropped sharply Ã¢â‚¬â€ algorithm de-prioritising the account.',
+      reason: 'Engagement velocity dropped sharply — algorithm de-prioritising the account.',
       jobDesc: 'Need a social media manager to handle Instagram content and Reels for a travel creator.',
       signals: ['inconsistent_posting', 'low_ctr'],
       budget: ['running_ads'],
@@ -8819,10 +8905,10 @@ const _OPP_LEAD_BANK = {
       name: 'SkillsWithPriya',
       platform: 'LinkedIn',
       followers: '3.1k followers',
-      problem: 'Posts are long-form only Ã¢â‚¬â€ no carousels, no short hooks. Low reach despite solid expertise.',
+      problem: 'Posts are long-form only — no carousels, no short hooks. Low reach despite solid expertise.',
       strategy: 'Offer a LinkedIn content system: 8 posts/month (4 carousels + 4 text) targeting growth audience.',
       match: 88,
-      reason: 'Missing carousel format Ã¢â‚¬â€ algorithm prioritises carousels 3x over plain text posts.',
+      reason: 'Missing carousel format — algorithm prioritises carousels 3x over plain text posts.',
       jobDesc: 'Looking for a LinkedIn content writer who can create carousel posts and grow professional reach.',
       signals: ['inconsistent_posting', 'low_ctr'],
       budget: ['monetised'],
@@ -8831,10 +8917,10 @@ const _OPP_LEAD_BANK = {
       name: 'ChefRohanEats',
       platform: 'YouTube',
       followers: '22k subscribers',
-      problem: 'Has audience but zero monetisation Ã¢â‚¬â€ no course, no Patreon, no link in bio. Revenue = $0.',
-      strategy: 'Pitch a simple lead magnet funnel: free recipe PDF Ã¢â€ â€™ email list Ã¢â€ â€™ paid course upsell.',
+      problem: 'Has audience but zero monetisation — no course, no Patreon, no link in bio. Revenue = $0.',
+      strategy: 'Pitch a simple lead magnet funnel: free recipe PDF → email list → paid course upsell.',
       match: 90,
-      reason: 'Monetisation gap Ã¢â‚¬â€ strong audience with no conversion path detected.',
+      reason: 'Monetisation gap — strong audience with no conversion path detected.',
       jobDesc: 'Food YouTube creator needs a landing page and email funnel to monetise their 22k audience.',
       signals: ['no_cta', 'no_email_list'],
       budget: [],
@@ -8843,10 +8929,10 @@ const _OPP_LEAD_BANK = {
       name: 'MotivateWithAarav',
       platform: 'Instagram',
       followers: '31k followers',
-      problem: 'Running ads with no landing page Ã¢â‚¬â€ traffic goes to plain Instagram bio. Ad spend wasted.',
+      problem: 'Running ads with no landing page — traffic goes to plain Instagram bio. Ad spend wasted.',
       strategy: 'Build a 1-page landing page + lead magnet to capture the paid traffic properly.',
       match: 94,
-      reason: 'Active ad spend detected Ã¢â‚¬â€ but no landing page means every ad dollar is leaking.',
+      reason: 'Active ad spend detected — but no landing page means every ad dollar is leaking.',
       jobDesc: 'Motivational speaker needs a landing page to convert paid Instagram traffic into email subscribers.',
       signals: ['no_cta', 'no_email_list'],
       budget: ['running_ads', 'monetised'],
@@ -8855,25 +8941,25 @@ const _OPP_LEAD_BANK = {
 
   'Local Businesses': [
     {
-      name: 'Chai & Chapters CafÃƒÂ©',
+      name: 'Chai & Chapters Café',
       platform: 'Instagram',
       followers: '2.3k followers',
       problem: 'Bio link goes to a dead page. No clear CTA in posts. Great photos but zero conversion path.',
-      strategy: 'Fix the link-in-bio first Ã¢â‚¬â€ broken door. Then pitch a social media retainer.',
+      strategy: 'Fix the link-in-bio first — broken door. Then pitch a social media retainer.',
       match: 94,
       reason: 'Critical conversion bottleneck: broken bio link confirmed, zero CTA in last 20 posts.',
-      jobDesc: 'Local cafÃƒÂ© needs someone to manage Instagram, fix their bio, and create a landing page to drive orders.',
+      jobDesc: 'Local café needs someone to manage Instagram, fix their bio, and create a landing page to drive orders.',
       signals: ['no_cta'],
       budget: ['running_ads'],
     },
     {
       name: 'GreenLeaf Salon',
       platform: 'Website',
-      followers: 'Google Business: 4.1Ã¢Ëœâ€¦',
+      followers: 'Google Business: 4.1★',
       problem: 'Website loads in 7.2s, not mobile-optimised, and has no booking widget. Losing walk-ins.',
     strategy: 'Lead with the 7-second load time. Offer website revamp + Calendly integration for $800.',
       match: 93,
-      reason: 'Failed Core Web Vitals Ã¢â‚¬â€ load time 7.2s vs 1.8s industry average. No booking system.',
+      reason: 'Failed Core Web Vitals — load time 7.2s vs 1.8s industry average. No booking system.',
       jobDesc: 'Local salon wants a faster, mobile-friendly website with online appointment booking integrated.',
       signals: ['slow_site', 'no_cta'],
       budget: ['monetised'],
@@ -8881,11 +8967,11 @@ const _OPP_LEAD_BANK = {
     {
       name: 'QuickFix Electronics',
       platform: 'Google Maps',
-      followers: '127 reviews, 3.8Ã¢Ëœâ€¦',
-      problem: 'Review score below local average of 4.2Ã¢Ëœâ€¦. No response to negative reviews. Trust signals missing.',
+      followers: '127 reviews, 3.8★',
+      problem: 'Review score below local average of 4.2★. No response to negative reviews. Trust signals missing.',
       strategy: 'Offer reputation management starter: review response templates + QR code system.',
       match: 87,
-      reason: 'Review score 0.4Ã¢Ëœâ€¦ below local competitor median Ã¢â‚¬â€ losing search ranking.',
+      reason: 'Review score 0.4★ below local competitor median — losing search ranking.',
       jobDesc: 'Electronics repair shop needs help managing online reviews and improving Google Business profile.',
       signals: ['no_cta'],
       budget: [],
@@ -8897,7 +8983,7 @@ const _OPP_LEAD_BANK = {
       problem: 'Posting only 2x per week, no Reels, no stories. Competitors dominating search.',
       strategy: 'Pitch a 30-day social media blitz: 5 posts/week + daily stories with UGC reposts.',
       match: 89,
-      reason: 'Posting frequency 4x below category average Ã¢â‚¬â€ algorithm suppressing reach.',
+      reason: 'Posting frequency 4x below category average — algorithm suppressing reach.',
       jobDesc: 'Cloud kitchen brand needs a social media manager to increase Instagram presence and drive orders.',
       signals: ['inconsistent_posting', 'low_ctr'],
       budget: ['running_ads'],
@@ -8905,11 +8991,11 @@ const _OPP_LEAD_BANK = {
     {
       name: 'Flourish Fitness Studio',
       platform: 'Website',
-      followers: 'Google: 4.4Ã¢Ëœâ€¦ / 43 reviews',
-      problem: 'No online class booking Ã¢â‚¬â€ clients WhatsApp to book, owner manually confirms. Losing 3+ leads/day.',
+      followers: 'Google: 4.4★ / 43 reviews',
+      problem: 'No online class booking — clients WhatsApp to book, owner manually confirms. Losing 3+ leads/day.',
       strategy: 'Set up Calendly. Frame it as 3 hours/day returned to actual coaching.',
       match: 92,
-      reason: 'Manual booking bottleneck Ã¢â‚¬â€ no scheduling widget, no automated confirmation.',
+      reason: 'Manual booking bottleneck — no scheduling widget, no automated confirmation.',
       jobDesc: 'Fitness studio needs an online booking system integrated into their website.',
       signals: ['no_cta', 'slow_site'],
       budget: ['monetised'],
@@ -8936,7 +9022,7 @@ const _OPP_LEAD_BANK = {
       problem: 'App screenshots in Play Store are plain UI dumps. Reviews mention "confusing onboarding". No explainer video.',
       strategy: 'Pitch a 60-second explainer video + redesigned app store screenshots with lifestyle context.',
       match: 90,
-      reason: 'App store conversion gap Ã¢â‚¬â€ plain screenshots vs competitor lifestyle shots on same audience.',
+      reason: 'App store conversion gap — plain screenshots vs competitor lifestyle shots on same audience.',
       jobDesc: 'Food-tech startup needs a short explainer video and better app store visuals to improve installs.',
       signals: ['poor_design', 'no_cta'],
       budget: ['running_ads'],
@@ -8944,11 +9030,11 @@ const _OPP_LEAD_BANK = {
     {
       name: 'Hirrdly (HR Tool)',
       platform: 'Website',
-      followers: 'Ã¢â‚¬â€',
+      followers: '—',
       problem: 'Blog has 2 posts from 6 months ago. SEO score is 34/100. Missing product-led content.',
       strategy: 'Offer 4 long-form SEO articles/month targeting HR manager keywords. Frame as pipeline-building.',
       match: 85,
-      reason: 'Domain SEO score 34/100 Ã¢â‚¬â€ zero organic traffic growth in last 90 days.',
+      reason: 'Domain SEO score 34/100 — zero organic traffic growth in last 90 days.',
       jobDesc: 'B2B HR software company needs SEO-optimised blog posts targeting HR managers and CHROs.',
       signals: ['inconsistent_posting', 'low_ctr'],
       budget: ['monetised'],
@@ -8957,10 +9043,10 @@ const _OPP_LEAD_BANK = {
       name: 'StackMind AI',
       platform: 'Website',
       followers: 'Beta product',
-      problem: 'No onboarding email sequence Ã¢â‚¬â€ users sign up and never hear from company again. Churn is high.',
+      problem: 'No onboarding email sequence — users sign up and never hear from company again. Churn is high.',
       strategy: 'Build a 5-email onboarding sequence: welcome, feature spotlight, social proof, tip, upgrade nudge.',
       match: 93,
-      reason: 'Zero post-signup email flow Ã¢â‚¬â€ industry avg churn without onboarding is 65% in 7 days.',
+      reason: 'Zero post-signup email flow — industry avg churn without onboarding is 65% in 7 days.',
       jobDesc: 'AI startup needs someone to write and set up a full onboarding email sequence for trial users.',
       signals: ['no_email_list', 'no_cta'],
       budget: ['running_ads', 'monetised'],
@@ -8969,10 +9055,10 @@ const _OPP_LEAD_BANK = {
       name: 'PocketLegal',
       platform: 'LinkedIn',
       followers: '1.2k followers',
-      problem: 'Posting case studies as walls of text. No visual content. Engagement rate 0.4% Ã¢â‚¬â€ invisible to algorithm.',
+      problem: 'Posting case studies as walls of text. No visual content. Engagement rate 0.4% — invisible to algorithm.',
       strategy: 'Convert top 3 case studies into carousel posts. Show engagement data from comparable legal SaaS.',
       match: 88,
-      reason: 'Text-only content on a platform that pushes visuals Ã¢â‚¬â€ engagement 5x below niche average.',
+      reason: 'Text-only content on a platform that pushes visuals — engagement 5x below niche average.',
       jobDesc: 'LegalTech startup needs LinkedIn content designed to drive awareness and demo requests.',
       signals: ['low_ctr', 'poor_design', 'inconsistent_posting'],
       budget: ['monetised'],
@@ -8987,7 +9073,7 @@ const _OPP_LEAD_BANK = {
       problem: 'Product images on plain white backgrounds. Competitors using lifestyle shots. Cart abandonment likely high.',
       strategy: 'Offer 10 lifestyle product photo edits as paid trial. Lifestyle imagery converts 30% better for fashion.',
       match: 92,
-      reason: 'Visual content gap Ã¢â‚¬â€ 100% white-bg shots vs competitor lifestyle imagery on same audience.',
+      reason: 'Visual content gap — 100% white-bg shots vs competitor lifestyle imagery on same audience.',
       jobDesc: 'D2C clothing brand needs a product photo editor to create lifestyle-style edits from existing shots.',
       signals: ['poor_design', 'low_ctr'],
       budget: ['running_ads', 'monetised'],
@@ -8997,21 +9083,21 @@ const _OPP_LEAD_BANK = {
       platform: 'Website',
       followers: 'Shopify store',
       problem: 'Email list of 1,400 subs but last campaign was 4 months ago. No welcome sequence, no abandoned cart flow.',
-    strategy: 'Lead with the dormant list angle Ã¢â‚¬â€ "your list is making $0 right now." Pitch welcome + promo campaign.',
+    strategy: 'Lead with the dormant list angle — "your list is making $0 right now." Pitch welcome + promo campaign.',
       match: 89,
-      reason: 'Dormant list detected Ã¢â‚¬â€ 1,400 subscribers, last send 4 months ago, no automation flows.',
-      jobDesc: 'Organic skincare brand wants email automations Ã¢â‚¬â€ welcome sequence and abandoned cart recovery.',
+      reason: 'Dormant list detected — 1,400 subscribers, last send 4 months ago, no automation flows.',
+      jobDesc: 'Organic skincare brand wants email automations — welcome sequence and abandoned cart recovery.',
       signals: ['no_email_list', 'no_cta'],
       budget: ['monetised'],
     },
     {
       name: 'GadgetNest',
       platform: 'Amazon',
-      followers: '4.3Ã¢Ëœâ€¦ seller rating',
+      followers: '4.3★ seller rating',
       problem: 'Product descriptions are bullet-point dumps. Competitor products with similar specs outrank them.',
-      strategy: 'Offer a single listing rewrite as a demo Ã¢â‚¬â€ if it ranks better, they\'ll want the full catalogue.',
+      strategy: 'Offer a single listing rewrite as a demo — if it ranks better, they\'ll want the full catalogue.',
       match: 86,
-      reason: 'Listing keyword density 40% below top-3 competitors Ã¢â‚¬â€ organic rank suppressed.',
+      reason: 'Listing keyword density 40% below top-3 competitors — organic rank suppressed.',
       jobDesc: 'Amazon seller needs copywriter to rewrite descriptions with better keywords and benefit-driven language.',
       signals: ['poor_design', 'low_ctr'],
       budget: ['running_ads'],
@@ -9021,9 +9107,9 @@ const _OPP_LEAD_BANK = {
       platform: 'Instagram',
       followers: '6.4k followers',
     problem: 'Running ads but sending traffic to the main Instagram profile, not a booking page. $800/month with no return.',
-      strategy: 'Build a simple landing page with Calendly booking form Ã¢â‚¬â€ redirect all ad traffic there.',
+      strategy: 'Build a simple landing page with Calendly booking form — redirect all ad traffic there.',
       match: 95,
-      reason: 'Active ad spend confirmed with no conversion destination Ã¢â‚¬â€ every dollar is going to a dead-end profile.',
+      reason: 'Active ad spend confirmed with no conversion destination — every dollar is going to a dead-end profile.',
       jobDesc: 'Nail salon running Instagram ads needs a landing page and booking system to convert ad traffic.',
       signals: ['no_cta'],
       budget: ['running_ads'],
@@ -9035,7 +9121,7 @@ const _OPP_LEAD_BANK = {
       problem: 'Website has no customer reviews or UGC. Trust score near zero for cold visitors.',
       strategy: 'Set up post-purchase review flow (Judge.me or Loox) and design social proof section for homepage.',
       match: 88,
-      reason: 'Zero social proof on homepage Ã¢â‚¬â€ 63% of visitors abandon without reviews.',
+      reason: 'Zero social proof on homepage — 63% of visitors abandon without reviews.',
       jobDesc: 'Fashion D2C brand needs a social proof strategy: review collection system and homepage redesign.',
       signals: ['no_cta', 'poor_design'],
       budget: ['running_ads', 'monetised'],
@@ -9044,13 +9130,13 @@ const _OPP_LEAD_BANK = {
 
   'Coaches & Consultants': [
     {
-      name: 'Manav Sharma Ã¢â‚¬â€ Biz Coach',
+      name: 'Manav Sharma — Biz Coach',
       platform: 'LinkedIn',
       followers: '6.4k followers',
       problem: 'Strong personal brand but no lead magnet, no email list, no freebie to convert followers.',
     strategy: 'Pitch a simple lead magnet (PDF checklist) + 3-step email welcome sequence for $500.',
       match: 93,
-      reason: 'Audience strong but zero off-platform assets Ã¢â‚¬â€ entire business disappears if LinkedIn bans account.',
+      reason: 'Audience strong but zero off-platform assets — entire business disappears if LinkedIn bans account.',
       jobDesc: 'Business coach needs copywriter to create a lead magnet PDF and email welcome sequence.',
       signals: ['no_email_list', 'no_cta'],
       budget: ['monetised'],
@@ -9071,22 +9157,22 @@ const _OPP_LEAD_BANK = {
       name: 'CareerCompass Academy',
       platform: 'YouTube',
       followers: '7.1k subscribers',
-    problem: 'Selling a $499 course but no sales page Ã¢â‚¬â€ just a Gumroad link. No testimonials, no FAQ, no urgency.',
-      strategy: 'Build a dedicated course sales page. Proper pages with social proof convert 3Ã¢â‚¬â€œ5x better than bare Gumroad.',
+    problem: 'Selling a $499 course but no sales page — just a Gumroad link. No testimonials, no FAQ, no urgency.',
+      strategy: 'Build a dedicated course sales page. Proper pages with social proof convert 3–5x better than bare Gumroad.',
       match: 88,
-      reason: 'Course funnel gap Ã¢â‚¬â€ Gumroad link has no social proof, objection handling, or urgency.',
+      reason: 'Course funnel gap — Gumroad link has no social proof, objection handling, or urgency.',
       jobDesc: 'Online course creator needs a sales page to sell their career coaching program.',
       signals: ['no_cta', 'poor_design'],
       budget: ['monetised', 'running_ads'],
     },
     {
-      name: 'Dr. Priya Menon Ã¢â‚¬â€ Nutritionist',
+      name: 'Dr. Priya Menon — Nutritionist',
       platform: 'Instagram',
       followers: '9.2k followers',
-      problem: 'Posts 7 days a week but all content is advice Ã¢â‚¬â€ no offer, no CTA, no sales ever. Warm audience untapped.',
+      problem: 'Posts 7 days a week but all content is advice — no offer, no CTA, no sales ever. Warm audience untapped.',
       strategy: 'Write a 3-post story-driven launch sequence for her online programme. Then pitch a monthly retainer.',
       match: 94,
-      reason: 'High posting frequency + zero commercial CTA Ã¢â‚¬â€ audience trained to expect only free content.',
+      reason: 'High posting frequency + zero commercial CTA — audience trained to expect only free content.',
       jobDesc: 'Nutritionist coach needs copywriter to create a launch post sequence and convert followers to clients.',
       signals: ['no_cta', 'no_email_list'],
       budget: ['monetised'],
@@ -9098,7 +9184,7 @@ const _OPP_LEAD_BANK = {
     problem: 'Running a paid workshop at $299 but promoting with a single text post. No event page, no countdown.',
       strategy: 'Design a simple Carrd event landing page + write a 3-post promotional sequence.',
       match: 90,
-      reason: 'Event promotion gap Ã¢â‚¬â€ single organic post for a paid offer with 12k warm audience.',
+      reason: 'Event promotion gap — single organic post for a paid offer with 12k warm audience.',
       jobDesc: 'Sales coach needs a landing page and promotional content to fill their paid workshop seats.',
       signals: ['no_cta', 'poor_design'],
       budget: ['monetised', 'running_ads'],
@@ -9111,16 +9197,16 @@ function _renderOppCard(lead) {
     .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
     .replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Score Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Score ──
   const score = lead.match || (Math.floor(Math.random() * 15) + 85);
   let scoreClass = 'score-cool', scoreBadge = 'Strong';
   if (score >= 95)      { scoreClass = 'score-hot';  scoreBadge = 'Elite'; }
   else if (score >= 88) { scoreClass = 'score-warm'; scoreBadge = 'High'; }
   const isHot = score >= 93;
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Service + deal derivation Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Service + deal derivation ──
   const probLow = (lead.problem || '').toLowerCase();
-  let dealValue = '$150 Ã¢â‚¬â€œ $400', service = 'Growth Strategy';
+  let dealValue = '$150 – $400', service = 'Growth Strategy';
   let magnet    = 'Free 5-min Video Audit';
   let afterText = 'Higher conversion rates and improved audience retention.';
   let effortClass = 'effort-medium', effortLabel = 'Medium effort';
@@ -9128,64 +9214,64 @@ function _renderOppCard(lead) {
   let serviceKey  = 'general';
 
   if (probLow.includes('thumbnail') || probLow.includes('youtube') || probLow.includes('reel') || probLow.includes('video')) {
-    dealValue = '$300 Ã¢â‚¬â€œ $800 / mo'; service = 'YouTube / Short-Form Optimization';
+    dealValue = '$300 – $800 / mo'; service = 'YouTube / Short-Form Optimization';
     magnet = '1 Free Custom Thumbnail Redesign'; serviceKey = 'thumbnails';
     afterText = '2x CTR, higher watch time, algorithm pushes content to cold audiences.';
     effortClass = 'effort-easy'; effortLabel = 'Easy win';
-    closingHint = 'Send a free thumbnail mockup first Ã¢â‚¬â€ let the work speak. Then pitch 5-pack.';
+    closingHint = 'Send a free thumbnail mockup first — let the work speak. Then pitch 5-pack.';
   } else if (probLow.includes('copy') || probLow.includes('landing') || probLow.includes('website') || probLow.includes('seo')) {
-    dealValue = '$500 Ã¢â‚¬â€œ $1,500'; service = 'Copywriting & CRO'; serviceKey = 'copywriting';
+    dealValue = '$500 – $1,500'; service = 'Copywriting & CRO'; serviceKey = 'copywriting';
     magnet = 'Free Hero-Section Rewrite';
     afterText = 'Clear value prop above fold, lower bounce rate, visitors click the CTA.';
     effortClass = 'effort-medium'; effortLabel = 'Medium effort';
     closingHint = 'Rewrite their hero section for free, then show the before/after. Upsell the full page.';
   } else if (probLow.includes('social') || probLow.includes('post') || probLow.includes('engagement') || probLow.includes('reel') || probLow.includes('instagram')) {
-    dealValue = '$400 Ã¢â‚¬â€œ $900 / mo'; service = 'Social Media System'; serviceKey = 'social';
+    dealValue = '$400 – $900 / mo'; service = 'Social Media System'; serviceKey = 'social';
     magnet = '1-Week Free Content Calendar';
     afterText = 'Consistent daily posts, algorithm favour, inbound DM leads week-over-week.';
     effortClass = 'effort-medium'; effortLabel = 'Medium effort';
     closingHint = 'Offer a 7-day free calendar as bait. If they see engagement lift, close the retainer.';
   } else if (probLow.includes('booking') || probLow.includes('funnel') || probLow.includes('cta') || probLow.includes('bio') || probLow.includes('link')) {
-    dealValue = '$250 Ã¢â‚¬â€œ $700'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
+    dealValue = '$250 – $700'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
     magnet = 'Free Link-in-Bio Audit PDF';
     afterText = 'Working booking funnel, measurable conversion path, no more lost leads.';
     effortClass = 'effort-easy'; effortLabel = 'Easy win';
     closingHint = 'Fix their broken link-in-bio for free. Frame the upsell as "the full funnel behind it."';
   } else if (probLow.includes('review') || probLow.includes('reputation') || probLow.includes('google')) {
-    dealValue = '$300 Ã¢â‚¬â€œ $600 / mo'; service = 'Reputation Management'; serviceKey = 'general';
+    dealValue = '$300 – $600 / mo'; service = 'Reputation Management'; serviceKey = 'general';
     magnet = 'Free Competitor Review Analysis';
     afterText = 'Higher star rating, professional response system, more walk-ins from search.';
     effortClass = 'effort-hard'; effortLabel = 'Hard sell';
     closingHint = 'Lead with the competitor star-rating gap. Offer to write 5 review responses for free.';
   } else if (probLow.includes('email') || probLow.includes('list') || probLow.includes('sequence') || probLow.includes('campaign')) {
-    dealValue = '$400 Ã¢â‚¬â€œ $1,200'; service = 'Email Marketing Setup'; serviceKey = 'email';
+    dealValue = '$400 – $1,200'; service = 'Email Marketing Setup'; serviceKey = 'email';
     magnet = 'Free Email Audit + Subject Line Pack';
     afterText = 'Automated welcome flow, abandoned cart recovery, regular revenue from dormant list.';
     effortClass = 'effort-medium'; effortLabel = 'Medium effort';
     closingHint = 'Show them the $ value of their inactive list. One recovered campaign pays for your service.';
   } else if (probLow.includes('ad') || probLow.includes('funnel') || probLow.includes('landing')) {
-    dealValue = '$400 Ã¢â‚¬â€œ $900'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
+    dealValue = '$400 – $900'; service = 'Funnel & Conversion Setup'; serviceKey = 'funnel';
     magnet = 'Free Landing Page Audit';
     afterText = 'Every ad dollar should land on a page that converts, not a dead Instagram bio.';
     effortClass = 'effort-easy'; effortLabel = 'Easy win';
     closingHint = 'Show them their ad spend is leaking. Offer to build the landing page on a performance basis.';
   }
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Reply probability Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Reply probability ──
   const replyScore  = lead.replyChance || Math.min(92, Math.max(38, score - 10 + Math.floor(Math.random() * 20)));
   const replyClass  = replyScore >= 65 ? 'reply-high' : replyScore >= 45 ? 'reply-mid' : 'reply-low';
   const replyLabel  = replyScore >= 65 ? 'High' : replyScore >= 45 ? 'Medium' : 'Low';
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Why now Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Why now ──
   const whyNow = lead.whyNow || _deriveWhyNow(lead);
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Red flag Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Red flag ──
   const redFlag = lead.redFlag || _deriveRedFlag(lead);
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Closing hint from lead data or derived Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Closing hint from lead data or derived ──
   const closeHintText = lead.closingHint || closingHint;
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Action context strings Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Action context strings ──
   const firstName   = lead.name.split(/[\s@]/)[0] || 'there';
   const beforeText  = lead.problem || 'Conversion gaps detected.';
   const rawDmText   = `Hey ${firstName}! I noticed your ${lead.platform} has a specific gap — "${(lead.problem||'').slice(0,55)}…" — that I've fixed for similar accounts. Mind if I send a free mockup to show you what's possible?`;
@@ -9237,7 +9323,7 @@ function _renderOppCard(lead) {
       <!-- Stats row: reply % + effort tag -->
       <div class="opp-stats-row">
         <span class="opp-reply-pill ${replyClass}">
-          ${replyLabel} Ã‚Â· ${replyScore}% Reply Chance
+          ${replyLabel} · ${replyScore}% Reply Chance
         </span>
         <span class="opp-effort-tag ${effortClass}">${effortLabel}</span>
       </div>
@@ -9326,33 +9412,33 @@ function _renderOppCard(lead) {
   </div>`;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Derive "Why Now" from lead data Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Derive "Why Now" from lead data ── */
 function _deriveWhyNow(lead) {
   const p = (lead.problem || '').toLowerCase();
-  if (p.includes('ad') || p.includes('spend'))      return 'They\'re actively spending on ads with no return Ã¢â‚¬â€ every day costs them money. They need a fix now.';
-  if (p.includes('drop') || p.includes('declin'))    return 'Engagement is falling fast Ã¢â‚¬â€ algorithm window closing. They\'re in panic mode and open to solutions.';
-  if (p.includes('launch') || p.includes('course'))  return 'They just launched or are about to Ã¢â‚¬â€ conversion window is open right now.';
-  if (p.includes('booking') || p.includes('manual')) return 'Manual booking is draining hours daily. They\'re at capacity pain Ã¢â‚¬â€ perfect moment to pitch automation.';
+  if (p.includes('ad') || p.includes('spend'))      return 'They\'re actively spending on ads with no return — every day costs them money. They need a fix now.';
+  if (p.includes('drop') || p.includes('declin'))    return 'Engagement is falling fast — algorithm window closing. They\'re in panic mode and open to solutions.';
+  if (p.includes('launch') || p.includes('course'))  return 'They just launched or are about to — conversion window is open right now.';
+  if (p.includes('booking') || p.includes('manual')) return 'Manual booking is draining hours daily. They\'re at capacity pain — perfect moment to pitch automation.';
   if (p.includes('bio') || p.includes('link'))        return 'Broken funnel is leaking warm traffic every hour. This is a bleeding wound, not a future problem.';
   if (p.includes('email') || p.includes('list'))      return 'They have an audience but zero email revenue. Every day the list goes cold is money left on the table.';
-  return 'Recently active and growing Ã¢â‚¬â€ in a mindset to invest in tools that help them move faster.';
+  return 'Recently active and growing — in a mindset to invest in tools that help them move faster.';
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Derive red flag from lead data Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Derive red flag from lead data ── */
 function _deriveRedFlag(lead) {
   const p  = (lead.problem || '').toLowerCase();
   const f  = (lead.followers || '').toLowerCase();
   const m  = lead.match || 0;
   if (f.includes('50k') || f.includes('100k')) {
     if (!p.includes('monetis') && !p.includes('ad') && !p.includes('product')) {
-      return 'Large audience but zero monetisation signal Ã¢â‚¬â€ may have low budget intent despite follower count.';
+      return 'Large audience but zero monetisation signal — may have low budget intent despite follower count.';
     }
   }
-  if (p.includes('review') && !p.includes('monetis')) return 'No revenue signal detected Ã¢â‚¬â€ lead may not have budget for ongoing services.';
-  if (m < 88) return 'Signal match below threshold Ã¢â‚¬â€ approach with a lower-risk free offer first.';
+  if (p.includes('review') && !p.includes('monetis')) return 'No revenue signal detected — lead may not have budget for ongoing services.';
+  if (m < 88) return 'Signal match below threshold — approach with a lower-risk free offer first.';
   return null; // No red flag
 }
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Main scan function Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Main scan function ── */
 async function scanOpportunities() {
   if (!_planRules().deepScan) {
     showToast('Deep Scan is available on Pro plan and above.');
@@ -9394,9 +9480,9 @@ async function scanOpportunities() {
       <div class="opp-skeleton"></div>
     </div>`;
 
-  const phrases = ['Scanning target platformsâ€¦','Running AI gap-analysisâ€¦','Matching pain signalsâ€¦','Scoring opportunitiesâ€¦','Compiling outreach dossiersâ€¦'];
+  const phrases = ['Scanning target platforms…','Running AI gap-analysis…','Matching pain signals…','Scoring opportunities…','Compiling outreach dossiers…'];
   let tIdx = 0;
-  loaderTxt.textContent = 'Initializing scan nodesâ€¦';
+  loaderTxt.textContent = 'Initializing scan nodes…';
   const txtInt = setInterval(() => { if (tIdx < phrases.length) loaderTxt.textContent = phrases[tIdx++]; }, 700);
 
   let apiLeads = [];
@@ -9420,7 +9506,7 @@ async function scanOpportunities() {
     const apiData = await apiRes.json();
     apiLeads = apiData.leads || [];
   } catch(e) {
-    showToast('Live scan failed Ã¢â‚¬â€ showing cached results.');
+    showToast('Live scan failed — showing cached results.');
   }
   clearInterval(txtInt);
   stopDeepLoadingSafety();
@@ -9438,12 +9524,12 @@ async function scanOpportunities() {
 
   let pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Hot-only filter Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Hot-only filter ──
   if (hotOnly) {
     pool = pool.filter(l => (l.match || 0) >= 90 && ((l.budget||[]).length > 0));
   }
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Service match filter Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Service match filter ──
   const serviceMap = {
     thumbnails:  ['thumbnail','video','reel','youtube','short-form'],
     copywriting: ['copy','landing','website','seo','description'],
@@ -9457,7 +9543,7 @@ async function scanOpportunities() {
     if (pool.length === 0) pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
   }
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Audience size filter Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Audience size filter ──
   const sizeMap = {
     beginner:    [0, 10000],
     growing:     [10000, 50000],
@@ -9474,7 +9560,7 @@ async function scanOpportunities() {
     if (pool.length === 0) pool = _OPP_LEAD_BANK[type] || _OPP_LEAD_BANK['Local Businesses'];
   }
 
-  // Ã¢â€â‚¬Ã¢â€â‚¬ Signal scoring Ã¢â€â‚¬Ã¢â€â‚¬
+  // ── Signal scoring ──
   let scored;
   if (checkedSignals.length > 0 || checkedBudget.length > 0) {
     scored = pool.map(lead => {
@@ -9509,10 +9595,10 @@ async function scanOpportunities() {
   return true;
 }
 
-/* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
+/* ═══════════════════════════════════════════════════════════════
    END OPPORTUNITY ENGINE JS
-â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PLAYBOOK GAMIFICATION Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+═══════════════════════════════════════════════════════════════ */
+/* ─── PLAYBOOK GAMIFICATION ─── */
 const CHECKLIST_STORAGE_KEY = 'lancify_checklist_progress';
 const CHECKLIST_WIDGET_DISMISS_KEY = 'lancify_widget_dismissed';
 const CHECKLIST_WIDGET_MIN_KEY = 'lancify_widget_minimized';
@@ -9676,7 +9762,7 @@ function updateChecklistUi() {
   });
 
   // Improvement 2: Update summary text
-  setText('checklist-summary-text', `${completed}/${CHECKLIST_STEPS.length} steps done Ã¢â‚¬â€ click to expand`);
+  setText('checklist-summary-text', `${completed}/${CHECKLIST_STEPS.length} steps done — click to expand`);
 
   updateChecklistBanner();
   renderFloatingChecklistWidget();
@@ -9824,9 +9910,9 @@ function toggleFloatingChecklistMinimize() {
   localStorage.setItem(CHECKLIST_WIDGET_MIN_KEY, next === 'yes' ? 'yes' : 'no');
   renderFloatingChecklistWidget();
 }
-/* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
+/* ═══════════════════════════════════════════════════════
    THEME SYSTEM
-   â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
+   ═══════════════════════════════════════════════════════ */
 function applyTheme(theme) {
   if (theme === 'dark') {
     document.documentElement.classList.add('dark');
@@ -9881,9 +9967,9 @@ function applySavedTheme() {
   }
 }
 
-/* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
+/* ═══════════════════════════════════════════════════════
    COLLAPSIBLE SIDEBAR
-   â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
+   ═══════════════════════════════════════════════════════ */
 let sidebarCollapsed = localStorage.getItem('lancify-sidebar') === 'collapsed';
 
 function applySidebarState() {
@@ -9964,7 +10050,7 @@ window.addEventListener('resize', () => {
   if (!sidebarCollapsed) _syncNavFolderHeights();
 });
 
-// Ã¢â€â‚¬Ã¢â€â‚¬ Supabase + App State Ã¢â€â‚¬Ã¢â€â‚¬
+// ── Supabase + App State ──
 lucide.createIcons();
 const {createClient} = supabase;
 const sb = createClient(
@@ -10228,7 +10314,7 @@ function _setPlanUi(){
       const upgradeTarget = planKey === 'free' ? 'Pro ($19/mo)' : 'Elite ($49/mo)';
       const warningText = el('credits-warning-text');
       if (warningText) {
-        warningText.textContent = `${remaining} credits left this month Ã¢â‚¬â€ upgrade to ${upgradeTarget} for more.`;
+        warningText.textContent = `${remaining} credits left this month — upgrade to ${upgradeTarget} for more.`;
       }
     }
   }
@@ -10447,7 +10533,7 @@ async function _markFeatureUsage(featureKey){
   The chat collects exactly the keys generate.js needs inside answers{}:
     skills, experience, hours, goal, platform
   Note: "target" (who they want to work with) maps to "skills" context but is
-  not its own key in the backend Ã¢â‚¬â€ we keep it as extra context in the answers
+  not its own key in the backend — we keep it as extra context in the answers
   object. The backend only uses: skills, experience, hours, goal, platform.
   We add a 6th question for platform so we always have it.
 */
@@ -10481,7 +10567,7 @@ const chatQuestions = [
   }
 ];
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ INIT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── INIT ─── */
 async function initApp() {
   applySidebarState();
   let isLoading = true;
@@ -10554,7 +10640,7 @@ function showLogin() {
   switchAuthTab('signin');
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ AUTH Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── AUTH ─── */
 async function signInGoogle() { await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}}); }
 function switchAuthTab(tab) {
   const isSignup = tab === 'signup';
@@ -10656,17 +10742,17 @@ function showAuthError(msg){ const e=el('auth-error'); e.textContent=msg; e.styl
 function showAuthSuccess(msg){ const e=el('auth-success'); e.textContent=msg; e.style.display='block'; }
 function clearAuthMessages(){ el('auth-error').style.display='none'; el('auth-success').style.display='none'; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ NAVIGATION Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── NAVIGATION ─── */
 function renderQuickGuideBanner(page) {
   // Change 1: Check guide mode
   if (localStorage.getItem('lancify_guide_mode') === 'off') return;
 
   const guides = {
-    opportunity: "Ã°Å¸Å½Â¯ Step 1: Search for clients in your niche Ã¢â€ â€™ Save the best match Ã¢â€ â€™ Click Quick DM to send your first outreach. Come back when done.",
-    gig: "Ã°Å¸Å½Â¯ Step 1: Search for clients in your niche Ã¢â€ â€™ Save the best match Ã¢â€ â€™ Click Quick DM to send your first outreach. Come back when done.",
-    audit: "Ã¢Å¡Â¡ Step 2: Enter your lead's website URL Ã¢â€ â€™ Generate the audit Ã¢â€ â€™ Copy the key finding to use in your pitch. Takes 2 minutes.",
-    email: "Ã¢Å“â€°Ã¯Â¸Â Step 3: Select 'Follow-up' email type Ã¢â€ â€™ Enter your lead's name and context Ã¢â€ â€™ Send or copy the email. This is what gets replies.",
-    roadmap: "Ã°Å¸â€œË† Step 4: Generate your 30-day roadmap Ã¢â€ â€™ Save it Ã¢â€ â€™ Come back to it daily. This is your system."
+    opportunity: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
+    gig: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
+    audit: "⚡ Step 2: Enter your lead's website URL → Generate the audit → Copy the key finding to use in your pitch. Takes 2 minutes.",
+    email: "✉️ Step 3: Select 'Follow-up' email type → Enter your lead's name and context → Send or copy the email. This is what gets replies.",
+    roadmap: "📈 Step 4: Generate your 30-day roadmap → Save it → Come back to it daily. This is your system."
   };
 
   if (!guides[page]) return;
@@ -10819,7 +10905,7 @@ function openStartHere(){
   }, 120);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PROFILE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── PROFILE ─── */
 function applyProfileToFields(p){
   if(!p) return;
   setVal('prof-name',p.name||'');
@@ -10831,6 +10917,27 @@ function applyProfileToFields(p){
   if(p.income_goal) setVal('prof-goal',p.income_goal);
   if(p.hours_per_day) setVal('prof-hours',p.hours_per_day);
   if(p.biggest_challenge) setVal('prof-challenge',p.biggest_challenge);
+}
+
+function getPreferredProfileName(profile = userProfile, user = currentUser){
+  const fallback = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
+  return String(profile?.name || fallback || 'User').trim();
+}
+
+function syncWorkspaceIdentity(profile = userProfile, user = currentUser){
+  const fullName = getPreferredProfileName(profile, user);
+  const firstName = fullName.split(/\s+/)[0] || 'User';
+  const initial = firstName[0] ? firstName[0].toUpperCase() : 'U';
+  const h = new Date().getHours();
+  const greeting = `${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${firstName}`;
+
+  setText('header-avatar', initial);
+  setText('ws-name', `${firstName}'s Workspace`);
+  setText('acct-ws-name', `${firstName}'s Workspace`);
+  setText('hero-greeting', greeting);
+
+  if (user?.user_metadata) user.user_metadata.full_name = fullName;
+  return { fullName, firstName };
 }
 
 function checkProfileBanners(){
@@ -10980,15 +11087,20 @@ async function saveProfile(){
     biggest_challenge:val('prof-challenge')||'Finding clients'
   };
   const btn=el('save-prof-btn');
-  btn.disabled=true; btn.textContent='Savingâ€¦';
+  btn.disabled=true; btn.textContent='Saving…';
   try {
     await sb.from('profiles').upsert([p],{onConflict:'user_id'});
-    userProfile={...userProfile,...p}; checkProfileBanners(); showToast('Profile saved!');
+    userProfile={...userProfile,...p};
+    applyProfileToFields(userProfile);
+    syncWorkspaceIdentity(userProfile, currentUser);
+    checkProfileBanners();
+    renderBusinessDashboard();
+    showToast('Profile saved!');
   } catch(e){ showToast('Error saving profile.'); }
   btn.disabled=false; btn.textContent='Save Profile';
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ STATS & CREDITS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── STATS & CREDITS ─── */
 async function loadStats(uid){
   try {
     const [kits,props,emails,gigs]=await Promise.all([
@@ -11006,7 +11118,7 @@ async function loadStats(uid){
   } catch(e){ _setPlanUi(); }
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ AUDIT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── AUDIT ─── */
 function toggleAuditUrl(){ const v=val('audit-platform'); el('audit-url-wrap').style.display=(v==='Website')?'block':'none'; }
 
 let auditLogoBase64 = null; // Global variable to hold the logo image
@@ -11154,7 +11266,7 @@ async function downloadAuditPDF() {
     addPremiumSection('4. Recommended Action Plan', fixes);
     addPremiumSection('5. Implementation Strategy', d.sec5_pitch);
 
-    // Ã°Å¸â€™Â° THE OFFICIAL "INVOICE" BLOCK AT THE BOTTOM Ã°Å¸â€™Â°
+    // 💰 THE OFFICIAL "INVOICE" BLOCK AT THE BOTTOM 💰
     if (yOffset > 230) { doc.addPage(); yOffset = 20; }
     
     yOffset += 5;
@@ -11199,16 +11311,16 @@ async function downloadAuditPDF() {
   }
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PROPOSAL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── PROPOSAL ─── */
 async function generateProposal(){
   const job=val('prop-job'); if(!job) { showToast('Paste a job description first'); return false; }
   let ok = false;
   el('prop-btn').disabled=true; loader('prop',true); toggleResult('prop',false);
   try {
     /*
-      FIX 2 Ã¢â‚¬â€ Proposal Writer
-      Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-      Payload key fix: jobDescription  Ã¢â€ â€™  jobDesc
+      FIX 2 — Proposal Writer
+      ────────────────────────
+      Payload key fix: jobDescription  →  jobDesc
       proposal.js expects: { jobDesc, platform, experience, niche }
     */
     const res=await fetch('/api/proposal',{
@@ -11225,10 +11337,10 @@ async function generateProposal(){
     if(data.error) throw new Error(data.error);
 
     /*
-      FIX 2 (continued) Ã¢â‚¬â€ Proposal UI Render
-      Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+      FIX 2 (continued) — Proposal UI Render
+      ────────────────────────────────────────
       Backend returns: { subject, proposal, tips }
-      Old code used data.body Ã¢â‚¬â€ correct key is data.proposal.
+      Old code used data.body — correct key is data.proposal.
       We also surface the subject line and tips for extra value.
     */
     const subjectLine = data.subject ? `SUBJECT: ${data.subject}\n\n` : '';
@@ -11255,15 +11367,15 @@ async function generateProposal(){
   return ok;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ EMAIL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── EMAIL ─── */
 async function generateEmail(){
   const ctx=val('email-context'); if(!ctx) { showToast('Add some context first'); return false; }
   let ok = false;
   el('email-btn').disabled=true; loader('email',true); toggleResult('email',false);
   try {
     /*
-      FIX 4 Ã¢â‚¬â€ Email Writer
-      Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+      FIX 4 — Email Writer
+      ─────────────────────
       Added: niche (from userProfile, falls back to 'Freelancer')
       email.js expects: { emailType, tone, context, niche }
     */
@@ -11281,10 +11393,10 @@ async function generateEmail(){
     if(data.error) throw new Error(data.error);
 
     /*
-      FIX 4 (continued) Ã¢â‚¬â€ Email UI Render
-      Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+      FIX 4 (continued) — Email UI Render
+      ─────────────────────────────────────
       Backend returns: { subject, body, tips }
-      data.body contains \n\n paragraph breaks Ã¢â‚¬â€ we preserve them via
+      data.body contains \n\n paragraph breaks — we preserve them via
       white-space:pre-wrap which is already set on .result-box-body.
       We also surface subject line and tips.
     */
@@ -11311,7 +11423,7 @@ async function generateEmail(){
   return ok;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ GIG FINDER Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── GIG FINDER ─── */
 async function findGigs(){
   const skills=val('gig-skills'); if(!skills) { showToast('Enter your skills first'); return false; }
   let ok = false;
@@ -11327,7 +11439,7 @@ async function findGigs(){
       body:JSON.stringify({
         skills,
         platform:   val('gig-platform'),
-        experience: userProfile.exp_level  || 'Beginner Ã¢â‚¬â€ no reviews yet',
+        experience: userProfile.exp_level  || 'Beginner — no reviews yet',
         budget:     userProfile.income_goal|| '$1,000/mo to start'
       })
     });
@@ -11371,7 +11483,7 @@ async function findGigs(){
   return ok;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ ROADMAP Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── ROADMAP ─── */
 async function generateRoadmap(){
   const skills=val('rm-skills'); if(!skills) { showToast('Enter your skills'); return false; }
   let ok = false;
@@ -11380,7 +11492,7 @@ async function generateRoadmap(){
     /*
       roadmap.js expects:
       { name, skills, platform, hoursPerDay, currentLevel, biggestFear }
-      All keys already match Ã¢â‚¬â€ no payload changes needed here.
+      All keys already match — no payload changes needed here.
 
       roadmap.js returns:
       {
@@ -11410,7 +11522,7 @@ async function generateRoadmap(){
     el('rm-content').innerHTML = goalText + (data.weeks||[]).map(w=>`
       <div style="margin-bottom:28px">
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px">
-          Week ${w.weekNumber||w.week} Ã¢â‚¬â€ ${w.theme||''}
+          Week ${w.weekNumber||w.week} — ${w.theme||''}
         </div>
         ${w.focus ? `<div style="font-size:13px;color:var(--text-muted);margin-bottom:14px">${w.focus}</div>` : ''}
         <div style="display:flex;flex-direction:column;gap:8px">
@@ -11420,8 +11532,8 @@ async function generateRoadmap(){
                 <strong>${d.title||''}</strong>${d.title?': ':''}${d.task||''}
               </div>
               ${d.why ? `<div style="font-size:12px;color:var(--text3);margin-top:4px">${d.why}</div>` : ''}
-              ${d.lancifyTip ? `<div style="font-size:12px;color:#6366f1;margin-top:4px">Ã°Å¸â€™Â¡ ${d.lancifyTip}</div>` : ''}
-              ${d.timeEstimate ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">Ã¢ÂÂ± ${d.timeEstimate}</div>` : ''}
+              ${d.lancifyTip ? `<div style="font-size:12px;color:#6366f1;margin-top:4px">💡 ${d.lancifyTip}</div>` : ''}
+              ${d.timeEstimate ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">⏱ ${d.timeEstimate}</div>` : ''}
             </div>`).join('')}
         </div>
       </div>`).join('');
@@ -11457,7 +11569,7 @@ function resetRoadmap(){
   }
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PIPELINE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── PIPELINE ─── */
 async function loadLeads(uid){
   try {
     const {data, error}=await sb.from('leads').select('*').eq('user_id',uid).order('created_at',{ascending:false});
@@ -11952,7 +12064,7 @@ function renderSavedSequences() {
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
         <div>
           <div style="font-weight:600;font-size:13px;">${escapeHtml(s.leadName || 'Untitled lead')}</div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${escapeHtml(s.platform || 'Website')} Ã‚Â· ${new Date(s.createdAt).toLocaleDateString()}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${escapeHtml(s.platform || 'Website')} · ${new Date(s.createdAt).toLocaleDateString()}</div>
         </div>
         <button class="btn btn-secondary" type="button" style="height:32px;padding:0 12px;" onclick="toggleSavedSequenceItem('${escapeJsAttr(s.id)}')">Expand</button>
       </div>
@@ -12209,7 +12321,7 @@ async function deleteLead(id){
   }
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ CLIENT + INVOICE DATA (PHASE 1) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── CLIENT + INVOICE DATA (PHASE 1) ─── */
 function _storageKey(base, uid){ return `${base}-${uid || 'guest'}`; }
 
 async function loadOpportunityClients(uid){
@@ -12296,7 +12408,7 @@ function renderManagedOpportunityClients(){
     <div class="opp-managed-item">
       <div style="min-width:0">
         <div style="font-size:13px;font-weight:600;color:var(--text-main)">${c.name}</div>
-        <div style="font-size:11.5px;color:var(--text-muted)">${c.platform} Ã‚Â· ${c.service} Ã‚Â· ${c.potentialValue}</div>
+        <div style="font-size:11.5px;color:var(--text-muted)">${c.platform} · ${c.service} · ${c.potentialValue}</div>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
         ${c.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(c.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
@@ -12648,7 +12760,7 @@ function injectBusinessDashboardWidgets(){
           <div class="pulse-card">
             <div class="pulse-card-top">
               <div>
-                <div class="pulse-label">Outstanding</div>
+                <div class="pulse-label" title="Money waiting to be paid by clients">Pending Payments</div>
                 <div class="pulse-value" id="home-outstanding">$0</div>
                 <div class="pulse-change neutral" id="home-outstanding-change">-> 0%</div>
               </div>
@@ -12676,9 +12788,11 @@ function injectBusinessDashboardWidgets(){
               <div class="chart-y-labels" id="home-chart-y-labels"></div>
               <div class="earnings-chart-stage">
                 <div id="home-earnings-chart" class="earnings-chart"></div>
+                <div class="chart-tooltip" id="home-chart-tooltip" aria-hidden="true"></div>
                 <div class="chart-label-row" id="home-chart-labels"></div>
               </div>
             </div>
+            <div class="chart-context-copy" id="home-chart-caption">Booked + paid revenue by date bucket.</div>
           </div>
         </div>
         <div class="dashboard-panel">
@@ -12701,6 +12815,10 @@ function injectBusinessDashboardWidgets(){
             </div>
             <div class="credits-meta">
               <div class="credits-copy" id="home-credits-copy">1,000 of 1,000 credits remaining this month.</div>
+              <div class="credits-stat-list" id="home-credits-breakdown">
+                <div class="credits-stat-item"><span>Credits used this month</span><strong id="home-credits-used">0</strong></div>
+                <div class="credits-stat-item"><span>Most used</span><strong id="home-credits-top">No usage yet</strong></div>
+              </div>
               <div class="credits-upgrade-note" id="home-credits-warning" style="display:none">Running low this month. Upgrade to Pro to keep momentum high.</div>
               <button class="btn btn-primary" id="home-credits-cta" style="width:max-content;display:none" onclick="showUpgradeModal()">Upgrade to Pro</button>
             </div>
@@ -12984,7 +13102,7 @@ function hasDashboardMetricHistory(metricKey, minimumDaysAgo = 7){
 }
 
 function renderStatChange(current, previous, inverse = false, hasHistory = true){
-  if (!hasHistory) return { text: 'Ã¢â‚¬â€', cls: 'neutral' };
+  if (!hasHistory) return { text: '—', cls: 'neutral' };
   if (!previous || previous === 0) return { text: '— New', cls: 'neutral' };
   const pct = Math.round(((current - previous) / previous) * 100);
   if (pct === 0) return { text: '→ 0%', cls: 'neutral' };
@@ -13160,10 +13278,42 @@ function renderHomeMonthlyTarget(){
   );
 }
 
+const CREDIT_USAGE_LABELS = {
+  opportunity_scan: 'Gig Finder',
+  audit_generate: 'Audit Generator',
+  proposal_generate: 'Proposal Writer',
+  email_generate: 'Email Writer',
+  gig_scan: 'Gig Finder',
+  roadmap_generate: 'Roadmap',
+  sequence_generate: 'Sequence Builder'
+};
+
+function showHomeChartTooltip(event, label, value){
+  const tooltip = el('home-chart-tooltip');
+  if (!tooltip) return;
+  tooltip.innerHTML = `<span class="chart-tooltip-kicker">${escapeHtml(label)}</span><span class="chart-tooltip-value">${escapeHtml(value)}</span>`;
+  tooltip.classList.add('show');
+  moveHomeChartTooltip(event);
+}
+
+function moveHomeChartTooltip(event){
+  const tooltip = el('home-chart-tooltip');
+  if (!tooltip || !event) return;
+  tooltip.style.left = `${event.clientX}px`;
+  tooltip.style.top = `${event.clientY - 8}px`;
+}
+
+function hideHomeChartTooltip(){
+  const tooltip = el('home-chart-tooltip');
+  if (!tooltip) return;
+  tooltip.classList.remove('show');
+}
+
 function renderHomeEarningsChart(){
   const host = el('home-earnings-chart');
   const labels = el('home-chart-labels');
   const yLabels = el('home-chart-y-labels');
+  const caption = el('home-chart-caption');
   if (!host || !labels || !yLabels) return;
 
   ['7d','30d','90d'].forEach(range => el(`home-range-${range}`)?.classList.toggle('active', homeEarningsRange === range));
@@ -13184,12 +13334,15 @@ function renderHomeEarningsChart(){
   });
 
   if (!coords.some(point => point.value > 0)) {
-    host.innerHTML = `<div class="empty-state centered" style="min-height:220px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No earnings yet</div><p class="empty-state-copy">Once deals close and invoices are paid, your revenue trend will appear here.</p></div>`;
+    host.innerHTML = `<div class="empty-state centered" style="min-height:220px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No earnings yet</div><p class="empty-state-copy">No clients yet? Use Gig Finder or Find Clients to land your first one, then your revenue trend will start here.</p></div>`;
     labels.innerHTML = '';
     yLabels.innerHTML = '';
+    hideHomeChartTooltip();
+    if (caption) caption.textContent = 'Booked + paid revenue by date bucket.';
     return;
   }
 
+  const nonZeroPoints = coords.filter(point => point.value > 0).length;
   const path = coords.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(' ');
   const area = `${path} L ${coords[coords.length - 1].x.toFixed(1)} ${(h - padY).toFixed(1)} L ${coords[0].x.toFixed(1)} ${(h - padY).toFixed(1)} Z`;
   const gridLines = [0.25, 0.5, 0.75].map(line => {
@@ -13202,23 +13355,36 @@ function renderHomeEarningsChart(){
       ${gridLines}
       <path d="${area}" fill="rgba(232,80,10,0.08)"></path>
       <path d="${path}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-      ${coords.map(point => `<circle cx="${point.x}" cy="${point.y}" r="4" fill="var(--accent)"></circle>`).join('')}
+      ${coords.map(point => `<circle cx="${point.x}" cy="${point.y}" r="4" fill="var(--accent)" onmouseenter="showHomeChartTooltip(event, '${escapeJsAttr(point.label)}', '${escapeJsAttr(formatCurrency(point.value || 0))}')" onmousemove="moveHomeChartTooltip(event)" onmouseleave="hideHomeChartTooltip()"><title>${escapeHtml(`${point.label}: ${formatCurrency(point.value || 0)}`)}</title></circle>`).join('')}
     </svg>
   `;
   yLabels.innerHTML = [max, max / 2, 0].map(value => `<div class="chart-y-label">${escapeHtml(formatChartAxisValue(value))}</div>`).join('');
   labels.innerHTML = points.map(point => `<div class="chart-x-label">${escapeHtml(point.label)}</div>`).join('');
+  if (caption) {
+    caption.textContent = nonZeroPoints <= 2
+      ? 'Early-stage revenue can spike when a single payment lands. Hover a point to see the exact date and amount.'
+      : 'Booked + paid revenue by date bucket. Hover a point to inspect the exact amount.';
+  }
 }
 
 function renderHomeCreditsWidget(total, remaining){
   const ring = el('home-credits-ring');
   if (!ring) return;
-  const pct = Math.max(0, Math.min(100, Math.round((remaining / Math.max(total, 1)) * 100)));
+  const exactPct = (remaining / Math.max(total, 1)) * 100;
+  const pct = Math.max(0, Math.min(100, Math.round(exactPct)));
+  const displayPct = remaining === total ? '100%' : exactPct >= 99 ? `${Math.floor(exactPct)}%` : `${Math.round(exactPct)}%`;
   const planKey = _currentPlanKey();
   const circumference = 2 * Math.PI * 36;
   ring.style.strokeDasharray = `${circumference}`;
   ring.style.strokeDashoffset = `${circumference - ((pct / 100) * circumference)}`;
-  setText('home-credits-pct', `${pct}%`);
+  setText('home-credits-pct', displayPct);
   setText('home-credits-copy', `${remaining.toLocaleString()} of ${total.toLocaleString()} credits remaining this month`);
+  const used = Math.max(0, total - remaining);
+  setText('home-credits-used', used.toLocaleString());
+  const usageEntries = Object.entries({ ...(billingState?.usage || {}), ...(billingState?.dailyUsage || {}) })
+    .sort((a, b) => Number(b[1] || 0) - Number(a[1] || 0));
+  const [topFeature, topCount] = usageEntries[0] || [];
+  setText('home-credits-top', topFeature ? `${CREDIT_USAGE_LABELS[topFeature] || 'AI Tools'} (${Number(topCount || 0)})` : 'No usage yet');
   const warning = el('home-credits-warning');
   const cta = el('home-credits-cta');
   const low = pct <= 20;
@@ -13319,7 +13485,7 @@ function renderHomeTopClients(){
       </div>
       <span class="status-pill ${escapeHtml(client.status || 'inactive')}">${escapeHtml((client.status || 'inactive').replace(/^\w/, m => m.toUpperCase()))}</span>
     </div>
-  `).join('') : '<div class="empty-state centered" style="min-height:180px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No top clients yet</div><p class="empty-state-copy">Close a deal or send your first invoice to start building client history.</p></div>';
+  `).join('') : '<div class="empty-state centered" style="min-height:180px;padding:12px 0"><div class="empty-state-heading" style="font-size:22px">No top clients yet</div><p class="empty-state-copy">Land your first client with Gig Finder or Find Clients, then this list will start filling up with real revenue history.</p></div>';
 }
 
 function renderHomeRoadmapTeaser(activeDeals, totalClients, followUpsDue){
@@ -13343,14 +13509,13 @@ function updateHomeHeroContext(activeDeals, totalClients, savedCount){
   const contextEl = el('hero-context');
   const greetingEl = el('hero-greeting');
   if (!contextEl) return;
-  const rawName = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Shaurya';
-  const firstName = String(rawName).split(' ')[0] || 'Shaurya';
+  const firstName = getPreferredProfileName().split(/\s+/)[0] || 'Shaurya';
   const h = new Date().getHours();
   const timeGreeting = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
-  let copy = `You have ${activeDeals} active client${activeDeals === 1 ? '' : 's'}. Ready to close more?`;
-  if (activeDeals === 0 && totalClients > 0) copy = `You have 0 active clients. ${totalClients} client${totalClients === 1 ? '' : 's'} are in the workspace.`;
-  if (activeDeals === 0 && totalClients === 0 && savedCount > 0) copy = `You have 0 active clients. ${savedCount} saved opportunit${savedCount === 1 ? 'y is' : 'ies are'} ready for outreach.`;
-  if (activeDeals === 0 && totalClients === 0 && savedCount === 0) copy = 'You have 0 active clients. Ready to close more?';
+  let copy = `You have ${activeDeals} active client${activeDeals === 1 ? '' : 's'}. Keep the momentum up and move one toward a close this week.`;
+  if (activeDeals === 0 && totalClients > 0) copy = `You have 0 active clients right now. Re-open ${totalClients} saved client${totalClients === 1 ? '' : 's'} in Manage Clients and schedule the next follow-up.`;
+  if (activeDeals === 0 && totalClients === 0 && savedCount > 0) copy = `No active clients yet. You already have ${savedCount} saved opportunit${savedCount === 1 ? 'y' : 'ies'} ready for outreach — move one into Manage Clients and send the first message.`;
+  if (activeDeals === 0 && totalClients === 0 && savedCount === 0) copy = 'No clients yet? Use Gig Finder or Find Clients to land your first one this week.';
   if (greetingEl) greetingEl.textContent = `${timeGreeting}, ${firstName}`;
   contextEl.textContent = copy;
 }
@@ -13869,7 +14034,7 @@ function isWithinAccountingWindow(rawDate){
   return (!start || value >= start) && (!end || value <= end);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ UI HELPERS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── UI HELPERS ─── */
 function renderPipeline(){
   const buckets={pitched:[],replied:[],won:[]};
   userLeads.forEach(l=>{ const s=l.status||'pitched'; if(buckets[s]) buckets[s].push(l); });
@@ -14157,7 +14322,7 @@ function renderAccountingFunnel(filteredLeads){
       <div class="analytics-funnel-row">
         <div class="analytics-row-main">
           <div class="analytics-row-title">${CRM_STAGE_META[status].label}</div>
-          <div class="analytics-row-sub">${stageLeads.length} deal${stageLeads.length === 1 ? '' : 's'} Ã‚Â· ${formatCurrency(stageValue)}</div>
+          <div class="analytics-row-sub">${stageLeads.length} deal${stageLeads.length === 1 ? '' : 's'} · ${formatCurrency(stageValue)}</div>
           <div class="analytics-track"><span style="width:${pct}%"></span></div>
         </div>
         <div class="analytics-row-value">${pct}%</div>
@@ -14184,7 +14349,7 @@ function renderAccountingChannels(filteredLeads){
     <div class="analytics-channel-row">
       <div class="analytics-row-main">
         <div class="analytics-row-title">${escapeHtml(platform)}</div>
-        <div class="analytics-row-sub">${value.count} client${value.count === 1 ? '' : 's'} Ã‚Â· ${formatCurrency(value.value)}</div>
+        <div class="analytics-row-sub">${value.count} client${value.count === 1 ? '' : 's'} · ${formatCurrency(value.value)}</div>
         <div class="analytics-track"><span style="width:${Math.round((value.count / maxCount) * 100)}%"></span></div>
       </div>
       <div class="analytics-row-value">${value.count}</div>
@@ -14361,7 +14526,7 @@ function renderPipeline(){
           <div class="kanban-card-top">
             <div style="min-width:0">
               <div class="kanban-card-name">${escapeHtml(lead.client_name || '')}</div>
-              <div class="kanban-card-val">${lead.project_value ? formatCurrency(lead.project_value) : 'Custom quote'}${lead.service ? ` Ã‚Â· ${escapeHtml(lead.service)}` : ''}</div>
+              <div class="kanban-card-val">${lead.project_value ? formatCurrency(lead.project_value) : 'Custom quote'}${lead.service ? ` · ${escapeHtml(lead.service)}` : ''}</div>
             </div>
             <button class="icon-btn" onclick="openLeadEditor('${escapeJsAttr(lead.id)}')" aria-label="Edit client"><i data-lucide="pencil-line" style="width:14px;height:14px"></i></button>
           </div>
@@ -14496,7 +14661,7 @@ function normalizeDealValue(raw, fallback='$150 - $450'){
   const text = String(raw || '').replace(/\s+/g, ' ').trim();
   if (!text) return fallback;
 
-  const rangeMatch = text.match(/\$?\s*([\d,]+(?:\.\d+)?)\s*(?:-|Ã¢â‚¬â€œ|Ã¢â‚¬â€|to)\s*\$?\s*([\d,]+(?:\.\d+)?)(.*)$/i);
+  const rangeMatch = text.match(/\$?\s*([\d,]+(?:\.\d+)?)\s*(?:-|–|—|to)\s*\$?\s*([\d,]+(?:\.\d+)?)(.*)$/i);
   if (rangeMatch) {
     const min = Number(rangeMatch[1].replace(/,/g, ''));
     const max = Number(rangeMatch[2].replace(/,/g, ''));
@@ -14517,7 +14682,7 @@ function normalizeDealValue(raw, fallback='$150 - $450'){
   }
 
   return text
-    .replace(/\s*(?:Ã¢â‚¬â€œ|Ã¢â‚¬â€)\s*/g, ' - ')
+    .replace(/\s*(?:–|—)\s*/g, ' - ')
     .replace(/\s{2,}/g, ' ');
 }
 function getDealFloor(raw, fallback=0){
@@ -14715,7 +14880,7 @@ function renderUpgradeModalShell() {
   modal.innerHTML = `
     <div style="position:fixed;top:16px;left:20px;z-index:1000;">
       <button onclick="closeUpgrade()" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--text-muted);font-size:13px;font-weight:500;cursor:pointer;padding:6px 10px;border-radius:8px;transition:color .15s,background .15s;font-family:inherit;" onmouseover="this.style.color='var(--text-main)';this.style.background='var(--bg-panel)'" onmouseout="this.style.color='var(--text-muted)';this.style.background='none'">
-        â† Back to Dashboard
+        ← Back to Dashboard
       </button>
     </div>
     <div class="pricing-page-shell">
@@ -15020,17 +15185,17 @@ document.addEventListener('click',e=>{
   if(acctOpen&&!el('account-dropdown')?.contains(e.target)&&!el('header-avatar')?.contains(e.target)&&!document.querySelector('.sb-workspace-btn')?.contains(e.target))
     closeAccountDropdown();
 });
-/* â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â
-   ONBOARDING Ã¢â‚¬â€ shown ONCE, never again
+/* ══════════════════════════════════════════════════════════
+   ONBOARDING — shown ONCE, never again
    Gate 1: localStorage flag 'lancify-onboarded'
-   Gate 2: Supabase profiles.skills column exists & Ã¢â€°Â  'Skipped'
+   Gate 2: Supabase profiles.skills column exists & ≠ 'Skipped'
    Both must agree before we skip onboarding.
-   â•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Ââ•Â */
+   ══════════════════════════════════════════════════════════ */
 
 let _obStep = 1;
 const OB_TOTAL = 5;
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Quote bank Ã¢â‚¬â€ personalised per goal Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Quote bank — personalised per goal ── */
 const _obQuotes = {
   default: [
     { q: "The best time to start was yesterday. The second best time is right now.", a: "Lancify" },
@@ -15177,7 +15342,7 @@ function setupOnboardingFlow() {
   const platformLabel = step5.querySelector('#ob-platform-chips')?.closest('.field-group')?.querySelector('.field-label');
   if (platformLabel) platformLabel.textContent = 'Primary platform';
   const nicheLabel = step5.querySelector('#ob-niche')?.closest('.field-group')?.querySelector('.field-label');
-  if (nicheLabel) nicheLabel.innerHTML = 'Your niche / target client Ã¢â‚¬â€ <span style="color:#3a3a3a">optional</span>';
+  if (nicheLabel) nicheLabel.innerHTML = 'Your niche / target client — <span style="color:#3a3a3a">optional</span>';
 
   const platformChips = step5.querySelectorAll('#ob-platform-chips .ob-chip');
   if (platformChips[0]) {
@@ -15228,14 +15393,9 @@ async function onLogin(user) {
   // Change 1: Persist guide mode state
   applyGuideMode(localStorage.getItem('lancify_guide_mode') || 'on');
 
-  const name      = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';  const firstName = name.split(' ')[0];
-  setText('header-avatar',  name[0].toUpperCase());
-  setText('ws-name',        `${firstName}'s Workspace`);
-  setText('acct-ws-name',   `${firstName}'s Workspace`);
-  const h = new Date().getHours();
-  setText('hero-greeting',  `${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${firstName}`);
+  const { fullName, firstName } = syncWorkspaceIdentity(userProfile, user);
 
-  if (el('ob-name')) el('ob-name').value = firstName !== 'User' ? name : '';
+  if (el('ob-name')) el('ob-name').value = firstName !== 'User' ? fullName : '';
 
   await loadBillingState(user.id);
   verifyPaymentSetup();
@@ -15274,17 +15434,17 @@ document.addEventListener('visibilitychange', () => {
     setTimeout(initDashboardCharts, 50);
   }
 });
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+/* ──────────────────────────────────────────────────────────
    AURORA MESH BACKGROUND
    Draws soft animated colour blobs on the shared canvas.
    Called once. Canvas persists under intro + wizard + quotes.
-   Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+   ────────────────────────────────────────────────────────── */
 function _startAurora() {
   const canvas = el('ob-aurora-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  // Colour palette Ã¢â‚¬â€ deep, rich, premium. Pure black-and-white
+  // Colour palette — deep, rich, premium. Pure black-and-white
   // with just enough chroma to feel alive (matches ElevenLabs feel).
   const blobs = [
     { x: 0.25, y: 0.30, r: 0.45, h: 220, s: 55, l: 18, dx: 0.00012, dy: 0.00009 },
@@ -15349,9 +15509,9 @@ function _startAurora() {
   };
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-   ROUTING Ã¢â‚¬â€ Instant load, no animations
-   Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ──────────────────────────────────────────────────────────
+   ROUTING — Instant load, no animations
+   ────────────────────────────────────────────────────────── */
 async function _decideRoute(uid) {
   const localDone = localStorage.getItem('lancify-onboarded-' + uid) === 'yes';
   let isReturning  = false;
@@ -15373,6 +15533,7 @@ async function _decideRoute(uid) {
     if (fullProfile) {
       userProfile = { ...userProfile, ...fullProfile };
       applyProfileToFields(fullProfile);
+      syncWorkspaceIdentity(fullProfile, currentUser);
       checkProfileBanners();
       await loadBillingState(uid);
       verifyPaymentSetup();
@@ -15454,7 +15615,7 @@ function selectChip(groupId, chipEl, hiddenId) {
 
 async function _obFinish() {
   const btn = el('ob-next-btn');
-  btn.disabled = true; btn.textContent = 'Savingâ€¦';
+  btn.disabled = true; btn.textContent = 'Saving…';
 
   const pd = {
     user_id:     currentUser.id,
@@ -15483,7 +15644,7 @@ async function _obFinish() {
     setText('header-avatar', pd.name[0].toUpperCase());
     setText('hero-greeting', (() => { const h=new Date().getHours(); return `${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${firstName}`; })());
 
-    // Fade onboarding Ã¢â€ â€™ show quote screen
+    // Fade onboarding → show quote screen
     const screen = el('onboarding-screen');
     screen.classList.add('fade-out');
     setTimeout(() => {
@@ -15492,15 +15653,15 @@ async function _obFinish() {
     }, 450);
 
   } catch(e) {
-    btn.disabled = false; btn.textContent = 'Enter Workspace Ã¢â€ â€™';
+    btn.disabled = false; btn.textContent = 'Enter Workspace →';
     showToast('Error saving profile. Please try again.');
   }
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Quote screen (5 seconds, then dashboard) Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ── Quote screen (5 seconds, then dashboard) ── */
 function _runQuoteScreen(goal, firstName) {
   const qs = el('ob-quote-screen');
-  if (!qs) { el('app-layout').classList.add('show'); requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights)); showToast(`Welcome to Lancify, ${firstName}! Ã°Å¸Å¡â‚¬`); return; }
+  if (!qs) { el('app-layout').classList.add('show'); requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights)); showToast(`Welcome to Lancify, ${firstName}! 🚀`); return; }
 
   const pool = _obQuotes[goal] || _obQuotes.default;
   const quotes = pool.length >= 2 ? pool : [...pool, ..._obQuotes.default].slice(0, 3);
@@ -15540,7 +15701,7 @@ function _runQuoteScreen(goal, firstName) {
       showQuote(qi);
     } else {
       clearInterval(interval);
-      // Fade out quote screen Ã¢â€ â€™ show upgrade modal (Bug 3)
+      // Fade out quote screen → show upgrade modal (Bug 3)
       setTimeout(() => {
         qs.style.opacity = '0';
         qs.style.transition = 'opacity 0.7s ease';
@@ -15556,16 +15717,16 @@ function _runQuoteScreen(goal, firstName) {
           
           _pendingPostPlanAction = 'dashboard_entrance';
           showUpgradeModal({ pushRoute: true });
-          showToast(`Welcome to Lancify, ${firstName}! Ã°Å¸Å¡â‚¬`);
+          showToast(`Welcome to Lancify, ${firstName}! 🚀`);
         }, 700);
       }, 400);
     }
   }, DISPLAY_MS);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ SETTINGS MODAL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── SETTINGS MODAL ─── */
 function getCurrencySymbol() {
-  const currencies = { USD:'$', EUR:'â€”', GBP:'Ã‚Â£', INR:'Ã¢â€šÂ¹', AUD:'A$' };
+  const currencies = { USD:'$', EUR:'€', GBP:'£', INR:'₹', AUD:'A$' };
   return currencies[localStorage.getItem('lancify_currency') || 'USD'] || '$';
 }
 
@@ -15607,7 +15768,7 @@ function setThemePref(theme){
   if(btnD) btnD.classList.toggle('active', theme==='dark');
 }
 
-// Legacy stubs Ã¢â‚¬â€ kept so any orphaned HTML onclick calls don't crash
+// Legacy stubs — kept so any orphaned HTML onclick calls don't crash
 function nextWizardStep() {}
 function skipOnboarding()  { obNext(); }
 function finishOnboarding(){ _obFinish(); }
