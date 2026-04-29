@@ -5,10 +5,11 @@
     messages: [
       {
         role: 'assistant',
-        content: 'Hi, I am Lancify Help. Tell me what you are trying to do, what broke, or where you are stuck, and I will give you the fastest fix.',
+        content: 'Hi, I am Lancify AI Agent. Tell me what you are trying to do, what broke, or where you are stuck. I will give you the fastest Lancify-specific fix.',
       },
     ],
     busy: false,
+    pendingAttachments: [],
   };
 
   const quickTopics = [
@@ -45,7 +46,7 @@
     },
     {
       title: 'Credits and locked tools',
-      body: 'Free plans have monthly credits and some feature limits. If a tool is locked or a scan limit is reached, check Subscription from the profile menu.',
+      body: 'Free plans have monthly credits and some feature limits. If a tool is locked or a scan limit is reached, check Subscription from the profile menu. For billing issues, contact support@lancifyai.com.',
     },
     {
       title: 'Best first workflow',
@@ -54,6 +55,7 @@
   ];
 
   const icon = (name, size = 18) => `<i data-lucide="${name}" style="width:${size}px;height:${size}px"></i>`;
+  const SUPPORT_EMAIL = 'support@lancifyai.com';
 
   function esc(value) {
     return String(value || '')
@@ -62,6 +64,56 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  function formatBytes(bytes) {
+    const size = Number(bytes || 0);
+    if (size < 1024) return `${size} B`;
+    if (size < 1024 * 1024) return `${Math.round(size / 1024)} KB`;
+    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  function isTextLike(file) {
+    return /^text\//.test(file.type || '') || /\.(txt|md|json|csv|js|jsx|ts|tsx|html|css|log)$/i.test(file.name || '');
+  }
+
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(reader.error || new Error('File read failed.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || '').slice(0, 9000));
+      reader.onerror = () => reject(reader.error || new Error('File read failed.'));
+      reader.readAsText(file);
+    });
+  }
+
+  async function buildAttachment(file) {
+    const isImage = /^image\//.test(file.type || '');
+    const attachment = {
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      name: file.name || 'attachment',
+      type: file.type || 'application/octet-stream',
+      size: file.size || 0,
+      kind: isImage ? 'image' : 'file',
+    };
+
+    if (isImage && file.size <= 4 * 1024 * 1024) {
+      attachment.dataUrl = await readFileAsDataUrl(file);
+    } else if (isTextLike(file) && file.size <= 1024 * 1024) {
+      attachment.text = await readFileAsText(file);
+    } else {
+      attachment.note = 'File metadata attached. For deep review, paste the relevant text or upload a smaller image/text file.';
+    }
+
+    return attachment;
   }
 
   function getAppContext() {
@@ -95,21 +147,28 @@
     const style = document.createElement('style');
     style.id = 'lancify-help-styles';
     style.textContent = `
-      .lhelp-backdrop{position:fixed;inset:0;z-index:9990;background:rgba(15,23,42,.18);backdrop-filter:blur(2px);display:none}
+      .lhelp-backdrop{position:fixed;inset:0;z-index:9990;background:transparent;backdrop-filter:none;display:none;pointer-events:none}
       .lhelp-backdrop.show{display:block}
-      .lhelp-panel{position:fixed;top:18px;right:22px;width:min(540px,calc(100vw - 28px));height:min(790px,calc(100vh - 36px));z-index:9991;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:22px;box-shadow:0 30px 90px rgba(15,23,42,.28);display:none;overflow:hidden;color:#171a1f;font-family:Inter,system-ui,sans-serif}
+      .lhelp-panel{position:fixed;top:29px;right:29px;width:400px;max-width:calc(100vw - 58px);height:calc(100vh - 58px);max-height:768px;z-index:9991;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:22px;box-shadow:0 30px 90px rgba(15,23,42,.28);display:none;overflow:hidden;color:#171a1f;font-family:Inter,system-ui,sans-serif;pointer-events:auto}
       .lhelp-panel.show{display:flex;flex-direction:column;animation:lhelpPop .2s cubic-bezier(.16,1,.3,1)}
       @keyframes lhelpPop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
-      .lhelp-hero{background:#171717;color:#fff;padding:34px 38px 92px;position:relative;overflow:hidden}
+      .lhelp-hero{background:#171717;color:#fff;padding:34px 28px 92px;position:relative;overflow:hidden}
       .lhelp-topbar{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
       .lhelp-brand{font-size:42px;line-height:1;font-weight:800;letter-spacing:0}
       .lhelp-close{width:34px;height:34px;border:0;background:transparent;color:#fff;border-radius:9px;display:grid;place-items:center;cursor:pointer}
       .lhelp-close:hover{background:rgba(255,255,255,.12)}
-      .lhelp-title{position:relative;z-index:1;margin-top:78px;font-size:35px;line-height:1.18;font-weight:750;letter-spacing:0;max-width:380px}
+      .lhelp-title{position:relative;z-index:1;margin-top:78px;font-size:33px;line-height:1.18;font-weight:750;letter-spacing:0;max-width:340px}
       .lhelp-body{background:#f6f7f9;flex:1;min-height:0;margin-top:-48px;border-top-left-radius:0;border-top-right-radius:0;display:flex;flex-direction:column;position:relative}
-      .lhelp-scroll{overflow:auto;padding:0 28px 92px;flex:1}
+      .lhelp-scroll{overflow:auto;padding:0 20px 92px;flex:1}
       .lhelp-card{background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:14px;box-shadow:0 14px 34px rgba(15,23,42,.08);margin-bottom:14px}
+      .lhelp-support-card{padding:14px 18px;font-size:13.5px;line-height:1.5;color:#59616d}
+      .lhelp-support-card strong{display:block;color:#171a1f;font-size:14px;margin-bottom:2px}
+      .lhelp-support-card a{color:#009bd7;font-weight:700;text-decoration:none}
       .lhelp-status{display:flex;align-items:center;gap:14px;padding:18px 20px}
+      .lhelp-recent{display:flex;align-items:center;gap:12px;padding:17px 18px}
+      .lhelp-recent-mark{width:48px;height:48px;border-radius:12px;background:#111;color:#fff;display:grid;place-items:center;font-size:24px;font-weight:800;flex:none}
+      .lhelp-recent-title{font-size:14px;font-weight:800;color:#171a1f;margin-bottom:3px}
+      .lhelp-recent-copy{font-size:13px;color:#737b86;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .lhelp-status-dot{width:36px;height:36px;border-radius:50%;background:#2ecc71;color:#fff;display:grid;place-items:center;flex:none}
       .lhelp-muted{color:#727985}
       .lhelp-action{width:100%;border:0;background:#fff;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;text-align:left;font:inherit;font-weight:700;color:#1b1f25;cursor:pointer}
@@ -133,6 +192,7 @@
       .lhelp-chat{background:#fff;flex:1;min-height:0;display:flex;flex-direction:column}
       .lhelp-messages{flex:1;overflow:auto;padding:18px 22px 16px;background:#fff}
       .lhelp-note{border:1px solid #dfe4ea;border-radius:22px;padding:16px 18px;color:#68717d;line-height:1.55;margin-bottom:18px;display:flex;gap:12px}
+      .lhelp-note a{color:#009bd7;font-weight:700;text-decoration:none}
       .lhelp-bubble{max-width:82%;padding:14px 16px;border-radius:18px;margin:0 0 12px;white-space:pre-wrap;line-height:1.55;font-size:14px}
       .lhelp-bubble.assistant{background:#f2f3f5;color:#1f2329;border-bottom-left-radius:6px}
       .lhelp-bubble.user{background:#111827;color:#fff;margin-left:auto;border-bottom-right-radius:6px}
@@ -144,8 +204,14 @@
       .lhelp-input-wrap{border:2px solid #00a3dc;border-radius:22px;min-height:106px;padding:14px;display:flex;flex-direction:column;gap:10px}
       .lhelp-textarea{border:0;outline:0;resize:none;min-height:42px;max-height:110px;font:inherit;color:#111827;background:transparent}
       .lhelp-tools{display:flex;align-items:center;gap:16px;color:#8a9099}
+      .lhelp-tool-btn{border:0;background:transparent;color:inherit;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;cursor:pointer}
+      .lhelp-tool-btn:hover{background:#f1f3f5;color:#009bd7}
       .lhelp-send{margin-left:auto;width:44px;height:44px;border-radius:50%;border:0;background:#e8eaed;color:#a3a8b0;display:grid;place-items:center;cursor:pointer}
       .lhelp-send.ready{background:#009bd7;color:#fff}
+      .lhelp-attachments{display:flex;gap:8px;flex-wrap:wrap}
+      .lhelp-chip{display:inline-flex;align-items:center;gap:7px;max-width:100%;border:1px solid rgba(15,23,42,.1);background:#f7f8fa;color:#444b55;border-radius:999px;padding:6px 9px;font-size:12px}
+      .lhelp-chip button{border:0;background:transparent;color:#7b828c;cursor:pointer;display:grid;place-items:center;padding:0}
+      .lhelp-bubble .lhelp-chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);color:inherit;margin-top:8px}
       .lhelp-section-title{font-size:13px;font-weight:800;color:#8a9099;text-transform:uppercase;letter-spacing:0;margin:10px 0 12px}
       .lhelp-article{padding:16px 18px}
       .lhelp-article h4{font-size:15px;margin:0 0 5px;color:#171a1f}
@@ -158,8 +224,12 @@
       html.dark .lhelp-bubble.assistant{background:#1f1f23;color:#f4f4f5}
       html.dark .lhelp-bubble.user{background:#f4f4f5;color:#111}
       html.dark .lhelp-input-wrap{border-color:#0ea5d7}
+      html.dark .lhelp-support-card strong{color:#f4f4f5}
+      html.dark .lhelp-recent-title{color:#f4f4f5}
+      html.dark .lhelp-tool-btn:hover{background:#1f1f23}
+      html.dark .lhelp-chip{background:#1f1f23;border-color:#303036;color:#d4d4d8}
       @media(max-width:640px){
-        .lhelp-backdrop{background:rgba(15,23,42,.28)}
+        .lhelp-backdrop{background:transparent}
         .lhelp-panel{top:8px;right:8px;left:8px;width:auto;height:calc(100vh - 16px);border-radius:18px}
         .lhelp-hero{padding:26px 26px 82px}
         .lhelp-title{margin-top:58px;font-size:30px}
@@ -229,12 +299,24 @@
 
   function renderHomeContent() {
     return `
+      <div class="lhelp-card lhelp-recent" data-help-tab="messages" role="button" tabindex="0">
+        <div class="lhelp-recent-mark">L</div>
+        <div style="min-width:0;flex:1">
+          <div class="lhelp-recent-title">Recent message</div>
+          <div class="lhelp-recent-copy">Lancify AI Agent · Fast help for your workspace</div>
+        </div>
+        <span class="lhelp-muted" style="font-size:12px">now</span>
+      </div>
       <div class="lhelp-card lhelp-status">
         <div class="lhelp-status-dot">${icon('check', 22)}</div>
         <div>
           <div><strong>Status:</strong> All Systems Operational</div>
           <div class="lhelp-muted">Lancify AI support is ready</div>
         </div>
+      </div>
+      <div class="lhelp-card lhelp-support-card">
+        <strong>Issue not solved?</strong>
+        Contact us at <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>. We reply within 1 hour.
       </div>
       <div class="lhelp-card">
         <button class="lhelp-action" data-help-tab="messages">
@@ -274,6 +356,21 @@
     `;
   }
 
+  function renderAttachmentChips(attachments = [], removable = false) {
+    if (!attachments.length) return '';
+    return `
+      <div class="lhelp-attachments">
+        ${attachments.map(file => `
+          <span class="lhelp-chip">
+            ${icon(file.kind === 'image' ? 'image' : 'paperclip', 13)}
+            <span>${esc(file.name)} · ${esc(formatBytes(file.size))}</span>
+            ${removable ? `<button type="button" data-help-remove-attachment="${esc(file.id)}" aria-label="Remove ${esc(file.name)}">${icon('x', 13)}</button>` : ''}
+          </span>
+        `).join('')}
+      </div>
+    `;
+  }
+
   function renderMessagesView() {
     return `
       <div id="lancify-help-view" style="height:100%;display:flex;flex-direction:column;">
@@ -292,18 +389,25 @@
             <div style="text-align:center;color:#757c86;margin:6px 0 24px">Contact support</div>
             <div class="lhelp-note">
               <span class="lhelp-blue">${icon('info', 20)}</span>
-              <span>I can help with Lancify setup, proposal writing, lead finding, CRM, invoices, credits, billing questions, and errors inside the app. Share the exact issue and I will give you steps.</span>
+              <span>I can help with Lancify setup, proposal writing, lead finding, CRM, invoices, credits, billing questions, and errors inside the app. If the issue is not solved, contact <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>. We reply within 1 hour.</span>
             </div>
-            ${HELP_STATE.messages.map(msg => `<div class="lhelp-bubble ${msg.role === 'user' ? 'user' : 'assistant'}">${esc(msg.content)}</div>`).join('')}
+            ${HELP_STATE.messages.map(msg => `
+              <div class="lhelp-bubble ${msg.role === 'user' ? 'user' : 'assistant'}">
+                ${esc(msg.content)}
+                ${renderAttachmentChips(msg.attachments || [], false)}
+              </div>
+            `).join('')}
             ${HELP_STATE.busy ? '<div class="lhelp-bubble assistant"><span class="lhelp-typing"><span></span><span></span><span></span></span></div>' : ''}
           </div>
           <form class="lhelp-composer" data-help-compose>
             <div class="lhelp-input-wrap">
               <textarea class="lhelp-textarea" name="message" placeholder="Message..." rows="2"></textarea>
+              ${renderAttachmentChips(HELP_STATE.pendingAttachments, true)}
               <div class="lhelp-tools">
-                ${icon('paperclip', 19)}
-                ${icon('smile', 19)}
-                <span style="font-size:11px;border:1px solid currentColor;border-radius:3px;padding:0 3px;font-weight:800">GIF</span>
+                <input type="file" data-help-file-input multiple style="display:none">
+                <input type="file" data-help-image-input accept="image/*" multiple style="display:none">
+                <button class="lhelp-tool-btn" type="button" data-help-add-files title="Attach files">${icon('paperclip', 19)}</button>
+                <button class="lhelp-tool-btn" type="button" data-help-add-images title="Attach images">${icon('image', 19)}</button>
                 ${icon('mic', 19)}
                 <button class="lhelp-send" type="submit" aria-label="Send message">${icon('arrow-up', 21)}</button>
               </div>
@@ -358,7 +462,20 @@
     if (compose) {
       const textarea = compose.querySelector('textarea');
       const send = compose.querySelector('.lhelp-send');
-      const syncReady = () => send?.classList.toggle('ready', !!textarea?.value.trim());
+      const fileInput = compose.querySelector('[data-help-file-input]');
+      const imageInput = compose.querySelector('[data-help-image-input]');
+      const syncReady = () => send?.classList.toggle('ready', !!textarea?.value.trim() || HELP_STATE.pendingAttachments.length > 0);
+      compose.querySelector('[data-help-add-files]')?.addEventListener('click', () => fileInput?.click());
+      compose.querySelector('[data-help-add-images]')?.addEventListener('click', () => imageInput?.click());
+      fileInput?.addEventListener('change', () => { addPendingAttachments(fileInput.files); fileInput.value = ''; });
+      imageInput?.addEventListener('change', () => { addPendingAttachments(imageInput.files); imageInput.value = ''; });
+      compose.querySelectorAll('[data-help-remove-attachment]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-help-remove-attachment');
+          HELP_STATE.pendingAttachments = HELP_STATE.pendingAttachments.filter(file => file.id !== id);
+          render();
+        });
+      });
       textarea?.addEventListener('input', syncReady);
       textarea?.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && !event.shiftKey) {
@@ -369,10 +486,12 @@
       compose.addEventListener('submit', (event) => {
         event.preventDefault();
         const text = textarea?.value.trim();
-        if (!text || HELP_STATE.busy) return;
+        const attachments = HELP_STATE.pendingAttachments.slice();
+        if ((!text && !attachments.length) || HELP_STATE.busy) return;
         textarea.value = '';
+        HELP_STATE.pendingAttachments = [];
         syncReady();
-        sendMessage(text);
+        sendMessage(text || 'Please review the attached file or image and help me fix this Lancify issue.', attachments);
       });
       syncReady();
       setTimeout(() => textarea?.focus(), 20);
@@ -400,9 +519,29 @@
     if (box) box.scrollTop = box.scrollHeight;
   }
 
-  async function sendMessage(text) {
+  async function addPendingAttachments(fileList) {
+    const files = Array.from(fileList || []);
+    if (!files.length) return;
+    const slots = Math.max(0, 5 - HELP_STATE.pendingAttachments.length);
+    const selected = files.slice(0, slots);
+    if (!selected.length) return;
+
+    try {
+      const built = await Promise.all(selected.map(buildAttachment));
+      HELP_STATE.pendingAttachments = HELP_STATE.pendingAttachments.concat(built);
+      render();
+    } catch (error) {
+      HELP_STATE.messages.push({
+        role: 'assistant',
+        content: `I could not attach that file. Try a smaller image or paste the relevant text. For urgent file-related issues, email ${SUPPORT_EMAIL}.`,
+      });
+      render();
+    }
+  }
+
+  async function sendMessage(text, attachments = []) {
     if (!text || HELP_STATE.busy) return;
-    HELP_STATE.messages.push({ role: 'user', content: text });
+    HELP_STATE.messages.push({ role: 'user', content: text, attachments });
     HELP_STATE.busy = true;
     render();
     scrollMessagesToBottom();
@@ -415,6 +554,7 @@
           message: text,
           history: HELP_STATE.messages.slice(0, -1).slice(-10),
           context: getAppContext(),
+          attachments,
         }),
       });
 
@@ -428,7 +568,7 @@
     } catch (error) {
       HELP_STATE.messages.push({
         role: 'assistant',
-        content: `I could not reach Lancify AI support right now. Quick fix: refresh the app, check your plan and credits, then try again. If there is an error message, send it here after the connection returns.\n\nTechnical detail: ${error.message}`,
+        content: `I could not reach Lancify AI support right now. Quick fix: refresh the app, check your plan and credits, then try again. If this is urgent or pricing-related, email ${SUPPORT_EMAIL}; we reply within 1 hour.\n\nTechnical detail: ${error.message}`,
       });
     } finally {
       HELP_STATE.busy = false;
