@@ -6914,6 +6914,7 @@ body,
         <div class="acct-menu">
           <button class="acct-menu-item" onclick="openSettings('profile');toggleAccountDropdown()">Settings</button>
           <button class="acct-menu-item" onclick="showUpgradeModal();toggleAccountDropdown()">Subscription</button>
+          <button class="acct-menu-item" onclick="openLancifyHelp();toggleAccountDropdown()">Get Help</button>
           <div class="acct-divider"></div>
           <button class="acct-menu-item" onclick="toggleGuideModeSetting();toggleAccountDropdown()">
             <span>Step-by-step guide</span>
@@ -15799,6 +15800,7 @@ async function checkCredits(cost, callback) {
 enhanceProfileBanners();
 initApp();
 </script>
+       <script src="gethelp.js"></script>
        <div id="toast"></div>
 </body>
 </html>
