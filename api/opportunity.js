@@ -9,8 +9,19 @@ const MARKETPLACE_BLOCKLIST = [
   'canva', 'veed', 'template', 'theme', 'tool', 'software', 'platform',
   'list', 'top 10', 'best ', 'reddit', 'quora', 'agency',
   'hubspot', 'squarespace', 'wix', 'wordpress.org',
-  'clutch', 'goodfirms', 'bark.com', 'thumbtack', 'sortlist'
+  'clutch', 'goodfirms', 'bark.com', 'thumbtack', 'sortlist',
+  'how to grow', 'youtube tips', 'get more views', 'youtube automation',
+  'make money online', 'passive income', 'side hustle', 'faceless channel'
 ];
+
+const LOCATION_TO_REGION = {
+  'united states': 'US', 'usa': 'US', 'us': 'US',
+  'united kingdom': 'GB', 'uk': 'GB', 'england': 'GB',
+  'india': 'IN', 'canada': 'CA', 'australia': 'AU',
+  'germany': 'DE', 'france': 'FR', 'brazil': 'BR',
+  'pakistan': 'PK', 'nigeria': 'NG', 'philippines': 'PH',
+  'south africa': 'ZA', 'kenya': 'KE', 'ghana': 'GH',
+};
 
 const PRICE_HINTS = {
   'Thumbnail Design': '$120 - $350',
@@ -409,11 +420,14 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'finance youtube channel',
-      'productivity youtube channel',
-      'education youtube channel',
-      'faceless youtube channel',
-      'gaming youtube channel',
+      'personal finance tips channel',
+      'fitness workout channel',
+      'cooking recipes channel',
+      'travel vlog channel',
+      'gaming channel',
+      'business tips channel',
+      'motivation channel',
+      'history facts channel',
     ],
     minSubs: 3000,
     maxSubs: 50000,
@@ -429,11 +443,14 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'small youtube channel vlog',
-      'small youtube channel podcast',
-      'education youtube creator',
-      'faceless youtube channel',
-      'gaming youtube channel',
+      'travel vlog channel',
+      'fitness lifestyle channel',
+      'cooking channel',
+      'daily vlog channel',
+      'gaming channel',
+      'business advice channel',
+      'education explainer channel',
+      'tech review channel',
     ],
     minSubs: 1200,
     maxSubs: 90000,
@@ -449,10 +466,13 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'explainer youtube channel',
-      'history youtube channel',
-      'education youtube channel',
-      'documentary youtube channel',
+      'history documentary channel',
+      'science explainer channel',
+      'true crime channel',
+      'geography facts channel',
+      'space exploration channel',
+      'philosophy channel',
+      'mythology stories channel',
     ],
     minSubs: 2000,
     maxSubs: 70000,
@@ -610,28 +630,51 @@ function normalizeServiceTag(v) {
 }
 
 function normalizeAdvancedControls(body = {}) {
+  const painSignalsRaw = body.painSignals ?? body.pain_signals ?? body.signals ?? [];
+  const hotRaw = body.hotLeadsOnly ?? body.hot_leads_only ?? body.quickMode ?? body.quick_mode ?? body.hotOnly ?? false;
   const audienceRaw =
-    body.audienceSize ?? body.audience ?? body.audienceFilter ?? body.audienceBucket ?? body.audienceTier ?? 'all';
+    body.audienceSize ?? body.audience_size ?? body.audienceBucket ?? body.audience ?? body.audienceFilter ?? body.audienceTier ?? 'all';
   const serviceRaw =
-    body.serviceMatch ?? body.serviceNeed ?? body.service ?? body.services ?? body.serviceFilter ?? 'all';
-  const filtersRaw = body.filters ?? body.filterBy ?? body.filter ?? [];
-  const hotRaw = body.hotLeadsOnly ?? body.quickMode ?? body.quick_mode ?? body.hotOnly ?? false;
+    body.serviceMatch ?? body.service_match ?? body.serviceNeed ?? body.services ?? body.service ?? body.serviceFilter ?? 'all';
+  const filtersRaw = body.filters ?? body.filterBy ?? body.filter_by ?? body.filter ?? [];
+
+  console.log('[AdvancedControls raw]', JSON.stringify({
+    painSignalsRaw,
+    hotRaw,
+    audienceRaw,
+    serviceRaw,
+    filtersRaw,
+  }));
 
   const serviceFilters = asArray(serviceRaw)
     .map(normalizeServiceTag)
     .filter((x) => x && x !== 'all');
 
-  const filterSet = new Set(asArray(filtersRaw).map((f) => lower(f)));
-  const hotLeadsOnly = hotRaw === true || lower(hotRaw).includes('hot');
+  const painSignalList = asArray(painSignalsRaw).map((s) => lower(s)).filter(Boolean);
+  const filterList = asArray(filtersRaw).map((f) => lower(f)).filter(Boolean);
+  const combinedFilters = [...new Set([...painSignalList, ...filterList])];
+  const hasToken = (...terms) => combinedFilters.some((value) => terms.some((term) => value.includes(term)));
+  const hasPoorVisualSignal = painSignalList.some((value) => value.includes('poor visual quality') || value.includes('poor visual'));
+  const hotLeadsOnly =
+    hotRaw === true ||
+    hotRaw === 1 ||
+    ['true', '1', 'yes'].includes(lower(hotRaw)) ||
+    lower(hotRaw).includes('hot') ||
+    painSignalList.some((value) => value.includes('no email list / funnel') || value.includes('no email list'));
 
-  return {
+  const controls = {
     audienceBucket: normalizeAudienceBucket(audienceRaw),
     serviceFilters,
     hotLeadsOnly,
-    filterHighPain: [...filterSet].some((f) => f.includes('high pain') || f.includes('pain>90') || f.includes('pain >90')),
-    filterActive7d: [...filterSet].some((f) => f.includes('active') && f.includes('7')),
-    filterNoMonetization: [...filterSet].some((f) => f.includes('no monetization')),
+    filterHighPain: hasToken('high pain', 'pain>90', 'pain >90', 'low ctr / low views', 'low ctr', 'ad spend, no funnel', 'ad spend'),
+    filterActive7d: hasToken('active 7', 'last 7 days', 'uploaded in 7', 'inconsistent posting', 'inconsistent'),
+    filterNoMonetization: hasToken('no monetization', 'no clear cta'),
+    painSignals: painSignalList,
+    scoreSignals: hasPoorVisualSignal ? ['poor-visual'] : [],
   };
+
+  console.log('[AdvancedControls normalized]', JSON.stringify(controls));
+  return controls;
 }
 
 function formatSubs(subs) {
@@ -668,6 +711,12 @@ function extractLocation(prompt) {
   const idx = t.toLowerCase().lastIndexOf(' in ');
   if (idx === -1) return '';
   return cleanText(t.slice(idx + 4));
+}
+
+function resolveRegionCode(locationString) {
+  if (!locationString) return null;
+  const key = locationString.toLowerCase().trim();
+  return LOCATION_TO_REGION[key] || null;
 }
 
 function isBadMarketplaceName(name) {
@@ -840,11 +889,28 @@ async function searchYouTubeCreators({
   const safeMinViewSubRatio = Number(minViewSubRatio || 0.01);
   const safeSearchOrder = cleanText(searchOrder || 'date').toLowerCase() === 'relevance' ? 'relevance' : 'date';
   const safePublishedAfterDays = Number(publishedAfterDays || 90);
+  const regionCode = resolveRegionCode(location);
+  const ADVICE_CHANNEL_BLOCKLIST = [
+    'how to grow', 'youtube tips', 'youtube strategy', 'get more views',
+    'how to make money', 'youtube algorithm', 'faceless channel tutorial',
+    'how to start a channel', 'youtube automation', 'content strategy',
+    'how i got', 'how to go viral', 'youtube secrets', 'monetize your channel',
+    'grow your channel', 'make money youtube', 'youtube for beginners',
+    'make money online', 'passive income', 'side hustle tips',
+  ];
 
   const publishedAfter = new Date(Date.now() - safePublishedAfterDays * DAY_MS).toISOString();
-  const searchQueries = (queries || []).slice(0, 6);
+  const searchQueries = (queries || []).slice(0, 8);
   const randomizedQueries = [...searchQueries].sort(() => Math.random() - 0.5);
   const rawSearchItems = [];
+
+  console.log('[YouTubeSearch init]', JSON.stringify({
+    location,
+    regionCode,
+    queryCount: randomizedQueries.length,
+    searchOrder: safeSearchOrder,
+    publishedAfterDays: safePublishedAfterDays,
+  }));
 
   for (const q of randomizedQueries) {
     const fullQ = cleanText(location ? `${q} ${location}` : q);
@@ -852,11 +918,15 @@ async function searchYouTubeCreators({
       `https://www.googleapis.com/youtube/v3/search?part=snippet` +
       `&q=${encodeURIComponent(fullQ)}` +
       `&type=video&order=${safeSearchOrder}&maxResults=25&relevanceLanguage=en` +
+      (regionCode ? `&regionCode=${encodeURIComponent(regionCode)}` : '') +
       `&publishedAfter=${encodeURIComponent(publishedAfter)}` +
       `&key=${YOUTUBE}`;
 
+    console.log('[YouTubeSearch request]', searchUrl.replace(/([?&]key=)[^&]+/i, '$1[redacted]'));
+
     try {
       const data = await fetchJson(searchUrl);
+      console.log('[YouTubeSearch responseCount]', JSON.stringify({ query: fullQ, count: data?.items?.length || 0 }));
       if (data?.items?.length) rawSearchItems.push(...data.items);
     } catch (e) {
       console.error('YouTube video search failed:', e.message || e);
@@ -926,6 +996,10 @@ async function searchYouTubeCreators({
     const title = cleanText(ch.snippet?.title);
     const desc = cleanText(ch.snippet?.description).slice(0, 320);
     const titleLc = title.toLowerCase();
+    const descLc = desc.toLowerCase();
+    const isAdviceChannel = ADVICE_CHANNEL_BLOCKLIST.some(
+      (term) => titleLc.includes(term) || descLc.includes(term)
+    );
 
     if (
       !title ||
@@ -934,6 +1008,11 @@ async function searchYouTubeCreators({
       titleLc.includes('official') ||
       isBadMarketplaceName(title)
     ) {
+      continue;
+    }
+
+    if (isAdviceChannel) {
+      console.log('[YouTubeSearch advice-skip]', JSON.stringify({ title, location, regionCode }));
       continue;
     }
 
@@ -985,6 +1064,7 @@ async function searchYouTubeCreators({
     candidates.push(profile);
   }
 
+  console.log('[YouTubeSearch candidates]', JSON.stringify({ location, regionCode, total: candidates.length }));
   return candidates
     .sort((a, b) => b.qualityScore - a.qualityScore || a.subscriberCount - b.subscriberCount)
     .slice(0, 20);
@@ -1268,34 +1348,40 @@ function getNicheBucket(profile, skill) {
 }
 
 function pickDiverseTopLeads(leads, profilesById, skill, maxLeads = 3) {
-  const selected = [];
-  const usedDomains = new Set();
-  const usedBuckets = new Set();
-
-  for (const lead of leads) {
-    if (selected.length >= maxLeads) break;
-    const profile = profilesById.get(lead.sourceId);
-    if (!profile) continue;
-
-    const root = getRootDomain(profile.profileUrl);
-    const bucket = getNicheBucket(profile, skill);
-
-    if (root && usedDomains.has(root)) continue;
-    if (usedBuckets.has(bucket)) continue;
-
-    selected.push(lead);
-    if (root) usedDomains.add(root);
-    usedBuckets.add(bucket);
+  const safeLeads = Array.isArray(leads) ? leads : [];
+  console.log('[LeadDiversity input]', JSON.stringify({ total: safeLeads.length, maxLeads, skill }));
+  if (safeLeads.length <= maxLeads) {
+    console.log('[LeadDiversity result]', JSON.stringify({ mode: 'direct', returned: safeLeads.length }));
+    return safeLeads.slice(0, maxLeads);
   }
 
-  if (selected.length < maxLeads) {
-    for (const lead of leads) {
+  if (safeLeads.length > maxLeads * 2) {
+    const selected = [];
+    const usedDomains = new Set();
+    const usedBuckets = new Set();
+    for (const lead of safeLeads) {
       if (selected.length >= maxLeads) break;
-      if (!selected.find((x) => x.sourceId === lead.sourceId)) selected.push(lead);
+      const profile = profilesById.get(lead.sourceId);
+      if (!profile) {
+        selected.push(lead);
+        continue;
+      }
+      const root = getRootDomain(profile.profileUrl);
+      const bucket = getNicheBucket(profile, skill);
+      if (root && usedDomains.has(root)) continue;
+      if (usedBuckets.has(bucket)) continue;
+      selected.push(lead);
+      if (root) usedDomains.add(root);
+      usedBuckets.add(bucket);
+    }
+    if (selected.length >= maxLeads) {
+      console.log('[LeadDiversity result]', JSON.stringify({ mode: 'diverse', returned: selected.length }));
+      return selected;
     }
   }
 
-  return selected.slice(0, maxLeads);
+  console.log('[LeadDiversity result]', JSON.stringify({ mode: 'top-match', returned: Math.min(safeLeads.length, maxLeads) }));
+  return safeLeads.slice(0, maxLeads);
 }
 
 async function readSiteSignals(profileUrl) {
@@ -1376,11 +1462,17 @@ function hasMonetizationLink(profile) {
 function inferPainScore(profile, cfg) {
   let pain = 58;
   const isCreator = (cfg?.targetType === 'creator') || profile.platform === 'YouTube';
+  let d = null;
+  let ratio = null;
+  let views = null;
 
   if (isCreator) {
-    const d = Number(profile.lastUploadDays || 999);
-    const ratio = Number(profile.viewSubRatio || 0);
-    const views = Number(profile.avgRecentViews || 0);
+    d = Number(profile.lastUploadDays ?? 999);
+    ratio = Number(profile.viewSubRatio ?? 0);
+    views = Number(profile.avgRecentViews ?? 0);
+    if (!Number.isFinite(d)) d = 999;
+    if (!Number.isFinite(ratio)) ratio = 0;
+    if (!Number.isFinite(views)) views = 0;
 
     if (d <= 7) pain += 12;
     else if (d <= 14) pain += 9;
@@ -1406,7 +1498,9 @@ function inferPainScore(profile, cfg) {
     if (Number(profile.reviews || 0) > 0 && Number(profile.reviews || 0) < 35) pain += 5;
   }
 
-  return clamp(Math.round(pain), 55, 99);
+  const finalPain = clamp(Math.round(pain), 55, 99);
+  console.log('[painScore]', profile.name, finalPain, { d, ratio, views });
+  return finalPain;
 }
 
 function profileAudiencePass(profile, cfg, audienceBucket) {
@@ -1468,8 +1562,19 @@ function applyAdvancedProfileFilters(profiles, cfg, advanced = {}, skill = null)
   } = advanced || {};
 
   const isCreatorMode = (cfg?.targetType === 'creator');
+  const sourceProfiles = Array.isArray(profiles) ? profiles : [];
+  console.log('[AdvancedFilters apply]', JSON.stringify({
+    total: sourceProfiles.length,
+    audienceBucket,
+    serviceFilters,
+    hotLeadsOnly,
+    filterHighPain,
+    filterActive7d,
+    filterNoMonetization,
+    skill,
+  }));
 
-  return (profiles || []).filter((p) => {
+  const filtered = sourceProfiles.filter((p) => {
     const painScore = inferPainScore(p, cfg);
     p.painScore = painScore;
     p.serviceTags = detectServiceTags(p, skill);
@@ -1502,11 +1607,19 @@ function applyAdvancedProfileFilters(profiles, cfg, advanced = {}, skill = null)
 
     return true;
   });
+
+  console.log('[AdvancedFilters result]', JSON.stringify({ kept: filtered.length, removed: sourceProfiles.length - filtered.length, skill }));
+  return filtered;
 }
 
 function rankProfiles(profiles, cfg, signals = [], budget = []) {
   const signalSet = new Set((signals || []).map((s) => lower(s)));
   const budgetSet = new Set((budget || []).map((b) => lower(b)));
+  console.log('[RankProfiles signals]', JSON.stringify({
+    total: Array.isArray(profiles) ? profiles.length : 0,
+    signals: [...signalSet],
+    budget: [...budgetSet],
+  }));
 
   return (profiles || [])
     .map((p) => {
@@ -1515,6 +1628,7 @@ function rankProfiles(profiles, cfg, signals = [], budget = []) {
       if ((cfg?.targetType === 'creator') || p.platform === 'YouTube') {
         if (signalSet.has('active-posting') && Number(p.lastUploadDays || 999) <= 14) score += 3;
         if (signalSet.has('high-engagement') && Number(p.viewSubRatio || 0) >= 0.08) score += 4;
+        if (signalSet.has('poor-visual') && Number(p.viewSubRatio || 0) < 0.05) score += 5;
         if (budgetSet.has('low-ticket') && Number(p.subscriberCount || 0) <= 30000) score += 2;
       } else if (p.platform === 'Google Maps') {
         if (signalSet.has('high-intent') && (p.website || p.phone)) score += 4;
@@ -1763,9 +1877,18 @@ export default async function handler(req, res) {
 
   try {
     const cfg = skill ? SKILL_CONFIG[skill] : null;
-    const location = extractLocation(effectivePrompt);
+    const promptLocation = extractLocation(effectivePrompt);
+    const locationOverride = cleanText(body.location ?? body.targetLocation ?? body.region ?? '');
+    const location = locationOverride || promptLocation;
     const advanced = normalizeAdvancedControls(body);
-    const normalizedSignals = normalizeSignalTokens(signals);
+    console.log('[AdvancedFilters normalized]', JSON.stringify(advanced));
+    console.log('[Mode]', mode, '[isQuickMode]', isQuickMode);
+    console.log('[Location resolved]', JSON.stringify({ locationOverride, promptLocation, location, regionCode: resolveRegionCode(location) }));
+    const normalizedSignals = [...new Set([
+      ...normalizeSignalTokens(signals),
+      ...(advanced.scoreSignals || []),
+    ])];
+    console.log('[RankSignals normalized]', JSON.stringify(normalizedSignals));
     const normalizedBudget = normalizeBudgetTokens(budget);
     const planTier = resolvePlanTier(body);
     const leadTarget = computeLeadTarget({ incomeGoal, skill, planTier });
