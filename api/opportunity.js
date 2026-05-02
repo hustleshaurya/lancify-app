@@ -364,6 +364,57 @@ const SKILL_INTENT_RULES = {
   },
 };
 
+const SKILL_FALLBACK_TEXT = {
+  'Thumbnail Design': {
+    problem: (name) => `${name} is uploading actively but their thumbnails likely have low CTR - a quick redesign sprint could unlock more views.`,
+    strategy: () => `Pitch a 3-thumbnail test sprint and show a before/after CTR improvement example.`,
+  },
+  'Video Editing': {
+    problem: (name) => `${name} uploads regularly but their editing pacing and hooks likely lose viewers in the first 30 seconds.`,
+    strategy: () => `Offer a free 60-second re-edit of their worst-performing video as a proof-of-concept.`,
+  },
+  'Voice Over': {
+    problem: (name) => `${name} posts narration-heavy content but their audio quality or pacing likely reduces watch time.`,
+    strategy: () => `Offer a sample re-narration of one of their recent videos to demonstrate the quality gap.`,
+  },
+  'Social Media Management': {
+    problem: (name) => `${name} has visible demand but posts inconsistently, leaving engagement on the table.`,
+    strategy: () => `Propose a 30-day content calendar with 3 posts per week as a starter package.`,
+  },
+  'Web Design': {
+    problem: (name) => `${name} has traffic but their website likely has a weak CTA and poor mobile experience hurting conversions.`,
+    strategy: () => `Offer a free homepage audit with 3 specific conversion fixes as a discovery call hook.`,
+  },
+  'Copywriting': {
+    problem: (name) => `${name} has a product but their copy likely undersells the value proposition and has no clear hook.`,
+    strategy: () => `Rewrite their hero section headline for free and show the contrast to open the conversation.`,
+  },
+  'Email Marketing': {
+    problem: (name) => `${name} has an audience but no email sequence to convert followers into paying customers.`,
+    strategy: () => `Offer to write a 3-email welcome sequence as a low-risk starter deliverable.`,
+  },
+  'SEO': {
+    problem: (name) => `${name} has a website but is likely invisible on Google due to missing on-page SEO basics.`,
+    strategy: () => `Run a free keyword gap audit and present 5 quick wins they can implement immediately.`,
+  },
+  'Funnel Building': {
+    problem: (name) => `${name} drives traffic but has no funnel to capture leads or convert visitors into clients.`,
+    strategy: () => `Propose a simple 3-step lead magnet funnel as a starter build.`,
+  },
+  'Graphic Design': {
+    problem: (name) => `${name} sells products but their visual branding is inconsistent and likely hurts perceived value.`,
+    strategy: () => `Create a free brand style tile (colors, fonts, sample creative) to demonstrate the upgrade.`,
+  },
+  'Paid Ads': {
+    problem: (name) => `${name} has a product but is likely leaving money on the table with no structured paid acquisition.`,
+    strategy: () => `Propose a $5/day test campaign with one ad creative to prove ROI before a bigger commitment.`,
+  },
+  'Content Writing': {
+    problem: (name) => `${name} has a website but their blog is thin or outdated, missing organic search traffic.`,
+    strategy: () => `Offer one free SEO-optimized article on their top keyword to show the content quality gap.`,
+  },
+};
+
 const GENERIC_PHRASES = [
   'improve online presence',
   'attract more clients',
@@ -420,20 +471,20 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'personal finance tips channel',
-      'fitness workout channel',
-      'cooking recipes channel',
-      'travel vlog channel',
-      'gaming channel',
-      'business tips channel',
-      'motivation channel',
-      'history facts channel',
+      'how to invest money beginners',
+      'home workout no equipment',
+      'easy dinner recipes',
+      'travel tips europe',
+      'minecraft survival guide',
+      'morning routine productivity',
+      'world war 2 history',
+      'learn guitar beginner',
     ],
-    minSubs: 3000,
-    maxSubs: 50000,
-    maxInactiveDays: 90,
-    minAvgViews: 180,
-    minViewSubRatio: 0.007,
+    minSubs: 2000,
+    maxSubs: 80000,
+    maxInactiveDays: 120,
+    minAvgViews: 100,
+    minViewSubRatio: 0.004,
     searchOrder: 'relevance',
     publishedAfterDays: 180,
     minLeadCount: 3,
@@ -443,20 +494,20 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'travel vlog channel',
-      'fitness lifestyle channel',
-      'cooking channel',
-      'daily vlog channel',
-      'gaming channel',
-      'business advice channel',
-      'education explainer channel',
-      'tech review channel',
+      'solo travel vlog',
+      'what i eat in a day',
+      'day in my life college',
+      'budget travel tips',
+      'beginner weightlifting',
+      'small business owner day',
+      'gaming highlights',
+      'studying with me',
     ],
-    minSubs: 1200,
-    maxSubs: 90000,
-    maxInactiveDays: 120,
-    minAvgViews: 120,
-    minViewSubRatio: 0.004,
+    minSubs: 800,
+    maxSubs: 120000,
+    maxInactiveDays: 150,
+    minAvgViews: 80,
+    minViewSubRatio: 0.003,
     searchOrder: 'relevance',
     publishedAfterDays: 240,
     minLeadCount: 3,
@@ -466,16 +517,20 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'history documentary channel',
-      'science explainer channel',
-      'true crime channel',
-      'geography facts channel',
-      'space exploration channel',
-      'philosophy channel',
-      'mythology stories channel',
+      'dark history facts',
+      'unsolved mysteries explained',
+      'ancient civilizations documentary',
+      'space facts mind blowing',
+      'true crime cold case',
+      'philosophy of life explained',
+      'greek mythology stories',
+      'geography facts countries',
     ],
-    minSubs: 2000,
-    maxSubs: 70000,
+    minSubs: 1000,
+    maxSubs: 100000,
+    maxInactiveDays: 120,
+    minAvgViews: 80,
+    minViewSubRatio: 0.003,
     allowWebFallback: false,
   },
   'Social Media Management': {
@@ -900,7 +955,7 @@ async function searchYouTubeCreators({
   ];
 
   const publishedAfter = new Date(Date.now() - safePublishedAfterDays * DAY_MS).toISOString();
-  const searchQueries = (queries || []).slice(0, 8);
+  const searchQueries = (queries || []).slice(0, 10);
   const randomizedQueries = [...searchQueries].sort(() => Math.random() - 0.5);
   const rawSearchItems = [];
 
@@ -917,7 +972,7 @@ async function searchYouTubeCreators({
     const searchUrl =
       `https://www.googleapis.com/youtube/v3/search?part=snippet` +
       `&q=${encodeURIComponent(fullQ)}` +
-      `&type=video&order=${safeSearchOrder}&maxResults=25&relevanceLanguage=en` +
+      `&type=video&order=${safeSearchOrder}&maxResults=50&relevanceLanguage=en` +
       (regionCode ? `&regionCode=${encodeURIComponent(regionCode)}` : '') +
       `&publishedAfter=${encodeURIComponent(publishedAfter)}` +
       `&key=${YOUTUBE}`;
@@ -1290,8 +1345,11 @@ function buildSkillFallbackText(profile, skill, cfg, siteSignal = null) {
   const signalText = siteSignal?.summary || null;
 
   if ((cfg?.targetType === 'creator') || profile.platform === 'YouTube') {
-    const problem = `Their recent uploads show ${requiredWord} upside, especially across newer videos with inconsistent packaging.`;
-    const strategy = `Pitch a low-risk sprint focused on ${requiredWord} gains with 3 test deliverables and quick A/B feedback.`;
+    const skillText = SKILL_FALLBACK_TEXT[skill];
+    const name = cleanText(profile.name || 'This creator');
+    const problem = skillText ? skillText.problem(name) : `Their recent uploads show ${requiredWord} upside.`;
+    const strategy = skillText ? skillText.strategy() : `Pitch a low-risk sprint focused on ${requiredWord} gains.`;
+    console.log('[SkillFallbackText]', JSON.stringify({ skill, name, problem, strategy }));
     return { problem, strategy };
   }
 
@@ -1648,13 +1706,15 @@ function fallbackLeadFromProfile(profile, skill, cfg) {
   const replyChance = clamp(Math.round(35 + (match - 70) * 1.0), 35, 90);
 
   const followerText = profile.followers || 'Not listed';
-  const problem = (cfg?.targetType === 'creator')
-    ? `${profile.name} is uploading actively but likely has thumbnail CTR headroom they can monetize quickly.`
-    : `${profile.name} has visible demand signals but likely has conversion leaks they are not fixing fast.`;
-
-  const strategy = (cfg?.targetType === 'creator')
-    ? `Pitch with one quick thumbnail teardown of a recent video and offer a 3-thumbnail test sprint.`
-    : `Lead with one concrete conversion issue and offer a low-risk starter implementation.`;
+  const skillText = SKILL_FALLBACK_TEXT[skill];
+  const name = cleanText(profile.name || 'This creator');
+  const problem = skillText
+    ? skillText.problem(name)
+    : `${name} has clear growth potential but likely has a ${skill || 'service'} gap holding them back.`;
+  const strategy = skillText
+    ? skillText.strategy()
+    : `Lead with one specific fix and offer a low-risk starter implementation.`;
+  console.log('[FallbackLeadText]', JSON.stringify({ skill, name, problem, strategy }));
 
   return {
     sourceId: profile.sourceId,
@@ -2035,11 +2095,11 @@ export default async function handler(req, res) {
                 'youtube creator channel',
               ],
               location: '',
-              minSubs: 600,
-              maxSubs: 180000,
-              maxInactiveDays: 180,
-              minAvgViews: 60,
-              minViewSubRatio: 0.002,
+              minSubs: 500,
+              maxSubs: 250000,
+              maxInactiveDays: 200,
+              minAvgViews: 40,
+              minViewSubRatio: 0.001,
               searchOrder: 'relevance',
               publishedAfterDays: 365,
             }), 8000);
