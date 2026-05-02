@@ -58,7 +58,7 @@ const PLAN_CONFIG = {
   },
 };
 
-function withTimeout(promise, ms = 8000) {
+function withTimeout(promise, ms = 20000) {
   return Promise.race([
     promise,
     new Promise((_, reject) =>
@@ -413,6 +413,12 @@ const SKILL_FALLBACK_TEXT = {
     problem: (name) => `${name} has a website but their blog is thin or outdated, missing organic search traffic.`,
     strategy: () => `Offer one free SEO-optimized article on their top keyword to show the content quality gap.`,
   },
+};
+
+const CREATOR_EMERGENCY_QUERIES = {
+  'Thumbnail Design': ['investing tips beginners', 'home workout routine', 'easy recipes cooking', 'travel vlog'],
+  'Video Editing': ['daily vlog', 'travel diary', 'gym workout log', 'study with me'],
+  'Voice Over': ['history facts', 'true crime story', 'ancient history', 'space documentary'],
 };
 
 const GENERIC_PHRASES = [
@@ -967,24 +973,28 @@ async function searchYouTubeCreators({
     publishedAfterDays: safePublishedAfterDays,
   }));
 
-  for (const q of randomizedQueries) {
-    const fullQ = cleanText(location ? `${q} ${location}` : q);
-    const searchUrl =
-      `https://www.googleapis.com/youtube/v3/search?part=snippet` +
-      `&q=${encodeURIComponent(fullQ)}` +
-      `&type=video&order=${safeSearchOrder}&maxResults=50&relevanceLanguage=en` +
-      (regionCode ? `&regionCode=${encodeURIComponent(regionCode)}` : '') +
-      `&publishedAfter=${encodeURIComponent(publishedAfter)}` +
-      `&key=${YOUTUBE}`;
+  const queryResults = await Promise.allSettled(
+    randomizedQueries.map(async (q) => {
+      const fullQ = cleanText(location ? `${q} ${location}` : q);
+      const searchUrl =
+        `https://www.googleapis.com/youtube/v3/search?part=snippet` +
+        `&q=${encodeURIComponent(fullQ)}` +
+        `&type=video&order=${safeSearchOrder}&maxResults=50&relevanceLanguage=en` +
+        (regionCode ? `&regionCode=${encodeURIComponent(regionCode)}` : '') +
+        `&publishedAfter=${encodeURIComponent(publishedAfter)}` +
+        `&key=${YOUTUBE}`;
 
-    console.log('[YouTubeSearch request]', searchUrl.replace(/([?&]key=)[^&]+/i, '$1[redacted]'));
-
-    try {
-      const data = await fetchJson(searchUrl);
+      console.log('[YouTubeSearch request]', searchUrl.replace(/([?&]key=)[^&]+/i, '$1[redacted]'));
+      const data = await fetchJson(searchUrl, {}, 12000);
       console.log('[YouTubeSearch responseCount]', JSON.stringify({ query: fullQ, count: data?.items?.length || 0 }));
-      if (data?.items?.length) rawSearchItems.push(...data.items);
-    } catch (e) {
-      console.error('YouTube video search failed:', e.message || e);
+      return data?.items || [];
+    })
+  );
+  for (const result of queryResults) {
+    if (result.status === 'fulfilled') rawSearchItems.push(...result.value);
+    else {
+      console.warn('[YouTubeSearch query failed]', result.reason?.message);
+      console.error('YouTube video search failed:', result.reason?.message || result.reason);
     }
   }
 
@@ -1005,34 +1015,31 @@ async function searchYouTubeCreators({
   if (!channelIds.length) return [];
 
   const videoById = new Map();
-  for (const ids of chunk(videoIds, 50)) {
-    const url =
-      `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics` +
-      `&id=${ids.join(',')}&maxResults=50&key=${YOUTUBE}`;
-    try {
-      const data = await fetchJson(url);
-      for (const v of data?.items || []) {
-        videoById.set(v.id, v);
-      }
-    } catch (e) {
-      console.error('YouTube videos details failed:', e.message || e);
-    }
-  }
-
   const channelById = new Map();
-  for (const ids of chunk(channelIds, 50)) {
-    const url =
-      `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics` +
-      `&id=${ids.join(',')}&maxResults=50&key=${YOUTUBE}`;
-    try {
-      const data = await fetchJson(url);
-      for (const c of data?.items || []) {
-        channelById.set(c.id, c);
+  await Promise.all([
+    ...chunk(videoIds, 50).map(async (ids) => {
+      const url =
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics` +
+        `&id=${ids.join(',')}&maxResults=50&key=${YOUTUBE}`;
+      try {
+        const data = await fetchJson(url, {}, 10000);
+        for (const v of data?.items || []) videoById.set(v.id, v);
+      } catch (e) {
+        console.error('YouTube videos details failed:', e.message || e);
       }
-    } catch (e) {
-      console.error('YouTube channel details failed:', e.message || e);
-    }
-  }
+    }),
+    ...chunk(channelIds, 50).map(async (ids) => {
+      const url =
+        `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics` +
+        `&id=${ids.join(',')}&maxResults=50&key=${YOUTUBE}`;
+      try {
+        const data = await fetchJson(url, {}, 10000);
+        for (const c of data?.items || []) channelById.set(c.id, c);
+      } catch (e) {
+        console.error('YouTube channel details failed:', e.message || e);
+      }
+    }),
+  ]);
 
   const videosByChannel = new Map();
   for (const item of rawSearchItems) {
@@ -1074,7 +1081,7 @@ async function searchYouTubeCreators({
     const subs = Number(ch.statistics?.subscriberCount || 0);
     const videoCount = Number(ch.statistics?.videoCount || 0);
     if (subs < minSubs || subs > maxSubs) continue;
-    if (videoCount < 15) continue;
+    if (videoCount < 5) continue;
 
     const recentVideos = (videosByChannel.get(chId) || [])
       .sort((a, b) => new Date(b.snippet?.publishedAt || 0) - new Date(a.snippet?.publishedAt || 0))
@@ -1968,7 +1975,7 @@ export default async function handler(req, res) {
             minViewSubRatio: cfg.minViewSubRatio || 0.01,
             searchOrder: cfg.searchOrder || 'date',
             publishedAfterDays: cfg.publishedAfterDays || 90,
-          }), 8000);
+          }), 25000);
         } catch (e) {
           console.warn('YouTube search timed out, trying fallback:', e.message);
           rawProfiles = [];
@@ -1997,7 +2004,7 @@ export default async function handler(req, res) {
               minViewSubRatio: Math.max(0.003, Number(cfg.minViewSubRatio || 0.01) - 0.004),
               searchOrder: 'relevance',
               publishedAfterDays: Math.max(270, Number(cfg.publishedAfterDays || 90)),
-            }), 8000);
+            }), 25000);
           } catch (e) {
             console.warn('YouTube retry timed out, trying fallback:', e.message);
           }
@@ -2089,11 +2096,7 @@ export default async function handler(req, res) {
             await wait(300);
             rawProfiles = await withTimeout(searchYouTubeCreators({
               YOUTUBE,
-              queries: [
-                `${cleanText(skill)} youtube`,
-                `small youtube creator ${cleanText(skill)}`,
-                'youtube creator channel',
-              ],
+              queries: CREATOR_EMERGENCY_QUERIES[skill] || ['daily vlog', 'travel tips', 'cooking recipes', 'study with me'],
               location: '',
               minSubs: 500,
               maxSubs: 250000,
@@ -2102,7 +2105,7 @@ export default async function handler(req, res) {
               minViewSubRatio: 0.001,
               searchOrder: 'relevance',
               publishedAfterDays: 365,
-            }), 8000);
+            }), 25000);
           } catch (e) {
             console.warn('YouTube broad fallback timed out, trying fallback:', e.message);
             rawProfiles = [];
@@ -2168,7 +2171,7 @@ export default async function handler(req, res) {
             location,
             minSubs: 2000,
             maxSubs: platform === 'youtube' ? 100000 : 70000,
-          }), 8000);
+          }), 25000);
         } catch (e) {
           console.warn('Content creator search timed out, trying fallback:', e.message);
           rawProfiles = [];
