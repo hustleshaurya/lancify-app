@@ -3766,7 +3766,7 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
   box-shadow:0 12px 24px rgba(15,23,42,0.14)
 }
 .qf-find-btn:hover{opacity:.92;transform:translateY(-1px)}
-.qf-find-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.qf-find-btn:disabled{opacity:.7;cursor:not-allowed;transform:none}
 .ps-top-row{grid-template-columns:220px 1fr auto;gap:14px}
 .opp-deep-panel .pre-scan-panel{padding:22px}
 .ps-size-btn,.ps-service-chip,.opp-preset-btn{
@@ -3825,6 +3825,9 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
 @keyframes qfPulse {
   0%   { transform: scale(.5); opacity: .8; }
   100% { transform: scale(2);  opacity: 0;  }
+}
+@keyframes ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
 }
 .qf-loading-text {
   font-size: 14px;
@@ -7759,11 +7762,11 @@ body,
         <button class="qf-skill-card" data-skill="Voice Over" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="mic-2" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Voice Over</span><span class="qf-skill-sub">YouTube & ads</span></span></button>
         <button class="qf-skill-card" data-skill="Paid Ads" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="wallet" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Paid Ads</span><span class="qf-skill-sub">E-commerce brands</span></span></button>
         <button class="qf-skill-card" data-skill="Content Writing" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="file-text" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Content Writing</span><span class="qf-skill-sub">SaaS & blogs</span></span></button>
-        <button class="qf-skill-card" data-skill="other" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="sparkles" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Other Skill</span><span class="qf-skill-sub">Type your skill</span></span></button>
+        <button class="qf-skill-card" data-skill="Other Skill" onclick="selectSkill(this)"><span class="qf-skill-icon"><i data-lucide="sparkles" style="width:18px;height:18px"></i></span><span class="qf-skill-copy"><span class="qf-skill-name">Other Skill</span><span class="qf-skill-sub">Type your skill</span></span></button>
       </div>
 
       <!-- Other skill input -->
-      <input type="text" id="qf-other-skill" class="qf-other-input" placeholder="e.g. Motion Graphics, UX Design, Translation...">
+      <input type="text" id="qf-other-skill" class="qf-other-input" placeholder="e.g. Motion Graphics, UX Design, Translation..." style="display:none">
 
       <div class="qf-bottom-row">
         <div>
@@ -7777,7 +7780,7 @@ body,
           <label class="field-label">Target location <span style="color:var(--text3)">(optional)</span></label>
           <input type="text" id="qf-location" placeholder="e.g. New York, London, or worldwide">
         </div>
-        <button class="qf-find-btn" id="qf-find-btn" onclick="checkCredits(2, quickFindClients)">
+        <button type="button" class="qf-find-btn" id="qf-find-btn" onclick="quickFindButtonClick()">
           <i data-lucide="target" style="width:14px;height:14px"></i>
           Find Clients
         </button>
@@ -7943,7 +7946,7 @@ body,
 </div><!-- /pre-scan-panel -->
           </div><!-- /opp-deep-panel -->
 
-          <div id="elite-filters-panel" style="display:none;margin-top:8px;">
+          <div id="elite-filters-panel" class="opp-deep-only" style="display:none;margin-top:8px;">
             <div class="opp-filters">
               <span class="opp-filter-label">Filter By:</span>
               <div class="opp-chip-group">
@@ -7953,7 +7956,7 @@ body,
               </div>
             </div>
           </div>
-          <div id="elite-filters-teaser" style="margin-top:14px;padding:14px 16px;border:1px dashed rgba(245,158,11,0.3);border-radius:12px;background:rgba(245,158,11,0.04);display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;" onclick="showUpgradeModal()">
+          <div id="elite-filters-teaser" class="opp-deep-only" style="margin-top:14px;padding:14px 16px;border:1px dashed rgba(245,158,11,0.3);border-radius:12px;background:rgba(245,158,11,0.04);display:none;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;" onclick="showUpgradeModal()">
             <div>
               <div style="font-size:12px;font-weight:700;color:#f59e0b;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px;">⚡ Elite Filters</div>
               <div style="font-size:12px;color:var(--text-muted);">Hot leads filter, budget qualifiers & advanced targeting — unlock on Elite</div>
@@ -7978,13 +7981,17 @@ body,
           </div>
 
           <div id="opp-results-wrap">
-            <div class="opp-results-grid">
-              <div class="opp-empty">
-                <div class="opp-radar-icon">
-                  <i data-lucide="radar" style="width:28px;height:28px;"></i>
-                </div>
-                <strong style="color:var(--text-main);font-size:15px;margin-bottom:2px">Awaiting parameters</strong>
-                <span>Enter your ideal client profile to initiate deep scan.</span>
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;gap:20px">
+              <div style="width:64px;height:64px;border-radius:50%;background:rgba(139,92,246,0.1);border:1.5px solid rgba(139,92,246,0.3);display:flex;align-items:center;justify-content:center">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.8)" stroke-width="1.5">
+                  <path d="M12 2a10 10 0 1 0 10 10"/>
+                  <path d="M12 6v6l4 2"/>
+                  <circle cx="18" cy="6" r="3" fill="rgba(139,92,246,0.3)" stroke="rgba(139,92,246,0.8)"/>
+                </svg>
+              </div>
+              <div style="text-align:center">
+                <p style="color:#fff;font-weight:600;font-size:15px;margin-bottom:6px">Ready to deep scan</p>
+                <p style="color:rgba(255,255,255,0.4);font-size:13px;max-width:280px">Describe your ideal client above and hit Run Deep Scan - AI will find the highest-intent leads matching your filters.</p>
               </div>
             </div>
           </div>
@@ -8637,7 +8644,7 @@ async function quickFindClients() {
         Try changing your location, or switch to <strong>Deep Scan</strong> to customise your search further.
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="checkCredits(2, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
+        <button type="button" onclick="quickFindButtonClick()" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
           Try Again
         </button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">
@@ -8676,19 +8683,33 @@ function switchOppMode(mode) {
     tabQuick.classList.remove('active');
     tabDeep.classList.add('active');
   }
+  if (typeof _setPlanUi === 'function') _setPlanUi();
 }
 
-function selectSkill(btn) {
-  document.querySelectorAll('.qf-skill-card').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  _activeSkill = btn.dataset.skill;
+function _syncOtherSkillInput(focus = false) {
   const otherInput = el('qf-other-skill');
-  if (_activeSkill === 'other') {
-    otherInput.classList.add('show');
-    otherInput.focus();
-  } else {
-    otherInput.classList.remove('show');
+  if (!otherInput) return;
+  const shouldShow = _activeSkill === 'Other Skill';
+  otherInput.classList.toggle('show', shouldShow);
+  otherInput.style.display = shouldShow ? 'block' : 'none';
+  if (!shouldShow) otherInput.value = '';
+  if (shouldShow && focus) otherInput.focus();
+}
+
+function selectSkill(btn, forceSelect = false) {
+  const skillName = btn?.dataset?.skill || null;
+  const isSame = _activeSkill === skillName;
+  if (isSame && !forceSelect) {
+    btn.classList.remove('active');
+    _activeSkill = null;
+    _syncOtherSkillInput(false);
+    return;
   }
+
+  document.querySelectorAll('.qf-skill-card').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  _activeSkill = skillName;
+  _syncOtherSkillInput(_activeSkill === 'Other Skill');
 }
 
 /* ══ QUICK FIND LOADING STEPS ══ */
@@ -8735,10 +8756,53 @@ function _startQfLoader(wrap) {
 }
 
 /* ══ RENDER A SIMPLE QUICK FIND LEAD CARD ══ */
+const LOADING_MESSAGES = [
+  'Searching YouTube for real creators...',
+  'Filtering out agencies and noise...',
+  'Scoring leads by pain signals...',
+  'Generating pitch angles with AI...',
+  'Almost there - finding the best matches...',
+];
+
+function _startQfLoader(wrap) {
+  wrap.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 24px;gap:32px">
+      <div style="position:relative;width:80px;height:80px">
+        <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,107,53,0.15);animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite"></div>
+        <div style="position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,107,53,0.3);animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite 0.3s"></div>
+        <div style="position:absolute;inset:16px;border-radius:50%;background:rgba(255,107,53,0.1);border:1.5px solid #FF6B35;display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <p style="color:#fff;font-weight:600;font-size:16px;margin-bottom:8px">Scanning for clients...</p>
+        <p id="qf-loading-message" style="color:rgba(255,255,255,0.45);font-size:13px">${LOADING_MESSAGES[0]}</p>
+      </div>
+      <div style="width:240px;height:2px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden">
+        <div id="qf-scan-progress" style="height:100%;width:8%;background:linear-gradient(90deg,#FF6B35,#FF8C5A);border-radius:2px;transition:width 0.4s ease"></div>
+      </div>
+    </div>`;
+
+  let i = 0;
+  let scanProgress = 8;
+  const interval = setInterval(() => {
+    i = (i + 1) % LOADING_MESSAGES.length;
+    scanProgress = Math.min(scanProgress + 18, 92);
+    const msg = el('qf-loading-message');
+    const progress = el('qf-scan-progress');
+    if (msg) msg.textContent = LOADING_MESSAGES[i];
+    if (progress) progress.style.width = `${scanProgress}%`;
+  }, 2800);
+
+  return interval;
+}
+
 function _renderQfCard(lead) {
   const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const jsEsc = s => String(s || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n').replace(/\r/g,'');
-  const skill = _activeSkill === 'other' ? (val('qf-other-skill') || 'your skill') : (_activeSkill || 'your skill');
+  const skill = _activeSkill === 'Other Skill' ? (val('qf-other-skill') || 'your skill') : (_activeSkill || 'your skill');
 
   const firstName  = (lead.name || '').split(/[\s@]/)[0] || 'there';
   const dmText = lead.quickDm || lead.assets?.quickDm || `Hey ${firstName}! I checked out your ${lead.platform} and noticed ${(lead.problem || '').slice(0, 60)}… I specialize in ${skill} and think I can help. Can I send you a quick example?`;
@@ -8791,13 +8855,39 @@ function _renderQfCard(lead) {
 }
 
 /* ══ MAIN QUICK FIND FUNCTION ══ */
+let _qfClickLocked = false;
+
+function _setQfButtonLoading(isLoading) {
+  const btn = el('qf-find-btn');
+  if (!btn) return;
+  btn.disabled = !!isLoading;
+  btn.style.cursor = isLoading ? 'not-allowed' : 'pointer';
+  btn.style.opacity = isLoading ? '0.7' : '1';
+  btn.innerHTML = isLoading ? 'Scanning...' : '<i data-lucide="target" style="width:14px;height:14px"></i> Find Clients';
+  if (!isLoading && window.lucide) lucide.createIcons();
+}
+
+async function quickFindButtonClick() {
+  if (_qfClickLocked) return false;
+  _qfClickLocked = true;
+  _setQfButtonLoading(true);
+  const success = await checkCredits(2, quickFindClients);
+  if (!success) {
+    _qfClickLocked = false;
+    _setQfButtonLoading(false);
+  }
+  return success;
+}
+
 async function quickFindClients() {
-  const skillRaw  = _activeSkill === 'other' ? val('qf-other-skill').trim() : _activeSkill;
+  const skillRaw  = _activeSkill === 'Other Skill' ? val('qf-other-skill').trim() : _activeSkill;
   const income    = val('qf-income').trim();
   const location  = val('qf-location').trim();
 
   if (!skillRaw) {
     showToast('Please select your skill first.');
+    _qfClickLocked = false;
+    _setQfButtonLoading(false);
     return false;
   }
 
@@ -8805,7 +8895,7 @@ async function quickFindClients() {
   const btn    = el('qf-find-btn');
   const wrap   = el('opp-results-wrap');
 
-  btn.disabled = true;
+  _setQfButtonLoading(true);
 
   // Start premium loading animation
   const loaderInterval = _startQfLoader(wrap);
@@ -8838,7 +8928,8 @@ async function quickFindClients() {
   }
 
   clearInterval(loaderInterval);
-  btn.disabled = false;
+  _qfClickLocked = false;
+  _setQfButtonLoading(false);
 
   if (apiLeads.length > 0) {
     wrap.innerHTML = `
@@ -8865,7 +8956,7 @@ async function quickFindClients() {
         ${apiError ? 'Something went wrong. Please try again.' : 'Try adding a location like "Mumbai" or "New York", or switch to Advanced mode.'}
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button onclick="checkCredits(2, quickFindClients)" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Again</button>
+        <button type="button" onclick="quickFindButtonClick()" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Again</button>
         <button onclick="switchOppMode('deep')" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Advanced</button>
       </div>
     </div>`;
@@ -8900,7 +8991,7 @@ function setOppPreset(type, prompt) {
   if (mappedSkill) {
     document.querySelectorAll('.qf-skill-card').forEach(card => {
       if (card.dataset.skill === mappedSkill) {
-        selectSkill(card);
+        selectSkill(card, true);
       }
     });
   }
@@ -10402,9 +10493,10 @@ function _setPlanUi(){
   _updateDailyLimitUi();
   _syncPlanGatedUi();
   const eliteTeaser = el('elite-filters-teaser');
-  if (eliteTeaser) eliteTeaser.style.display = planKey === 'elite' ? 'none' : 'flex';
+  const isDeepMode = el('tab-deep')?.classList.contains('active');
+  if (eliteTeaser) eliteTeaser.style.display = isDeepMode && planKey !== 'elite' ? 'flex' : 'none';
   const eliteFiltersPanel = el('elite-filters-panel');
-  if (eliteFiltersPanel) eliteFiltersPanel.style.display = planKey === 'elite' ? 'block' : 'none';
+  if (eliteFiltersPanel) eliteFiltersPanel.style.display = isDeepMode && planKey === 'elite' ? 'block' : 'none';
 }
 
 function _applyPlanLocks(){
@@ -12201,7 +12293,7 @@ function markLeadWon(cardEl, leadName, platform, service = '', dealValue = ''){
 }
 
 function _renderQfCard(lead) {
-  const skill = _activeSkill === 'other' ? (val('qf-other-skill') || 'your skill') : (_activeSkill || 'your skill');
+  const skill = _activeSkill === 'Other Skill' ? (val('qf-other-skill') || 'your skill') : (_activeSkill || 'your skill');
   const deal = normalizeDealValue(lead.dealValue || '$200 - $500');
   const dmText = lead.quickDm || lead.assets?.quickDm || `Lead: ${lead.name}\nSkill: ${skill}\nObservation: ${lead.problem}\nOffer: ${deal}`;
   const loomText = lead.loomScript || lead.assets?.loomScript || `Hi ${lead.name}, quick teardown for your ${lead.platform}. I noticed ${lead.problem}. The first fix I'd make is ${lead.strategy}.`;
