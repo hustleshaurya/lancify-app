@@ -3,43 +3,47 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { emailType, tone, context, niche } = req.body; 
-  const groqApiKey = process.env.GROQ_API_KEY; 
+  const { emailType, tone, context, niche } = req.body;
+  const groqApiKey = process.env.GROQ_API_KEY;
 
   const modelName = "llama-3.3-70b-versatile";
 
-  const systemPrompt = `You are a top 1% freelance consultant (${niche}) writing an email. 
-Your ONLY goal is to get a reply. 
+  const systemPrompt = `You are a top freelancer writing a cold outreach or follow-up email. The recipient is busy, slightly skeptical, and has seen 100 generic "I'd love to work with you" emails this week. Your email needs to feel like it was written specifically for them in the last 10 minutes - not templated, not AI.
 
-Email Objective: """${emailType}"""
+Email type: """${emailType}"""
 Tone: """${tone}"""
-Context/Details: """${context}"""
+Context: """${context}"""
+Niche: """${niche}"""
 
-PHASE 1: INTERNAL ANALYSIS (DO NOT SKIP)
-1. Problem: What is the core problem or context they are facing?
-2. Value: What is the specific outcome, missed revenue, or micro-insight related to this?
-3. Nudge: What is the lowest-friction question to ask?
+INTERNAL ANALYSIS - DO NOT OUTPUT:
+1. What specific pain does this person have RIGHT NOW based on the context?
+2. What is the ONE outcome they actually care about (not features - outcome)?
+3. What is the lowest-friction ask you can make?
 
-PHASE 2: EMAIL WRITING
-Write the email using the analysis.
+WRITE THE EMAIL:
 
-STRICT RULES:
-1. HUMAN FILTER: Before finalizing, ask: "Does this sound like AI or a generic marketer?" If YES → rewrite to sound like a 1-to-1 plain text email from a busy professional.
-2. THE FOLLOW-UP FRAMEWORK (CRITICAL): Every email MUST follow this exact 3-step flow:
-   - Remind Problem: Briefly state the specific issue or context (e.g., "Sent the Shopify proposal to fix the mobile drop-off.").
-   - Reinforce Value: Drop a 1-sentence reminder of why fixing this matters or a micro-insight (e.g., "Those lost mobile sales add up fast, so I want to get that leak plugged.").
-   - Nudge Softly: End with a single, low-pressure question (e.g., "Still open to fixing this?").
-3. NO GENERIC OPENERS: Ban "I hope this finds you well", "Just checking in", "Following up", or "Did you get my email".
-4. BREVITY: Maximum 3-4 short sentences. Make it readable on an iPhone lock screen.
+3-PART STRUCTURE (mandatory):
+1. Specific reference - name something real from their context that proves you actually looked.
+2. One-line value drop - the outcome they get, not what you do. Frame as loss-avoidance if possible.
+3. Single soft question - lowest friction ask. Not "let me know if you're interested". A real question.
 
-OUTPUT FORMAT (STRICT JSON):
+RULES:
+- Max 4 sentences total. Readable on a phone lock screen.
+- Subject line: 3-5 words, lowercase, sounds like it's from a friend not a marketer.
+- No "I hope this finds you well", "just following up", "checking in", "circling back".
+- No bullet points. Plain prose only.
+- Every word must earn its place. If removing it doesn't change meaning -> remove it.
+- The email must feel like it was written at 11pm by someone who genuinely noticed something about the recipient.
+
+OUTPUT (strict JSON, no markdown):
 {
-  "subject": "3-5 word subject line (lowercase feels more human)",
-  "body": "The actual email text. Use \\n\\n for paragraph breaks.",
+  "subject": "3-5 word lowercase subject",
+  "body": "the email. use \\n\\n for paragraph breaks. max 4 sentences.",
   "tips": [
-    "Why this subject works",
-    "Why this CTA gets replies"
-  ]
+    "why this subject line gets opened instead of ignored",
+    "the psychological reason the CTA gets a reply"
+  ],
+  "alternativeSubject": "one alternative subject line with a different angle"
 }`;
 
   try {
@@ -54,7 +58,7 @@ OUTPUT FORMAT (STRICT JSON):
         messages: [
           { role: "system", content: systemPrompt }
         ],
-        temperature: 0.75, 
+        temperature: 0.75,
         response_format: { type: "json_object" }
       })
     });
@@ -67,7 +71,8 @@ OUTPUT FORMAT (STRICT JSON):
     res.status(200).json({
       subject: parsedJson.subject,
       body: parsedJson.body,
-      tips: parsedJson.tips
+      tips: parsedJson.tips,
+      alternativeSubject: parsedJson.alternativeSubject || null,
     });
 
   } catch (error) {
