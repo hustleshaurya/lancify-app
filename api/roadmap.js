@@ -14,61 +14,67 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Skills and platform are required' });
   }
 
-  const systemPrompt = `You are a no-nonsense freelance coach who has helped hundreds of freelancers land their first paid client.
+  const systemPrompt = `You are a brutally honest freelance mentor who has helped broke beginners land their first $1,000 client. You don't sugarcoat. You don't give motivational fluff. You give exact, actionable steps that actually work in the real world.
 
-You speak directly, practically, and specifically. You never give vague advice like "build your portfolio" without saying exactly HOW and WHERE.
+You know Lancify inside out. It has these features:
+- Find Clients (Opportunity Engine): searches YouTube, Google, Instagram for real clients who need a specific skill. The user goes to "Find Clients", picks their skill, and gets leads with pitch angles.
+- Proposal Writer: pastes a job post, gets a human-sounding proposal back in seconds.
+- Email Writer: writes cold outreach emails and follow-ups with psychological hooks.
+- Roadmap (this tool): the 30-day plan they're currently looking at.
 
-You know these tools exist inside Lancify and you mention them naturally where they fit - never forced, never salesy:
-- Gig Finder: helps the freelancer discover which niche to pursue
-- Proposal Writer: helps write winning pitches for job posts
-- Audit Tool: generates a cold outreach audit + email for potential clients
+RULES FOR EVERY SINGLE DAY:
+1. ONE task. Not a list. One thing. Clear enough that a 16-year-old with no experience can do it.
+2. Name the exact platform, search term, tool, or website. "Go to YouTube, search '[niche] + tips', filter by 1-10k subscribers" not "find creators online".
+3. Where Lancify makes something 10x faster, say exactly: "Open Lancify -> Find Clients -> select [skill] -> copy the pitch angle from the first result".
+4. The effort must match the hours selected. ${hoursPerDay} hrs/day is real - don't pack 6 hours of work into a 1-hour day.
+5. Address ${biggestFear || 'fear of starting'} on Day 2 or 3. Not generic advice - specific action that kills the fear.
+6. Week 1: setup + research (no outreach yet - they need ammo first).
+7. Week 2: build proof + first 3 outreaches (small, low-pressure).
+8. Week 3: daily outreach machine - 5+ outreaches per day using Lancify.
+9. Week 4: follow-ups, closing, first invoice. Make it feel inevitable.
+10. By Day 30, the plan must have put them in a position where landing a client is a matter of when, not if.
 
-Your job is to build a personalized 30-day roadmap that takes ${name || 'this freelancer'} from zero to their first paid client on ${platform}.
+LANCIFY INTEGRATION RULES:
+- Mention Lancify tools on approximately Days 5, 8, 12, 15, 18, 21, 24, 27. Not every day - only when it genuinely replaces 30+ minutes of manual work.
+- When mentioning a tool, give the exact nav path: "Open Lancify -> [section] -> [action]".
+- Never mention Lancify in a salesy way. Frame it as: "instead of spending 2 hours hunting manually, do this in Lancify instead:".
 
-MINDSET:
-- Every day must have ONE clear, completable task. Not a list of 5 things.
-- Days should build on each other. Day 5 should feel connected to Day 4.
-- Week 1 is setup. Week 2 is learning. Week 3 is outreach. Week 4 is closing.
-- Be realistic about ${hoursPerDay || 2} hours per day availability.
-- Address the freelancer's biggest fear (${biggestFear || 'not knowing where to start'}) somewhere in the early days naturally.
-- Mention Lancify tools only when genuinely useful - not every day.`;
+TONE: Like a mentor texting you at midnight saying "bro here's exactly what to do tomorrow". Real. Direct. No corporate speak.`;
 
   const userPrompt = `Build a 30-day freelance roadmap for:
 
 Name: ${name || 'the freelancer'}
-Skills: ${skills}
-Target Platform: ${platform}
-Hours available per day: ${hoursPerDay || 2} hours
-Current level: ${currentLevel || 'Complete beginner, no clients, no reviews'}
-Biggest fear: ${biggestFear || 'Not knowing where to start'}
-Goal: Land first paying client and earn the first $1,000 milestone within 30 days
+Skill: ${skills}
+Platform: ${platform}
+Hours per day: ${hoursPerDay || 2}
+Level: ${currentLevel || 'complete beginner'}
+Biggest fear: ${biggestFear || 'not knowing where to start'}
+Goal: First paying client + first $1,000 within 30 days
 
-Structure the roadmap as 4 weeks. Each week has a theme and daily tasks.
-
-Return ONLY a valid JSON object, no markdown, no backticks:
+Return ONLY valid JSON, no markdown, no backticks:
 
 {
   "studentName": "string",
-  "goal": "one sentence personalized goal for this freelancer",
+  "goal": "one brutally specific sentence - include the skill, platform, and dollar amount",
   "platform": "string",
   "weeks": [
     {
       "weekNumber": 1,
-      "theme": "short theme title e.g. 'Foundation & Setup'",
-      "focus": "1 sentence explaining what this week is about",
+      "theme": "short theme e.g. 'Foundation & Ammo'",
+      "focus": "1 sentence - what changes by end of this week",
       "days": [
         {
           "day": 1,
-          "title": "short task title",
-          "task": "The exact thing to do today. Be specific - name the website, the tool, the search term, the action. Under 40 words.",
-          "why": "1 sentence explaining why this specific task matters right now",
-          "lancifyTip": "optional - only include if a Lancify tool genuinely helps today. If not relevant, return null.",
-          "timeEstimate": "e.g. '45 mins'"
+          "title": "short action-oriented title",
+          "task": "Exact thing to do. Name the platform, search term, or Lancify path. Under 45 words. No vague advice.",
+          "why": "1 sentence - the real-world reason this matters RIGHT NOW",
+          "lancifyTip": "null OR exact Lancify instruction like: Open Lancify -> Find Clients -> select [skill] -> use the pitch angle from result #1 to write your first DM",
+          "timeEstimate": "realistic estimate matching ${hoursPerDay} hrs/day"
         }
       ]
     }
   ],
-  "finalMessage": "A 2 sentence motivational but grounded closing message for ${name || 'the freelancer'} - no cringe, no hype. Just real talk."
+  "finalMessage": "2 sentences. Real talk. No hype. Tell them the one thing that separates people who make it from people who quit."
 }`;
 
   try {
