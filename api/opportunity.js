@@ -599,11 +599,11 @@ const SKILL_CONFIG = {
     exclude: ['fiverr', 'upwork', 'mailchimp', 'klaviyo', 'agency', 'tool', 'platform'],
   },
   'SEO': {
-    method: 'serp',
+    method: 'maps',
     targetType: 'business',
-    serpQuery: '(small business website OR local business website OR ecommerce store) (slow website OR weak SEO OR not ranking OR low traffic) -agency -\"seo services\"',
-    allowDomains: [],
-    exclude: ['agency', 'seo agency', 'digital marketing agency', 'fiverr', 'upwork', 'list', 'top 10', 'semrush', 'ahrefs', 'producthunt.com', 'linkedin.com'],
+    apifyMaps: 'local business dentist plumber contractor salon restaurant clinic',
+    serpQuery: 'local business dentist plumber contractor salon restaurant -agency -blog -list',
+    exclude: ['agency', 'seo agency', 'digital marketing agency', 'fiverr', 'upwork', 'list', 'top 10', 'semrush', 'ahrefs', 'producthunt.com', 'linkedin.com', 'article', 'blog', 'tips', 'guide'],
   },
   'Funnel Building': {
     method: 'serp',
