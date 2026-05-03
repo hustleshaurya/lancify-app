@@ -720,6 +720,23 @@ function cleanText(v) {
   return String(v || '').replace(/\s+/g, ' ').trim();
 }
 
+function extractCreatorQueries(prompt, skill) {
+  const cleaned = (prompt || '')
+    .replace(/on (instagram|youtube|tiktok|linkedin)/gi, '')
+    .replace(/with no .+/gi, '')
+    .replace(/(coach|consultant|freelancer|creator|influencer)/gi, '')
+    .replace(/selling via .+/gi, '')
+    .trim();
+
+  const base = cleaned.length > 10 ? cleaned : (skill || 'content creator');
+  return [
+    base,
+    `${base} tips`,
+    `${base} beginner`,
+    `${base} tutorial`,
+  ].filter(Boolean).slice(0, 4);
+}
+
 function lower(v) {
   return cleanText(v).toLowerCase();
 }
@@ -2364,14 +2381,19 @@ export default async function handler(req, res) {
           }
         }
       } else if (type === 'Content Creators') {
+        const creatorQueries = extractCreatorQueries(effectivePrompt, skill);
         try {
           rawProfiles = await withTimeout(searchYouTubeCreators({
             YOUTUBE,
-            queries: [effectivePrompt],
+            queries: creatorQueries,
             location,
             skill,
-            minSubs: 2000,
-            maxSubs: platform === 'youtube' ? 100000 : 70000,
+            minSubs: advanced.audienceBucket === 'beginner' ? 500 : advanced.audienceBucket === 'established' ? 50000 : 2000,
+            maxSubs: advanced.audienceBucket === 'beginner' ? 10000 : advanced.audienceBucket === 'established' ? 500000 : 100000,
+            maxInactiveDays: advanced.filterActive7d ? 7 : 90,
+            minAvgViews: 100,
+            minViewSubRatio: 0.004,
+            publishedAfterDays: advanced.filterActive7d ? 7 : 180,
           }), 25000);
         } catch (e) {
           console.warn('Content creator search timed out, trying fallback:', e.message);
@@ -2400,13 +2422,29 @@ export default async function handler(req, res) {
         }
       } else if (type === 'Coaches & Consultants') {
         try {
-          rawProfiles = await withTimeout(runSerpGoogle(`site:linkedin.com/in ${effectivePrompt} coach OR consultant -recruiter`, {
+          rawProfiles = await withTimeout(runSerpGoogle(`${effectivePrompt} site:linkedin.com/in -recruiter`, {
             SERP,
             allowDomains: ['linkedin.com'],
           }), 8000);
         } catch (e) {
           console.warn('Coach search timed out, trying fallback:', e.message);
           rawProfiles = [];
+        }
+
+        // Fallback: personal websites of coaches
+        if (rawProfiles.length < 3) {
+          try {
+            const coachQ = effectivePrompt
+              .replace(/on (instagram|youtube|tiktok)/gi, '')
+              .trim();
+            const extra = await withTimeout(runSerpGoogle(
+              `${coachQ} coaching website -agency -template -directory`,
+              { SERP, excludeTerms: ['agency', 'template', 'directory', 'fiverr', 'upwork'] }
+            ), 8000);
+            rawProfiles = dedupeProfiles([...rawProfiles, ...extra]);
+          } catch (e) {
+            console.warn('Coach fallback failed:', e.message);
+          }
         }
       } else {
         try {
@@ -2430,6 +2468,18 @@ export default async function handler(req, res) {
     }
 
     const dedupedRaw = dedupeProfiles(rawProfiles);
+    // Apply audience size filter in advanced mode
+    if (!isQuickMode && advanced.audienceBucket && advanced.audienceBucket !== 'all') {
+      const bucketFiltered = dedupedRaw.filter((p) => {
+        const subs = Number(p.subscriberCount || p.followerCount || 0);
+        if (advanced.audienceBucket === 'beginner') return subs < 10000;
+        if (advanced.audienceBucket === 'growing') return subs >= 10000 && subs <= 50000;
+        if (advanced.audienceBucket === 'established') return subs > 50000;
+        return true;
+      });
+      // Only apply filter if it doesn't wipe everything out
+      if (bucketFiltered.length >= 2) dedupedRaw.splice(0, dedupedRaw.length, ...bucketFiltered);
+    }
     const gated = isQuickMode
       ? buildQuickCandidatePool(dedupedRaw, gateCfg)
       : qualityGate(dedupedRaw, gateCfg);
