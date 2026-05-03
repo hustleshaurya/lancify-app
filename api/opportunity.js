@@ -175,13 +175,42 @@ function buildOutreachAssets(lead, skill) {
   const profileUrl = cleanText(lead?.profileUrl || '');
   const whyNow = cleanText(lead?.whyNow || 'there is active growth momentum, so a small fix can move fast');
   const closingHint = cleanText(lead?.closingHint || 'Start with a tiny first deliverable to reduce risk.');
+  const nameHash = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const isBusinessLead = lower(lead?.platform) !== 'youtube';
 
-  const quickDm = [
-    `Hey ${name},`,
-    `I noticed one thing: ${problem}`,
-    `The first move I would make is ${strategy}`,
-    `If useful, I can scope a small starter sprint at ${deal}.`,
-  ].join('\n');
+  const variants = [
+    [
+      `Hey ${name} -`,
+      `watched a few of your recent videos. ${problem}`,
+      `curious if that's something you're actively trying to fix or just riding out?`,
+    ],
+    [
+      `Hey ${name},`,
+      `been looking at your channel - the content itself is solid.`,
+      `one thing I'd change: ${strategy}`,
+      `could be worth a quick chat if you're open to it.`,
+    ],
+    [
+      `${name} -`,
+      `noticed ${problem}`,
+      `had an idea for a fix that'd probably take less than a week.`,
+      `want me to send a quick breakdown?`,
+    ],
+    [
+      `Hey ${name},`,
+      `came across your business - ${problem}`,
+      `I do this exact fix for similar businesses. want me to show you what it'd look like for yours?`,
+    ],
+  ];
+  const variantIndex = isBusinessLead ? 3 : nameHash % 3;
+  const quickDm = variants[variantIndex].join('\n');
+  const subjectVariants = [
+    `had an idea for ${name}`,
+    `quick thing I noticed on your channel`,
+    `one change that could move things for you`,
+    `${name} - saw something worth sharing`,
+  ];
+  const subject = subjectVariants[nameHash % subjectVariants.length];
 
   const loomScript = [
     `Hi ${name}, quick teardown for your ${lead?.platform || 'business'}.`,
@@ -202,7 +231,7 @@ function buildOutreachAssets(lead, skill) {
   ].join('\n');
 
   const proposal = [
-    `Subject: Quick ${skill || 'Growth'} Improvement Plan for ${name}`,
+    `Subject: ${subject}`,
     ``,
     `I reviewed your current setup and found: ${problem}`,
     `My plan: ${strategy}`,
@@ -447,6 +476,15 @@ const EMERGENCY_FALLBACK_QUERIES = {
     'documentary', 'story narration', 'educational video',
     'history channel', 'true crime', 'mystery videos',
   ],
+  'Social Media Management': ['local restaurant social media', 'salon instagram business', 'gym fitness studio social'],
+  'Web Design': ['local dentist website', 'plumber contractor website', 'clinic small business website'],
+  'SEO': ['local business not ranking google', 'small business website seo', 'ecommerce store seo traffic'],
+  'Funnel Building': ['life coach no funnel', 'fitness coach lead generation', 'business coach booking page'],
+  'Email Marketing': ['fitness coach email list', 'life coach newsletter', 'business coach email marketing'],
+  'Copywriting': ['shopify clothing store', 'beauty brand shopify', 'fitness supplements store'],
+  'Paid Ads': ['shopify ecommerce fashion store', 'beauty brand paid ads', 'fitness supplement brand'],
+  'Graphic Design': ['shopify clothing accessories store', 'beauty brand shopify design', 'ecommerce brand visual'],
+  'Content Writing': ['saas startup blog', 'ecommerce brand content', 'b2b startup website blog'],
 };
 
 const GENERIC_PHRASES = [
@@ -562,11 +600,12 @@ const SKILL_CONFIG = {
     ],
     minSubs: 1000,
     maxSubs: 100000,
-    maxInactiveDays: 120,
+    maxInactiveDays: 150,
     minAvgViews: 80,
     minViewSubRatio: 0.003,
     searchOrder: 'date',
-    publishedAfterDays: 180,
+    publishedAfterDays: 240,
+    minLeadCount: 3,
     allowWebFallback: false,
   },
   'Social Media Management': {
@@ -599,10 +638,10 @@ const SKILL_CONFIG = {
     exclude: ['fiverr', 'upwork', 'mailchimp', 'klaviyo', 'agency', 'tool', 'platform'],
   },
   'SEO': {
-    method: 'maps',
+    method: 'serp',
     targetType: 'business',
-    apifyMaps: 'local business dentist plumber contractor salon restaurant clinic',
-    serpQuery: 'local business dentist plumber contractor salon restaurant -agency -blog -list',
+    serpQuery: '(local business OR small business site) (not ranking on google OR low traffic OR slow website) -agency -blog -list',
+    allowDomains: [],
     exclude: ['agency', 'seo agency', 'digital marketing agency', 'fiverr', 'upwork', 'list', 'top 10', 'semrush', 'ahrefs', 'producthunt.com', 'linkedin.com', 'article', 'blog', 'tips', 'guide'],
   },
   'Funnel Building': {
@@ -1279,7 +1318,7 @@ async function runSerpMaps(query, SERP) {
   if (!SERP) return [];
   try {
     const url = `https://serpapi.com/search.json?engine=google_maps&q=${encodeURIComponent(query)}&type=search&api_key=${SERP}`;
-    const data = await fetchJson(url);
+    const data = await fetchJson(url, {}, 8000);
 
     return (data.local_results || []).slice(0, 20).map((r, idx) => {
       const p = {
@@ -1346,7 +1385,7 @@ async function runSerpGoogle(query, { SERP, excludeTerms = [], allowDomains = []
           : host.includes('producthunt.com') ? 'Product Hunt'
           : 'Website',
       };
-      p.qualityScore = scoreSerpProfile(p, {});
+      p.qualityScore = scoreSerpProfile(p, { allowDomains });
       return p;
     });
   } catch (e) {
@@ -1379,6 +1418,8 @@ function qualityGate(profiles, cfg) {
     // Business quality gate.
     if (p.platform === 'Website' && !p.description) return false;
     if (!p.profileUrl.startsWith('http')) return false;
+    const nameText = lower(p.name);
+    if (nameText.includes('agency') || nameText.includes('services ltd') || nameText.includes('top 10') || nameText.includes('best ')) return false;
 
     return true;
   });
@@ -1542,6 +1583,14 @@ function pickDiverseTopLeads(leads, profilesById, skill, maxLeads = 3) {
       console.log('[LeadDiversity result]', JSON.stringify({ mode: 'diverse', returned: selected.length }));
       return selected;
     }
+    if (selected.length < maxLeads) {
+      for (const lead of safeLeads) {
+        if (selected.length >= maxLeads) break;
+        if (!selected.find((s) => s.sourceId === lead.sourceId)) selected.push(lead);
+      }
+    }
+    console.log('[LeadDiversity result]', JSON.stringify({ mode: 'diverse-top-up', returned: selected.length }));
+    return selected;
   }
 
   console.log('[LeadDiversity result]', JSON.stringify({ mode: 'top-match', returned: Math.min(safeLeads.length, maxLeads) }));
@@ -1556,7 +1605,7 @@ async function readSiteSignals(profileUrl) {
   try {
     const controller = new AbortController();
     timer = setTimeout(() => controller.abort(), 2200);
-    const text = await fetch(`https://r.jina.ai/http://${root}`, { signal: controller.signal }).then((r) => r.text());
+    const text = await fetch(`https://r.jina.ai/https://${root}`, { signal: controller.signal }).then((r) => r.text());
     const page = lower(text).slice(0, 9000);
 
     const signals = {
@@ -1809,7 +1858,7 @@ function rankProfiles(profiles, cfg, signals = [], budget = []) {
 
 function fallbackLeadFromProfile(profile, skill, cfg) {
   const match = clamp(Number(profile.qualityScore || 80), 75, 99);
-  const replyChance = clamp(Math.round(35 + (match - 70) * 1.0), 35, 90);
+  const replyChance = clamp(Math.round(35 + (match - 70) * 1.5), 35, 90);
 
   const followerText = profile.followers || 'Not listed';
   const skillText = SKILL_FALLBACK_TEXT[skill];
@@ -1873,7 +1922,7 @@ async function enrichWithGroq({ GROQ, profiles, skill, incomeGoal, cfg, leadLimi
   }));
 
   const creatorNote = (cfg?.targetType === 'creator')
-    ? 'Creator skill selected: prioritize active small creators with 3k-50k subscribers and solid recent view activity.'
+    ? `Creator skill selected: prioritize active creators with ${cfg?.minSubs || 2000}-${cfg?.maxSubs || 80000} subscribers who uploaded in the last ${cfg?.maxInactiveDays || 60} days and have strong recent view activity.`
     : 'Business skill selected: prioritize leads with clear hiring intent and obvious conversion gaps.';
 
   const incomeContext = incomeGoal ? `Freelancer income goal: ${incomeGoal}. Keep pricing realistic for beginners.` : '';
@@ -1923,7 +1972,7 @@ Return raw JSON only.`;
         },
         body: JSON.stringify({
           model: 'llama-3.3-70b-versatile',
-          max_tokens: 1600,
+          max_tokens: 3200,
           temperature: 0.25,
           messages: [{ role: 'user', content: prompt }],
         }),
@@ -1945,7 +1994,7 @@ Return raw JSON only.`;
         if (!p) return null;
 
         const match = clamp(Number(p.qualityScore || 82), 75, 99);
-        const replyChance = clamp(Number(x?.replyChance || Math.round(35 + (match - 70) * 1.0)), 35, 90);
+        const replyChance = clamp(Number(x?.replyChance || Math.round(35 + (match - 70) * 1.5)), 35, 90);
 
         const lead = {
           sourceId: p.sourceId,
