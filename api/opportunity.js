@@ -415,10 +415,38 @@ const SKILL_FALLBACK_TEXT = {
   },
 };
 
-const CREATOR_EMERGENCY_QUERIES = {
-  'Thumbnail Design': ['investing tips beginners', 'home workout routine', 'easy recipes cooking', 'travel vlog'],
-  'Video Editing': ['daily vlog', 'travel diary', 'gym workout log', 'study with me'],
-  'Voice Over': ['history facts', 'true crime story', 'ancient history', 'space documentary'],
+const EDUCATIONAL_VIDEO_PATTERNS = [
+  /how to (make|create|design|edit|grow|get|improve|increase|boost)/i,
+  /\d+ (tips|ways|secrets|hacks|mistakes|steps|tricks)/i,
+  /(tutorial|guide|course|lesson|training|explained|masterclass)/i,
+  /(beginner|for beginners|complete guide|step by step|from scratch)/i,
+  /(you need to|you should|you must|stop doing|avoid these)/i,
+  /(best way to|how i|my secret|the truth about)/i,
+  /(make money|earn money|passive income|side hustle|dropshipping)/i,
+  /(affiliate marketing|amazon fba|shopify tutorial|crypto)/i,
+  /(youtube algorithm|go viral|get more|grow your|increase your)/i,
+  /(monetize|faceless channel|automation|content strategy)/i,
+];
+
+const EDUCATIONAL_RED_FLAG_PHRASES = [
+  'how to', 'tutorial', 'tips', 'secrets', 'mistakes',
+  'beginner guide', 'make money', 'passive income',
+  'get more', 'grow your', 'increase your',
+];
+
+const EMERGENCY_FALLBACK_QUERIES = {
+  'Thumbnail Design': [
+    'daily vlog', 'gaming channel', 'cooking videos',
+    'travel diary', 'fitness journey', 'podcast clips',
+  ],
+  'Video Editing': [
+    'personal vlog', 'travel videos', 'workout videos',
+    'recipe videos', 'story time', 'reaction videos',
+  ],
+  'Voice Over': [
+    'documentary', 'story narration', 'educational video',
+    'history channel', 'true crime', 'mystery videos',
+  ],
 };
 
 const GENERIC_PHRASES = [
@@ -477,21 +505,21 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'how to invest money beginners',
-      'home workout no equipment',
-      'easy dinner recipes',
-      'travel tips europe',
-      'minecraft survival guide',
-      'morning routine productivity',
-      'world war 2 history',
-      'learn guitar beginner',
+      'my stock portfolio update',
+      'what i eat in a day realistic',
+      'i tried this workout challenge',
+      'travel vlog solo backpacking',
+      'minecraft survival lets play',
+      'my morning routine 2024',
+      'day in my life college student',
+      'cooking easy recipes quick',
     ],
     minSubs: 2000,
     maxSubs: 80000,
     maxInactiveDays: 120,
     minAvgViews: 100,
     minViewSubRatio: 0.004,
-    searchOrder: 'relevance',
+    searchOrder: 'date',
     publishedAfterDays: 180,
     minLeadCount: 3,
     allowWebFallback: false,
@@ -500,21 +528,21 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'solo travel vlog',
-      'what i eat in a day',
-      'day in my life college',
-      'budget travel tips',
-      'beginner weightlifting',
-      'small business owner day',
-      'gaming highlights',
-      'studying with me',
+      'day in my life realistic',
+      'what i eat in a day full day',
+      'solo travel vlog cheap budget',
+      'i tried extreme challenge',
+      'gym workout routine beginner',
+      'small business vlog day',
+      'gaming lets play episode',
+      'study with me silent',
     ],
     minSubs: 800,
     maxSubs: 120000,
     maxInactiveDays: 150,
     minAvgViews: 80,
     minViewSubRatio: 0.003,
-    searchOrder: 'relevance',
+    searchOrder: 'date',
     publishedAfterDays: 240,
     minLeadCount: 3,
     allowWebFallback: false,
@@ -523,20 +551,22 @@ const SKILL_CONFIG = {
     method: 'youtube',
     targetType: 'creator',
     ytQueries: [
-      'dark history facts',
-      'unsolved mysteries explained',
-      'ancient civilizations documentary',
-      'space facts mind blowing',
-      'true crime cold case',
-      'philosophy of life explained',
-      'greek mythology stories',
-      'geography facts countries',
+      'true crime unsolved case',
+      'horror story narration',
+      'history facts world war',
+      'space documentary facts',
+      'ancient civilization mystery',
+      'philosophy explained simple',
+      'scary story animated',
+      'mystery solved explained',
     ],
     minSubs: 1000,
     maxSubs: 100000,
     maxInactiveDays: 120,
     minAvgViews: 80,
     minViewSubRatio: 0.003,
+    searchOrder: 'date',
+    publishedAfterDays: 180,
     allowWebFallback: false,
   },
   'Social Media Management': {
@@ -780,6 +810,30 @@ function resolveRegionCode(locationString) {
   return LOCATION_TO_REGION[key] || null;
 }
 
+function isEducationalChannel(channelTitle, channelDesc, recentVideoTitles = [], adviceTerms = []) {
+  const titleLc = cleanText(channelTitle).toLowerCase();
+  const descLc = cleanText(channelDesc).toLowerCase();
+  const normalizedVideoTitles = (recentVideoTitles || []).map((title) => cleanText(title)).filter(Boolean);
+
+  const channelTextHasAdvice = (adviceTerms || []).some(
+    (term) => titleLc.includes(term) || descLc.includes(term)
+  );
+  if (channelTextHasAdvice) return true;
+
+  const videoTitleText = normalizedVideoTitles.join(' ').toLowerCase();
+  let eduVideoCount = 0;
+  for (const pattern of EDUCATIONAL_VIDEO_PATTERNS) {
+    if (pattern.test(videoTitleText)) {
+      eduVideoCount++;
+    }
+  }
+  if (eduVideoCount >= 3) return true;
+
+  const redFlagCount = EDUCATIONAL_RED_FLAG_PHRASES.filter((phrase) => videoTitleText.includes(phrase)).length;
+  const redFlagRatio = redFlagCount / Math.max(normalizedVideoTitles.length, 1);
+  return redFlagRatio >= 0.5;
+}
+
 function isBadMarketplaceName(name) {
   const n = lower(name);
   return MARKETPLACE_BLOCKLIST.some((k) => n.includes(k));
@@ -935,6 +989,7 @@ async function searchYouTubeCreators({
   YOUTUBE,
   queries,
   location,
+  skill = null,
   minSubs,
   maxSubs,
   maxInactiveDays = 60,
@@ -995,6 +1050,38 @@ async function searchYouTubeCreators({
     else {
       console.warn('[YouTubeSearch query failed]', result.reason?.message);
       console.error('YouTube video search failed:', result.reason?.message || result.reason);
+    }
+  }
+
+  if (rawSearchItems.length < 20 && skill && EMERGENCY_FALLBACK_QUERIES[skill]) {
+    console.log('[YouTubeSearch emergency-fallback]', JSON.stringify({
+      skill,
+      location,
+      existingCount: rawSearchItems.length,
+    }));
+
+    const emergencyQueries = EMERGENCY_FALLBACK_QUERIES[skill];
+    const emergencyResults = await Promise.allSettled(
+      emergencyQueries.map(async (q) => {
+        const fullQ = cleanText(location ? `${q} ${location}` : q);
+        const searchUrl =
+          `https://www.googleapis.com/youtube/v3/search?part=snippet` +
+          `&q=${encodeURIComponent(fullQ)}` +
+          `&type=video&order=${safeSearchOrder}&maxResults=30&relevanceLanguage=en` +
+          (regionCode ? `&regionCode=${encodeURIComponent(regionCode)}` : '') +
+          `&publishedAfter=${encodeURIComponent(publishedAfter)}` +
+          `&key=${YOUTUBE}`;
+
+        console.log('[YouTubeSearch emergency-request]', searchUrl.replace(/([?&]key=)[^&]+/i, '$1[redacted]'));
+        const data = await fetchJson(searchUrl, {}, 12000);
+        console.log('[YouTubeSearch emergency-responseCount]', JSON.stringify({ query: fullQ, count: data?.items?.length || 0 }));
+        return data?.items || [];
+      })
+    );
+
+    for (const result of emergencyResults) {
+      if (result.status === 'fulfilled') rawSearchItems.push(...result.value);
+      else console.warn('[YouTubeSearch emergency-query failed]', result.reason?.message);
     }
   }
 
@@ -1087,6 +1174,17 @@ async function searchYouTubeCreators({
       .sort((a, b) => new Date(b.snippet?.publishedAt || 0) - new Date(a.snippet?.publishedAt || 0))
       .slice(0, 6);
 
+    const recentVideoTitles = recentVideos.map((v) => cleanText(v.snippet?.title || ''));
+    if (isEducationalChannel(title, desc, recentVideoTitles, ADVICE_CHANNEL_BLOCKLIST)) {
+      console.log('[YouTubeSearch educational-skip]', JSON.stringify({
+        title,
+        location,
+        regionCode,
+        sampleVideos: recentVideoTitles.slice(0, 3),
+      }));
+      continue;
+    }
+
     const avgRecentViews = recentVideos.length
       ? Math.round(recentVideos.reduce((sum, v) => sum + Number(v.statistics?.viewCount || 0), 0) / recentVideos.length)
       : 0;
@@ -1120,6 +1218,7 @@ async function searchYouTubeCreators({
       lastUploadDays,
       country: cleanText(ch.snippet?.country || 'Unknown'),
       contactPath: 'YouTube About page + channel links + latest video comments',
+      recentVideoTitles,
     };
 
     profile.qualityScore = scoreCreatorProfile(profile, { minSubs, maxSubs });
@@ -1968,6 +2067,7 @@ export default async function handler(req, res) {
             YOUTUBE,
             queries: cfg.ytQueries,
             location,
+            skill,
             minSubs: cfg.minSubs,
             maxSubs: cfg.maxSubs,
             maxInactiveDays: cfg.maxInactiveDays || 60,
@@ -1997,12 +2097,13 @@ export default async function handler(req, res) {
               YOUTUBE,
               queries: broaderQueries,
               location,
+              skill,
               minSubs: Math.max(500, Number(cfg.minSubs || 2000) - 1500),
               maxSubs: Number(cfg.maxSubs || 70000) + 40000,
               maxInactiveDays: Math.max(120, Number(cfg.maxInactiveDays || 60)),
               minAvgViews: Math.max(80, Number(cfg.minAvgViews || 250) - 120),
               minViewSubRatio: Math.max(0.003, Number(cfg.minViewSubRatio || 0.01) - 0.004),
-              searchOrder: 'relevance',
+              searchOrder: cfg.searchOrder || 'date',
               publishedAfterDays: Math.max(270, Number(cfg.publishedAfterDays || 90)),
             }), 25000);
           } catch (e) {
@@ -2096,14 +2197,15 @@ export default async function handler(req, res) {
             await wait(300);
             rawProfiles = await withTimeout(searchYouTubeCreators({
               YOUTUBE,
-              queries: CREATOR_EMERGENCY_QUERIES[skill] || ['daily vlog', 'travel tips', 'cooking recipes', 'study with me'],
+              queries: EMERGENCY_FALLBACK_QUERIES[skill] || ['daily vlog', 'travel tips', 'cooking recipes', 'study with me'],
               location: '',
+              skill,
               minSubs: 500,
               maxSubs: 250000,
               maxInactiveDays: 200,
               minAvgViews: 40,
               minViewSubRatio: 0.001,
-              searchOrder: 'relevance',
+              searchOrder: cfg.searchOrder || 'date',
               publishedAfterDays: 365,
             }), 25000);
           } catch (e) {
@@ -2169,6 +2271,7 @@ export default async function handler(req, res) {
             YOUTUBE,
             queries: [effectivePrompt],
             location,
+            skill,
             minSubs: 2000,
             maxSubs: platform === 'youtube' ? 100000 : 70000,
           }), 25000);
