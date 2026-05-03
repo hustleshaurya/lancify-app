@@ -202,7 +202,7 @@ function buildOutreachAssets(lead, skill) {
       `I do this exact fix for similar businesses. want me to show you what it'd look like for yours?`,
     ],
   ];
-  const variantIndex = isBusinessLead ? 3 : nameHash % 3;
+  const variantIndex = isBusinessLead ? (nameHash % 2 === 0 ? 3 : 2) : nameHash % 3;
   const quickDm = variants[variantIndex].join('\n');
   const subjectVariants = [
     `had an idea for ${name}`,
@@ -217,7 +217,7 @@ function buildOutreachAssets(lead, skill) {
     `1) What I noticed: ${problem}`,
     `2) Why it matters now: ${whyNow}`,
     `3) What I would do first: ${strategy}`,
-    `4) Simple next step: I can deliver one starter asset this week (${deal}).`,
+    `4) What I'd do first: ${strategy} - I can have something ready this week (${deal}).`,
   ].join('\n');
 
   const audit = [
@@ -1352,7 +1352,7 @@ async function runSerpGoogle(query, { SERP, excludeTerms = [], allowDomains = []
 
   try {
     const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&num=20&api_key=${SERP}`;
-    const data = await fetchJson(url);
+    const data = await fetchJson(url, {}, 8000);
 
     const allow = (allowDomains || []).map((d) => d.toLowerCase());
     const allBad = [...globalBad, ...(excludeTerms || []).map((e) => e.toLowerCase())];
