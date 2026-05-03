@@ -56,7 +56,8 @@ OUTPUT (strict JSON, no markdown):
       body: JSON.stringify({
         model: modelName,
         messages: [
-          { role: "system", content: systemPrompt }
+          { role: "system", content: systemPrompt },
+          { role: "user", content: `Write the email now based on the context provided. Context: """${context}""" Email type: ${emailType}. Tone: ${tone}. Niche: ${niche}.` }
         ],
         temperature: 0.75,
         response_format: { type: "json_object" }
