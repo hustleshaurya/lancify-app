@@ -786,6 +786,24 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
   color:var(--text-muted);
 }
 .ai-result-pill strong{color:var(--text-main)}
+.ai-result-callout{
+  display:grid;
+  gap:6px;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  color:var(--text-main);
+  font-size:13px;
+  line-height:1.55;
+}
+.ai-result-callout.warning{
+  border-color:rgba(232,80,10,0.22);
+  background:var(--accent-soft);
+}
+.ai-result-callout strong{
+  color:var(--text-main);
+}
 .gig-result-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -11783,6 +11801,7 @@ async function generateProposal(){
       subject: data.subject || '',
       body: data.proposal || '',
       tips: data.tips || [],
+      redFlag: data.redFlag || '',
       pills: [
         `<strong>Platform</strong> ${escapeHtml(val('prop-platform') || 'Custom')}`,
         `<strong>Tone</strong> calm + confident`,
@@ -11835,6 +11854,7 @@ async function generateEmail(){
       subject: data.subject || '',
       body: data.body || '',
       tips: data.tips || [],
+      alternativeSubject: data.alternativeSubject || '',
       pills: [
         `<strong>Objective</strong> ${escapeHtml(val('email-type') || 'Email')}`,
         `<strong>Tone</strong> ${escapeHtml(val('email-tone') || 'Professional')}`
@@ -14887,7 +14907,7 @@ function paragraphsFromText(text=''){
     .map(chunk => `<p>${escapeHtml(chunk).replace(/\n/g,'<br>')}</p>`)
     .join('');
 }
-function renderAiResultMarkup({kicker,title,subject,body,tips=[],pills=[]}){
+function renderAiResultMarkup({kicker,title,subject,body,tips=[],pills=[],alternativeSubject='',redFlag=''}){
   return `
     <div class="ai-result-shell">
       <div class="ai-result-hero">
@@ -14902,7 +14922,9 @@ function renderAiResultMarkup({kicker,title,subject,body,tips=[],pills=[]}){
         </div>
         <div class="ai-result-side-card">
           ${pills.length ? `<div class="ai-result-label">Angle</div><div class="ai-result-pills">${pills.map(p => `<span class="ai-result-pill">${p}</span>`).join('')}</div>` : ''}
-          ${tips.length ? `<div class="ai-result-label" style="${pills.length ? 'margin-top:16px' : ''}">Why this works</div><ul class="ai-result-list">${tips.map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>` : ''}
+          ${alternativeSubject ? `<div class="ai-result-label" style="${pills.length ? 'margin-top:16px' : ''}">Alternative subject</div><div class="ai-result-callout"><strong>${escapeHtml(alternativeSubject)}</strong></div>` : ''}
+          ${redFlag ? `<div class="ai-result-label" style="${pills.length || alternativeSubject ? 'margin-top:16px' : ''}">Red flag</div><div class="ai-result-callout warning">${escapeHtml(redFlag)}</div>` : ''}
+          ${tips.length ? `<div class="ai-result-label" style="${pills.length || alternativeSubject || redFlag ? 'margin-top:16px' : ''}">Why this works</div><ul class="ai-result-list">${tips.map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>` : ''}
         </div>
       </div>
     </div>`;
