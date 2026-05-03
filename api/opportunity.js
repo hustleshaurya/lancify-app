@@ -479,11 +479,11 @@ const EMERGENCY_FALLBACK_QUERIES = {
   'Social Media Management': ['local restaurant social media', 'salon instagram business', 'gym fitness studio social'],
   'Web Design': ['local dentist website', 'plumber contractor website', 'clinic small business website'],
   'SEO': [
-    'local plumber website contact',
-    'dentist clinic near me website',
-    'local contractor small business',
-    'hair salon local business website',
-    'restaurant local business website',
+    'local plumber website',
+    'dentist clinic website',
+    'hair salon small business',
+    'local gym fitness center website',
+    'local restaurant website',
     'accountant small business website',
   ],
   'Funnel Building': [
@@ -668,9 +668,13 @@ const SKILL_CONFIG = {
   'SEO': {
     method: 'serp',
     targetType: 'business',
-    serpQuery: 'site:yelp.com small business plumber OR dentist OR clinic OR contractor OR salon',
+    serpQuery: 'site:yelp.com plumber OR dentist OR electrician OR restaurant OR salon OR gym OR lawyer OR accountant',
     allowDomains: ['yelp.com', 'yellowpages.com', 'bark.com'],
-    exclude: ['agency', 'seo agency', 'fiverr', 'upwork', 'semrush', 'ahrefs', 'list', 'top 10', 'blog', 'guide', 'tips'],
+    exclude: [
+      'agency', 'seo company', 'seo services', 'web design', 'digital marketing',
+      'marketing company', 'website development', 'web development', 'IT company',
+      'software', 'fiverr', 'upwork', 'semrush', 'ahrefs', 'list', 'top 10', 'blog'
+    ],
   },
   'Funnel Building': {
     method: 'serp',
