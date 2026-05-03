@@ -478,13 +478,41 @@ const EMERGENCY_FALLBACK_QUERIES = {
   ],
   'Social Media Management': ['local restaurant social media', 'salon instagram business', 'gym fitness studio social'],
   'Web Design': ['local dentist website', 'plumber contractor website', 'clinic small business website'],
-  'SEO': ['local business not ranking google', 'small business website seo', 'ecommerce store seo traffic'],
-  'Funnel Building': ['life coach no funnel', 'fitness coach lead generation', 'business coach booking page'],
-  'Email Marketing': ['fitness coach email list', 'life coach newsletter', 'business coach email marketing'],
+  'SEO': [
+    'local plumber website contact',
+    'dentist clinic near me website',
+    'local contractor small business',
+    'hair salon local business website',
+    'restaurant local business website',
+    'accountant small business website',
+  ],
+  'Funnel Building': [
+    'fitness coach online program',
+    'life coach digital course',
+    'business coach mentorship program',
+    'nutrition coach meal plan',
+    'mindset coach online course',
+    'weight loss coach program',
+  ],
+  'Email Marketing': [
+    'fitness supplements shopify store',
+    'wellness brand online store',
+    'beauty skincare shopify',
+    'yoga studio online products',
+    'nutrition coach online store',
+    'activewear clothing shopify',
+  ],
   'Copywriting': ['shopify clothing store', 'beauty brand shopify', 'fitness supplements store'],
   'Paid Ads': ['shopify ecommerce fashion store', 'beauty brand paid ads', 'fitness supplement brand'],
   'Graphic Design': ['shopify clothing accessories store', 'beauty brand shopify design', 'ecommerce brand visual'],
-  'Content Writing': ['saas startup blog', 'ecommerce brand content', 'b2b startup website blog'],
+  'Content Writing': [
+    'fitness brand blog articles',
+    'beauty brand shopify blog',
+    'lifestyle brand content writing',
+    'food brand recipe blog',
+    'wellness brand blog posts',
+    'ecommerce brand product blog',
+  ],
 };
 
 const GENERIC_PHRASES = [
@@ -633,23 +661,23 @@ const SKILL_CONFIG = {
   'Email Marketing': {
     method: 'serp',
     targetType: 'business',
-    serpQuery: 'site:linkedin.com/in life coach OR business coach OR fitness coach -recruiter -hiring',
-    allowDomains: ['linkedin.com'],
-    exclude: ['fiverr', 'upwork', 'mailchimp', 'klaviyo', 'agency', 'tool', 'platform'],
+    serpQuery: 'site:myshopify.com fitness OR wellness OR beauty OR skincare store',
+    allowDomains: ['myshopify.com', 'gumroad.com', 'stan.store'],
+    exclude: ['fiverr', 'upwork', 'mailchimp', 'klaviyo', 'agency', 'tool', 'platform', 'list', 'top 10'],
   },
   'SEO': {
     method: 'serp',
     targetType: 'business',
-    serpQuery: '(local business OR small business site) (not ranking on google OR low traffic OR slow website) -agency -blog -list',
-    allowDomains: [],
-    exclude: ['agency', 'seo agency', 'digital marketing agency', 'fiverr', 'upwork', 'list', 'top 10', 'semrush', 'ahrefs', 'producthunt.com', 'linkedin.com', 'article', 'blog', 'tips', 'guide'],
+    serpQuery: 'site:yelp.com small business plumber OR dentist OR clinic OR contractor OR salon',
+    allowDomains: ['yelp.com', 'yellowpages.com', 'bark.com'],
+    exclude: ['agency', 'seo agency', 'fiverr', 'upwork', 'semrush', 'ahrefs', 'list', 'top 10', 'blog', 'guide', 'tips'],
   },
   'Funnel Building': {
     method: 'serp',
     targetType: 'business',
-    serpQuery: 'site:linkedin.com/in life coach OR business coach OR fitness coach OR wellness coach -recruiter -hiring',
-    allowDomains: ['linkedin.com'],
-    exclude: ['clickfunnels', 'agency', 'tool', 'platform', 'software'],
+    serpQuery: 'site:myshopify.com OR site:gumroad.com fitness coach OR life coach OR business coach course',
+    allowDomains: ['myshopify.com', 'gumroad.com', 'stan.store', 'teachable.com'],
+    exclude: ['clickfunnels', 'agency', 'tool', 'platform', 'software', 'list', 'top 10'],
   },
   'Graphic Design': {
     method: 'serp',
@@ -668,9 +696,9 @@ const SKILL_CONFIG = {
   'Content Writing': {
     method: 'serp',
     targetType: 'business',
-    serpQuery: '(saas website OR startup website OR ecommerce brand) (blog OR resources OR knowledge base) -\"content writing services\" -agency',
-    allowDomains: [],
-    exclude: ['fiverr', 'upwork', 'agency', 'copywriting agency', 'content writing services', 'jasper', 'copy.ai', 'list', 'top 10', 'producthunt.com'],
+    serpQuery: 'site:myshopify.com fitness OR beauty OR lifestyle OR food brand blog',
+    allowDomains: ['myshopify.com', 'shopify.com'],
+    exclude: ['fiverr', 'upwork', 'agency', 'jasper', 'copy.ai', 'list', 'top 10', 'writesonic'],
   },
 };
 
@@ -2204,6 +2232,23 @@ export default async function handler(req, res) {
         } catch (e) {
           console.warn('SERP search timed out, trying fallback:', e.message);
           rawProfiles = [];
+        }
+
+        // Broaden if too narrow
+        if (rawProfiles.length < 2 && cfg?.method === 'serp' && ['SEO', 'Email Marketing', 'Funnel Building', 'Content Writing'].includes(skill)) {
+          console.log('[SERP broadening] too few results, retrying without site: restriction');
+          const broaderQ = (cfg.serpQuery || '').replace(/site:\S+\s*/g, '').replace(/^OR\s+/i, '').trim();
+          if (broaderQ) {
+            rawProfiles = await withTimeout(
+              runSerpGoogle(location ? `${broaderQ} ${location}` : broaderQ, {
+                SERP,
+                excludeTerms: cfg.exclude || [],
+                allowDomains: [],
+              }),
+              10000
+            );
+          }
+          console.log('[SERP broadened results]', rawProfiles.length);
         }
 
         // Quick-find resilience for SEO/Content Writing: broaden to website-heavy queries when needed.
