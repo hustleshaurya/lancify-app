@@ -1313,12 +1313,6 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
 .inline-loader{display:none;align-items:center;gap:9px;padding:12px 0;font-size:13px;color:var(--text-muted)}
 .inline-loader.show{display:flex}
 
-/* ─── PROFILE BANNER ─── */
-.profile-banner{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:9px 12px;display:none;align-items:center;gap:8px;font-size:12.5px;color:#15803d;margin-bottom:16px;cursor:pointer}
-.profile-banner.show{display:flex}
-.profile-banner:hover{background:#dcfce7}
-html.dark .profile-banner{background:#052e16;border-color:#166534;color:#86efac}
-html.dark .profile-banner:hover{background:#14532d}
 
 /* ─── CHAT PAGE ─── */
 .chat-wrap{max-width:620px;margin:0 auto}
@@ -4948,42 +4942,7 @@ html.dark .status-pill.pending{color:#fbbf24}
   gap:12px;
   margin-top:4px;
 }
-.profile-banner{
-  background:rgba(34,197,94,0.12);
-  border:1px solid rgba(34,197,94,0.2);
-  border-radius:12px;
-  padding:12px 14px;
-  display:none;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  font-size:13px;
-  color:#166534;
-  margin-bottom:16px;
-}
-.profile-banner.show{display:flex}
-.profile-banner-copy{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  cursor:pointer;
-  min-width:0;
-}
-.banner-close{
-  width:28px;
-  height:28px;
-  border-radius:999px;
-  border:1px solid transparent;
-  background:transparent;
-  color:inherit;
-  cursor:pointer;
-}
-.banner-close:hover{background:rgba(0,0,0,0.06)}
-html.dark .profile-banner{
-  color:#86efac;
-  background:rgba(34,197,94,0.08);
-  border-color:rgba(34,197,94,0.18);
-}
+
 .file-upload{
   min-height:110px;
   border-radius:12px;
@@ -7393,7 +7352,6 @@ body,
       <div id="page-proposal" class="page">
         <div class="content-inner">
           <div class="page-hd"><h1>Proposal Writer</h1><p>Paste a job description to generate a tailored, high-converting proposal.</p></div>
-          <div class="profile-banner" id="prop-banner" onclick="applyProfileTo('proposal')"><i data-lucide="user-check" style="width:13px;height:13px"></i> Profile detected — click to auto-fill your details</div>
           <div class="tool-grid">
             <div class="card tool-form-card">
               <div class="tool-section-kicker">Proposal Inputs</div>
@@ -7672,7 +7630,6 @@ body,
             <h2 style="font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--text-main);margin:0 0 8px;">Your Personal 30-Day Growth Map</h2>
             <p style="font-size:13px;color:var(--text-muted);margin:0;">Tell Lancify about yourself and get the exact daily actions, checklist, and follow-up path to close your first client.</p>
           </div>
-          <div class="profile-banner" id="rm-banner" onclick="applyProfileTo('roadmap')"><i data-lucide="user-check" style="width:13px;height:13px"></i> Profile detected — click to auto-fill</div>
           <div id="rm-saved-panel" class="roadmap-saved-panel" hidden></div>
           <div id="rm-form" class="card">
             <div class="roadmap-progress">
@@ -11272,12 +11229,7 @@ function syncWorkspaceIdentity(profile = userProfile, user = currentUser){
 }
 
 function checkProfileBanners(){
-  enhanceProfileBanners();
-  if(userProfile.skills){
-    ['prop','gig','rm'].forEach(id=>{
-      const b=el(id+'-banner'); if(b) b.classList.add('show');
-    });
-  }
+  // Profile banners removed
 }
 
 function applyProfileTo(tool){
@@ -13603,23 +13555,9 @@ function setButtonLoading(id, isLoading){
   }
 }
 
-function dismissProfileBanner(id, event){
-  if (event) event.stopPropagation();
-  el(id)?.classList.remove('show');
-}
 
 function enhanceProfileBanners(){
-  [
-    { id: 'prop-banner', tool: 'proposal', label: 'Profile detected — click to auto-fill' }
-  ].forEach(item => {
-    const banner = el(item.id);
-    if (!banner || banner.dataset.enhanced === 'yes') return;
-    banner.dataset.enhanced = 'yes';
-    banner.innerHTML = `
-      <div class="profile-banner-copy" onclick="applyProfileTo('${item.tool}')"><i data-lucide="user-check" style="width:13px;height:13px"></i><span>${item.label}</span></div>
-      <button class="banner-close" onclick="dismissProfileBanner('${item.id}', event)" aria-label="Dismiss profile banner">x</button>
-    `;
-  });
+  // Profile banners removed
 }
 
 function setHomeEarningsRange(range){
@@ -16468,7 +16406,6 @@ async function checkCredits(cost, callback) {
   }
 }
 
-enhanceProfileBanners();
 initApp();
 </script>
        <script src="gethelp.js"></script>
