@@ -6,46 +6,43 @@ export default async function handler(req, res) {
   if (!skills) return res.status(400).json({ error: 'Skills are required' });
   if (skills.trim().length < 3) return res.status(400).json({ error: 'Please describe your skills in more detail' });
 
-  const systemPrompt = `You are a sharp freelance market strategist who specializes in helping emerging freelancers land their first $500-$5,000/month on freelance platforms.
+  const systemPrompt = `You are a freelance market analyst who tracks platform demand weekly. You help beginners find niches where they can win their first client within 14 days, not someday.
 
-You have deep knowledge of:
-- What clients are actively hiring for RIGHT NOW on ${platform}
-- Which niches are oversaturated vs underserved
-- What a beginner with no reviews can realistically win
-- How to position a generic skill into a specific, high-converting niche
+Platform being analyzed: ${platform}
+Freelancer's skill set: "${skills}"
+Experience: ${experience || 'Complete beginner, no reviews'}
+Income goal: ${budget || '$1,000-$2,500/month'}
 
-YOUR THINKING PROCESS (internal, do not output):
-1. Look at the freelancer's skills: what are they ACTUALLY good enough at to deliver results?
-2. Cross-reference with current ${platform} demand: what are clients posting jobs for this month?
-3. Find the intersection: high demand + low competition + beginner can deliver = winning niche
-4. For each niche, think: what is the EXACT gig title a client would search for? Not a broad category.
-5. Ask yourself: "Is this specific enough that a beginner could create a portfolio piece for it this week?" If not, go more specific.
+YOUR INTERNAL ANALYSIS (do not output):
+Step 1: What can this freelancer actually deliver in their first week with zero reviews?
+Step 2: On ${platform} right now — what specific job titles are being posted repeatedly that match these skills?
+Step 3: Which of those have fewer than 50 sellers with under 10 reviews competing? That's the opening.
+Step 4: What is the EXACT gig title format clients search for? Not a category — a specific title like "Shopify product page copywriting for beauty brands" not "ecommerce copywriting"
+Step 5: What would a portfolio piece look like for this niche that takes under 3 hours to make?
 
-STRICT RULES:
-- Never recommend generic niches like "Graphic Design", "Content Writing", "Web Development"
-- Every niche must be hyper-specific (e.g., "Notion Dashboard Setup for Coaches" not "Notion Templates")
-- Price ranges must be realistic for beginner freelancers on ${platform} - not inflated fantasy numbers
-- The "whyNow" must reference something real and current - a trend, a platform shift, a growing industry
-- If skills are weak or vague, recommend niches that require LEARNING one small additional skill on top
-- Beginner-friendliness matters - factor in that this freelancer likely has no reviews yet`;
+STRICT QUALITY RULES:
+- NEVER recommend niches like "Social Media Management", "Graphic Design", "Content Writing", "Video Editing" as standalone — these are categories not niches
+- Every title must be hyper-specific — include the WHO, WHAT, and FOR WHOM: "YouTube thumbnail design for finance creators under 50k subscribers"
+- priceRange must be what a BEGINNER with zero reviews can realistically charge in week 1 — not aspirational numbers
+- whyNow must name a SPECIFIC platform shift, tool release, industry trend, or audience behavior happening right now in 2025-2026 — not generic "growing demand"
+- firstStep must be so specific that the freelancer knows exactly what to open, type, or create in the next 60 minutes — name the tool, the search term, or the exact action
+- portfolioHook must describe a free sample or mock project they can build in under 3 hours that proves they can do the work — specific enough to actually make
+- winCondition is the exact type of client on ${platform} who would hire this person within 14 days — describe them in one sentence like a profile`;
 
-  const userPrompt = `Freelancer Skills: "${skills}"
-Target Platform: "${platform}"
-Experience Level: "${experience || 'Beginner - no reviews yet'}"
-Monthly Income Goal: "${budget || '$1,000-$2,500/month to start'}"
+  const userPrompt = `Give me the top 5 specific, winnable niches for this freelancer on ${platform}.
 
-Based on this, recommend the top 5 highly specific, currently profitable freelance niches this person should pursue on ${platform}.
+Each niche must have:
+- title: Exact gig title a client would search (specific, include who it's for)
+- demand: "High" / "Medium" / "Low" based on actual ${platform} job posting volume
+- competition: "High" / "Medium" / "Low" based on number of established sellers
+- entryBarrier: "Easy" / "Medium" / "Hard" for a beginner with zero reviews
+- priceRange: What a beginner charges in week 1 (realistic, not aspirational)
+- whyNow: 1 sentence naming a SPECIFIC trend or platform shift in 2025-2026 driving demand
+- firstStep: Exact action to take in the next 60 minutes — name the tool, search term, or thing to create
+- portfolioHook: A free sample or mock project they can build in under 3 hours to prove the skill
+- winCondition: The exact type of client on ${platform} most likely to hire a beginner in this niche within 14 days
 
-For each niche provide:
-- title: Exact gig title to use (what a client would literally search for)
-- demand: "High", "Medium", or "Low" - based on actual ${platform} job volume
-- competition: "High", "Medium", or "Low" - how many sellers already offer this
-- entryBarrier: "Easy", "Medium", or "Hard" - can a beginner start this week?
-- priceRange: Realistic USD range per project for a beginner (e.g., "$75 - $250")
-- whyNow: 1 sentence. Must reference a current trend, platform growth, or industry shift - not generic advice
-- firstStep: 1 sentence. The single most important thing the freelancer should do TODAY to start in this niche
-
-Return ONLY a valid JSON object. No markdown, no backticks, no explanation:
+Return ONLY valid JSON, no markdown, no backticks:
 {
   "niches": [
     {
@@ -55,9 +52,13 @@ Return ONLY a valid JSON object. No markdown, no backticks, no explanation:
       "entryBarrier": "...",
       "priceRange": "...",
       "whyNow": "...",
-      "firstStep": "..."
+      "firstStep": "...",
+      "portfolioHook": "...",
+      "winCondition": "..."
     }
-  ]
+  ],
+  "topPick": "The single best niche from the 5 for THIS specific freelancer to start with — just the title",
+  "avoid": "One niche that looks attractive but is a trap for beginners right now — just the title and one sentence why"
 }`;
 
   try {
