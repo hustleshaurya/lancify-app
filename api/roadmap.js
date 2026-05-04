@@ -26,7 +26,8 @@ You know Lancify inside out. It has these features:
 
 RULES FOR EVERY SINGLE DAY:
 1. ONE task. Not a list. One thing. Clear enough that a 16-year-old with no experience can do it.
-2. CRITICAL: Before suggesting any manual research task, ask yourself — does Lancify already do this? If yes, use Lancify instead. The rule is:
+2. Under that one task, include a checklist of 3-5 tiny exact steps. Each checklist item must tell them exactly what to open, click, type, paste, create, send, or screenshot that day. No generic "research", "optimize", "build your brand", or "network" steps.
+3. CRITICAL: Before suggesting any manual research task, ask yourself — does Lancify already do this? If yes, use Lancify instead. The rule is:
    - Finding what niche to pursue → "Open Lancify → Gig Finder → enter your skills → pick the niche with High demand + Easy entry"
    - Finding potential clients on YouTube/Google/Instagram → "Open Lancify → Find Clients → select [skill] → you'll get leads with gap analysis and pitch angles already written"
    - Writing a cold DM or email → "Open Lancify → Email Writer → describe the context → copy the result"
@@ -34,14 +35,15 @@ RULES FOR EVERY SINGLE DAY:
    - Sending a Trojan Horse audit → "Open Lancify → Audit → enter their website URL → send the dossier as your pitch"
    - Building a follow-up sequence → "Open Lancify → Sequences → enter lead name + problem → copy the 3 messages"
    - NEVER tell the user to manually Google "web design services in demand" or manually search YouTube for creators — Lancify does both of these things better and faster
-3. Only tell users to do things manually if Lancify genuinely cannot do it — like creating a portfolio piece, recording a Loom video, or setting up their Upwork profile.
-4. The effort must match the hours selected. ${hoursPerDay} hrs/day is real — don't pack 6 hours of work into a 1-hour day.
-5. Address ${biggestFear || 'fear of starting'} on Day 2 or 3 with a specific action that kills the fear — not motivation talk.
-6. Week 1: Setup + use Gig Finder to find the right niche + build one portfolio piece. No outreach yet.
-7. Week 2: Use Find Clients to get first leads. Write first 3 outreach messages using Email Writer or Quick DM from lead cards.
-8. Week 3: Daily outreach machine — use Find Clients every day, send 5+ outreaches using Lancify tools.
-9. Week 4: Follow-ups using Sequence Builder + Email Writer, closing conversations, first invoice.
-10. By Day 30 the plan must make landing a client feel inevitable, not hopeful.
+4. Only tell users to do things manually if Lancify genuinely cannot do it — like creating a portfolio piece, recording a Loom video, or setting up their Upwork profile.
+5. The effort must match the hours selected. ${hoursPerDay} hrs/day is real — don't pack 6 hours of work into a 1-hour day.
+6. Address ${biggestFear || 'fear of starting'} on Day 2 or 3 with a specific action that kills the fear — not motivation talk.
+7. Week 1: Setup + use Gig Finder to find the right niche + build one portfolio piece. No outreach yet.
+8. Week 2: Use Find Clients to get first leads. Write first 3 outreach messages using Email Writer or Quick DM from lead cards.
+9. Week 3: Daily outreach machine — use Find Clients every day, send 5+ outreaches using Lancify tools.
+10. Week 4: Follow-ups using Sequence Builder + Email Writer, closing conversations, first invoice.
+11. By Day 30 the plan must make landing a client feel inevitable, not hopeful.
+12. No meaningless steps. Every day must directly move them toward one of these outcomes: sharper niche, proof asset, lead list, outreach sent, follow-up sent, sales conversation, proposal, invoice.
 
 LANCIFY TOOL REFERENCE — use these exact nav paths when mentioning tools:
 - Gig Finder: "Open Lancify → Gig Finder → [action]" — use on Day 1 or 2 to pick niche
@@ -79,6 +81,9 @@ Return ONLY valid JSON, no markdown, no backticks:
           "day": 1,
           "title": "short action-oriented title",
           "task": "Exact thing to do. Name the platform, search term, or Lancify path. Under 45 words. No vague advice.",
+          "checklist": [
+            "3-5 exact micro-steps for this day. Each item starts with a verb and names the screen/tool/text/action."
+          ],
           "why": "1 sentence - the real-world reason this matters RIGHT NOW",
           "lancifyTip": "null OR exact Lancify instruction like: Open Lancify → Find Clients → select [skill] → use the pitch angle from result #1 to write your first DM",
           "timeEstimate": "realistic estimate matching ${hoursPerDay} hrs/day"
