@@ -920,6 +920,10 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
   padding:16px;
   background:var(--bg-panel);
 }
+.roadmap-day-card.completed{
+  border-color:rgba(22,163,74,0.24);
+  background:linear-gradient(180deg, rgba(22,163,74,0.06), var(--bg-panel));
+}
 .roadmap-day-top{
   display:flex;
   justify-content:space-between;
@@ -927,6 +931,32 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
   margin-bottom:10px;
   align-items:flex-start;
 }
+.roadmap-day-main{
+  min-width:0;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:10px;
+  align-items:flex-start;
+}
+.roadmap-day-check{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--bg);
+  color:transparent;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.roadmap-day-check.checked{
+  border-color:#16a34a;
+  background:rgba(22,163,74,0.12);
+  color:#16a34a;
+}
+.roadmap-day-check i{width:14px;height:14px}
 .roadmap-day-badge{
   width:36px;
   height:36px;
@@ -986,6 +1016,42 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
   font-size:12px;
   line-height:1.6;
 }
+.roadmap-checklist{
+  margin-top:12px;
+  display:grid;
+  gap:8px;
+}
+.roadmap-check-item{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:9px;
+  align-items:flex-start;
+  padding:9px 10px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--bg);
+  cursor:pointer;
+}
+.roadmap-check-item input{
+  width:15px;
+  height:15px;
+  margin-top:2px;
+  accent-color:#16a34a;
+}
+.roadmap-check-item span{
+  font-size:12px;
+  line-height:1.55;
+  color:var(--text-muted);
+}
+.roadmap-check-item.done{
+  border-color:rgba(22,163,74,0.22);
+  background:rgba(22,163,74,0.06);
+}
+.roadmap-check-item.done span{
+  color:var(--text-main);
+  text-decoration:line-through;
+  text-decoration-color:rgba(22,163,74,0.5);
+}
 .roadmap-progress{
   margin-bottom:16px;
   padding:14px 16px;
@@ -1013,6 +1079,78 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
   background:linear-gradient(90deg, #E8500A, #f59e0b);
   border-radius:999px;
   transition:width .2s ease;
+}
+.roadmap-plan-progress,
+.roadmap-saved-panel{
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:var(--bg-panel);
+}
+.roadmap-plan-progress{
+  display:grid;
+  gap:10px;
+}
+.roadmap-progress-copy{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.roadmap-progress-title{
+  font-size:13px;
+  font-weight:800;
+  color:var(--text-main);
+}
+.roadmap-progress-count{
+  font-size:12px;
+  font-weight:700;
+  color:#E8500A;
+}
+.roadmap-saved-panel{
+  margin-bottom:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.roadmap-saved-panel[hidden]{display:none!important}
+.roadmap-saved-kicker{
+  font-size:10.5px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#E8500A;
+  margin-bottom:5px;
+}
+.roadmap-saved-title{
+  font-size:15px;
+  font-weight:800;
+  color:var(--text-main);
+  margin-bottom:4px;
+}
+.roadmap-saved-meta{
+  font-size:12px;
+  color:var(--text-muted);
+  line-height:1.5;
+}
+.roadmap-saved-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.roadmap-saved-actions .btn,
+.roadmap-result-actions .btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+}
+.roadmap-saved-actions .btn i,
+.roadmap-result-actions .btn i{
+  width:14px;
+  height:14px;
 }
 .rm-skill-grid,
 .rm-platform-grid{
@@ -7531,10 +7669,11 @@ body,
         <div class="content-inner">
           <div style="margin-bottom:28px;">
             <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#E8500A;margin-bottom:8px;">AI GROWTH COACH</div>
-            <h2 style="font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--text-main);margin:0 0 8px;">Your Personal 30-Day Roadmap</h2>
-            <p style="font-size:13px;color:var(--text-muted);margin:0;">Tell Lancify about yourself and get a day-by-day action plan built specifically for your skill, platform, and schedule. No fluff — just what to do, when, and why.</p>
+            <h2 style="font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--text-main);margin:0 0 8px;">Your Personal 30-Day Growth Map</h2>
+            <p style="font-size:13px;color:var(--text-muted);margin:0;">Tell Lancify about yourself and get the exact daily actions, checklist, and follow-up path to close your first client.</p>
           </div>
           <div class="profile-banner" id="rm-banner" onclick="applyProfileTo('roadmap')"><i data-lucide="user-check" style="width:13px;height:13px"></i> Profile detected — click to auto-fill</div>
+          <div id="rm-saved-panel" class="roadmap-saved-panel" hidden></div>
           <div id="rm-form" class="card">
             <div class="roadmap-progress">
               <div class="roadmap-progress-head">
@@ -7594,8 +7733,8 @@ body,
                 </select>
               </div>
             </div>
-            <button class="btn btn-primary btn-full" id="rm-btn" onclick="checkCredits(8, generateRoadmap)">Generate 30-Day Roadmap</button>
-            <div class="inline-loader" id="rm-loader"><div class="spin"></div><span>Building your custom roadmap…</span></div>
+            <button class="btn btn-primary btn-full" id="rm-btn" onclick="checkCredits(8, generateRoadmap)">Generate 30-Day Growth Map</button>
+            <div class="inline-loader" id="rm-loader"><div class="spin"></div><span>Building your custom growth map…</span></div>
           </div>
           <div id="rm-loading-steps" style="display:none;text-align:center;padding:32px;border:1px solid var(--border);border-radius:16px;margin-top:16px;">
             <div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:#E8500A;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
@@ -7603,10 +7742,11 @@ body,
           </div>
           <div id="rm-result" style="display:none;margin-top:22px">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px">
-              <h2 style="font-size:17px;font-weight:700">Your 30-Day Plan</h2>
-              <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <button class="btn btn-secondary rm-save-btn" id="rm-save-btn" onclick="saveRoadmap()">Save Roadmap</button>
-                <button class="btn btn-secondary" onclick="resetRoadmap()">Start Over</button>
+              <h2 style="font-size:17px;font-weight:700">Your Growth Map</h2>
+              <div class="roadmap-result-actions" style="display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn btn-secondary rm-save-btn" id="rm-save-btn" onclick="saveRoadmap()"><i data-lucide="save"></i><span>Save Growth Map</span></button>
+                <button class="btn btn-secondary" onclick="downloadRoadmapPDF()"><i data-lucide="download"></i><span>Download PDF</span></button>
+                <button class="btn btn-secondary" onclick="resetRoadmap()"><i data-lucide="rotate-ccw"></i><span>Start Over</span></button>
               </div>
             </div>
             <div id="rm-content"></div>
@@ -10776,6 +10916,7 @@ async function initApp() {
     updateRoadmapHours(val('rm-hours-slider') || 2, false);
     syncRoadmapSkillSelection();
     updateRoadmapFormState();
+    renderSavedRoadmapPanel();
     setTimeout(() => initChecklistCollapse(), 500);
     setTimeout(() => _syncNavFolderHeights(), 100);
     if (session?.user) onLogin(session.user);
@@ -10941,7 +11082,7 @@ function renderQuickGuideBanner(page) {
     gig: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
     audit: "⚡ Step 2: Enter your lead's website URL → Generate the audit → Copy the key finding to use in your pitch. Takes 2 minutes.",
     email: "✉️ Step 3: Select 'Follow-up' email type → Enter your lead's name and context → Send or copy the email. This is what gets replies.",
-    roadmap: "📈 Step 4: Generate your 30-day roadmap → Save it → Come back to it daily. This is your system."
+    roadmap: "📈 Step 4: Generate your Growth Map → reopen it daily → finish the checklist for that day."
   };
 
   if (!guides[page]) return;
@@ -11024,7 +11165,7 @@ function navigate(page) {
     proposal:'Proposal Writer',
     email:'Email Writer',
     gig:'Gig Finder',
-    roadmap:'30-Day Roadmap',
+    roadmap:'Growth Map',
     profile:'My Profile',
     pipeline:'Manage Clients',
     opportunity:'Find Clients',
@@ -11040,6 +11181,7 @@ function navigate(page) {
   setText('header-title', titles[page]||'Dashboard');
   if (page === 'invoices') renderInvoices();
   if (page === 'accounting' || page === 'home') renderBusinessDashboard();
+  if (page === 'roadmap') renderSavedRoadmapPanel();
   if (page === 'home') {
     setTimeout(() => {
       if (typeof Chart !== 'undefined') {
@@ -11240,25 +11382,326 @@ function showRoadmapWeek(weekNumber){
   });
 }
 
-function saveRoadmap(){
+const ROADMAP_STORAGE_BASE = 'lancify-growth-map';
+const ROADMAP_LEGACY_STORAGE_KEY = 'lancify-roadmap';
+window._roadmapProgress = window._roadmapProgress || {};
+
+function roadmapStorageKey(){
+  const uid = (typeof currentUser !== 'undefined' && currentUser?.id) ? currentUser.id : 'guest';
+  return _storageKey(ROADMAP_STORAGE_BASE, uid);
+}
+
+function readRoadmapStorage(key){
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) {
+    return null;
+  }
+}
+
+function ensureRoadmapId(data){
+  if (!data) return data;
+  if (!data._growthMapId) data._growthMapId = `growth-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+  return data;
+}
+
+function loadSavedRoadmap(){
+  const keys = [
+    roadmapStorageKey(),
+    ROADMAP_STORAGE_BASE,
+    ROADMAP_LEGACY_STORAGE_KEY,
+  ];
+  for (const key of keys) {
+    const saved = readRoadmapStorage(key);
+    if (saved?.data) {
+      return {
+        key,
+        savedAt: saved.savedAt || saved.createdAt || new Date().toISOString(),
+        data: ensureRoadmapId(saved.data),
+        progress: saved.progress || saved.checklistProgress || {},
+      };
+    }
+  }
+  return null;
+}
+
+function formatRoadmapSavedDate(iso){
+  const date = iso ? new Date(iso) : new Date();
+  if (Number.isNaN(date.getTime())) return 'just now';
+  return date.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+}
+
+function roadmapDayNumber(day, weekIndex, dayIndex){
+  return day?.day || ((weekIndex * 7) + dayIndex + 1);
+}
+
+function roadmapDayKey(day, weekIndex, dayIndex){
+  return `w${weekIndex + 1}-d${roadmapDayNumber(day, weekIndex, dayIndex)}`.replace(/[^\w-]/g,'-');
+}
+
+function roadmapStepKey(day, weekIndex, dayIndex, itemIndex){
+  return `${roadmapDayKey(day, weekIndex, dayIndex)}-s${itemIndex}`;
+}
+
+function roadmapChecklistForDay(day){
+  const source = Array.isArray(day?.checklist) ? day.checklist
+    : Array.isArray(day?.steps) ? day.steps
+      : Array.isArray(day?.actionSteps) ? day.actionSteps
+        : [];
+  const clean = source.map(item => String(item || '').trim()).filter(Boolean);
+  if (clean.length) return clean;
+  return day?.task ? [`Complete this action: ${day.task}`] : [];
+}
+
+function cleanRoadmapTip(tip){
+  const value = String(tip || '').trim();
+  return value && value.toLowerCase() !== 'null' ? value : '';
+}
+
+function getRoadmapProgressStats(data = window._latestRoadmapData, progress = window._roadmapProgress || {}){
+  const weeks = data?.weeks || [];
+  let total = 0;
+  let completed = 0;
+  let dayTotal = 0;
+  let dayCompleted = 0;
+  weeks.forEach((week, weekIndex) => {
+    (week.days || []).forEach((day, dayIndex) => {
+      const checklist = roadmapChecklistForDay(day);
+      if (!checklist.length) return;
+      dayTotal += 1;
+      let doneForDay = 0;
+      checklist.forEach((_, itemIndex) => {
+        total += 1;
+        if (progress[roadmapStepKey(day, weekIndex, dayIndex, itemIndex)]) {
+          completed += 1;
+          doneForDay += 1;
+        }
+      });
+      if (doneForDay === checklist.length) dayCompleted += 1;
+    });
+  });
+  const pct = total ? Math.round((completed / total) * 100) : 0;
+  return { total, completed, dayTotal, dayCompleted, pct };
+}
+
+function setRoadmapSaveButtonState(saved = false){
+  const btn = el('rm-save-btn');
+  if (!btn) return;
+  btn.classList.toggle('saved', saved);
+  btn.innerHTML = saved
+    ? '<i data-lucide="check"></i><span>Saved</span>'
+    : '<i data-lucide="save"></i><span>Save Growth Map</span>';
+  lucide.createIcons();
+}
+
+function persistRoadmap(options = {}){
   if (!window._latestRoadmapData) {
     showToast('Generate a roadmap first.');
+    return false;
+  }
+  const payload = {
+    savedAt: new Date().toISOString(),
+    data: ensureRoadmapId(window._latestRoadmapData),
+    progress: window._roadmapProgress || {},
+  };
+  localStorage.setItem(roadmapStorageKey(), JSON.stringify(payload));
+  setRoadmapSaveButtonState(true);
+  renderSavedRoadmapPanel();
+  if (!options.silent) {
+    showToast('Growth Map saved. Reopen it from Saved Growth Map above.');
+  }
+  return true;
+}
+
+function saveRoadmap(){
+  persistRoadmap({ silent:false });
+}
+
+function renderSavedRoadmapPanel(){
+  const panel = el('rm-saved-panel');
+  if (!panel) return;
+  const saved = loadSavedRoadmap();
+  if (!saved) {
+    panel.hidden = true;
+    panel.innerHTML = '';
     return;
   }
-  localStorage.setItem('lancify-roadmap', JSON.stringify({
-    savedAt: new Date().toISOString(),
-    data: window._latestRoadmapData,
-  }));
-  const btn = el('rm-save-btn');
-  if (btn) {
-    btn.classList.add('saved');
-    btn.textContent = 'Saved';
-    setTimeout(() => {
-      btn.classList.remove('saved');
-      btn.textContent = 'Save Roadmap';
-    }, 1800);
+  const stats = getRoadmapProgressStats(saved.data, saved.progress);
+  const title = saved.data.goal || `${saved.data.studentName || 'Your'} 30-day Growth Map`;
+  panel.hidden = false;
+  panel.innerHTML = `
+    <div>
+      <div class="roadmap-saved-kicker">Saved Growth Map</div>
+      <div class="roadmap-saved-title">${escapeHtml(title)}</div>
+      <div class="roadmap-saved-meta">Saved ${escapeHtml(formatRoadmapSavedDate(saved.savedAt))} · ${stats.completed}/${stats.total || 0} checklist steps done · ${stats.pct}% complete</div>
+    </div>
+    <div class="roadmap-saved-actions">
+      <button class="btn btn-primary" type="button" onclick="openSavedRoadmap()"><i data-lucide="folder-open"></i><span>Reopen</span></button>
+      <button class="btn btn-secondary" type="button" onclick="downloadRoadmapPDF('saved')"><i data-lucide="download"></i><span>PDF</span></button>
+      <button class="btn btn-secondary" type="button" onclick="deleteSavedRoadmap()"><i data-lucide="trash-2"></i><span>Delete</span></button>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+function openSavedRoadmap(){
+  const saved = loadSavedRoadmap();
+  if (!saved) {
+    showToast('No saved Growth Map yet.');
+    return;
   }
-  showToast('Roadmap saved.');
+  window._latestRoadmapData = ensureRoadmapId(saved.data);
+  window._roadmapProgress = saved.progress || {};
+  el('rm-content').innerHTML = renderRoadmapMarkup(window._latestRoadmapData);
+  el('rm-form').style.display = 'none';
+  el('rm-result').style.display = 'block';
+  showRoadmapWeek((window._latestRoadmapData.weeks || [])[0]?.weekNumber || (window._latestRoadmapData.weeks || [])[0]?.week || 1);
+  updateRoadmapProgressUi();
+  setRoadmapSaveButtonState(true);
+  lucide.createIcons();
+  showToast('Saved Growth Map reopened.');
+}
+
+function deleteSavedRoadmap(){
+  localStorage.removeItem(roadmapStorageKey());
+  localStorage.removeItem(ROADMAP_STORAGE_BASE);
+  localStorage.removeItem(ROADMAP_LEGACY_STORAGE_KEY);
+  renderSavedRoadmapPanel();
+  setRoadmapSaveButtonState(false);
+  showToast('Saved Growth Map deleted.');
+}
+
+function updateRoadmapProgressUi(){
+  const stats = getRoadmapProgressStats();
+  const fill = el('rm-plan-progress-fill');
+  if (fill) fill.style.width = `${stats.pct}%`;
+  setText('rm-plan-progress-count', `${stats.completed}/${stats.total || 0} checklist steps done`);
+  setText('rm-plan-progress-days', `${stats.dayCompleted}/${stats.dayTotal || 0} days complete`);
+  document.querySelectorAll('[data-roadmap-day-key]').forEach(card => {
+    const checks = [...card.querySelectorAll('[data-roadmap-check]')];
+    const done = checks.length > 0 && checks.every(input => input.checked);
+    card.classList.toggle('completed', done);
+    const dayCheck = card.querySelector('.roadmap-day-check');
+    if (dayCheck) dayCheck.classList.toggle('checked', done);
+  });
+  document.querySelectorAll('.roadmap-check-item').forEach(label => {
+    const input = label.querySelector('[data-roadmap-check]');
+    label.classList.toggle('done', !!input?.checked);
+  });
+  renderSavedRoadmapPanel();
+}
+
+function toggleRoadmapChecklist(key, checked){
+  window._roadmapProgress = window._roadmapProgress || {};
+  window._roadmapProgress[key] = !!checked;
+  updateRoadmapProgressUi();
+  persistRoadmap({ silent:true });
+}
+
+function toggleRoadmapDay(dayKey){
+  const card = document.querySelector(`[data-roadmap-day-key="${dayKey}"]`);
+  if (!card) return;
+  const checks = [...card.querySelectorAll('[data-roadmap-check]')];
+  const shouldCheck = checks.some(input => !input.checked);
+  checks.forEach(input => {
+    input.checked = shouldCheck;
+    window._roadmapProgress[input.dataset.roadmapCheck] = shouldCheck;
+  });
+  updateRoadmapProgressUi();
+  persistRoadmap({ silent:true });
+}
+
+function pdfSafeRoadmapText(text = ''){
+  return String(text || '')
+    .replace(/→/g, '->')
+    .replace(/—/g, '-')
+    .replace(/[^\S\r\n]+/g, ' ')
+    .trim();
+}
+
+function downloadRoadmapPDF(source = 'current'){
+  const saved = source === 'saved' ? loadSavedRoadmap() : null;
+  const fallbackSaved = saved || loadSavedRoadmap();
+  const data = saved?.data || window._latestRoadmapData || fallbackSaved?.data;
+  const progress = saved?.progress || window._roadmapProgress || fallbackSaved?.progress || {};
+  if (!data) {
+    showToast('Generate or reopen a Growth Map first.');
+    return;
+  }
+  if (!window.jspdf?.jsPDF) {
+    showToast('PDF tools are still loading. Try again in a second.');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const margin = 16;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const maxWidth = pageWidth - margin * 2;
+  let y = 18;
+
+  const ensureSpace = needed => {
+    if (y + needed <= pageHeight - margin) return;
+    doc.addPage();
+    y = margin;
+  };
+  const write = (text, size = 10, style = 'normal', gap = 4, color = [35,35,35]) => {
+    const safe = pdfSafeRoadmapText(text);
+    if (!safe) return;
+    doc.setFont('helvetica', style);
+    doc.setFontSize(size);
+    doc.setTextColor(...color);
+    const lines = doc.splitTextToSize(safe, maxWidth);
+    ensureSpace(lines.length * (size * 0.42) + gap);
+    doc.text(lines, margin, y);
+    y += lines.length * (size * 0.42) + gap;
+  };
+
+  const stats = getRoadmapProgressStats(data, progress);
+  doc.setFillColor(232,80,10);
+  doc.rect(0, 0, pageWidth, 7, 'F');
+  write('Lancify Growth Map', 20, 'bold', 6, [18,18,18]);
+  write(data.goal || '30-day plan to close your first client.', 11, 'normal', 5, [70,70,70]);
+  write(`${stats.completed}/${stats.total || 0} checklist steps done · ${stats.dayCompleted}/${stats.dayTotal || 0} days complete`, 9, 'bold', 8, [232,80,10]);
+
+  (data.weeks || []).forEach((week, weekIndex) => {
+    ensureSpace(24);
+    doc.setDrawColor(232,80,10);
+    doc.setLineWidth(0.4);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 7;
+    write(`Week ${week.weekNumber || week.week || weekIndex + 1}: ${week.theme || 'Client closing work'}`, 14, 'bold', 3, [18,18,18]);
+    if (week.focus) write(week.focus, 9, 'normal', 5, [80,80,80]);
+
+    (week.days || []).forEach((day, dayIndex) => {
+      const checklist = roadmapChecklistForDay(day);
+      const dayNum = roadmapDayNumber(day, weekIndex, dayIndex);
+      ensureSpace(18);
+      write(`Day ${dayNum}: ${day.title || 'Action item'}`, 11, 'bold', 2, [18,18,18]);
+      write(day.task || '', 9, 'normal', 2, [55,55,55]);
+      if (day.timeEstimate) write(`Time: ${day.timeEstimate}`, 8, 'bold', 2, [232,80,10]);
+      checklist.forEach((item, itemIndex) => {
+        const key = roadmapStepKey(day, weekIndex, dayIndex, itemIndex);
+        const mark = progress[key] ? '[x]' : '[ ]';
+        write(`${mark} ${item}`, 8.5, 'normal', 1.5, [60,60,60]);
+      });
+      if (day.why) write(`Why it matters: ${day.why}`, 8, 'italic', 2, [90,90,90]);
+      const tip = cleanRoadmapTip(day.lancifyTip);
+      if (tip) write(`Lancify: ${tip}`, 8, 'bold', 5, [232,80,10]);
+    });
+  });
+
+  if (data.finalMessage) {
+    ensureSpace(24);
+    write('Final note', 12, 'bold', 3, [18,18,18]);
+    write(data.finalMessage, 9, 'normal', 3, [55,55,55]);
+  }
+
+  const name = pdfSafeRoadmapText(data.studentName || 'growth-map').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'growth-map';
+  doc.save(`Lancify-Growth-Map-${name}.pdf`);
+  showToast('Growth Map PDF downloaded.');
 }
 
 async function saveProfile(){
@@ -11753,9 +12196,9 @@ function resetRoadmap(){
   window._rmLoadingInterval = null;
   const saveBtn = el('rm-save-btn');
   if (saveBtn) {
-    saveBtn.classList.remove('saved');
-    saveBtn.textContent = 'Save Roadmap';
+    setRoadmapSaveButtonState(false);
   }
+  renderSavedRoadmapPanel();
 }
 
 /* ─── PIPELINE ─── */
@@ -11918,7 +12361,7 @@ async function generateRoadmap(){
   let ok = false;
   const btn = el('rm-btn');
   const loadingEl = el('rm-loading-steps');
-  const steps = ['Analyzing your skills...', 'Researching your platform...', 'Building your week 1 plan...', 'Writing daily tasks...', 'Finalizing your roadmap...'];
+  const steps = ['Analyzing your skills...', 'Finding the fastest client path...', 'Building week 1 proof...', 'Writing daily checklists...', 'Saving your growth map...'];
   let stepIdx = 0;
   if (btn) btn.disabled = true;
   loader('rm',true);
@@ -11948,11 +12391,14 @@ async function generateRoadmap(){
     const data=await res.json();
     if(data.error) throw new Error(data.error);
 
-    window._latestRoadmapData = data;
+    window._roadmapProgress = {};
+    window._latestRoadmapData = ensureRoadmapId(data);
     el('rm-content').innerHTML = renderRoadmapMarkup(data);
     el('rm-form').style.display='none';
     el('rm-result').style.display='block';
     showRoadmapWeek((data.weeks || [])[0]?.weekNumber || (data.weeks || [])[0]?.week || 1);
+    updateRoadmapProgressUi();
+    persistRoadmap({ silent:true });
     if(currentUser){
       await sb.from('roadmaps').insert([{
         user_id: currentUser.id,
@@ -14960,10 +15406,22 @@ function renderGigCardMarkup(niche){
     </div>`;
 }
 function renderRoadmapMarkup(data){
+  window._latestRoadmapData = ensureRoadmapId(data);
   const weeks = data.weeks || [];
+  const stats = getRoadmapProgressStats(data);
   return `
     <div class="roadmap-shell">
       ${data.goal ? `<div class="roadmap-goal-card"><div class="ai-result-label">Outcome</div><div style="font-size:15px;line-height:1.7;color:var(--text-main)">${escapeHtml(data.goal)}</div></div>` : ''}
+      <div class="roadmap-plan-progress">
+        <div class="roadmap-progress-copy">
+          <div>
+            <div class="roadmap-progress-title">Growth Map Progress</div>
+            <div id="rm-plan-progress-days" class="roadmap-saved-meta">${stats.dayCompleted}/${stats.dayTotal || 0} days complete</div>
+          </div>
+          <div id="rm-plan-progress-count" class="roadmap-progress-count">${stats.completed}/${stats.total || 0} checklist steps done</div>
+        </div>
+        <div class="roadmap-progress-bar"><div class="roadmap-progress-fill" id="rm-plan-progress-fill" style="width:${stats.pct}%"></div></div>
+      </div>
       <div class="roadmap-toolbar">
         <div class="roadmap-tabs">
           ${weeks.map((w, idx) => `<button class="roadmap-tab ${idx === 0 ? 'active' : ''}" type="button" data-week="${escapeHtml(w.weekNumber || w.week || idx + 1)}" onclick="showRoadmapWeek('${escapeHtml(w.weekNumber || w.week || idx + 1)}')">Week ${escapeHtml(w.weekNumber || w.week || idx + 1)}</button>`).join('')}
@@ -14980,21 +15438,41 @@ function renderRoadmapMarkup(data){
               ${w.focus ? `<div style="max-width:360px;font-size:13px;line-height:1.7;color:var(--text-muted)">${escapeHtml(w.focus)}</div>` : ''}
             </div>
             <div class="roadmap-day-list">
-              ${(w.days || []).map(d => `
-                <div class="roadmap-day-card">
+              ${(w.days || []).map((d, dayIdx) => {
+                const checklist = roadmapChecklistForDay(d);
+                const dayKey = roadmapDayKey(d, idx, dayIdx);
+                const dayNum = roadmapDayNumber(d, idx, dayIdx);
+                const dayDone = checklist.length > 0 && checklist.every((_, itemIdx) => window._roadmapProgress?.[roadmapStepKey(d, idx, dayIdx, itemIdx)]);
+                const tip = cleanRoadmapTip(d.lancifyTip);
+                return `
+                <div class="roadmap-day-card ${dayDone ? 'completed' : ''}" data-roadmap-day-key="${escapeHtml(dayKey)}">
                   <div class="roadmap-day-top">
-                    <div>
-                      <div class="roadmap-day-title">${escapeHtml(d.title || 'Action item')}</div>
-                      <div class="roadmap-day-task">${escapeHtml(d.task || '')}</div>
+                    <div class="roadmap-day-main">
+                      <button class="roadmap-day-check ${dayDone ? 'checked' : ''}" type="button" onclick="toggleRoadmapDay('${escapeJsAttr(dayKey)}')" aria-label="Mark day ${escapeHtml(dayNum)} complete"><i data-lucide="check"></i></button>
+                      <div>
+                        <div class="roadmap-day-title">${escapeHtml(d.title || 'Action item')}</div>
+                        <div class="roadmap-day-task">${escapeHtml(d.task || '')}</div>
+                      </div>
                     </div>
-                    <div class="roadmap-day-badge">${escapeHtml(d.day || '')}</div>
+                    <div class="roadmap-day-badge">${escapeHtml(dayNum)}</div>
                   </div>
                   <div class="roadmap-day-meta">
                     ${d.timeEstimate ? `<span class="roadmap-time-pill">${escapeHtml(d.timeEstimate)}</span>` : ''}
                   </div>
                   ${d.why ? `<div class="roadmap-day-note"><strong style="color:var(--text-main)">Why it matters:</strong> ${escapeHtml(d.why)}</div>` : ''}
-                  ${d.lancifyTip ? `<div class="roadmap-day-tip">${escapeHtml(d.lancifyTip)}</div>` : ''}
-                </div>`).join('')}
+                  ${tip ? `<div class="roadmap-day-tip">${escapeHtml(tip)}</div>` : ''}
+                  ${checklist.length ? `<div class="roadmap-checklist">
+                    ${checklist.map((item, itemIdx) => {
+                      const stepKey = roadmapStepKey(d, idx, dayIdx, itemIdx);
+                      const checked = !!window._roadmapProgress?.[stepKey];
+                      return `<label class="roadmap-check-item ${checked ? 'done' : ''}">
+                        <input type="checkbox" data-roadmap-check="${escapeHtml(stepKey)}" ${checked ? 'checked' : ''} onchange="toggleRoadmapChecklist('${escapeJsAttr(stepKey)}', this.checked)">
+                        <span>${escapeHtml(item)}</span>
+                      </label>`;
+                    }).join('')}
+                  </div>` : ''}
+                </div>`;
+              }).join('')}
             </div>
           </div>`).join('')}
       </div>
@@ -15603,6 +16081,7 @@ async function onLogin(user) {
   updateSequenceCounts();
   
   applySavedTheme();
+  renderSavedRoadmapPanel();
   
   // Bug 1 & 3: Use user ID for progress
   pbProgress = loadChecklistProgress(user.id);
