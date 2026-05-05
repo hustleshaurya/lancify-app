@@ -1591,18 +1591,19 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 /* ═══════════════════════════════════════════
    TW TOOL PAGES — PREMIUM REDESIGN (Email + Proposal)
 ═══════════════════════════════════════════ */
-.tw-tool-page{display:grid;gap:28px;padding-bottom:40px}
+.tw-tool-page{display:grid;gap:24px;padding-bottom:40px}
 /* Page header */
 .tw-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .tw-page-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
 .tw-page-title{font-size:26px;font-weight:800;letter-spacing:-.6px;color:var(--text-main);margin:0 0 6px;line-height:1.15}
 .tw-page-desc{font-size:13.5px;color:var(--text-muted);margin:0;line-height:1.6;max-width:52ch}
 /* Two-column layout */
-.tw-tool-layout{display:grid;grid-template-columns:minmax(320px,400px) minmax(0,1fr);gap:20px;align-items:start}
+.tw-tool-layout{display:grid;grid-template-columns:minmax(340px,420px) minmax(0,1fr);gap:24px;align-items:start}
 /* Form panel */
 .tw-form-panel{
   display:flex;flex-direction:column;gap:18px;
-  background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:24px 22px
+  background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:26px 24px;
+  box-shadow:0 18px 45px rgba(0,0,0,0.08)
 }
 .tw-form-section-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3)}
 .tw-field{display:flex;flex-direction:column;gap:7px}
@@ -1610,10 +1611,10 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 .tw-label{font-size:12px;font-weight:600;color:var(--text-muted);letter-spacing:.01em}
 .tw-label-note{font-size:11px;font-weight:400;color:var(--text3);margin-left:4px}
 .tw-input,.tw-select,.tw-textarea{
-  width:100%;padding:10px 13px;border-radius:10px;
+  width:100%;padding:11px 14px;border-radius:10px;
   border:1px solid var(--border);background:var(--bg);
   color:var(--text-main);font-size:13px;font-family:inherit;
-  outline:none;transition:border-color .15s,box-shadow .15s;
+  outline:none;transition:border-color .15s,box-shadow .15s,background .15s;
   box-sizing:border-box
 }
 .tw-input:focus,.tw-select:focus,.tw-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,80,10,0.10)}
@@ -1622,21 +1623,22 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 /* Select cards (email objective) */
 .tw-select-cards{display:flex;flex-wrap:wrap;gap:7px}
 .tw-select-card{
-  padding:6px 13px;border-radius:8px;border:1px solid var(--border);
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:40px;padding:0 15px;border-radius:10px;border:1px solid var(--border);
   background:var(--bg);color:var(--text-muted);font-size:12px;font-weight:600;
   cursor:pointer;transition:all .14s;font-family:inherit
 }
 .tw-select-card:hover{border-color:var(--accent);color:var(--text-main)}
-.tw-select-card.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.tw-select-card.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(232,80,10,0.22)}
 /* Tone row */
 .tw-tone-row{display:flex;gap:7px}
 .tw-tone-card{
-  flex:1;padding:8px 0;border-radius:8px;border:1px solid var(--border);
+  flex:1;min-height:40px;padding:0 12px;border-radius:10px;border:1px solid var(--border);
   background:var(--bg);color:var(--text-muted);font-size:12px;font-weight:600;
   cursor:pointer;transition:all .14s;text-align:center;font-family:inherit
 }
 .tw-tone-card:hover{border-color:var(--border2);color:var(--text-main)}
-.tw-tone-card.active{background:var(--bg3);border-color:var(--border2);color:var(--text-main)}
+.tw-tone-card.active{background:var(--text-main);border-color:var(--text-main);color:var(--bg)}
 /* Generate button */
 .tw-generate-btn{
   display:flex;align-items:center;justify-content:center;gap:8px;
@@ -1647,9 +1649,16 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 }
 .tw-generate-btn:hover:not(:disabled){background:#c94008;transform:translateY(-1px)}
 .tw-generate-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.tw-generate-btn .btn-spinner{flex:0 0 auto}
+.tw-generate-btn .btn-text-default{
+  display:inline-flex!important;align-items:center;justify-content:center;gap:8px;
+  line-height:1;white-space:nowrap
+}
+.tw-generate-btn .btn-text-default svg{display:block;flex:0 0 auto}
 .tw-generate-btn .btn-text-loading{display:none}
 .tw-generate-btn.is-loading .btn-text-default{display:none}
 .tw-generate-btn.is-loading .btn-text-loading{display:flex;align-items:center;gap:8px}
+.tw-generate-btn.is-loading .btn-spinner{display:inline-flex}
 /* Inline loader */
 .tw-inline-loader{display:none;align-items:center;gap:10px;font-size:12.5px;color:var(--text-muted);padding:4px 0}
 .tw-inline-loader.show{display:flex}
@@ -1657,7 +1666,8 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 /* Output panel */
 .tw-output-panel{
   background:var(--bg2);border:1px solid var(--border);border-radius:18px;
-  overflow:hidden;min-height:460px;display:flex;flex-direction:column
+  overflow:hidden;min-height:460px;display:flex;flex-direction:column;
+  box-shadow:0 18px 45px rgba(0,0,0,0.08)
 }
 .tw-output-topbar{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -1709,6 +1719,9 @@ html.dark .tw-form-panel{background:rgba(255,255,255,0.03)}
 html.dark .tw-output-panel{background:rgba(255,255,255,0.03)}
 html.dark .tw-input,html.dark .tw-select,html.dark .tw-textarea{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.09)}
 html.dark .tw-select-card,html.dark .tw-tone-card{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.09)}
+html.dark .tw-select-card:hover,html.dark .tw-tone-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.16)}
+html.dark .tw-select-card.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 8px 24px rgba(232,80,10,0.28)}
+html.dark .tw-tone-card.active{background:#f5f5f3;border-color:#f5f5f3;color:#111}
 html.dark .tw-copy-btn,html.dark .tw-action-btn{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)}
 html.dark .tw-empty-icon{background:rgba(255,255,255,0.05)}
 /* Responsive */
@@ -7586,7 +7599,7 @@ body,
                 <input type="text" id="prop-exp" class="tw-input" placeholder="e.g. I designed thumbnails for a 100k YouTube channel">
               </div>
 
-              <button class="tw-generate-btn" id="prop-btn" onclick="checkCredits(3, generateProposal)">
+              <button type="button" class="tw-generate-btn" id="prop-btn" onclick="checkCredits(3, generateProposal)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -7646,11 +7659,11 @@ body,
               <div class="tw-field">
                 <label class="tw-label">Email Objective</label>
                 <div class="tw-select-cards" id="email-type-cards">
-                  <button class="tw-select-card active" data-val="Cold outreach with a specific insight" onclick="selectEmailType(this)">Cold Outreach</button>
-                  <button class="tw-select-card" data-val="Follow-up" onclick="selectEmailType(this)">Follow Up</button>
-                  <button class="tw-select-card" data-val="Invoice reminder" onclick="selectEmailType(this)">Invoice Reminder</button>
-                  <button class="tw-select-card" data-val="Proposal follow up" onclick="selectEmailType(this)">Proposal Follow Up</button>
-                  <button class="tw-select-card" data-val="Thank you" onclick="selectEmailType(this)">Thank You</button>
+                  <button type="button" class="tw-select-card active" data-val="Cold outreach with a specific insight" aria-pressed="true" onclick="selectEmailType(this)">Cold Outreach</button>
+                  <button type="button" class="tw-select-card" data-val="Follow-up" aria-pressed="false" onclick="selectEmailType(this)">Follow Up</button>
+                  <button type="button" class="tw-select-card" data-val="Invoice reminder" aria-pressed="false" onclick="selectEmailType(this)">Invoice Reminder</button>
+                  <button type="button" class="tw-select-card" data-val="Proposal follow up" aria-pressed="false" onclick="selectEmailType(this)">Proposal Follow Up</button>
+                  <button type="button" class="tw-select-card" data-val="Thank you" aria-pressed="false" onclick="selectEmailType(this)">Thank You</button>
                 </div>
                 <input type="hidden" id="email-type" value="Cold outreach with a specific insight">
               </div>
@@ -7658,10 +7671,10 @@ body,
               <div class="tw-field">
                 <label class="tw-label">Tone</label>
                 <div class="tw-tone-row" id="email-tone-cards">
-                  <button class="tw-tone-card active" data-val="Professional and polite" onclick="selectEmailTone(this)">Professional</button>
-                  <button class="tw-tone-card" data-val="Friendly" onclick="selectEmailTone(this)">Friendly</button>
-                  <button class="tw-tone-card" data-val="Direct" onclick="selectEmailTone(this)">Direct</button>
-                  <button class="tw-tone-card" data-val="Assertive" onclick="selectEmailTone(this)">Assertive</button>
+                  <button type="button" class="tw-tone-card active" data-val="Professional and polite" aria-pressed="true" onclick="selectEmailTone(this)">Professional</button>
+                  <button type="button" class="tw-tone-card" data-val="Friendly" aria-pressed="false" onclick="selectEmailTone(this)">Friendly</button>
+                  <button type="button" class="tw-tone-card" data-val="Direct" aria-pressed="false" onclick="selectEmailTone(this)">Direct</button>
+                  <button type="button" class="tw-tone-card" data-val="Assertive" aria-pressed="false" onclick="selectEmailTone(this)">Assertive</button>
                 </div>
                 <input type="hidden" id="email-tone" value="Professional and polite">
               </div>
@@ -7671,7 +7684,7 @@ body,
                 <textarea id="email-context" class="tw-textarea tw-textarea-lg" rows="9" placeholder="e.g. Delivered 5 YouTube thumbnails, client is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea>
               </div>
 
-              <button class="tw-generate-btn" id="email-btn" onclick="checkCredits(2, generateEmail)">
+              <button type="button" class="tw-generate-btn" id="email-btn" onclick="checkCredits(2, generateEmail)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
@@ -12309,14 +12322,24 @@ async function generateProposal(){
 
 /* ─── EMAIL ─── */
 function selectEmailType(btn){
-  document.querySelectorAll('#email-type-cards .tw-select-card').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('email-type').value = btn.dataset.val;
+  const selected = btn?.closest?.('.tw-select-card') || btn;
+  if (!selected) return;
+  document.querySelectorAll('#email-type-cards .tw-select-card').forEach(b=>{
+    const isActive = b === selected;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-pressed', String(isActive));
+  });
+  document.getElementById('email-type').value = selected.dataset.val || selected.textContent.trim();
 }
 function selectEmailTone(btn){
-  document.querySelectorAll('#email-tone-cards .tw-tone-card').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('email-tone').value = btn.dataset.val;
+  const selected = btn?.closest?.('.tw-tone-card') || btn;
+  if (!selected) return;
+  document.querySelectorAll('#email-tone-cards .tw-tone-card').forEach(b=>{
+    const isActive = b === selected;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-pressed', String(isActive));
+  });
+  document.getElementById('email-tone').value = selected.dataset.val || selected.textContent.trim();
 }
 async function generateEmail(){
   const ctx=val('email-context'); if(!ctx) { showToast('Add some context first'); return false; }
