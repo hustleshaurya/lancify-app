@@ -7613,7 +7613,7 @@ body,
 
             <!-- RIGHT: Output -->
             <div class="tw-output-panel">
-              <div id="prop-result-box" style="display:none;flex-direction:column;flex:1">
+              <div id="prop-result-box" style="display:none">
                 <div class="tw-output-topbar">
                   <div class="tw-output-label">Generated Output</div>
                   <div class="tw-output-actions">
@@ -7698,7 +7698,7 @@ body,
 
             <!-- RIGHT: Output -->
             <div class="tw-output-panel">
-              <div id="email-result-box" style="display:none;flex-direction:column;flex:1">
+              <div id="email-result-box" style="display:none">
                 <div class="tw-output-topbar">
                   <div class="tw-output-label">Generated Output</div>
                   <div class="tw-output-actions">
@@ -12566,42 +12566,18 @@ async function generateProposal(){
   let ok = false;
   setButtonLoading('prop-btn', true); loader('prop',true); toggleResult('prop',false);
   try {
-    const platform = val('prop-platform') || 'Upwork';
-    const niche    = val('prop-niche')    || '';
-    const exp      = val('prop-exp')      || '';
-
-    const prompt = `You are an expert freelance proposal writer. Write a compelling, specific, and concise freelance proposal for the following job posting.
-
-Platform: ${platform}
-${niche ? `Freelancer niche: ${niche}` : ''}
-${exp   ? `Freelancer experience: ${exp}` : ''}
-
-Job Description:
-${job}
-
-Respond ONLY with a valid JSON object (no markdown, no backticks) with these exact keys:
-{
-  "proposal": "the full proposal text, written in first person, 150-250 words, specific to the job",
-  "subject": "a short attention-grabbing subject line or opener",
-  "tips": ["tip 1 about why this proposal works", "tip 2", "tip 3"],
-  "redFlag": "one thing to watch out for in this job post, or empty string if none"
-}`;
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
+    const res=await fetch('/api/proposal',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        jobDesc:    job,
+        platform:   val('prop-platform'),
+        niche:      val('prop-niche'),
+        experience: val('prop-exp')
       })
     });
-    const raw = await res.json();
-    if (raw.error) throw new Error(raw.error.message || 'API error');
-
-    const text = (raw.content||[]).map(b=>b.text||'').join('');
-    let data = {};
-    try { data = JSON.parse(text.replace(/```json|```/g,'').trim()); } catch(_){ data = { proposal: text }; }
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
 
     el('prop-result-text').innerHTML = renderAiResultMarkup({
       kicker: 'Proposal draft',
@@ -12611,29 +12587,27 @@ Respond ONLY with a valid JSON object (no markdown, no backticks) with these exa
       tips: data.tips || [],
       redFlag: data.redFlag || '',
       pills: [
-        `<strong>Platform</strong> ${escapeHtml(platform)}`,
+        `<strong>Platform</strong> ${escapeHtml(val('prop-platform') || 'Custom')}`,
         `<strong>Tone</strong> calm + confident`,
         `<strong>Goal</strong> get the reply`
       ]
     });
     setText('prop-word-count', `${wordCount(data.proposal || '')} words`);
     toggleResult('prop',true);
-    recordActivity('proposal', `Generated a proposal for ${platform}`);
+    recordActivity('proposal', `Generated a proposal for ${val('prop-platform') || 'a client opportunity'}`);
 
     if(currentUser){
-      try {
-        await sb.from('proposals').insert([{
-          user_id:       currentUser.id,
-          platform:      platform,
-          niche:         niche,
-          proposal_text: data.proposal || '',
-          job_description: job
-        }]);
-        loadStats(currentUser.id);
-      } catch(_){}
+      await sb.from('proposals').insert([{
+        user_id:       currentUser.id,
+        platform:      val('prop-platform'),
+        niche:         val('prop-niche'),
+        proposal_text: data.proposal || '',
+        job_description: job
+      }]);
+      loadStats(currentUser.id);
     }
     ok = true;
-  } catch(e){ showToast('Error generating proposal. Try again.'); toggleResult('prop',false,true); ok = false; }
+  } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); ok = false; }
   setButtonLoading('prop-btn', false); loader('prop',false);
   return ok;
 }
@@ -12643,41 +12617,18 @@ async function generateEmail(){
   let ok = false;
   setButtonLoading('email-btn', true); loader('email',true); toggleResult('email',false);
   try {
-    const emailType = val('email-type') || 'Cold outreach';
-    const tone      = val('email-tone') || 'Professional and polite';
-    const niche     = userProfile.niche || 'Freelancer';
-
-    const prompt = `You are an expert email copywriter for freelancers. Write a professional, concise, and effective email.
-
-Email type: ${emailType}
-Tone: ${tone}
-Freelancer niche: ${niche}
-Context provided by the user:
-${ctx}
-
-Respond ONLY with a valid JSON object (no markdown, no backticks) with these exact keys:
-{
-  "subject": "a compelling subject line under 60 characters",
-  "body": "the full email body, 80-150 words, clear paragraphs, no greetings header just start the body text",
-  "alternativeSubject": "one alternative subject line",
-  "tips": ["reason 1 why this email works", "reason 2", "reason 3"]
-}`;
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
+    const res=await fetch('/api/email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        emailType: val('email-type'),
+        tone:      val('email-tone'),
+        context:   ctx,
+        niche:     userProfile.niche || 'Freelancer'
       })
     });
-    const raw = await res.json();
-    if (raw.error) throw new Error(raw.error.message || 'API error');
-
-    const text = (raw.content||[]).map(b=>b.text||'').join('');
-    let data = {};
-    try { data = JSON.parse(text.replace(/```json|```/g,'').trim()); } catch(_){ data = { body: text }; }
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
 
     latestEmailDraft = { subject: data.subject || '', body: data.body || '' };
     setText('email-subject-pill', `Subject: ${data.subject || 'No subject generated'}`);
@@ -12689,26 +12640,24 @@ Respond ONLY with a valid JSON object (no markdown, no backticks) with these exa
       tips: data.tips || [],
       alternativeSubject: data.alternativeSubject || '',
       pills: [
-        `<strong>Objective</strong> ${escapeHtml(emailType)}`,
-        `<strong>Tone</strong> ${escapeHtml(tone)}`
+        `<strong>Objective</strong> ${escapeHtml(val('email-type') || 'Email')}`,
+        `<strong>Tone</strong> ${escapeHtml(val('email-tone') || 'Professional')}`
       ]
     });
     toggleResult('email',true);
-    recordActivity('email', `Generated an email for ${emailType}`);
+    recordActivity('email', `Generated an email for ${val('email-type') || 'client outreach'}`);
 
     if(currentUser){
-      try {
-        await sb.from('emails').insert([{
-          user_id:    currentUser.id,
-          email_type: emailType,
-          email_text: data.body || '',
-          context:    ctx
-        }]);
-        loadStats(currentUser.id);
-      } catch(_){}
+      await sb.from('emails').insert([{
+        user_id:    currentUser.id,
+        email_type: val('email-type'),
+        email_text: data.body || '',
+        context:    ctx
+      }]);
+      loadStats(currentUser.id);
     }
     ok = true;
-  } catch(e){ showToast('Error generating email. Try again.'); toggleResult('email',false,true); ok = false; }
+  } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); ok = false; }
   setButtonLoading('email-btn', false); loader('email',false);
   return ok;
 }
@@ -15861,7 +15810,7 @@ function renderRoadmapMarkup(data){
 function toggleResult(prefix,s,reset=false){
   const rb=el(prefix+'-result-box');
   const eb=el(prefix+'-empty');
-  if(rb){ rb.style.display=s?'flex':'none'; if(s){ rb.style.flexDirection='column'; rb.style.flex='1'; } }
+  if(rb) rb.style.display=s?'flex':'none';
   if(eb) eb.style.display=(!s&&!reset)?'flex':'none';
 }
 
