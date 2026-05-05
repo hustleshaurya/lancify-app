@@ -1588,6 +1588,137 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 @media(max-width:1100px){.acct-v2-row{grid-template-columns:1fr}.acct-v2-row-equal{grid-template-columns:1fr}.acct-v2-kpi-strip{flex-wrap:wrap}.acct-v2-kpi{flex:1 1 calc(33% - 1px)}.acct-v2-kpi-divider{display:none}}
 @media(max-width:640px){.acct-v2-topbar{flex-direction:column;gap:12px}.acct-v2-kpi{flex:1 1 calc(50% - 1px)}.acct-v2-mini-row{grid-template-columns:1fr}}
 
+/* ═══════════════════════════════════════════
+   TW TOOL PAGES — PREMIUM REDESIGN (Email + Proposal)
+═══════════════════════════════════════════ */
+.tw-tool-page{display:grid;gap:28px;padding-bottom:40px}
+/* Page header */
+.tw-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.tw-page-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.tw-page-title{font-size:26px;font-weight:800;letter-spacing:-.6px;color:var(--text-main);margin:0 0 6px;line-height:1.15}
+.tw-page-desc{font-size:13.5px;color:var(--text-muted);margin:0;line-height:1.6;max-width:52ch}
+/* Two-column layout */
+.tw-tool-layout{display:grid;grid-template-columns:minmax(320px,400px) minmax(0,1fr);gap:20px;align-items:start}
+/* Form panel */
+.tw-form-panel{
+  display:flex;flex-direction:column;gap:18px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:24px 22px
+}
+.tw-form-section-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3)}
+.tw-field{display:flex;flex-direction:column;gap:7px}
+.tw-field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tw-label{font-size:12px;font-weight:600;color:var(--text-muted);letter-spacing:.01em}
+.tw-label-note{font-size:11px;font-weight:400;color:var(--text3);margin-left:4px}
+.tw-input,.tw-select,.tw-textarea{
+  width:100%;padding:10px 13px;border-radius:10px;
+  border:1px solid var(--border);background:var(--bg);
+  color:var(--text-main);font-size:13px;font-family:inherit;
+  outline:none;transition:border-color .15s,box-shadow .15s;
+  box-sizing:border-box
+}
+.tw-input:focus,.tw-select:focus,.tw-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,80,10,0.10)}
+.tw-textarea{resize:vertical;line-height:1.6}
+.tw-textarea-lg{min-height:160px}
+/* Select cards (email objective) */
+.tw-select-cards{display:flex;flex-wrap:wrap;gap:7px}
+.tw-select-card{
+  padding:6px 13px;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg);color:var(--text-muted);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .14s;font-family:inherit
+}
+.tw-select-card:hover{border-color:var(--accent);color:var(--text-main)}
+.tw-select-card.active{background:var(--accent);border-color:var(--accent);color:#fff}
+/* Tone row */
+.tw-tone-row{display:flex;gap:7px}
+.tw-tone-card{
+  flex:1;padding:8px 0;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg);color:var(--text-muted);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .14s;text-align:center;font-family:inherit
+}
+.tw-tone-card:hover{border-color:var(--border2);color:var(--text-main)}
+.tw-tone-card.active{background:var(--bg3);border-color:var(--border2);color:var(--text-main)}
+/* Generate button */
+.tw-generate-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;height:46px;border-radius:12px;border:none;
+  background:var(--accent);color:#fff;font-size:14px;font-weight:700;
+  cursor:pointer;transition:background .15s,transform .1s;font-family:inherit;
+  margin-top:2px
+}
+.tw-generate-btn:hover:not(:disabled){background:#c94008;transform:translateY(-1px)}
+.tw-generate-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.tw-generate-btn .btn-text-loading{display:none}
+.tw-generate-btn.is-loading .btn-text-default{display:none}
+.tw-generate-btn.is-loading .btn-text-loading{display:flex;align-items:center;gap:8px}
+/* Inline loader */
+.tw-inline-loader{display:none;align-items:center;gap:10px;font-size:12.5px;color:var(--text-muted);padding:4px 0}
+.tw-inline-loader.show{display:flex}
+
+/* Output panel */
+.tw-output-panel{
+  background:var(--bg2);border:1px solid var(--border);border-radius:18px;
+  overflow:hidden;min-height:460px;display:flex;flex-direction:column
+}
+.tw-output-topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap
+}
+.tw-output-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3)}
+.tw-output-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tw-subject-badge{
+  display:inline-flex;align-items:center;padding:5px 12px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:600;
+  border:1px solid rgba(232,80,10,0.18);max-width:320px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+.tw-word-badge{
+  display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;
+  background:var(--bg);border:1px solid var(--border);color:var(--text-muted);font-size:11.5px;font-weight:600
+}
+.tw-copy-btn{
+  display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 14px;
+  border-radius:8px;border:1px solid var(--border);background:var(--bg);
+  color:var(--text-main);font-size:12.5px;font-weight:600;cursor:pointer;
+  transition:background .14s,border-color .14s;font-family:inherit
+}
+.tw-copy-btn:hover{background:var(--bg3);border-color:var(--border2)}
+.tw-output-body{padding:20px;flex:1;overflow-y:auto}
+.tw-output-footer-actions{
+  display:flex;align-items:center;gap:8px;padding:14px 20px;
+  border-top:1px solid var(--border);flex-wrap:wrap
+}
+.tw-action-btn{
+  height:32px;padding:0 14px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--text-muted);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .14s;font-family:inherit
+}
+.tw-action-btn:hover{background:var(--bg3);color:var(--text-main);border-color:var(--border2)}
+/* Empty state */
+.tw-empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:48px 32px;flex:1;gap:12px
+}
+.tw-empty-icon{
+  width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--border);color:var(--text3);margin-bottom:4px
+}
+.tw-empty-title{font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--text-main)}
+.tw-empty-copy{font-size:13px;color:var(--text-muted);line-height:1.65;max-width:34ch}
+/* Dark overrides */
+html.dark .tw-form-panel{background:rgba(255,255,255,0.03)}
+html.dark .tw-output-panel{background:rgba(255,255,255,0.03)}
+html.dark .tw-input,html.dark .tw-select,html.dark .tw-textarea{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.09)}
+html.dark .tw-select-card,html.dark .tw-tone-card{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.09)}
+html.dark .tw-copy-btn,html.dark .tw-action-btn{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)}
+html.dark .tw-empty-icon{background:rgba(255,255,255,0.05)}
+/* Responsive */
+@media(max-width:900px){
+  .tw-tool-layout{grid-template-columns:1fr}
+  .tw-field-row{grid-template-columns:1fr}
+  .tw-tone-row{flex-wrap:wrap}
+  .tw-tone-card{flex:1 1 calc(50% - 4px)}
+}
+
 /* Sidebar folders */
 .nav-folder{margin:2px 0}
 .nav-folder-head{
@@ -7417,45 +7548,77 @@ body,
          </div>
 
       <div id="page-proposal" class="page">
-        <div class="content-inner">
-          <div class="page-hd"><h1>Proposal Writer</h1><p>Paste a job description to generate a tailored, high-converting proposal.</p></div>
-          <div class="tool-grid">
-            <div class="card tool-form-card">
-              <div class="tool-section-kicker">Proposal Inputs</div>
-              <div class="field-group">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
-                  <div><label class="field-label">Platform</label><select id="prop-platform"><option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Direct Email</option></select></div>
-                  <div><label class="field-label">Your Niche</label><input type="text" id="prop-niche" placeholder="e.g. YouTube Thumbnails"></div>
+        <div class="content-inner tw-tool-page">
+
+          <div class="tw-page-header">
+            <div class="tw-page-header-left">
+              <div class="tw-page-kicker"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Proposal Writer</div>
+              <h1 class="tw-page-title">Turn job posts into winning proposals</h1>
+              <p class="tw-page-desc">Paste any job description and get a tailored, high-converting proposal in seconds.</p>
+            </div>
+          </div>
+
+          <div class="tw-tool-layout">
+            <!-- LEFT: Inputs -->
+            <div class="tw-form-panel">
+              <div class="tw-form-section-label">Configure</div>
+
+              <div class="tw-field-row">
+                <div class="tw-field">
+                  <label class="tw-label">Platform</label>
+                  <select id="prop-platform" class="tw-select">
+                    <option>Upwork</option><option>Fiverr</option><option>LinkedIn</option><option>Direct Email</option>
+                  </select>
+                </div>
+                <div class="tw-field">
+                  <label class="tw-label">Your Niche</label>
+                  <input type="text" id="prop-niche" class="tw-input" placeholder="e.g. YouTube Thumbnails">
                 </div>
               </div>
-              <div class="field-group"><label class="field-label">Job Description</label><textarea id="prop-job" rows="7" placeholder="Paste the job listing here…"></textarea></div>
-              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Experience</label><input type="text" id="prop-exp" placeholder="e.g. I designed thumbnails for a 100k channel"></div>
-              <button class="btn btn-primary btn-full" id="prop-btn" style="margin-top:18px" onclick="checkCredits(3, generateProposal)">
+
+              <div class="tw-field">
+                <label class="tw-label">Job Description <span class="tw-label-note">paste the full listing</span></label>
+                <textarea id="prop-job" class="tw-textarea tw-textarea-lg" rows="8" placeholder="Paste the job post here. The more detail, the sharper the proposal…"></textarea>
+              </div>
+
+              <div class="tw-field">
+                <label class="tw-label">Your Experience <span class="tw-label-note">optional but powerful</span></label>
+                <input type="text" id="prop-exp" class="tw-input" placeholder="e.g. I designed thumbnails for a 100k YouTube channel">
+              </div>
+
+              <button class="tw-generate-btn" id="prop-btn" onclick="checkCredits(3, generateProposal)">
                 <span class="btn-spinner"></span>
-                <span class="btn-text-default">Write My Proposal</span>
-                <span class="btn-text-loading">Generating...</span>
+                <span class="btn-text-default">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  Write My Proposal
+                </span>
+                <span class="btn-text-loading">Generating…</span>
               </button>
               <div class="tool-limit-note hidden" id="proposal-daily-limit"></div>
-              <div class="inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposal…</span></div>
+              <div class="tw-inline-loader" id="prop-loader"><div class="spin"></div><span>Crafting your proposal…</span></div>
             </div>
-            <div class="result-panel">
-              <div class="result-box tool-output-card" id="prop-result-box" style="display:none">
-                <div class="result-box-header">
-                  <div>
-                    <div class="tool-section-kicker">Generated Output</div>
-                    <div class="tool-output-heading">Your Proposal</div>
+
+            <!-- RIGHT: Output -->
+            <div class="tw-output-panel">
+              <div id="prop-result-box" style="display:none">
+                <div class="tw-output-topbar">
+                  <div class="tw-output-label">Generated Output</div>
+                  <div class="tw-output-actions">
+                    <span class="tw-word-badge" id="prop-word-count">0 words</span>
+                    <button class="tw-copy-btn" onclick="copyEl('prop-result-text')">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      Copy
+                    </button>
                   </div>
-                  <button class="copy-btn" onclick="copyEl('prop-result-text')">Copy</button>
                 </div>
-                <div class="result-box-body" id="prop-result-text"></div>
-                <div class="output-footer">
-                  <span class="word-count-badge" id="prop-word-count">0 words</span>
-                </div>
+                <div class="tw-output-body" id="prop-result-text"></div>
               </div>
-              <div class="card-dashed empty-state centered" id="prop-empty">
-                <div class="empty-state-icon"><i data-lucide="file-text" style="width:22px;height:22px"></i></div>
-                <div class="empty-state-heading">Ready To Write</div>
-                <p class="empty-state-copy">Paste the opportunity details on the left and Lancify will generate a tailored proposal that sounds clear, credible, and easy to reply to.</p>
+              <div class="tw-empty-state" id="prop-empty">
+                <div class="tw-empty-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <div class="tw-empty-title">Ready to write</div>
+                <p class="tw-empty-copy">Paste the job details on the left and Lancify will craft a tailored proposal — specific, clear, and built to get a reply.</p>
               </div>
             </div>
           </div>
@@ -7465,43 +7628,87 @@ body,
 
 
       <div id="page-email" class="page">
-        <div class="content-inner">
-          <div class="page-hd"><h1>Email Writer</h1><p>Draft professional client communications instantly.</p></div>
-          <div class="tool-grid">
-            <div class="card tool-form-card">
-              <div class="tool-section-kicker">Email Inputs</div>
-              <div class="field-group"><label class="field-label">Email Objective</label><select id="email-type"><option value="Cold outreach with a specific insight">Cold Outreach With Insight</option><option value="Follow-up">Follow Up</option><option value="Invoice reminder">Invoice Reminder</option><option value="Proposal follow up">Proposal Follow Up</option><option value="Thank you">Thank You</option></select></div>
-              <div class="field-group"><label class="field-label">Tone</label><select id="email-tone"><option value="Professional and polite">Professional & Polite</option><option value="Friendly">Friendly</option><option value="Direct">Direct</option><option value="Assertive">Assertive</option></select></div>
-              <div class="field-group" style="margin-bottom:0"><label class="field-label">Key Context</label><textarea id="email-context" rows="9" placeholder="E.g. Delivered 5 YouTube thumbnails, client name is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="email-btn" style="margin-top:18px" onclick="checkCredits(2, generateEmail)">
+        <div class="content-inner tw-tool-page">
+
+          <div class="tw-page-header">
+            <div class="tw-page-header-left">
+              <div class="tw-page-kicker"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Email Writer</div>
+              <h1 class="tw-page-title">Professional emails, drafted instantly</h1>
+              <p class="tw-page-desc">Set the objective, tone, and context — get a send-ready email with a subject line that gets opened.</p>
+            </div>
+          </div>
+
+          <div class="tw-tool-layout">
+            <!-- LEFT: Inputs -->
+            <div class="tw-form-panel">
+              <div class="tw-form-section-label">Configure</div>
+
+              <div class="tw-field">
+                <label class="tw-label">Email Objective</label>
+                <div class="tw-select-cards" id="email-type-cards">
+                  <button class="tw-select-card active" data-val="Cold outreach with a specific insight" onclick="selectEmailType(this)">Cold Outreach</button>
+                  <button class="tw-select-card" data-val="Follow-up" onclick="selectEmailType(this)">Follow Up</button>
+                  <button class="tw-select-card" data-val="Invoice reminder" onclick="selectEmailType(this)">Invoice Reminder</button>
+                  <button class="tw-select-card" data-val="Proposal follow up" onclick="selectEmailType(this)">Proposal Follow Up</button>
+                  <button class="tw-select-card" data-val="Thank you" onclick="selectEmailType(this)">Thank You</button>
+                </div>
+                <input type="hidden" id="email-type" value="Cold outreach with a specific insight">
+              </div>
+
+              <div class="tw-field">
+                <label class="tw-label">Tone</label>
+                <div class="tw-tone-row" id="email-tone-cards">
+                  <button class="tw-tone-card active" data-val="Professional and polite" onclick="selectEmailTone(this)">Professional</button>
+                  <button class="tw-tone-card" data-val="Friendly" onclick="selectEmailTone(this)">Friendly</button>
+                  <button class="tw-tone-card" data-val="Direct" onclick="selectEmailTone(this)">Direct</button>
+                  <button class="tw-tone-card" data-val="Assertive" onclick="selectEmailTone(this)">Assertive</button>
+                </div>
+                <input type="hidden" id="email-tone" value="Professional and polite">
+              </div>
+
+              <div class="tw-field">
+                <label class="tw-label">Key Context <span class="tw-label-note">the more detail, the sharper the email</span></label>
+                <textarea id="email-context" class="tw-textarea tw-textarea-lg" rows="9" placeholder="e.g. Delivered 5 YouTube thumbnails, client is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea>
+              </div>
+
+              <button class="tw-generate-btn" id="email-btn" onclick="checkCredits(2, generateEmail)">
                 <span class="btn-spinner"></span>
-                <span class="btn-text-default">Generate Draft</span>
-                <span class="btn-text-loading">Generating...</span>
+                <span class="btn-text-default">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                  Generate Draft
+                </span>
+                <span class="btn-text-loading">Generating…</span>
               </button>
               <div class="tool-limit-note hidden" id="email-daily-limit"></div>
-              <div class="inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
+              <div class="tw-inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
             </div>
-            <div class="result-panel">
-              <div class="result-box tool-output-card" id="email-result-box" style="display:none">
-                <div class="result-box-header">
-                  <div>
-                    <div class="tool-section-kicker">Generated Output</div>
-                    <div class="tool-output-heading">Email Draft</div>
+
+            <!-- RIGHT: Output -->
+            <div class="tw-output-panel">
+              <div id="email-result-box" style="display:none">
+                <div class="tw-output-topbar">
+                  <div class="tw-output-label">Generated Output</div>
+                  <div class="tw-output-actions">
+                    <div class="tw-subject-badge" id="email-subject-pill">Subject: —</div>
+                    <button class="tw-copy-btn" onclick="copyEl('email-result-text')">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      Copy
+                    </button>
                   </div>
-                  <button class="copy-btn" onclick="copyEl('email-result-text')">Copy</button>
                 </div>
-                <div class="subject-pill" id="email-subject-pill">Subject: Not generated yet</div>
-                <div class="result-box-body" id="email-result-text"></div>
-                <div class="output-actions">
-                  <button class="btn btn-secondary" onclick="copyEl('email-result-text')">Copy</button>
-                  <button class="btn btn-secondary" onclick="checkCredits(2, generateEmail)">Regenerate</button>
-                  <button class="btn btn-secondary" onclick="downloadEmailDraft()">Download</button>
+                <div class="tw-output-body" id="email-result-text"></div>
+                <div class="tw-output-footer-actions">
+                  <button class="tw-action-btn" onclick="copyEl('email-result-text')">Copy text</button>
+                  <button class="tw-action-btn" onclick="checkCredits(2, generateEmail)">Regenerate</button>
+                  <button class="tw-action-btn" onclick="downloadEmailDraft()">Download</button>
                 </div>
               </div>
-              <div class="card-dashed empty-state centered" id="email-empty">
-                <div class="empty-state-icon"><i data-lucide="mail" style="width:22px;height:22px"></i></div>
-                <div class="empty-state-heading">Draft Client Communication Fast</div>
-                <p class="empty-state-copy">Set your objective, choose the tone, and generate a polished email with a clean subject line and send-ready copy.</p>
+              <div class="tw-empty-state" id="email-empty">
+                <div class="tw-empty-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div class="tw-empty-title">Draft client emails fast</div>
+                <p class="tw-empty-copy">Choose your objective, set the tone, add context — and get a polished email with a subject line that actually gets opened.</p>
               </div>
             </div>
           </div>
@@ -12101,6 +12308,16 @@ async function generateProposal(){
 }
 
 /* ─── EMAIL ─── */
+function selectEmailType(btn){
+  document.querySelectorAll('#email-type-cards .tw-select-card').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('email-type').value = btn.dataset.val;
+}
+function selectEmailTone(btn){
+  document.querySelectorAll('#email-tone-cards .tw-tone-card').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('email-tone').value = btn.dataset.val;
+}
 async function generateEmail(){
   const ctx=val('email-context'); if(!ctx) { showToast('Add some context first'); return false; }
   let ok = false;
