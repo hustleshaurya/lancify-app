@@ -1521,6 +1521,123 @@ html.dark .range-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fa
 .activity-date{font-size:11.5px;color:var(--text3);white-space:nowrap}
 .analytics-grid-bottom{grid-template-columns:1fr 1fr}
 
+/* ═══════════════════════════════════════════
+   ACCOUNTING V2 — PREMIUM REDESIGN
+═══════════════════════════════════════════ */
+.acct-v2-shell{display:grid;gap:24px;padding-bottom:32px}
+
+/* Top bar */
+.acct-v2-topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.acct-v2-title-block{}
+.acct-v2-h1{font-size:24px;font-weight:800;letter-spacing:-.6px;color:var(--text-main);margin:0 0 4px}
+.acct-v2-amp{color:var(--accent);font-weight:900}
+.acct-v2-sub{font-size:13px;color:var(--text-muted);margin:0}
+.acct-v2-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.acct-v2-range-switcher{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:3px}
+.acct-v2-chip{
+  padding:6px 13px;border-radius:7px;border:none;background:transparent;
+  color:var(--text-muted);font-size:12px;font-weight:600;letter-spacing:.02em;cursor:pointer;
+  transition:background .14s,color .14s
+}
+.acct-v2-chip:hover{color:var(--text-main)}
+.acct-v2-chip.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(232,80,10,0.28)}
+html.dark .acct-v2-chip.active{background:var(--accent);color:#fff}
+.acct-v2-daterange{display:flex;align-items:center;gap:6px}
+.acct-v2-date-input{
+  font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg2);color:var(--text-main);font-family:inherit;outline:none
+}
+.acct-v2-date-input:focus{border-color:var(--accent)}
+.acct-v2-date-sep{font-size:12px;color:var(--text3);font-weight:600}
+
+/* KPI strip */
+.acct-v2-kpi-strip{
+  display:flex;align-items:stretch;gap:0;
+  background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden
+}
+.acct-v2-kpi{
+  flex:1;display:flex;align-items:center;gap:12px;
+  padding:18px 16px;min-width:0;transition:background .14s
+}
+.acct-v2-kpi:hover{background:var(--bg3)}
+.acct-kpi-highlight{background:linear-gradient(135deg,rgba(232,80,10,0.06),transparent)}
+.acct-v2-kpi-divider{width:1px;background:var(--border);flex-shrink:0;margin:12px 0}
+.acct-v2-kpi-icon{
+  width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0
+}
+.acct-kpi-blue{background:rgba(99,102,241,0.12);color:#6366f1}
+.acct-kpi-amber{background:rgba(245,158,11,0.12);color:#f59e0b}
+.acct-kpi-green{background:rgba(34,197,94,0.12);color:#22c55e}
+.acct-kpi-teal{background:rgba(20,184,166,0.12);color:#14b8a6}
+.acct-kpi-orange{background:rgba(232,80,10,0.12);color:var(--accent)}
+.acct-kpi-purple{background:rgba(168,85,247,0.12);color:#a855f7}
+.acct-v2-kpi-body{min-width:0}
+.acct-v2-kpi-label{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;white-space:nowrap}
+.acct-v2-kpi-value{font-size:22px;font-weight:800;letter-spacing:-.6px;color:var(--text-main);line-height:1;margin-bottom:3px}
+.acct-v2-kpi-hint{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Panel rows */
+.acct-v2-row{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+.acct-v2-row-equal{grid-template-columns:1fr 1fr}
+
+/* Panels */
+.acct-v2-panel{
+  background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px 20px;
+  display:flex;flex-direction:column;gap:16px
+}
+.acct-v2-panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.acct-v2-panel-title{font-size:15px;font-weight:700;letter-spacing:-.3px;color:var(--text-main);margin-bottom:3px}
+.acct-v2-panel-desc{font-size:12px;color:var(--text-muted);line-height:1.5;max-width:44ch}
+
+/* Revenue mini-row */
+.acct-v2-mini-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+.acct-v2-mini{
+  padding:14px;border-radius:12px;
+  background:var(--bg);border:1px solid var(--border)
+}
+.acct-v2-mini-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.acct-v2-mini-value{font-size:20px;font-weight:800;letter-spacing:-.5px;color:var(--text-main);margin-bottom:2px}
+.acct-v2-mini-hint{font-size:11px;color:var(--text-muted)}
+
+/* Pipeline health stats */
+.acct-v2-health-stats{display:grid;grid-template-columns:1fr;gap:0}
+.acct-v2-health-stat{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid var(--border)
+}
+.acct-v2-health-stat:last-child{border-bottom:none}
+.acct-v2-health-label{font-size:12px;font-weight:600;color:var(--text-muted)}
+.acct-v2-health-value{font-size:20px;font-weight:800;letter-spacing:-.5px;color:var(--text-main)}
+.acct-v2-health-hint{font-size:11px;color:var(--text3);text-align:right}
+.acct-v2-funnel-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:-6px}
+
+/* Table tweak for v2 */
+.acct-v2-table th{padding:10px 8px 10px 0;font-size:10.5px}
+.acct-v2-table td{padding:11px 8px 11px 0;font-size:13px}
+.acct-v2-table td:first-child,.acct-v2-table th:first-child{padding-left:0}
+
+/* Dark mode overrides */
+html.dark .acct-v2-kpi-strip{background:rgba(255,255,255,0.03)}
+html.dark .acct-v2-panel{background:rgba(255,255,255,0.03)}
+html.dark .acct-v2-mini{background:rgba(255,255,255,0.04)}
+html.dark .acct-v2-date-input{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:#f1f5f9}
+html.dark .acct-v2-range-switcher{background:rgba(255,255,255,0.04)}
+html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
+
+/* Responsive */
+@media(max-width:1100px){
+  .acct-v2-row{grid-template-columns:1fr}
+  .acct-v2-row-equal{grid-template-columns:1fr}
+  .acct-v2-kpi-strip{flex-wrap:wrap}
+  .acct-v2-kpi{flex:1 1 calc(33% - 1px)}
+  .acct-v2-kpi-divider{display:none}
+}
+@media(max-width:640px){
+  .acct-v2-topbar{flex-direction:column;gap:12px}
+  .acct-v2-kpi{flex:1 1 calc(50% - 1px)}
+  .acct-v2-mini-row{grid-template-columns:1fr}
+}
+
 /* Sidebar folders */
 .nav-folder{margin:2px 0}
 .nav-folder-head{
@@ -8247,77 +8364,157 @@ body,
       </div>
 
       <div id="page-accounting" class="page">
-        <div class="content-inner wide analytics-shell">
-          <div class="page-hd page-hd-split">
-            <div>
-              <h1>Accounting & Analytics</h1>
-              <p>A more serious revenue view with date ranges, pipeline performance, client concentration, invoice health, and recent business activity.</p>
+        <div class="content-inner wide acct-v2-shell">
+
+          <!-- ── TOP BAR: title + range controls ── -->
+          <div class="acct-v2-topbar">
+            <div class="acct-v2-title-block">
+              <h1 class="acct-v2-h1">Accounting <span class="acct-v2-amp">&amp;</span> Analytics</h1>
+              <p class="acct-v2-sub">Revenue, pipeline health, client value &amp; cash flow — all in one view.</p>
             </div>
-            <div class="page-hd-note"><i data-lucide="line-chart" style="width:14px;height:14px"></i> Range filters update the full workspace.</div>
-          </div>
-          <div class="analytics-range-row">
-            <div class="range-switcher">
-              <button class="range-chip" data-acc-range="7d" onclick="setAccountingRange('7d')">7D</button>
-              <button class="range-chip active" data-acc-range="30d" onclick="setAccountingRange('30d')">30D</button>
-              <button class="range-chip" data-acc-range="90d" onclick="setAccountingRange('90d')">Quarter</button>
-              <button class="range-chip" data-acc-range="365d" onclick="setAccountingRange('365d')">Year</button>
-              <button class="range-chip" data-acc-range="all" onclick="setAccountingRange('all')">All time</button>
+            <div class="acct-v2-controls">
+              <div class="acct-v2-range-switcher">
+                <button class="acct-v2-chip" data-acc-range="7d" onclick="setAccountingRange('7d')">7D</button>
+                <button class="acct-v2-chip active" data-acc-range="30d" onclick="setAccountingRange('30d')">30D</button>
+                <button class="acct-v2-chip" data-acc-range="90d" onclick="setAccountingRange('90d')">Quarter</button>
+                <button class="acct-v2-chip" data-acc-range="365d" onclick="setAccountingRange('365d')">Year</button>
+                <button class="acct-v2-chip" data-acc-range="all" onclick="setAccountingRange('all')">All time</button>
+              </div>
+              <div class="acct-v2-daterange">
+                <input type="date" id="acc-date-start" onchange="applyAccountingCustomRange()" class="acct-v2-date-input">
+                <span class="acct-v2-date-sep">→</span>
+                <input type="date" id="acc-date-end" onchange="applyAccountingCustomRange()" class="acct-v2-date-input">
+              </div>
             </div>
-            <div class="analytics-custom-range">
-              <input type="date" id="acc-date-start" onchange="applyAccountingCustomRange()">
-              <span>to</span>
-              <input type="date" id="acc-date-end" onchange="applyAccountingCustomRange()">
+          </div>
+
+          <!-- ── KPI STRIP ── -->
+          <div class="acct-v2-kpi-strip">
+            <div class="acct-v2-kpi">
+              <div class="acct-v2-kpi-icon acct-kpi-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <div class="acct-v2-kpi-body">
+                <div class="acct-v2-kpi-label">Clients In Range</div>
+                <div class="acct-v2-kpi-value" id="acc-total-clients">0</div>
+                <div class="acct-v2-kpi-hint" id="acc-range-copy">Last 30 days</div>
+              </div>
+            </div>
+            <div class="acct-v2-kpi-divider"></div>
+            <div class="acct-v2-kpi">
+              <div class="acct-v2-kpi-icon acct-kpi-amber"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div>
+              <div class="acct-v2-kpi-body">
+                <div class="acct-v2-kpi-label">Open Pipeline</div>
+                <div class="acct-v2-kpi-value" id="acc-open-pipeline">$0</div>
+                <div class="acct-v2-kpi-hint">Deals still in motion</div>
+              </div>
+            </div>
+            <div class="acct-v2-kpi-divider"></div>
+            <div class="acct-v2-kpi acct-kpi-highlight">
+              <div class="acct-v2-kpi-icon acct-kpi-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+              <div class="acct-v2-kpi-body">
+                <div class="acct-v2-kpi-label">Booked Revenue</div>
+                <div class="acct-v2-kpi-value" id="acc-booked-revenue">$0</div>
+                <div class="acct-v2-kpi-hint">Closed-won value</div>
+              </div>
+            </div>
+            <div class="acct-v2-kpi-divider"></div>
+            <div class="acct-v2-kpi">
+              <div class="acct-v2-kpi-icon acct-kpi-teal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+              <div class="acct-v2-kpi-body">
+                <div class="acct-v2-kpi-label">Cash Collected</div>
+                <div class="acct-v2-kpi-value" id="acc-collected-cash">$0</div>
+                <div class="acct-v2-kpi-hint">Invoices marked paid</div>
+              </div>
+            </div>
+            <div class="acct-v2-kpi-divider"></div>
+            <div class="acct-v2-kpi">
+              <div class="acct-v2-kpi-icon acct-kpi-orange"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div class="acct-v2-kpi-body">
+                <div class="acct-v2-kpi-label">Pending Payments</div>
+                <div class="acct-v2-kpi-value" id="acc-outstanding">$0</div>
+                <div class="acct-v2-kpi-hint">Awaiting collection</div>
+              </div>
+            </div>
+            <div class="acct-v2-kpi-divider"></div>
+            <div class="acct-v2-kpi">
+              <div class="acct-v2-kpi-icon acct-kpi-purple"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+              <div class="acct-v2-kpi-body">
+                <div class="acct-v2-kpi-label">Close Rate</div>
+                <div class="acct-v2-kpi-value" id="acc-close-rate">0%</div>
+                <div class="acct-v2-kpi-hint">Won ÷ pipeline created</div>
+              </div>
             </div>
           </div>
-          <div class="analytics-hero-grid">
-            <div class="analytics-metric-card"><div class="analytics-metric-label">Clients In Range</div><div class="analytics-metric-value" id="acc-total-clients">0</div><div class="analytics-metric-sub" id="acc-range-copy">Showing the latest operating window.</div></div>
-            <div class="analytics-metric-card"><div class="analytics-metric-label">Open Pipeline</div><div class="analytics-metric-value" id="acc-open-pipeline">$0</div><div class="analytics-metric-sub">Open deal value still in motion.</div></div>
-            <div class="analytics-metric-card"><div class="analytics-metric-label">Booked Revenue</div><div class="analytics-metric-value" id="acc-booked-revenue">$0</div><div class="analytics-metric-sub">Closed-won value recorded in the CRM.</div></div>
-            <div class="analytics-metric-card"><div class="analytics-metric-label">Cash Collected</div><div class="analytics-metric-value" id="acc-collected-cash">$0</div><div class="analytics-metric-sub">Invoices marked paid in the selected range.</div></div>
-<div class="analytics-metric-card"><div class="analytics-metric-label" title="Money waiting to be paid by clients">Pending Payments</div><div class="analytics-metric-value" id="acc-outstanding">$0</div><div class="analytics-metric-sub">Money waiting to be paid by clients.</div></div>
-            <div class="analytics-metric-card"><div class="analytics-metric-label">Close Rate</div><div class="analytics-metric-value" id="acc-close-rate">0%</div><div class="analytics-metric-sub">Won deals divided by created pipeline.</div></div>
-          </div>
-          <div class="analytics-grid">
-            <div class="analytics-panel">
-              <div class="analytics-panel-header">
+
+          <!-- ── ROW 1: Revenue Intelligence + Pipeline Health ── -->
+          <div class="acct-v2-row">
+            <div class="acct-v2-panel acct-v2-panel-lg">
+              <div class="acct-v2-panel-head">
                 <div>
-                  <div class="analytics-panel-title">Revenue Intelligence</div>
-                  <div class="analytics-panel-copy">Track how much closed value is being created across the current period, then compare it against average ticket size and invoice volume.</div>
+                  <div class="acct-v2-panel-title">Revenue Intelligence</div>
+                  <div class="acct-v2-panel-desc">Closed value over time — vs average ticket &amp; invoice volume.</div>
                 </div>
               </div>
               <div class="trend-bars" id="acc-trend-bars"></div>
               <div class="trend-bars" id="acc-trend-labels" style="height:auto;padding-top:0;align-items:flex-start"></div>
-              <div class="analytics-mini-stats">
-                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Active Deals</div><div class="analytics-mini-stat-value" id="acc-active-deals">0</div><div class="analytics-mini-stat-sub">Pitched plus in talks</div></div>
-                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Average Ticket</div><div class="analytics-mini-stat-value" id="acc-avg-ticket">$0</div><div class="analytics-mini-stat-sub">Won revenue divided by wins</div></div>
-                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Invoices Raised</div><div class="analytics-mini-stat-value" id="acc-period-invoices">0</div><div class="analytics-mini-stat-sub">Invoices issued in this range</div></div>
-              </div>
-            </div>
-            <div class="analytics-panel">
-              <div class="analytics-panel-header">
-                <div>
-                  <div class="analytics-panel-title">Pipeline Health</div>
-                  <div class="analytics-panel-copy">Keep response rate, follow-up debt, and source flow visible so the CRM stays operational instead of decorative.</div>
+              <div class="acct-v2-mini-row">
+                <div class="acct-v2-mini">
+                  <div class="acct-v2-mini-label">Active Deals</div>
+                  <div class="acct-v2-mini-value" id="acc-active-deals">0</div>
+                  <div class="acct-v2-mini-hint">Pitched + in talks</div>
+                </div>
+                <div class="acct-v2-mini">
+                  <div class="acct-v2-mini-label">Avg Ticket</div>
+                  <div class="acct-v2-mini-value" id="acc-avg-ticket">$0</div>
+                  <div class="acct-v2-mini-hint">Won revenue ÷ wins</div>
+                </div>
+                <div class="acct-v2-mini">
+                  <div class="acct-v2-mini-label">Invoices Raised</div>
+                  <div class="acct-v2-mini-value" id="acc-period-invoices">0</div>
+                  <div class="acct-v2-mini-hint">In this date range</div>
                 </div>
               </div>
-              <div class="analytics-mini-stats" style="grid-template-columns:1fr">
-                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Response Rate</div><div class="analytics-mini-stat-value" id="acc-response-rate">0%</div><div class="analytics-mini-stat-sub">Replied plus won over created leads</div></div>
-                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Follow-ups Due</div><div class="analytics-mini-stat-value" id="acc-followups-due">0</div><div class="analytics-mini-stat-sub">Open deals with follow-ups due today</div></div>
-                <div class="analytics-mini-stat"><div class="analytics-mini-stat-label">Saved Opportunities</div><div class="analytics-mini-stat-value" id="acc-saved-leads">0</div><div class="analytics-mini-stat-sub">Still waiting to be staged into CRM</div></div>
+            </div>
+
+            <div class="acct-v2-panel acct-v2-panel-sm">
+              <div class="acct-v2-panel-head">
+                <div>
+                  <div class="acct-v2-panel-title">Pipeline Health</div>
+                  <div class="acct-v2-panel-desc">Response rate, follow-up debt &amp; CRM flow.</div>
+                </div>
               </div>
-              <div class="analytics-funnel-list" id="acc-funnel-list" style="margin-top:14px"></div>
+              <div class="acct-v2-health-stats">
+                <div class="acct-v2-health-stat">
+                  <div class="acct-v2-health-label">Response Rate</div>
+                  <div class="acct-v2-health-value" id="acc-response-rate">0%</div>
+                  <div class="acct-v2-health-hint">Replied + won over leads</div>
+                </div>
+                <div class="acct-v2-health-stat">
+                  <div class="acct-v2-health-label">Follow-ups Due</div>
+                  <div class="acct-v2-health-value" id="acc-followups-due">0</div>
+                  <div class="acct-v2-health-hint">Due today</div>
+                </div>
+                <div class="acct-v2-health-stat">
+                  <div class="acct-v2-health-label">Saved Leads</div>
+                  <div class="acct-v2-health-value" id="acc-saved-leads">0</div>
+                  <div class="acct-v2-health-hint">Waiting to be staged</div>
+                </div>
+              </div>
+              <div class="acct-v2-funnel-label">Deal Stage Breakdown</div>
+              <div class="analytics-funnel-list" id="acc-funnel-list"></div>
             </div>
           </div>
-          <div class="analytics-grid">
-            <div class="analytics-panel">
-              <div class="analytics-panel-header">
+
+          <!-- ── ROW 2: Top Clients + Channel Mix ── -->
+          <div class="acct-v2-row">
+            <div class="acct-v2-panel acct-v2-panel-lg">
+              <div class="acct-v2-panel-head">
                 <div>
-                  <div class="analytics-panel-title">Top Clients</div>
-                  <div class="analytics-panel-copy">See who is driving the most booked value and invoice activity across the filtered period.</div>
+                  <div class="acct-v2-panel-title">Top Clients</div>
+                  <div class="acct-v2-panel-desc">Booked, collected &amp; open value by client in this period.</div>
                 </div>
               </div>
               <div id="acc-top-clients-wrap">
-                <table class="analytics-table">
+                <table class="analytics-table acct-v2-table">
                   <thead>
                     <tr><th>Client</th><th>Booked</th><th>Collected</th><th>Open</th></tr>
                   </thead>
@@ -8325,36 +8522,39 @@ body,
                 </table>
               </div>
             </div>
-            <div class="analytics-panel">
-              <div class="analytics-panel-header">
+            <div class="acct-v2-panel acct-v2-panel-sm">
+              <div class="acct-v2-panel-head">
                 <div>
-                  <div class="analytics-panel-title">Channel Mix</div>
-                  <div class="analytics-panel-copy">Spot which channels are feeding your pipeline best so you can double down where conversion is healthiest.</div>
+                  <div class="acct-v2-panel-title">Channel Mix</div>
+                  <div class="acct-v2-panel-desc">Which sources feed your pipeline best.</div>
                 </div>
               </div>
               <div class="analytics-channel-list" id="acc-channel-mix"></div>
             </div>
           </div>
-          <div class="analytics-grid analytics-grid-bottom">
-            <div class="analytics-panel">
-              <div class="analytics-panel-header">
+
+          <!-- ── ROW 3: Collections + Recent Activity ── -->
+          <div class="acct-v2-row acct-v2-row-equal">
+            <div class="acct-v2-panel">
+              <div class="acct-v2-panel-head">
                 <div>
-                  <div class="analytics-panel-title">Collections Snapshot</div>
-                  <div class="analytics-panel-copy">A quick read on paid, sent, and overdue invoices keeps cash flow visible without leaving the workspace.</div>
+                  <div class="acct-v2-panel-title">Collections Snapshot</div>
+                  <div class="acct-v2-panel-desc">Paid, sent &amp; overdue invoices at a glance.</div>
                 </div>
               </div>
               <div class="analytics-collection-list" id="acc-collections-list"></div>
             </div>
-            <div class="analytics-panel">
-              <div class="analytics-panel-header">
+            <div class="acct-v2-panel">
+              <div class="acct-v2-panel-head">
                 <div>
-                  <div class="analytics-panel-title">Recent Activity</div>
-                  <div class="analytics-panel-copy">The latest meaningful moves across wins, invoices, and saved opportunities.</div>
+                  <div class="acct-v2-panel-title">Recent Activity</div>
+                  <div class="acct-v2-panel-desc">Latest wins, invoices &amp; saved opportunities.</div>
                 </div>
               </div>
               <div class="activity-list" id="acc-activity-list"></div>
             </div>
           </div>
+
         </div>
       </div>
 
