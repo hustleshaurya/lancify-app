@@ -124,10 +124,11 @@ function resolvePlanTier(body = {}) {
   return 'free';
 }
 
-function computeLeadTarget({ incomeGoal, skill, planTier }) {
+function computeLeadTarget({ incomeGoal, skill, planTier, isQuickMode = false }) {
   const plan = PLAN_CONFIG[planTier] || PLAN_CONFIG.free;
   const parsedIncome = parseUsdNumber(incomeGoal);
-  const incomeGoalUsd = clamp(Math.round(parsedIncome || 500), 100, 10000);
+  const fallbackIncomeGoalUsd = isQuickMode ? 500 : 500;
+  const incomeGoalUsd = clamp(Math.round(parsedIncome || fallbackIncomeGoalUsd), 100, 10000);
   const deal = parseUsdRange(PRICE_HINTS[skill] || PRICE_HINTS.default);
   const avgDealUsd = Math.max(80, Number(deal.avg || 300));
 
@@ -2155,7 +2156,7 @@ export default async function handler(req, res) {
     console.log('[RankSignals normalized]', JSON.stringify(normalizedSignals));
     const normalizedBudget = normalizeBudgetTokens(budget);
     const planTier = resolvePlanTier(body);
-    const leadTarget = computeLeadTarget({ incomeGoal, skill, planTier });
+    const leadTarget = computeLeadTarget({ incomeGoal, skill, planTier, isQuickMode });
     const rankWindow = clamp(Math.max(12, leadTarget.requestedLeadCount * 4), 12, leadTarget.planMaxCandidates);
 
     if (isQuickMode && skill && cfg) {
