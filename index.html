@@ -1666,7 +1666,7 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 /* Output panel */
 .tw-output-panel{
   background:var(--bg2);border:1px solid var(--border);border-radius:18px;
-  overflow:hidden;min-height:460px;display:flex;flex-direction:column;
+  overflow:visible;min-height:460px;display:flex;flex-direction:column;
   box-shadow:0 18px 45px rgba(0,0,0,0.08)
 }
 .tw-output-topbar{
@@ -7574,7 +7574,7 @@ body,
          </div>
 
       <div id="page-proposal" class="page">
-        <div class="content-inner tw-tool-page">
+        <div class="content-inner wide tw-tool-page">
 
           <div class="tw-page-header">
             <div class="tw-page-header-left">
@@ -7659,7 +7659,7 @@ body,
 
 
       <div id="page-email" class="page">
-        <div class="content-inner tw-tool-page">
+        <div class="content-inner wide tw-tool-page">
 
           <div class="tw-page-header">
             <div class="tw-page-header-left">
@@ -12429,61 +12429,6 @@ async function downloadAuditPDF() {
   }
 }
 
-/* ─── PROPOSAL ─── */
-async function generateProposal(){
-  const job=val('prop-job'); if(!job) { showToast('Paste a job description first'); return false; }
-  let ok = false;
-  el('prop-btn').disabled=true; loader('prop',true); toggleResult('prop',false);
-  try {
-    /*
-      FIX 2 — Proposal Writer
-      ────────────────────────
-      Payload key fix: jobDescription  →  jobDesc
-      proposal.js expects: { jobDesc, platform, experience, niche }
-    */
-    const res=await fetch('/api/proposal',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        jobDesc:    job,
-        platform:   val('prop-platform'),
-        niche:      val('prop-niche'),
-        experience: val('prop-exp')
-      })
-    });
-    const data=await res.json();
-    if(data.error) throw new Error(data.error);
-
-    /*
-      FIX 2 (continued) — Proposal UI Render
-      ────────────────────────────────────────
-      Backend returns: { subject, proposal, tips }
-      Old code used data.body — correct key is data.proposal.
-      We also surface the subject line and tips for extra value.
-    */
-    const subjectLine = data.subject ? `SUBJECT: ${data.subject}\n\n` : '';
-    const tipsBlock = (Array.isArray(data.tips) && data.tips.length)
-      ? '\n\n--- WHY THIS WORKS ---\n' + data.tips.map((t,i)=>`${i+1}. ${t}`).join('\n')
-      : '';
-
-    el('prop-result-text').textContent = subjectLine + (data.proposal || '') + tipsBlock;
-    toggleResult('prop',true);
-
-    if(currentUser){
-      await sb.from('proposals').insert([{
-        user_id:       currentUser.id,
-        platform:      val('prop-platform'),
-        niche:         val('prop-niche'),
-        proposal_text: data.proposal || '',
-        job_description: job
-      }]);
-      loadStats(currentUser.id);
-    }
-    ok = true;
-  } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); ok = false; }
-  el('prop-btn').disabled=false; loader('prop',false);
-  return ok;
-}
 
 /* ─── EMAIL ─── */
 function selectEmailType(btn){
@@ -12505,60 +12450,6 @@ function selectEmailTone(btn){
     b.setAttribute('aria-pressed', String(isActive));
   });
   document.getElementById('email-tone').value = selected.dataset.val || selected.textContent.trim();
-}
-async function generateEmail(){
-  const ctx=val('email-context'); if(!ctx) { showToast('Add some context first'); return false; }
-  let ok = false;
-  el('email-btn').disabled=true; loader('email',true); toggleResult('email',false);
-  try {
-    /*
-      FIX 4 — Email Writer
-      ─────────────────────
-      Added: niche (from userProfile, falls back to 'Freelancer')
-      email.js expects: { emailType, tone, context, niche }
-    */
-    const res=await fetch('/api/email',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        emailType: val('email-type'),
-        tone:      val('email-tone'),
-        context:   ctx,
-        niche:     userProfile.niche || 'Freelancer'
-      })
-    });
-    const data=await res.json();
-    if(data.error) throw new Error(data.error);
-
-    /*
-      FIX 4 (continued) — Email UI Render
-      ─────────────────────────────────────
-      Backend returns: { subject, body, tips }
-      data.body contains \n\n paragraph breaks — we preserve them via
-      white-space:pre-wrap which is already set on .result-box-body.
-      We also surface subject line and tips.
-    */
-    const subjectLine = data.subject ? `SUBJECT: ${data.subject}\n\n` : '';
-    const tipsBlock = (Array.isArray(data.tips) && data.tips.length)
-      ? '\n\n--- WHY THIS WORKS ---\n' + data.tips.map((t,i)=>`${i+1}. ${t}`).join('\n')
-      : '';
-
-    el('email-result-text').textContent = subjectLine + (data.body || '') + tipsBlock;
-    toggleResult('email',true);
-
-    if(currentUser){
-      await sb.from('emails').insert([{
-        user_id:    currentUser.id,
-        email_type: val('email-type'),
-        email_text: data.body || '',
-        context:    ctx
-      }]);
-      loadStats(currentUser.id);
-    }
-    ok = true;
-  } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); ok = false; }
-  el('email-btn').disabled=false; loader('email',false);
-  return ok;
 }
 
 /* ─── GIG FINDER ─── */
