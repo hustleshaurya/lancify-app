@@ -7638,6 +7638,7 @@ body,
                 <div class="tw-output-topbar">
                   <div class="tw-output-label">Proposal Writer</div>
                   <div class="tw-output-actions">
+                    <span class="tw-subject-badge" id="prop-subject-pill">Subject: —</span>
                     <span class="tw-word-badge" id="prop-word-count">0 words</span>
                     <button class="tw-copy-btn" onclick="copyEl('prop-result-text')">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -12640,6 +12641,7 @@ async function generateProposal(){
     if(data.error) throw new Error(data.error);
 
     el('prop-result-text').innerHTML = renderProposalResultMarkup(data);
+    setText('prop-subject-pill', `Subject: ${data.subject || 'No subject generated'}`);
     setText('prop-word-count', `${wordCount(data.proposal || '')} words`);
     toggleResult('prop',true);
     recordActivity('proposal', `Generated a proposal for ${val('prop-platform') || 'a client opportunity'}`);
@@ -15855,7 +15857,7 @@ function renderEmailResultMarkup(result = {}) {
   const tipItem = 'display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-main);margin-bottom:8px';
   const dot = 'width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px';
   return `<div style="display:grid;gap:0">
-    <div style="${card};background:var(--bg3)">
+    <div style="${card};background:var(--bg3);display:none">
       <span style="${label}">Subject Line</span>
       <div style="${pill}">${escapeHtml(result.subject || '—')}</div>
       ${result.alternativeSubject ? `<div style="font-size:12px;color:var(--text-muted);margin-top:8px">Alt: ${escapeHtml(result.alternativeSubject)}</div>` : ''}
@@ -15877,7 +15879,7 @@ function renderProposalResultMarkup(result = {}) {
   const tipItem = 'display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-main);margin-bottom:8px';
   const dot = 'width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px';
   return `<div style="display:grid;gap:0">
-    <div style="${card};background:var(--bg3)">
+    <div style="${card};background:var(--bg3);display:none">
       <span style="${label}">Subject Line</span>
       <div style="${pill}">${escapeHtml(result.subject || '—')}</div>
     </div>
