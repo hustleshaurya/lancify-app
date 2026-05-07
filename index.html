@@ -46,24 +46,24 @@
   --radius-lg: 10px;
 
   /* ── Light Theme ── */
-  --bg:          #f3f7fc;
-  --bg-panel:    #ffffff;
-  --bg-hover:    #eaf1fb;
-  --text-main:   #0f172a;
-  --text-muted:  #5b6473;
-  --border:      #d9e3f0;
-  --border2:     #b8c7da;
+  --bg:          #e8eef7;
+  --bg-panel:    #f5f8fc;
+  --bg-hover:    #dce6f2;
+  --text-main:   #060d1a;
+  --text-muted:  #3d4754;
+  --border:      #bfcfe3;
+  --border2:     #9ab0ca;
   --btn-bg:      #0f172a;
   --btn-text:    #ffffff;
-  --shadow-sm:   0 8px 20px rgba(15,23,42,0.04);
-  --shadow-md:   0 18px 40px rgba(15,23,42,0.08);
-  --shadow-lg:   0 26px 60px rgba(15,23,42,0.12);
+  --shadow-sm:   0 8px 20px rgba(15,23,42,0.07);
+  --shadow-md:   0 18px 40px rgba(15,23,42,0.12);
+  --shadow-lg:   0 26px 60px rgba(15,23,42,0.17);
 
   --bg2:    var(--bg-panel);
   --bg3:    var(--bg-hover);
   --text:   var(--text-main);
   --text2:  var(--text-muted);
-  --text3:  #9a9a9a;
+  --text3:  #6b7585;
   --accent:  #0f172a;
   --accent-primary: #E8500A;
   --accent-secondary: #E8500A;
@@ -1595,61 +1595,61 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 ═══════════════════════════════════════════ */
 .tw-tool-page{display:grid;gap:24px;padding-bottom:40px}
 /* Page header */
-.tw-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.tw-page-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
-.tw-page-title{font-size:26px;font-weight:800;letter-spacing:-.6px;color:var(--text-main);margin:0 0 6px;line-height:1.15}
-.tw-page-desc{font-size:13.5px;color:var(--text-muted);margin:0;line-height:1.6;max-width:52ch}
+.tw-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.tw-page-kicker{display:inline-flex;align-items:center;gap:7px;background:rgba(232,80,10,0.10);color:var(--accent-primary);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:999px;margin-bottom:14px}
+.tw-page-title{font-size:32px;font-weight:900;letter-spacing:-.8px;color:var(--text-main);margin:0 0 8px;line-height:1.1}
+.tw-page-desc{font-size:14px;color:var(--text-muted);margin:0;line-height:1.65;max-width:56ch}
 /* Two-column layout */
-.tw-tool-layout{display:grid;grid-template-columns:1fr;gap:20px;align-items:start;max-width:800px}
+.tw-tool-layout{display:grid;grid-template-columns:minmax(340px,420px) minmax(0,1fr);gap:24px;align-items:start}
 /* Form panel */
 .tw-form-panel{
   display:flex;flex-direction:column;gap:18px;
-  background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:26px 24px;
-  box-shadow:0 18px 45px rgba(0,0,0,0.08)
+  background:var(--bg-panel);border:1.5px solid var(--border);border-left:3px solid var(--accent-primary);border-radius:14px;padding:32px;
+  box-shadow:var(--shadow-md)
 }
-.tw-form-section-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3)}
-.tw-field{display:flex;flex-direction:column;gap:7px}
+.tw-form-section-label{font-size:12px;font-weight:600;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase}
+.tw-field{display:flex;flex-direction:column;gap:8px}
 .tw-field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.tw-label{font-size:12px;font-weight:600;color:var(--text-muted);letter-spacing:.01em}
-.tw-label-note{font-size:11px;font-weight:400;color:var(--text3);margin-left:4px}
+.tw-label{font-size:12px;font-weight:600;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase}
+.tw-label-note{font-size:11px;font-weight:400;color:var(--text3);margin-left:4px;text-transform:none;letter-spacing:0}
 .tw-input,.tw-select,.tw-textarea{
-  width:100%;padding:11px 14px;border-radius:10px;
-  border:1px solid var(--border);background:var(--bg);
-  color:var(--text-main);font-size:13px;font-family:inherit;
-  outline:none;transition:border-color .15s,box-shadow .15s,background .15s;
+  width:100%;padding:14px 16px;border-radius:10px;
+  border:1.5px solid var(--border);background:var(--bg);
+  color:var(--text-main);font-size:14px;line-height:1.6;font-family:inherit;
+  outline:none;transition:border-color .15s,box-shadow .15s;
   box-sizing:border-box
 }
-.tw-input:focus,.tw-select:focus,.tw-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,80,10,0.10)}
+.tw-input:focus,.tw-select:focus,.tw-textarea:focus{border-color:var(--accent-primary);box-shadow:0 0 0 4px rgba(232,80,10,0.09);outline:none}
 .tw-textarea{resize:vertical;line-height:1.6}
 .tw-textarea-lg{min-height:160px}
 /* Select cards (email objective) */
-.tw-select-cards{display:flex;flex-wrap:wrap;gap:7px}
+.tw-select-cards{display:inline-flex;flex-wrap:wrap;background:var(--bg-hover);border-radius:10px;padding:4px;gap:2px}
 .tw-select-card{
   display:inline-flex;align-items:center;justify-content:center;
-  min-height:40px;padding:0 15px;border-radius:10px;border:1px solid var(--border);
-  background:var(--bg);color:var(--text-muted);font-size:12px;font-weight:600;
-  cursor:pointer;transition:all .14s;font-family:inherit
+  padding:8px 16px;border-radius:7px;border:none;
+  background:transparent;color:var(--text-muted);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .15s;font-family:inherit
 }
-.tw-select-card:hover{border-color:var(--accent);color:var(--text-main)}
-.tw-select-card.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(232,80,10,0.22)}
+.tw-select-card:hover{color:var(--text-main)}
+.tw-select-card.active{background:var(--bg-panel);color:var(--text-main);font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.10)}
 /* Tone row */
-.tw-tone-row{display:flex;gap:7px}
+.tw-tone-row{display:inline-flex;flex-wrap:wrap;background:var(--bg-hover);border-radius:10px;padding:4px;gap:2px}
 .tw-tone-card{
-  flex:1;min-height:40px;padding:0 12px;border-radius:10px;border:1px solid var(--border);
-  background:var(--bg);color:var(--text-muted);font-size:12px;font-weight:600;
-  cursor:pointer;transition:all .14s;text-align:center;font-family:inherit
+  padding:8px 16px;border-radius:7px;border:none;
+  background:transparent;color:var(--text-muted);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .15s;text-align:center;font-family:inherit
 }
-.tw-tone-card:hover{border-color:var(--border2);color:var(--text-main)}
-.tw-tone-card.active{background:var(--text-main);border-color:var(--text-main);color:var(--bg)}
+.tw-tone-card:hover{color:var(--text-main)}
+.tw-tone-card.active{background:var(--text-main);color:var(--bg);font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.10)}
 /* Generate button */
 .tw-generate-btn{
   display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;height:46px;border-radius:12px;border:none;
-  background:var(--accent);color:#fff;font-size:14px;font-weight:700;
-  cursor:pointer;transition:background .15s,transform .1s;font-family:inherit;
+  width:100%;padding:14px 24px;border-radius:10px;border:none;
+  background:var(--accent-primary);color:#fff;font-size:15px;font-weight:700;
+  cursor:pointer;transition:opacity .15s,transform .1s;font-family:inherit;
   margin-top:2px
 }
-.tw-generate-btn:hover:not(:disabled){background:#c94008;transform:translateY(-1px)}
+.tw-generate-btn:hover:not(:disabled){opacity:.9;transform:translateY(-1px)}
 .tw-generate-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
 .tw-generate-btn .btn-spinner{flex:0 0 auto}
 .tw-generate-btn .btn-text-default{
@@ -1658,7 +1658,7 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 }
 .tw-generate-btn .btn-text-default svg{display:block;flex:0 0 auto}
 .tw-generate-btn .btn-text-loading{display:none}
-.tw-generate-btn.is-loading .btn-text-default{display:none}
+.tw-generate-btn.is-loading .btn-text-default{display:none!important}
 .tw-generate-btn.is-loading .btn-text-loading{display:flex;align-items:center;gap:8px}
 .tw-generate-btn.is-loading .btn-spinner{display:inline-flex}
 /* Inline loader */
@@ -1667,15 +1667,16 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 
 /* Output panel */
 .tw-output-panel{
-  background:var(--bg2);border:1px solid var(--border);border-radius:18px;
-  overflow:visible;min-height:0;display:flex;flex-direction:column;
-  box-shadow:0 18px 45px rgba(0,0,0,0.08)
+  background:var(--bg-panel);border:1.5px solid var(--border);border-radius:14px;
+  overflow:hidden;min-height:420px;display:flex;flex-direction:column;padding:28px;
+  box-shadow:var(--shadow-md)
 }
+#prop-result-box,#email-result-box{flex-direction:column;flex:1;min-height:100%}
 .tw-output-topbar{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:16px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap
+  padding:0 0 16px;border-bottom:1px solid var(--border);flex-wrap:wrap
 }
-.tw-output-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3)}
+.tw-output-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-main)}
 .tw-output-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tw-subject-badge{
   display:inline-flex;align-items:center;padding:5px 12px;border-radius:999px;
@@ -1694,9 +1695,9 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
   transition:background .14s,border-color .14s;font-family:inherit
 }
 .tw-copy-btn:hover{background:var(--bg3);border-color:var(--border2)}
-.tw-output-body{padding:20px;flex:1;overflow-y:auto;color:var(--text-main)}
+.tw-output-body{padding:20px 0 0;flex:1;overflow-y:auto;font-size:14.5px;line-height:1.75;color:var(--text-main);white-space:pre-wrap}
 .tw-output-footer-actions{
-  display:flex;align-items:center;gap:8px;padding:14px 20px;
+  display:flex;align-items:center;gap:8px;padding:14px 0 0;
   border-top:1px solid var(--border);flex-wrap:wrap
 }
 .tw-action-btn{
@@ -1707,23 +1708,23 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 .tw-action-btn:hover{background:var(--bg3);color:var(--text-main);border-color:var(--border2)}
 /* Empty state */
 .tw-empty-state{
-  display:flex;flex-direction:row;align-items:center;
-  text-align:left;padding:24px 28px;flex:1;gap:20px
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:48px 32px;flex:1;gap:12px;min-height:360px;color:var(--text-muted);font-size:14px
 }
 .tw-empty-icon{
   width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;
   background:var(--bg);border:1px solid var(--border);color:var(--text3);margin-bottom:4px
 }
-.tw-empty-title{font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--text-main)}
-.tw-empty-copy{font-size:13px;color:var(--text-muted);line-height:1.65;max-width:34ch}
+.tw-empty-title{font-size:14px;font-weight:500;letter-spacing:0;color:var(--text-muted)}
+.tw-empty-copy{display:none}
 /* Dark overrides */
 html.dark .tw-form-panel{background:rgba(255,255,255,0.03)}
 html.dark .tw-output-panel{background:rgba(255,255,255,0.03)}
 html.dark .tw-input,html.dark .tw-select,html.dark .tw-textarea{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.09)}
-html.dark .tw-select-card,html.dark .tw-tone-card{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.09)}
-html.dark .tw-select-card:hover,html.dark .tw-tone-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.16)}
-html.dark .tw-select-card.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 8px 24px rgba(232,80,10,0.28)}
-html.dark .tw-tone-card.active{background:#f5f5f3;border-color:#f5f5f3;color:#111}
+html.dark .tw-select-card,html.dark .tw-tone-card{background:transparent}
+html.dark .tw-select-card:hover,html.dark .tw-tone-card:hover{background:rgba(255,255,255,0.07)}
+html.dark .tw-select-card.active{background:var(--bg-panel);color:var(--text-main);box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+html.dark .tw-tone-card.active{background:var(--text-main);color:var(--bg);box-shadow:0 2px 8px rgba(0,0,0,0.4)}
 html.dark .tw-copy-btn,html.dark .tw-action-btn{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)}
 html.dark .tw-empty-icon{background:rgba(255,255,255,0.05)}
 /* Responsive */
@@ -7635,7 +7636,7 @@ body,
             <div class="tw-output-panel">
               <div id="prop-result-box" style="display:none">
                 <div class="tw-output-topbar">
-                  <div class="tw-output-label">Generated Output</div>
+                  <div class="tw-output-label">Proposal Writer</div>
                   <div class="tw-output-actions">
                     <span class="tw-word-badge" id="prop-word-count">0 words</span>
                     <button class="tw-copy-btn" onclick="copyEl('prop-result-text')">
@@ -7650,7 +7651,7 @@ body,
                 <div class="tw-empty-icon">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 </div>
-                <div class="tw-empty-title">Ready to write</div>
+                <div class="tw-empty-title">Your result will appear here</div>
                 <p class="tw-empty-copy">Paste the job details on the left and Lancify will craft a tailored proposal — specific, clear, and built to get a reply.</p>
               </div>
             </div>
@@ -7725,7 +7726,7 @@ body,
             <div class="tw-output-panel">
               <div id="email-result-box" style="display:none">
                 <div class="tw-output-topbar">
-                  <div class="tw-output-label">Generated Output</div>
+                  <div class="tw-output-label">Email Writer</div>
                   <div class="tw-output-actions">
                     <div class="tw-subject-badge" id="email-subject-pill">Subject: —</div>
                     <button class="tw-copy-btn" onclick="copyEl('email-result-text')">
@@ -7745,7 +7746,7 @@ body,
                 <div class="tw-empty-icon">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 </div>
-                <div class="tw-empty-title">Draft client emails fast</div>
+                <div class="tw-empty-title">Your result will appear here</div>
                 <p class="tw-empty-copy">Choose your objective, set the tone, add context — and get a polished email with a subject line that actually gets opened.</p>
               </div>
             </div>
@@ -14798,9 +14799,9 @@ function renderManagedOpportunityClients(){
       <div class="opp-managed-actions">
         ${client.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(client.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
         ${client.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${client.id}')">Copy DM</button>` : ''}
-        <button class="stage-btn" onclick="routeSavedLeadToProposal('${client.id}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Write Proposal</button>
-        <button class="stage-btn" onclick="routeSavedLeadToAudit('${client.id}')"><i data-lucide="search" style="width:11px;height:11px"></i> Run Audit</button>
-        <button class="stage-btn" onclick="routeSavedLeadToEmail('${client.id}')"><i data-lucide="mail" style="width:11px;height:11px"></i> Write Email</button>
+        <button class="stage-btn" onclick="routeSavedLeadToProposal('${client.id}')">Write Proposal</button>
+        <button class="stage-btn" onclick="routeSavedLeadToAudit('${client.id}')">Run Audit</button>
+        <button class="stage-btn" onclick="routeSavedLeadToEmail('${client.id}')">Write Email</button>
         <button class="stage-btn" onclick="addOpportunityClientToPipeline('${client.id}')">Add to Pipeline</button>
         <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="removeOpportunityClient('${client.id}')">Remove</button>
       </div>
@@ -15267,7 +15268,6 @@ function previewInvoicePdf() {
   doc.setTextColor(255,255,255);
   doc.setFont('helvetica','bold');
   doc.setFontSize(22);
-  doc.text('LANCIFY', pad + 7, pad + 14);
   doc.setFontSize(20);
   doc.text('INVOICE', pageWidth - pad - 7, pad + 12, { align:'right' });
   doc.setFontSize(9);
@@ -15562,9 +15562,9 @@ function renderManagedOpportunityClients(){
       <div class="opp-managed-actions">
         ${client.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(client.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
         ${client.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${client.id}')">Copy DM</button>` : ''}
-        <button class="stage-btn" onclick="routeSavedLeadToProposal('${client.id}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Write Proposal</button>
-        <button class="stage-btn" onclick="routeSavedLeadToAudit('${client.id}')"><i data-lucide="search" style="width:11px;height:11px"></i> Run Audit</button>
-        <button class="stage-btn" onclick="routeSavedLeadToEmail('${client.id}')"><i data-lucide="mail" style="width:11px;height:11px"></i> Write Email</button>
+        <button class="stage-btn" onclick="routeSavedLeadToProposal('${client.id}')">Write Proposal</button>
+        <button class="stage-btn" onclick="routeSavedLeadToAudit('${client.id}')">Run Audit</button>
+        <button class="stage-btn" onclick="routeSavedLeadToEmail('${client.id}')">Write Email</button>
         <button class="stage-btn" onclick="addOpportunityClientToPipeline('${client.id}')">Add to Pipeline</button>
         <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="removeOpportunityClient('${client.id}')">Remove</button>
       </div>
