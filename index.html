@@ -2136,6 +2136,8 @@ html.dark .tw-empty-icon{background:rgba(255,255,255,0.05)}
   display:flex;align-items:center;justify-content:center;
 }
 .modal-close:hover{background:var(--bg-hover)}
+.link-btn{background:none;border:0;font:inherit;cursor:pointer}
+.currency-modal{max-width:420px}
 
 /* ─── ACCOUNT DROPDOWN ─── */
 .account-dropdown{
@@ -4111,15 +4113,8 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
 .qf-other-input:focus{outline:none;border-color:#E8500A;box-shadow:0 0 0 3px rgba(232,80,10,0.10)}
 .qf-other-input.show{display:block}
 .qf-bottom-row{
-  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end;margin-bottom:8px
+  display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:12px;align-items:end;margin-bottom:8px
 }
-.qf-income-wrap{position:relative}
-.qf-income-wrap input{
-  width:100%;padding:12px 8px 12px 28px;border-radius:14px;border:1px solid var(--border2);background:var(--bg);
-  color:var(--text-main);font-size:13px;font-family:inherit;appearance:textfield;-moz-appearance:textfield
-}
-.qf-income-wrap input:focus{outline:none;border-color:#E8500A;box-shadow:0 0 0 3px rgba(232,80,10,0.10)}
-.qf-currency-symbol{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none}
 .qf-find-btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 20px;height:46px;
   background:var(--btn-bg);color:var(--btn-text);border:none;border-radius:14px;font-size:13px;font-weight:700;
@@ -4331,6 +4326,25 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
   border-color: var(--btn-bg);
 }
 .qf-action-btn.primary:hover { opacity: .85; }
+.save-lead-btn.saved,
+.stage-btn.saved {
+  color:#15803d !important;
+  border-color:rgba(34,197,94,0.28) !important;
+  background:rgba(34,197,94,0.10) !important;
+  cursor:not-allowed;
+}
+.save-lead-btn[disabled]{opacity:.72;cursor:not-allowed}
+.save-spinner{
+  width:11px;height:11px;border:1.5px solid currentColor;border-top-color:transparent;
+  border-radius:999px;display:inline-block;animation:spin .75s linear infinite;
+}
+.tool-prefill-banner{
+  display:none;align-items:center;justify-content:space-between;gap:12px;
+  border:1px solid rgba(99,102,241,0.22);background:rgba(99,102,241,0.08);
+  color:var(--text-main);border-radius:10px;padding:10px 12px;margin:0 0 14px;font-size:12.5px;
+}
+.tool-prefill-banner.show{display:flex}
+.tool-prefill-banner button{border:0;background:transparent;color:var(--text-muted);cursor:pointer;font:inherit;padding:2px 6px}
 
 /* Premium SaaS refresh */
 :root{
@@ -5960,8 +5974,7 @@ html.dark .roadmap-teaser{
   border-color:rgba(232,80,10,0.22) !important;
   color:var(--accent) !important;
 }
-.qf-other-input:focus,
-.qf-income-wrap input:focus{
+.qf-other-input:focus{
   border-color:var(--accent) !important;
   box-shadow:none !important;
 }
@@ -6557,8 +6570,7 @@ textarea:focus-visible{
 }
 .kanban-board-col.drag-over,
 .qf-skill-card.active,
-.qf-other-input:focus,
-.qf-income-wrap input:focus{
+.qf-other-input:focus{
   border-color:#E8500A !important;
   box-shadow:none !important;
 }
@@ -7192,12 +7204,6 @@ body,
           <div class="nav-item" data-page="audit" data-tooltip="Audit Generator" onclick="navigate('audit')"><i data-lucide="sparkles" class="icon"></i><span class="nav-label"> Audit Generator</span></div>
           <div class="nav-item" data-page="proposal" data-tooltip="Proposal Writer" onclick="navigate('proposal')"><i data-lucide="file-text" class="icon"></i><span class="nav-label"> Proposal Writer</span></div>
           <div class="nav-item" data-page="email" data-tooltip="Email Writer" onclick="navigate('email')"><i data-lucide="mail" class="icon"></i><span class="nav-label"> Email Writer</span></div>
-          <div class="nav-item plan-locked" data-page="sequence" data-tooltip="Sequences" onclick="navigate('sequence')">
-            <i data-lucide="git-branch" class="icon"></i>
-            <span class="nav-label"> Sequences</span>
-            <span class="pro-badge" style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;letter-spacing:.04em;">ELITE</span>
-          </div>
-          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span></div>
         </div>
       </div>
 
@@ -7223,7 +7229,7 @@ body,
         </div>
       </div>
 
-<div class="nav-folder" data-folder="growth">
+<div class="nav-folder open" data-folder="growth">
         <button class="nav-folder-head" onclick="toggleNavFolder('growth')">
           <span class="nav-folder-title">
             <i data-lucide="trending-up" class="icon"></i>
@@ -7232,6 +7238,12 @@ body,
           <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
         </button>
         <div class="nav-folder-children" id="folder-growth">
+          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span></div>
+          <div class="nav-item plan-locked" data-page="sequence" data-tooltip="Sequences" onclick="navigate('sequence')">
+            <i data-lucide="git-branch" class="icon"></i>
+            <span class="nav-label"> Sequences</span>
+            <span class="pro-badge" style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;letter-spacing:.04em;">ELITE</span>
+          </div>
           <div class="nav-item" data-page="roadmap" data-tooltip="Growth Roadmap" onclick="navigate('roadmap')">
             <i data-lucide="map" class="icon"></i>
             <span class="nav-label"> Growth Roadmap</span>
@@ -7486,6 +7498,7 @@ body,
       <div id="page-audit" class="page">
         <div class="content-inner">
           <div class="page-hd"><h1>Trojan Horse Audit</h1><p>Generate a clinical, 3-point growth diagnostic to send as a cold pitch.</p></div>
+          <div class="tool-prefill-banner" id="audit-prefill-banner"><span id="audit-prefill-text">Pre-filled from lead</span><button type="button" onclick="dismissToolPrefill('audit')">x</button></div>
           <div class="tool-grid">
             <div class="card tool-form-card">
               <div class="tool-section-kicker">Target Intelligence</div>
@@ -7570,6 +7583,7 @@ body,
               <p class="tw-page-desc">Paste any job description and get a tailored, high-converting proposal in seconds.</p>
             </div>
           </div>
+          <div class="tool-prefill-banner" id="proposal-prefill-banner"><span id="proposal-prefill-text">Pre-filled from lead</span><button type="button" onclick="dismissToolPrefill('proposal')">x</button></div>
 
           <div class="tw-tool-layout">
             <!-- LEFT: Inputs -->
@@ -7608,7 +7622,11 @@ body,
                 <span class="btn-text-loading">Generating…</span>
               </button>
               <div class="tool-limit-note hidden" id="proposal-daily-limit"></div>
-              <div class="tw-inline-loader" id="prop-loader"><div class="spin"></div><span>Crafting your proposal…</span></div>
+              <div class="tw-inline-loader" id="prop-loader"><div class="spin"></div><span>Writing your proposal...</span></div>
+              <div class="error-box" id="prop-error" style="display:none;background:#fef2f2;border:1px solid #ef4444;border-radius:8px;padding:12px;margin-top:10px;color:#991b1b;font-size:12.5px">
+                Generation failed. Please try again.
+                <button type="button" class="stage-btn" onclick="checkCredits(3, generateProposal)" style="margin-left:8px">Retry</button>
+              </div>
             </div>
 
             <!-- RIGHT: Output -->
@@ -7651,6 +7669,7 @@ body,
             </div>
           </div>
 
+          <div class="tool-prefill-banner" id="email-prefill-banner"><span id="email-prefill-text">Pre-filled from lead</span><button type="button" onclick="dismissToolPrefill('email')">x</button></div>
           <div class="tw-tool-layout">
             <!-- LEFT: Inputs -->
             <div class="tw-form-panel">
@@ -7693,7 +7712,11 @@ body,
                 <span class="btn-text-loading">Generating…</span>
               </button>
               <div class="tool-limit-note hidden" id="email-daily-limit"></div>
-              <div class="tw-inline-loader" id="email-loader"><div class="spin"></div><span>Drafting your email…</span></div>
+              <div class="tw-inline-loader" id="email-loader"><div class="spin"></div><span>Writing your email...</span></div>
+              <div class="error-box" id="email-error" style="display:none;background:#fef2f2;border:1px solid #ef4444;border-radius:8px;padding:12px;margin-top:10px;color:#991b1b;font-size:12.5px">
+                Generation failed. Please try again.
+                <button type="button" class="stage-btn" onclick="checkCredits(2, generateEmail)" style="margin-left:8px">Retry</button>
+              </div>
             </div>
 
             <!-- RIGHT: Output -->
@@ -8172,15 +8195,20 @@ body,
 
       <div class="qf-bottom-row">
         <div>
-          <label class="field-label">How much do you want to earn? <span style="color:var(--text3)">(monthly goal)</span></label>
-          <div class="qf-income-wrap">
-            <span class="qf-currency-symbol">$</span>
-            <input type="number" id="qf-income" min="10" max="10000" placeholder="e.g. 500" style="width:100%;padding-left:26px !important">
-          </div>
-        </div>
-        <div>
-          <label class="field-label">Target location <span style="color:var(--text3)">(optional)</span></label>
-          <input type="text" id="qf-location" placeholder="e.g. New York, London, or worldwide">
+          <label class="field-label">Filter by Country</label>
+          <select id="qf-location">
+            <option value="">Worldwide (No Filter)</option>
+            <option value="United States">United States</option>
+            <option value="India">India</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Canada">Canada</option>
+            <option value="Australia">Australia</option>
+            <option value="Germany">Germany</option>
+            <option value="Brazil">Brazil</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Philippines">Philippines</option>
+            <option value="Pakistan">Pakistan</option>
+          </select>
         </div>
         <button type="button" class="qf-find-btn" id="qf-find-btn" onclick="quickFindButtonClick()">
           <i data-lucide="target" style="width:14px;height:14px"></i>
@@ -8423,7 +8451,7 @@ body,
                 <div><label class="field-label">Client Name</label><input type="text" id="inv-client-name" placeholder="e.g. MilkTea Emma"></div>
                 <div><label class="field-label">Client Email</label><input type="email" id="inv-client-email" placeholder="client@email.com"></div>
                 <div><label class="field-label">Service</label><input type="text" id="inv-service" placeholder="e.g. 5 Thumbnail Designs"></div>
-                <div><label class="field-label">Amount ($)</label><input type="number" id="inv-amount" placeholder="300"></div>
+                <div><label class="field-label">Amount (USD)</label><input type="number" id="inv-amount" placeholder="300"></div>
                 <div><label class="field-label">Due Date</label><input type="date" id="inv-due-date"></div>
                 <div><label class="field-label">Status</label><select id="inv-status"><option value="sent">Sent</option><option value="paid">Paid</option><option value="overdue">Overdue</option></select></div>
               </div>
@@ -8734,6 +8762,28 @@ body,
 <!-- ═══════════════════════════════════════════
      SETTINGS MODAL — Claude-style left nav
      ═══════════════════════════════════════════ -->
+<div class="modal-backdrop" id="currency-modal">
+  <div class="modal currency-modal">
+    <h3 style="font-size:22px;font-weight:800;color:var(--text-main);letter-spacing:-.5px;margin:0 0 6px">What currency do you work in?</h3>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6;margin:0 0 18px">We'll show all prices and earnings in your local currency.</p>
+    <label class="field-label">Currency</label>
+    <select id="currency-onboarding-select" style="margin-bottom:16px">
+      <option value="USD">US Dollar (USD) - $</option>
+      <option value="INR">Indian Rupee (INR) - ₹</option>
+      <option value="GBP">British Pound (GBP) - £</option>
+      <option value="CAD">Canadian Dollar (CAD) - CA$</option>
+      <option value="AUD">Australian Dollar (AUD) - A$</option>
+      <option value="EUR">Euro (EUR) - €</option>
+      <option value="BRL">Brazilian Real (BRL) - R$</option>
+      <option value="NGN">Nigerian Naira (NGN) - ₦</option>
+      <option value="PHP">Philippine Peso (PHP) - ₱</option>
+      <option value="PKR">Pakistani Rupee (PKR) - ₨</option>
+    </select>
+    <button class="btn btn-primary btn-full" id="currency-set-btn" onclick="confirmCurrencyOnboarding()">Set Currency</button>
+    <button class="link-btn" type="button" onclick="skipCurrencyOnboarding()" style="margin:12px auto 0;display:block;color:var(--text-muted)">Skip for now</button>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="settings-modal">
   <div class="modal" style="position:relative">
     <button class="settings-close" onclick="closeModal('settings-modal')">
@@ -8809,18 +8859,27 @@ body,
           </div>
           <input type="checkbox" id="notif-email" onchange="localStorage.setItem('lancify_notif_email', this.checked)" style="width:auto">
         </div>
-        <div class="pref-row">
+        <div class="pref-row" style="align-items:flex-start">
           <div>
-            <div class="pref-label">Default currency</div>
-            <div class="pref-desc">Set the currency symbol for your invoices.</div>
+            <div class="pref-label">Currency Preferences</div>
+            <div class="pref-desc" id="settings-currency-current">Current currency: US Dollar ($)</div>
+            <div class="pref-desc" id="settings-currency-rate" style="margin-top:4px">1 USD = $1.00</div>
           </div>
-          <select id="inv-currency-pref" onchange="localStorage.setItem('lancify_currency', this.value)" style="width:120px">
-            <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="GBP">GBP (£)</option>
-            <option value="INR">INR (₹)</option>
-            <option value="AUD">AUD (A$)</option>
+          <div style="display:grid;gap:8px;min-width:210px">
+          <select id="settings-currency-select">
+            <option value="USD">US Dollar (USD) - $</option>
+            <option value="INR">Indian Rupee (INR) - ₹</option>
+            <option value="GBP">British Pound (GBP) - £</option>
+            <option value="CAD">Canadian Dollar (CAD) - CA$</option>
+            <option value="EUR">Euro (EUR) - €</option>
+            <option value="AUD">Australian Dollar (AUD) - A$</option>
+            <option value="BRL">Brazilian Real (BRL) - R$</option>
+            <option value="NGN">Nigerian Naira (NGN) - ₦</option>
+            <option value="PHP">Philippine Peso (PHP) - ₱</option>
+            <option value="PKR">Pakistani Rupee (PKR) - ₨</option>
           </select>
+          <button class="btn btn-secondary" id="settings-currency-btn" onclick="updateCurrencyFromSettings()">Update Currency</button>
+          </div>
         </div>
         <div class="pref-row">
           <div>
@@ -9365,7 +9424,6 @@ async function quickFindButtonClick() {
 
 async function quickFindClients() {
   const skillRaw  = _activeSkill === 'Other Skill' ? val('qf-other-skill').trim() : _activeSkill;
-  const income    = val('qf-income').trim();
   const location  = val('qf-location').trim();
 
   if (!skillRaw) {
@@ -9400,7 +9458,7 @@ async function quickFindClients() {
         platform:   'all',
         skill:      skillRaw,
         mode:       'quick',
-        incomeGoal: income ? parseInt(income) : null,
+        location,
         plan:       _currentPlanKey(),
       }),
     });
@@ -9420,13 +9478,11 @@ async function quickFindClients() {
       <div style="margin-bottom:12px">
         <div style="font-size:13px;color:var(--text-muted)">
           Found <strong style="color:var(--text-main)">${apiLeads.length} clients</strong> who need <strong style="color:var(--text-main)">${skillRaw}</strong>
-          ${income ? ` · Target: <strong style="color:#10b981">$${income}/mo</strong>` : ''}
+          ${location ? ` in <strong style="color:var(--text-main)">${location}</strong>` : ''}
           </div>
         </div>
         <div class="qf-results-grid">${apiLeads.map(_renderQfCard).join('')}</div>`;
     lucide.createIcons();
-    ingestOpportunityClients(apiLeads, skillRaw);
-    renderManagedOpportunityClients();
     showToast(`Found ${apiLeads.length} real clients for you!`);
     return true;
   }
@@ -9437,7 +9493,7 @@ async function quickFindClients() {
       <div style="width:54px;height:54px;margin:0 auto 16px;border-radius:16px;border:1px solid var(--border);background:var(--bg-panel);display:flex;align-items:center;justify-content:center"><i data-lucide="search" style="width:22px;height:22px;color:var(--text-main)"></i></div>
       <div style="font-size:16px;font-weight:700;color:var(--text-main);margin-bottom:8px">No clients found right now</div>
       <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto;line-height:1.6">
-        ${apiError ? 'Something went wrong. Please try again.' : 'Try adding a location like "Mumbai" or "New York", or switch to Advanced mode.'}
+        ${apiError ? 'Something went wrong. Please try again.' : 'Try another country filter, or switch to Advanced mode.'}
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         <button type="button" onclick="quickFindButtonClick()" style="padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--bg);color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer">Try Again</button>
@@ -9500,6 +9556,97 @@ function copyDirectText(text, successMsg = 'Quick DM copied.') {
 
 /* ── Won-state tracker (session memory) ── */
 const _wonLeads = new Set();
+const _savedOpportunityLeadIds = new Set();
+const _savingOpportunityLeadIds = new Set();
+const _latestOpportunityLeadMap = new Map();
+
+function _opportunityLeadKey(lead = {}) {
+  const raw = [
+    lead.id,
+    lead.profileUrl,
+    lead.websiteUrl,
+    lead.name,
+    lead.platform,
+    lead.problem || lead.description || ''
+  ].filter(Boolean).join('|').toLowerCase();
+  let hash = 0;
+  for (let i = 0; i < raw.length; i++) hash = ((hash << 5) - hash) + raw.charCodeAt(i) | 0;
+  return `lead-${Math.abs(hash || Date.now())}`;
+}
+
+function _rememberOpportunityLead(lead = {}, skill = '') {
+  const key = _opportunityLeadKey(lead);
+  _latestOpportunityLeadMap.set(key, { ...lead, _saveSkill: skill || lead.serviceMatch || lead.service || '' });
+  return key;
+}
+
+function _leadIdentityMatches(a = {}, b = {}) {
+  const aProfile = String(a.profileUrl || a.websiteUrl || '').toLowerCase();
+  const bProfile = String(b.profileUrl || b.websiteUrl || '').toLowerCase();
+  const aName = String(a.name || a.client_name || '').toLowerCase();
+  const bName = String(b.name || b.client_name || '').toLowerCase();
+  return (!!aProfile && aProfile === bProfile) || (!!aName && aName === bName && String(a.platform || '').toLowerCase() === String(b.platform || '').toLowerCase());
+}
+
+function _isOpportunityLeadSaved(lead = {}, key = '') {
+  if (key && _savedOpportunityLeadIds.has(key)) return true;
+  return (opportunityClients || []).some(client => _leadIdentityMatches(client, lead));
+}
+
+function renderSaveLeadButton(lead = {}, skill = '', className = 'qf-action-btn') {
+  const key = _rememberOpportunityLead(lead, skill);
+  const saved = _isOpportunityLeadSaved(lead, key);
+  if (saved) _savedOpportunityLeadIds.add(key);
+  return `<button class="${className} save-lead-btn${saved ? ' saved' : ''}" data-save-lead-key="${key}" onclick="saveLeadByKey('${key}')" ${saved ? 'disabled' : ''}>${saved ? '&#10003; Saved' : '<i data-lucide="bookmark" style="width:11px;height:11px"></i> Save Lead'}</button>`;
+}
+
+function updateSaveLeadButtonState(key, state) {
+  document.querySelectorAll('.save-lead-btn').forEach(btn => {
+    if (btn.dataset.saveLeadKey !== key) return;
+    btn.classList.toggle('saved', state === 'saved');
+    btn.disabled = state === 'saving' || state === 'saved';
+    if (state === 'saving') btn.innerHTML = '<span class="save-spinner"></span> Saving...';
+    else if (state === 'saved') btn.innerHTML = '&#10003; Saved';
+    else btn.innerHTML = '<i data-lucide="bookmark" style="width:11px;height:11px"></i> Save Lead';
+  });
+  if (window.lucide) lucide.createIcons();
+}
+
+async function saveLeadByKey(key) {
+  const lead = _latestOpportunityLeadMap.get(key);
+  if (!lead) {
+    showToast('Failed to save, try again');
+    return false;
+  }
+  return saveLead(lead, lead._saveSkill || '');
+}
+
+async function saveLead(lead = {}, skill = '') {
+  const key = _opportunityLeadKey(lead);
+  if (_isOpportunityLeadSaved(lead, key)) {
+    _savedOpportunityLeadIds.add(key);
+    updateSaveLeadButtonState(key, 'saved');
+    return true;
+  }
+  if (_savingOpportunityLeadIds.has(key)) return false;
+  _savingOpportunityLeadIds.add(key);
+  updateSaveLeadButtonState(key, 'saving');
+  try {
+    const added = ingestOpportunityClients([lead], skill || lead.serviceMatch || lead.service || _activeSkill || 'Freelance service', { silent: true });
+    if (added <= 0 && !_isOpportunityLeadSaved(lead, key)) throw new Error('Save failed');
+    _savedOpportunityLeadIds.add(key);
+    updateSaveLeadButtonState(key, 'saved');
+    showToast('Lead saved to Manage Clients');
+    return true;
+  } catch (error) {
+    console.error('saveLead error:', error);
+    updateSaveLeadButtonState(key, 'default');
+    showToast('Failed to save, try again');
+    return false;
+  } finally {
+    _savingOpportunityLeadIds.delete(key);
+  }
+}
 
 function markLeadWon(cardEl, leadName, platform) {
   if (_wonLeads.has(leadName)) return;
@@ -10168,8 +10315,6 @@ async function scanOpportunities() {
   if (apiLeads.length > 0) {
     wrap.innerHTML = `<div class="opp-results-grid">${apiLeads.map(_renderOppCard).join('')}</div>`;
     lucide.createIcons();
-    ingestOpportunityClients(apiLeads, serviceFilter === 'all' ? 'Deep Scan Lead' : serviceFilter);
-    renderManagedOpportunityClients();
     loader.classList.remove('show');
     btn.disabled = false;
     showToast(`Found ${apiLeads.length} live leads.`);
@@ -10726,6 +10871,26 @@ const CRM_STAGE_META = {
   replied: { label: 'In Talks', eyebrow: 'Discovery', color: '#d97706' },
   won: { label: 'Won', eyebrow: 'Closed', color: '#16a34a' }
 };
+const CURRENCY_OPTIONS = [
+  { code:'USD', name:'US Dollar', symbol:'$' },
+  { code:'INR', name:'Indian Rupee', symbol:'₹' },
+  { code:'GBP', name:'British Pound', symbol:'£' },
+  { code:'CAD', name:'Canadian Dollar', symbol:'CA$' },
+  { code:'AUD', name:'Australian Dollar', symbol:'A$' },
+  { code:'EUR', name:'Euro', symbol:'€' },
+  { code:'BRL', name:'Brazilian Real', symbol:'R$' },
+  { code:'NGN', name:'Nigerian Naira', symbol:'₦' },
+  { code:'PHP', name:'Philippine Peso', symbol:'₱' },
+  { code:'PKR', name:'Pakistani Rupee', symbol:'₨' }
+];
+let currencyState = { code:'USD', symbol:'$', rate:1 };
+try {
+  const localCurrencyCode = localStorage.getItem('lancify_currency');
+  if (localCurrencyCode) {
+    const localCurrency = CURRENCY_OPTIONS.find(item => item.code === localCurrencyCode) || CURRENCY_OPTIONS[0];
+    currencyState = { code: localCurrency.code, symbol: localCurrency.symbol, rate: localCurrency.code === 'USD' ? 1 : currencyState.rate };
+  }
+} catch {}
 
 const PLAN_RULES = {
   free: {
@@ -12565,6 +12730,7 @@ async function generateProposal(){
   const job=val('prop-job'); if(!job) { showToast('Paste a job description first'); return false; }
   let ok = false;
   setButtonLoading('prop-btn', true); loader('prop',true); toggleResult('prop',false);
+  hide('prop-error');
   try {
     const res=await fetch('/api/proposal',{
       method:'POST',
@@ -12579,19 +12745,7 @@ async function generateProposal(){
     const data=await res.json();
     if(data.error) throw new Error(data.error);
 
-    el('prop-result-text').innerHTML = renderAiResultMarkup({
-      kicker: 'Proposal draft',
-      title: 'Built to sound sharp, specific, and worth replying to',
-      subject: data.subject || '',
-      body: data.proposal || '',
-      tips: data.tips || [],
-      redFlag: data.redFlag || '',
-      pills: [
-        `<strong>Platform</strong> ${escapeHtml(val('prop-platform') || 'Custom')}`,
-        `<strong>Tone</strong> calm + confident`,
-        `<strong>Goal</strong> get the reply`
-      ]
-    });
+    el('prop-result-text').innerHTML = renderProposalResultMarkup(data);
     setText('prop-word-count', `${wordCount(data.proposal || '')} words`);
     toggleResult('prop',true);
     recordActivity('proposal', `Generated a proposal for ${val('prop-platform') || 'a client opportunity'}`);
@@ -12607,7 +12761,7 @@ async function generateProposal(){
       loadStats(currentUser.id);
     }
     ok = true;
-  } catch(e){ showToast('Error. Try again.'); toggleResult('prop',false,true); ok = false; }
+  } catch(e){ console.error('Proposal generation error:', e); show('prop-error'); showToast('Error. Try again.'); toggleResult('prop',false,true); ok = false; }
   setButtonLoading('prop-btn', false); loader('prop',false);
   return ok;
 }
@@ -12616,6 +12770,7 @@ async function generateEmail(){
   const ctx=val('email-context'); if(!ctx) { showToast('Add some context first'); return false; }
   let ok = false;
   setButtonLoading('email-btn', true); loader('email',true); toggleResult('email',false);
+  hide('email-error');
   try {
     const res=await fetch('/api/email',{
       method:'POST',
@@ -12632,18 +12787,7 @@ async function generateEmail(){
 
     latestEmailDraft = { subject: data.subject || '', body: data.body || '' };
     setText('email-subject-pill', `Subject: ${data.subject || 'No subject generated'}`);
-    el('email-result-text').innerHTML = renderAiResultMarkup({
-      kicker: 'Email draft',
-      title: 'Short enough to read, sharp enough to earn a reply',
-      subject: data.subject || '',
-      body: data.body || '',
-      tips: data.tips || [],
-      alternativeSubject: data.alternativeSubject || '',
-      pills: [
-        `<strong>Objective</strong> ${escapeHtml(val('email-type') || 'Email')}`,
-        `<strong>Tone</strong> ${escapeHtml(val('email-tone') || 'Professional')}`
-      ]
-    });
+    el('email-result-text').innerHTML = renderEmailResultMarkup(data);
     toggleResult('email',true);
     recordActivity('email', `Generated an email for ${val('email-type') || 'client outreach'}`);
 
@@ -12657,7 +12801,7 @@ async function generateEmail(){
       loadStats(currentUser.id);
     }
     ok = true;
-  } catch(e){ showToast('Error. Try again.'); toggleResult('email',false,true); ok = false; }
+  } catch(e){ console.error('Email generation error:', e); show('email-error'); showToast('Error. Try again.'); toggleResult('email',false,true); ok = false; }
   setButtonLoading('email-btn', false); loader('email',false);
   return ok;
 }
@@ -12759,7 +12903,19 @@ async function generateRoadmap(){
   return ok;
 }
 
-function routeToAudit(targetName, platform, observation = '', price = '', service = ''){
+function showToolPrefill(tool, leadName = '') {
+  const banner = el(`${tool}-prefill-banner`);
+  const text = el(`${tool}-prefill-text`);
+  if (!banner || !text) return;
+  text.textContent = `Pre-filled from lead: ${leadName || 'Saved lead'}`;
+  banner.classList.add('show');
+}
+
+function dismissToolPrefill(tool) {
+  el(`${tool}-prefill-banner`)?.classList.remove('show');
+}
+
+function routeToAudit(targetName, platform, observation = '', price = '', service = '', websiteUrl = ''){
   setVal('audit-target', targetName);
   const platformMap = {
     'Instagram': 'Instagram',
@@ -12773,6 +12929,7 @@ function routeToAudit(targetName, platform, observation = '', price = '', servic
   };
   const mappedPlatform = platformMap[platform] || 'Instagram';
   setVal('audit-platform', mappedPlatform);
+  if (websiteUrl) setVal('audit-url', websiteUrl);
   if (observation) setVal('audit-obs', observation);
   if (price) setVal('audit-price', normalizeDealValue(price, price));
   if (service) {
@@ -12788,11 +12945,12 @@ function routeToAudit(targetName, platform, observation = '', price = '', servic
     if (mappedService) setVal('audit-service', mappedService);
   }
   if (typeof toggleAuditUrl === 'function') toggleAuditUrl();
+  showToolPrefill('audit', targetName);
   navigate('audit');
   showToast(`Audit pre-filled for "${targetName}".`);
 }
 
-function routeToProposal(jobDesc, platform = '', niche = ''){
+function routeToProposal(jobDesc, platform = '', niche = '', leadName = ''){
   setVal('prop-job', jobDesc);
   if (platform) setVal('prop-platform', ['Upwork','Fiverr','LinkedIn'].includes(platform) ? platform : 'LinkedIn');
   if (niche) setVal('prop-niche', niche);
@@ -12800,6 +12958,7 @@ function routeToProposal(jobDesc, platform = '', niche = ''){
   const eb = el('prop-empty');
   if (rb) rb.style.display = 'none';
   if (eb) eb.style.display = 'flex';
+  showToolPrefill('proposal', leadName || 'Lead');
   navigate('proposal');
   showToast('Proposal brief pre-filled.');
 }
@@ -12811,8 +12970,41 @@ function routeToDraftEmail(leadName, contextBody, emailType = 'Cold outreach wit
   const eb = el('email-empty');
   if (rb) rb.style.display = 'none';
   if (eb) eb.style.display = 'flex';
+  showToolPrefill('email', leadName);
   navigate('email');
   showToast(`Email context pre-filled for "${leadName}".`);
+}
+
+function routeSavedLeadToProposal(id) {
+  const lead = opportunityClients.find(item => item.id === id);
+  if (!lead) return;
+  routeToProposal(
+    lead.problem || lead.description || lead.quickDm || '',
+    lead.platform || '',
+    lead.niche || lead.skill || lead.service || '',
+    lead.name || ''
+  );
+}
+
+function routeSavedLeadToAudit(id) {
+  const lead = opportunityClients.find(item => item.id === id);
+  if (!lead) return;
+  routeToAudit(
+    lead.name || '',
+    lead.platform || '',
+    lead.problem || lead.description || '',
+    lead.potentialValue || '',
+    lead.service || lead.skill || '',
+    lead.profileUrl || lead.websiteUrl || ''
+  );
+}
+
+function routeSavedLeadToEmail(id) {
+  const lead = opportunityClients.find(item => item.id === id);
+  if (!lead) return;
+  const context = `Lead: ${lead.name || ''}. Problem: ${lead.problem || ''}. Platform: ${lead.platform || ''}.`;
+  routeToDraftEmail(lead.name || 'Lead', context, 'Cold outreach with a specific insight');
+  if (lead.niche || lead.skill) userProfile = { ...userProfile, niche: lead.niche || lead.skill };
 }
 
 function renderSequenceLeadOptions() {
@@ -13132,9 +13324,10 @@ function _renderQfCard(lead) {
     <div class="qf-lead-actions">
       <button class="qf-action-btn primary" onclick="copyDirectText('${escapeJsAttr(dmText)}','Quick DM copied.')"><i data-lucide="zap" style="width:11px;height:11px"></i> Quick DM</button>
       <button class="qf-action-btn" onclick="copyDirectText('${escapeJsAttr(loomText)}','Loom script copied.')"><i data-lucide="video" style="width:11px;height:11px"></i> Loom Script</button>
-      <button class="qf-action-btn" onclick="routeToAudit('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(auditObservation)}','${escapeJsAttr(deal)}','${escapeJsAttr(skill)}')"><i data-lucide="file-check-2" style="width:11px;height:11px"></i> Audit</button>
-      <button class="qf-action-btn" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(skill)}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal</button>
+      <button class="qf-action-btn" onclick="routeToAudit('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(auditObservation)}','${escapeJsAttr(deal)}','${escapeJsAttr(skill)}','${escapeJsAttr(lead.profileUrl || lead.websiteUrl || '')}')"><i data-lucide="file-check-2" style="width:11px;height:11px"></i> Audit</button>
+      <button class="qf-action-btn" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(skill)}','${escapeJsAttr(lead.name || '')}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal</button>
       <button class="qf-action-btn" onclick="importLeadToSequence({name:'${escapeJsAttr(lead.name || '')}',platform:'${escapeJsAttr(lead.platform || '')}',problem:'${escapeJsAttr(lead.problem || '')}'})"><i data-lucide="git-branch" style="width:11px;height:11px"></i> Sequence</button>
+      ${renderSaveLeadButton(lead, skill, 'qf-action-btn')}
     </div>
   </div>`;
 }
@@ -13142,7 +13335,8 @@ function _renderQfCard(lead) {
 function _renderOppCard(lead) {
   const score = Number(lead.match || 86);
   const replyScore = Number(lead.replyChance || Math.max(42, score - 12));
-  const dealValue = normalizeDealValue(lead.dealValue || '$150 - $450');
+  const rawDealValue = lead.dealValue || '$150 - $450';
+  const dealValue = normalizeDealValue(rawDealValue);
   const reason = lead.reason || 'Strong fit between the visible problem and your service.';
   const whyNow = lead.whyNow || 'Timing is good because the account is active and clearly trying to grow.';
   const service = lead.serviceMatch || lead.service || 'Freelance service';
@@ -13220,17 +13414,18 @@ function _renderOppCard(lead) {
       <div class="opp-action-group">
         <span class="opp-action-group-label">Follow-up</span>
         <div class="opp-action-btns">
-          <button class="opp-action-btn opp-btn-outline" onclick="routeToAudit('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(problem)}','${escapeJsAttr(dealValue)}','${escapeJsAttr(service)}')"><i data-lucide="file-check-2" style="width:11px;height:11px"></i> Audit</button>
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToAudit('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(problem)}','${escapeJsAttr(dealValue)}','${escapeJsAttr(service)}','${escapeJsAttr(lead.profileUrl || lead.websiteUrl || '')}')"><i data-lucide="file-check-2" style="width:11px;height:11px"></i> Audit</button>
           <button class="opp-action-btn opp-btn-outline" onclick="routeToDraftEmail('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(objectionReply)}','Reply to budget objection')"><i data-lucide="mail-plus" style="width:11px;height:11px"></i> Reply Coach</button>
         </div>
       </div>
       <div class="opp-action-group">
         <span class="opp-action-group-label">Close</span>
         <div class="opp-action-btns">
-          <button class="opp-action-btn opp-btn-outline" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal Brief</button>
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToProposal('${escapeJsAttr(proposalText)}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}','${escapeJsAttr(lead.name || '')}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Proposal Brief</button>
           <button class="opp-action-btn opp-btn-outline" onclick="importLeadToSequence({name:'${escapeJsAttr(lead.name || '')}',platform:'${escapeJsAttr(lead.platform || '')}',problem:'${escapeJsAttr(problem)}'})"><i data-lucide="git-branch" style="width:11px;height:11px"></i> Sequence</button>
-          <button class="opp-action-btn opp-btn-outline" onclick="routeToInvoice('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(service)}','${escapeJsAttr(dealValue)}','','Opportunity Engine lead')"><i data-lucide="receipt-text" style="width:11px;height:11px"></i> Quick Invoice</button>
-          <button class="opp-action-btn opp-btn-won" onclick="markLeadWon(this.closest('.opp-card'),'${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}','${escapeJsAttr(dealValue)}')"><i data-lucide="trophy" style="width:11px;height:11px"></i> Save as Won</button>
+          <button class="opp-action-btn opp-btn-outline" onclick="routeToInvoice('${escapeJsAttr(lead.name || '')}','${escapeJsAttr(service)}','${escapeJsAttr(rawDealValue)}','','Opportunity Engine lead')"><i data-lucide="receipt-text" style="width:11px;height:11px"></i> Quick Invoice</button>
+          ${renderSaveLeadButton(lead, service, 'opp-action-btn opp-btn-outline')}
+          <button class="opp-action-btn opp-btn-won" onclick="markLeadWon(this.closest('.opp-card'),'${escapeJsAttr(lead.name || '')}','${escapeJsAttr(lead.platform || '')}','${escapeJsAttr(service)}','${escapeJsAttr(rawDealValue)}')"><i data-lucide="trophy" style="width:11px;height:11px"></i> Save as Won</button>
         </div>
       </div>
     </div>
@@ -13338,8 +13533,8 @@ async function upsertOpportunityClientsRemote(rows = []){
   }
 }
 
-function ingestOpportunityClients(leads = [], skill = ''){
-  if (!currentUser || !Array.isArray(leads) || !leads.length) return;
+function ingestOpportunityClients(leads = [], skill = '', options = {}){
+  if (!currentUser || !Array.isArray(leads) || !leads.length) return 0;
   const existing = new Set(opportunityClients.map(c => `${(c.profileUrl||'').toLowerCase()}|${(c.name||'').toLowerCase()}`));
   const insertedRows = [];
   let added = 0;
@@ -13353,8 +13548,13 @@ function ingestOpportunityClients(leads = [], skill = ''){
       name: l.name,
       platform: l.platform || 'Website',
       service: skill || 'Freelance service',
-      potentialValue: normalizeDealValue(l.dealValue || '$150 - $450'),
+      potentialValue: l.dealValue || '$150 - $450',
       profileUrl: l.profileUrl || '',
+      websiteUrl: l.websiteUrl || '',
+      problem: l.problem || l.description || '',
+      description: l.description || l.problem || '',
+      niche: l.niche || l.skill || skill || '',
+      skill: l.skill || skill || '',
       quickDm: l.quickDm || l.assets?.quickDm || '',
       created_at: new Date().toISOString(),
     };
@@ -13367,7 +13567,9 @@ function ingestOpportunityClients(leads = [], skill = ''){
   upsertOpportunityClientsRemote(insertedRows);
   renderManagedOpportunityClients();
   renderBusinessDashboard();
-  if (added > 0) showToast(`${added} lead${added>1?'s':''} saved to Manage Clients.`);
+  insertedRows.forEach(row => _savedOpportunityLeadIds.add(_opportunityLeadKey(row)));
+  if (added > 0 && !options.silent) showToast(`${added} lead${added>1?'s':''} saved to Manage Clients.`);
+  return added;
 }
 
 function renderManagedOpportunityClients(){
@@ -14703,6 +14905,9 @@ function renderManagedOpportunityClients(){
       <div class="opp-managed-actions">
         ${client.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(client.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
         ${client.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${client.id}')">Copy DM</button>` : ''}
+        <button class="stage-btn" onclick="routeSavedLeadToProposal('${client.id}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Write Proposal</button>
+        <button class="stage-btn" onclick="routeSavedLeadToAudit('${client.id}')"><i data-lucide="search" style="width:11px;height:11px"></i> Run Audit</button>
+        <button class="stage-btn" onclick="routeSavedLeadToEmail('${client.id}')"><i data-lucide="mail" style="width:11px;height:11px"></i> Write Email</button>
         <button class="stage-btn" onclick="addOpportunityClientToPipeline('${client.id}')">Add to Pipeline</button>
         <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="removeOpportunityClient('${client.id}')">Remove</button>
       </div>
@@ -15122,86 +15327,116 @@ function previewInvoicePdf() {
   const amount = val('inv-amount') || '0';
   const dueDate = val('inv-due-date') || '';
   const notes = val('inv-notes') || '';
-  const status = val('inv-status') || 'sent';
-  
+
   if (!clientName || clientName === 'Client') { showToast('Please enter a client name first.'); return; }
   if (!amount || amount === '0') { showToast('Please enter an amount first.'); return; }
-  
+  if (!window.jspdf?.jsPDF) { showToast('PDF tools are still loading. Try again in a second.'); return; }
+
   const freelancerName = userProfile?.name || userProfile?.full_name || currentUser?.email || 'Freelancer';
   const freelancerEmail = currentUser?.email || userProfile?.email || '';
   const amountNumber = parseFloat(amount) || 0;
-  const amountText = `${getCurrencySymbol()}${amountNumber.toFixed(2)}`;
+  const amountText = formatCurrency(amountNumber);
+  const taxRate = 0;
+  const taxAmount = 0;
   const invNum = `INV-${Date.now().toString().slice(-6)}`;
-  const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
-  const dueDateFormatted = dueDate ? new Date(dueDate).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) : 'On receipt';
-  
-  const statusStyles = { paid: 'background:#dcfce7;color:#166534;', sent: 'background:rgba(232,80,10,0.08);color:#E8500A;', overdue: 'background:#fee2e2;color:#dc2626;' };
-  
-  setText('pdf-invoice-number', invNum);
-  setText('pdf-company-name', freelancerName);
-  setText('pdf-freelancer-display-name', freelancerName);
-  setText('pdf-freelancer-name', freelancerEmail || freelancerName);
-  setText('pdf-sender-copy', freelancerName);
-  setText('pdf-client-name', clientName);
-  setText('pdf-client-email', clientEmail);
-  setText('pdf-date-issued', today);
-  setText('pdf-due-date', dueDateFormatted);
-  setText('pdf-service', service);
-  setText('pdf-qty', '1');
-  setText('pdf-unit-price', amountText);
-  setText('pdf-amount-row', amountText);
-  setText('pdf-subtotal', amountText);
-  setText('pdf-total', amountText);
-  setText('pdf-notes', notes);
-  setText('pdf-footer-email', freelancerEmail);
-  
-  const badge = el('pdf-status-badge');
-  if (badge) {
-    badge.textContent = status.toUpperCase();
-    badge.style.cssText = statusStyles[status] || statusStyles.sent;
-  }
-  const showWatermark = !_planRules().whitelabelInvoice;
-  const watermarkEl = el('pdf-footer-watermark');
-  if (watermarkEl) watermarkEl.style.display = showWatermark ? 'block' : 'none';
 
-  const notesWrap = el('pdf-notes-wrap');
-  if (notesWrap) notesWrap.style.display = notes.trim() ? 'block' : 'none';
-  
-  const preview = el('invoice-pdf-preview');
-  preview.style.position = 'absolute';
-  preview.style.left = '-9999px';
-  preview.style.top = document.documentElement.scrollTop + 'px';
-  preview.style.zIndex = '9999';
-  preview.style.visibility = 'visible';
-  preview.style.display = 'block';
-  document.body.appendChild(preview);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const pad = 12;
+  const purple = [108, 99, 255];
+  const text = [26, 26, 46];
+  const muted = [107, 114, 128];
+  const border = [229, 231, 235];
+  const light = [249, 250, 251];
+  const fmtDate = raw => {
+    const d = raw ? new Date(raw) : new Date();
+    if (Number.isNaN(d.getTime())) return 'On receipt';
+    return d.toLocaleDateString('en-GB');
+  };
+  const label = (copy, x, y) => {
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...muted);
+    doc.text(String(copy || '').toUpperCase(), x, y);
+  };
+  const body = (copy, x, y, opts = {}) => {
+    doc.setFont('helvetica', opts.bold ? 'bold' : 'normal');
+    doc.setFontSize(opts.size || 10);
+    doc.setTextColor(...(opts.color || text));
+    doc.text(String(copy || ''), x, y, opts.align ? { align: opts.align } : undefined);
+  };
 
   showToast('Generating PDF...');
+  doc.setFillColor(...purple);
+  doc.rect(pad, pad, pageWidth - pad * 2, 22, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(22);
+  doc.text('LANCIFY', pad + 7, pad + 14);
+  doc.setFontSize(20);
+  doc.text('INVOICE', pageWidth - pad - 7, pad + 12, { align:'right' });
+  doc.setFontSize(9);
+  doc.text(invNum, pageWidth - pad - 7, pad + 18, { align:'right' });
 
-  html2canvas(preview, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
-    preview.style.position = 'fixed';
-    preview.style.left = '-9999px';
-    preview.style.top = '0';
-    preview.style.zIndex = '-1';
-    preview.style.visibility = 'hidden';
+  let y = pad + 38;
+  const leftX = pad + 7;
+  const rightX = pageWidth / 2 + 4;
+  label('From', leftX, y);
+  label('To', rightX, y);
+  y += 7;
+  body(freelancerName, leftX, y, { bold:true });
+  body(clientName, rightX, y, { bold:true });
+  y += 6;
+  if (freelancerEmail) body(freelancerEmail, leftX, y);
+  if (clientEmail) body(clientEmail, rightX, y);
+  y += 16;
+  body(`Issue Date: ${fmtDate(new Date())}`, leftX, y, { bold:true });
+  body(`Due Date: ${dueDate ? fmtDate(dueDate) : 'On receipt'}`, rightX, y, { bold:true });
 
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const imgData = canvas.toDataURL('image/png');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`${invNum}-${clientName.replace(/\s+/g,'-')}.pdf`);
-    showToast('Invoice downloaded!');
-  }).catch((err) => {
-    console.error('PDF error:', err);
-    preview.style.position = 'fixed';
-    preview.style.left = '-9999px';
-    preview.style.top = '0';
-    preview.style.zIndex = '-1';
-    preview.style.visibility = 'hidden';
-    showToast('PDF generation failed: ' + (err?.message || 'unknown error'));
-  });
+  y += 18;
+  label('Description', leftX, y);
+  label('Qty', pageWidth - pad - 70, y);
+  label('Rate', pageWidth - pad - 45, y);
+  label('Amount', pageWidth - pad - 7, y);
+  y += 4;
+  doc.setDrawColor(...border);
+  doc.line(leftX, y, pageWidth - pad - 7, y);
+  y += 7;
+  doc.setFillColor(...light);
+  doc.rect(leftX - 2, y - 5, pageWidth - pad * 2 - 10, 13, 'F');
+  body(service, leftX, y + 2);
+  body('1', pageWidth - pad - 66, y + 2);
+  body(amountText, pageWidth - pad - 28, y + 2, { align:'right' });
+  body(amountText, pageWidth - pad - 7, y + 2, { align:'right' });
+
+  y += 26;
+  const totalsX = pageWidth - pad - 82;
+  const totalsValX = pageWidth - pad - 7;
+  body('Subtotal:', totalsX, y);
+  body(amountText, totalsValX, y, { align:'right' });
+  y += 7;
+  body(`Tax (${taxRate}%):`, totalsX, y);
+  body(formatCurrency(taxAmount), totalsValX, y, { align:'right' });
+  y += 5;
+  doc.setDrawColor(...purple);
+  doc.line(totalsX, y, totalsValX, y);
+  y += 9;
+  body('TOTAL:', totalsX, y, { bold:true, size:14, color:purple });
+  body(amountText, totalsValX, y, { bold:true, size:14, color:purple, align:'right' });
+
+  const footerY = pageHeight - pad - 18;
+  label('Notes / Payment Terms', leftX, footerY);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  doc.setTextColor(156, 163, 175);
+  const noteLines = doc.splitTextToSize(notes || 'Payment due by the due date above. Thank you for your business.', 115);
+  doc.text(noteLines, leftX, footerY + 6);
+  doc.text('Generated by Lancify', pageWidth - pad - 7, footerY + 6, { align:'right' });
+
+  doc.save(`${invNum}-${clientName.replace(/\s+/g,'-')}.pdf`);
+  showToast('Invoice downloaded!');
   }
 
 function renderBusinessDashboard(){
@@ -15266,7 +15501,7 @@ function renderAccountingTrend(filteredWonLeads){
 
   bars.innerHTML = data.map(item => `
     <div class="trend-col">
-      <div class="trend-bar-value">${item.value ? formatCurrency(item.value) : '$0'}</div>
+      <div class="trend-bar-value">${item.value ? formatCurrency(item.value) : formatCurrency(0)}</div>
       <div class="trend-bar" style="height:${Math.max(14, Math.round((item.value / maxValue) * 180))}px"></div>
     </div>
   `).join('');
@@ -15434,6 +15669,9 @@ function renderManagedOpportunityClients(){
       <div class="opp-managed-actions">
         ${client.profileUrl ? `<button class="stage-btn" onclick="window.open('${String(client.profileUrl).replace(/'/g, "\\'")}','_blank')">Open</button>` : ''}
         ${client.quickDm ? `<button class="stage-btn" onclick="copyOpportunityClientDm('${client.id}')">Copy DM</button>` : ''}
+        <button class="stage-btn" onclick="routeSavedLeadToProposal('${client.id}')"><i data-lucide="file-text" style="width:11px;height:11px"></i> Write Proposal</button>
+        <button class="stage-btn" onclick="routeSavedLeadToAudit('${client.id}')"><i data-lucide="search" style="width:11px;height:11px"></i> Run Audit</button>
+        <button class="stage-btn" onclick="routeSavedLeadToEmail('${client.id}')"><i data-lucide="mail" style="width:11px;height:11px"></i> Write Email</button>
         <button class="stage-btn" onclick="addOpportunityClientToPipeline('${client.id}')">Add to Pipeline</button>
         <button class="stage-btn" style="color:#dc2626;border-color:#fecaca" onclick="removeOpportunityClient('${client.id}')">Remove</button>
       </div>
@@ -15616,10 +15854,19 @@ function escapeJsAttr(str=''){
     .replace(/\r/g,'')
     .replace(/\n/g,'\\n');
 }
-function formatCurrency(amount){
+function convertFromUSD(usdAmount){
+  const usd = Number(usdAmount || 0);
+  const converted = usd * Number(currencyState.rate || 1);
+  if (!Number.isFinite(converted)) return 0;
+  return Math.abs(converted) > 10 ? Math.round(converted) : Math.round(converted * 100) / 100;
+}
+function formatAmount(amount){
   const num = Number(amount || 0);
-  const symbol = getCurrencySymbol();
-  return `${symbol}${num.toLocaleString()}`;
+  const rounded = Math.abs(num) > 10 ? Math.round(num) : Math.round(num * 100) / 100;
+  return `${getCurrencySymbol()}${rounded.toLocaleString(undefined, { maximumFractionDigits: Math.abs(rounded) > 10 ? 0 : 2 })}`;
+}
+function formatCurrency(amount){
+  return formatAmount(convertFromUSD(amount));
 }
 function normalizeDealValue(raw, fallback='$150 - $450'){
   const text = String(raw || '').replace(/\s+/g, ' ').trim();
@@ -15650,15 +15897,13 @@ function normalizeDealValue(raw, fallback='$150 - $450'){
     .replace(/\s{2,}/g, ' ');
 }
 function getDealFloor(raw, fallback=0){
-  const normalized = normalizeDealValue(raw, '');
-  const nums = normalized.match(/\d[\d,]*/g) || [];
+  const nums = String(raw || '').match(/\d[\d,]*/g) || [];
   if (!nums.length) return fallback;
   const first = Number(nums[0].replace(/,/g, ''));
   return Number.isFinite(first) ? first : fallback;
 }
 function getDealAverage(raw, fallback=0){
-  const normalized = normalizeDealValue(raw, '');
-  const nums = normalized.match(/\d+(?:,\d{3})*(?:\.\d+)?/g) || [];
+  const nums = String(raw || '').match(/\d+(?:,\d{3})*(?:\.\d+)?/g) || [];
   if (!nums.length) return fallback;
   const parsed = nums
     .map(n => Number(String(n).replace(/,/g, '')))
@@ -15671,6 +15916,12 @@ function summarizeDealValue(raw){
   const normalized = normalizeDealValue(raw, '');
   if (!normalized) return 'Custom quote';
   return normalized;
+}
+function formatUsdText(text = ''){
+  return String(text || '').replace(/\$\s*([\d,]+(?:\.\d+)?)/g, (_, num) => {
+    const value = Number(String(num).replace(/,/g, ''));
+    return Number.isFinite(value) ? formatCurrency(value) : `$${num}`;
+  });
 }
 function paragraphsFromText(text=''){
   return String(text)
@@ -15702,6 +15953,38 @@ function renderAiResultMarkup({kicker,title,subject,body,tips=[],pills=[],altern
       </div>
     </div>`;
 }
+function renderEmailResultMarkup(result = {}) {
+  return `
+    <div class="result-container ai-result-shell">
+      <div class="result-section ai-result-body-card">
+        <label class="ai-result-label">Subject Line</label>
+        <div class="subject-pill ai-result-subject">${escapeHtml(result.subject || '')}</div>
+        ${result.alternativeSubject ? `<div class="alt-subject" style="font-size:12px;color:var(--text-muted);margin-top:8px">Alt: ${escapeHtml(result.alternativeSubject)}</div>` : ''}
+      </div>
+      <div class="result-section ai-result-body-card" style="margin-top:12px">
+        <label class="ai-result-label">Email Body</label>
+        <div style="white-space:pre-wrap;font-size:14px;line-height:1.75;color:var(--text-main)">${escapeHtml(result.body || '')}</div>
+        <button class="stage-btn" style="margin-top:12px" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.body || '')}','Email copied.')">Copy Email</button>
+      </div>
+      ${result.tips?.length > 0 ? `<div class="result-section ai-result-side-card" style="margin-top:12px"><label class="ai-result-label">Why This Works</label><ol class="ai-result-list">${result.tips.map(tip => `<li>${escapeHtml(tip)}</li>`).join('')}</ol></div>` : ''}
+    </div>`;
+}
+function renderProposalResultMarkup(result = {}) {
+  return `
+    <div class="result-container ai-result-shell">
+      <div class="result-section ai-result-body-card">
+        <label class="ai-result-label">Subject Line</label>
+        <div class="subject-pill ai-result-subject">${escapeHtml(result.subject || '')}</div>
+      </div>
+      <div class="result-section ai-result-body-card" style="margin-top:12px">
+        <label class="ai-result-label">Proposal</label>
+        <div style="white-space:pre-wrap;font-size:14px;line-height:1.75;color:var(--text-main)">${escapeHtml(result.proposal || '')}</div>
+        <button class="stage-btn" style="margin-top:12px" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.proposal || '')}','Proposal copied.')">Copy Proposal</button>
+      </div>
+      ${result.tips?.length > 0 ? `<div class="result-section ai-result-side-card" style="margin-top:12px"><label class="ai-result-label">Why This Works</label><ol class="ai-result-list">${result.tips.map(tip => `<li>${escapeHtml(tip)}</li>`).join('')}</ol></div>` : ''}
+      ${result.redFlag ? `<div class="red-flag-box" style="background:#fffbeb;border:1px solid #f59e0b;border-radius:8px;padding:12px;margin-top:12px;color:#92400e">${escapeHtml(result.redFlag)}</div>` : ''}
+    </div>`;
+}
 function renderGigCardMarkup(niche){
   const demand = niche.demand || 'Demand';
   const competition = niche.competition || 'Competition';
@@ -15712,7 +15995,7 @@ function renderGigCardMarkup(niche){
     <div class="gig-result-card">
       <div class="gig-result-top">
         <div class="gig-result-title">${escapeHtml(niche.title || '')}</div>
-        <div class="gig-result-range">${escapeHtml(niche.priceRange || '')}</div>
+        <div class="gig-result-range">${escapeHtml(formatUsdText(niche.priceRange || ''))}</div>
       </div>
       <div class="gig-result-copy">${escapeHtml(niche.whyNow || 'High demand for this niche right now.')}</div>
       <div class="gig-result-section">
@@ -15738,7 +16021,7 @@ function renderRoadmapMarkup(data){
   const stats = getRoadmapProgressStats(data);
   return `
     <div class="roadmap-shell">
-      ${data.goal ? `<div class="roadmap-goal-card"><div class="ai-result-label">Outcome</div><div style="font-size:15px;line-height:1.7;color:var(--text-main)">${escapeHtml(data.goal)}</div></div>` : ''}
+      ${data.goal ? `<div class="roadmap-goal-card"><div class="ai-result-label">Outcome</div><div style="font-size:15px;line-height:1.7;color:var(--text-main)">${escapeHtml(formatUsdText(data.goal))}</div></div>` : ''}
       <div class="roadmap-plan-progress">
         <div class="roadmap-progress-copy">
           <div>
@@ -15762,7 +16045,7 @@ function renderRoadmapMarkup(data){
                 <div class="roadmap-week-meta">Week ${escapeHtml(w.weekNumber || w.week || '')} • ${escapeHtml(w.theme || '')}</div>
                 <div class="roadmap-week-title">${escapeHtml(w.theme || '')}</div>
               </div>
-              ${w.focus ? `<div style="max-width:360px;font-size:13px;line-height:1.7;color:var(--text-muted)">${escapeHtml(w.focus)}</div>` : ''}
+              ${w.focus ? `<div style="max-width:360px;font-size:13px;line-height:1.7;color:var(--text-muted)">${escapeHtml(formatUsdText(w.focus))}</div>` : ''}
             </div>
             <div class="roadmap-day-list">
               ${(w.days || []).map((d, dayIdx) => {
@@ -15778,7 +16061,7 @@ function renderRoadmapMarkup(data){
                       <button class="roadmap-day-check ${dayDone ? 'checked' : ''}" type="button" onclick="toggleRoadmapDay('${escapeJsAttr(dayKey)}')" aria-label="Mark day ${escapeHtml(dayNum)} complete"><i data-lucide="check"></i></button>
                       <div>
                         <div class="roadmap-day-title">${escapeHtml(d.title || 'Action item')}</div>
-                        <div class="roadmap-day-task">${escapeHtml(d.task || '')}</div>
+                        <div class="roadmap-day-task">${escapeHtml(formatUsdText(d.task || ''))}</div>
                       </div>
                     </div>
                     <div class="roadmap-day-badge">${escapeHtml(dayNum)}</div>
@@ -15786,15 +16069,15 @@ function renderRoadmapMarkup(data){
                   <div class="roadmap-day-meta">
                     ${d.timeEstimate ? `<span class="roadmap-time-pill">${escapeHtml(d.timeEstimate)}</span>` : ''}
                   </div>
-                  ${d.why ? `<div class="roadmap-day-note"><strong style="color:var(--text-main)">Why it matters:</strong> ${escapeHtml(d.why)}</div>` : ''}
-                  ${tip ? `<div class="roadmap-day-tip">${escapeHtml(tip)}</div>` : ''}
+                  ${d.why ? `<div class="roadmap-day-note"><strong style="color:var(--text-main)">Why it matters:</strong> ${escapeHtml(formatUsdText(d.why))}</div>` : ''}
+                  ${tip ? `<div class="roadmap-day-tip">${escapeHtml(formatUsdText(tip))}</div>` : ''}
                   ${checklist.length ? `<div class="roadmap-checklist">
                     ${checklist.map((item, itemIdx) => {
                       const stepKey = roadmapStepKey(d, idx, dayIdx, itemIdx);
                       const checked = !!window._roadmapProgress?.[stepKey];
                       return `<label class="roadmap-check-item ${checked ? 'done' : ''}">
                         <input type="checkbox" data-roadmap-check="${escapeHtml(stepKey)}" ${checked ? 'checked' : ''} onchange="toggleRoadmapChecklist('${escapeJsAttr(stepKey)}', this.checked)">
-                        <span>${escapeHtml(item)}</span>
+                        <span>${escapeHtml(formatUsdText(item))}</span>
                       </label>`;
                     }).join('')}
                   </div>` : ''}
@@ -15803,7 +16086,7 @@ function renderRoadmapMarkup(data){
             </div>
           </div>`).join('')}
       </div>
-      ${data.finalMessage ? `<div class="roadmap-goal-card"><div class="ai-result-label">Keep going</div><div style="font-size:14px;line-height:1.75;color:var(--text-main)">${escapeHtml(data.finalMessage)}</div></div>` : ''}
+      ${data.finalMessage ? `<div class="roadmap-goal-card"><div class="ai-result-label">Keep going</div><div style="font-size:14px;line-height:1.75;color:var(--text-main)">${escapeHtml(formatUsdText(data.finalMessage))}</div></div>` : ''}
     </div>`;
 }
 
@@ -16396,6 +16679,7 @@ async function onLogin(user) {
   if (el('ob-name')) el('ob-name').value = firstName !== 'User' ? fullName : '';
 
   await loadBillingState(user.id);
+  await loadCurrencyPreference(user.id);
   verifyPaymentSetup();
   loadLeadMeta(user.id);
   injectBusinessDashboardWidgets();
@@ -16531,6 +16815,8 @@ async function _decideRoute(uid) {
   if (isReturning) {
     if (fullProfile) {
       userProfile = { ...userProfile, ...fullProfile };
+      const option = currencyOption(fullProfile.preferred_currency_code || currencyState.code || 'USD');
+      applyCurrencyState(option.code, fullProfile.exchange_rate_from_usd || currencyState.rate || 1, fullProfile.preferred_currency_symbol || option.symbol);
       applyProfileToFields(fullProfile);
       syncWorkspaceIdentity(fullProfile, currentUser);
       checkProfileBanners();
@@ -16540,6 +16826,7 @@ async function _decideRoute(uid) {
     el('app-layout').classList.add('show');
     requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
     setTimeout(initDashboardCharts, 50);
+    setTimeout(maybeShowCurrencyOnboarding, 900);
     if (isPlanRoute()) showUpgradeModal({ pushRoute: false });
   } else {
     if (localStorage.getItem(ONBOARDING_SEEN_KEY) === 'yes') {
@@ -16660,7 +16947,7 @@ async function _obFinish() {
 /* ── Quote screen (5 seconds, then dashboard) ── */
 function _runQuoteScreen(goal, firstName) {
   const qs = el('ob-quote-screen');
-  if (!qs) { el('app-layout').classList.add('show'); requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights)); showToast(`Welcome to Lancify, ${firstName}! 🚀`); return; }
+  if (!qs) { el('app-layout').classList.add('show'); requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights)); showToast(`Welcome to Lancify, ${firstName}! 🚀`); setTimeout(maybeShowCurrencyOnboarding, 900); return; }
 
   const pool = _obQuotes[goal] || _obQuotes.default;
   const quotes = pool.length >= 2 ? pool : [...pool, ..._obQuotes.default].slice(0, 3);
@@ -16717,6 +17004,7 @@ function _runQuoteScreen(goal, firstName) {
           _pendingPostPlanAction = 'dashboard_entrance';
           showUpgradeModal({ pushRoute: true });
           showToast(`Welcome to Lancify, ${firstName}! 🚀`);
+          setTimeout(maybeShowCurrencyOnboarding, 900);
         }, 700);
       }, 400);
     }
@@ -16732,8 +17020,133 @@ function getCurrencySymbol() {
 function syncSettingsUi() {
   const emailNotif = el('notif-email');
   if(emailNotif) emailNotif.checked = localStorage.getItem('lancify_notif_email') === 'true';
-  const currency = el('inv-currency-pref');
-  if(currency) currency.value = localStorage.getItem('lancify_currency') || 'USD';
+}
+
+function currencyOption(code) {
+  return CURRENCY_OPTIONS.find(item => item.code === String(code || '').toUpperCase()) || CURRENCY_OPTIONS[0];
+}
+
+function getCurrencySymbol() {
+  return currencyState.symbol || currencyOption(currencyState.code).symbol || '$';
+}
+
+function getCurrencyName(code = currencyState.code) {
+  return currencyOption(code).name;
+}
+
+function applyCurrencyState(code = 'USD', rate = 1, symbol = '') {
+  const option = currencyOption(code);
+  currencyState = {
+    code: option.code,
+    symbol: symbol || option.symbol,
+    rate: Number(rate || 1) || 1
+  };
+  localStorage.setItem('lancify_currency', currencyState.code);
+  syncSettingsUi();
+  renderInvoices();
+  renderPipelineSummary?.();
+  renderBusinessDashboard();
+}
+
+async function fetchCurrencyRate(code) {
+  const target = currencyOption(code).code;
+  if (target === 'USD') return 1;
+  const response = await fetch(`/api/currency-rate?from=USD&to=${encodeURIComponent(target)}`);
+  const data = await response.json();
+  if (!response.ok || !Number.isFinite(Number(data.rate))) throw new Error(data.error || 'Rate unavailable');
+  return Number(data.rate);
+}
+
+async function loadCurrencyPreference(uid) {
+  if (!uid) return;
+  try {
+    const { data, error } = await sb
+      .from('profiles')
+      .select('preferred_currency_code,preferred_currency_symbol,exchange_rate_from_usd')
+      .eq('user_id', uid)
+      .single();
+    if (error || !data) return;
+    const option = currencyOption(data.preferred_currency_code || 'USD');
+    applyCurrencyState(option.code, data.exchange_rate_from_usd || 1, data.preferred_currency_symbol || option.symbol);
+  } catch (error) {
+    console.warn('Currency preference load skipped:', error?.message || error);
+  }
+}
+
+async function updateCurrencyPreference(code, opts = {}) {
+  if (!currentUser) return false;
+  const option = currencyOption(code);
+  const rate = await fetchCurrencyRate(option.code);
+  const payload = {
+    user_id: currentUser.id,
+    preferred_currency_code: option.code,
+    preferred_currency_symbol: option.symbol,
+    exchange_rate_from_usd: rate
+  };
+  const { error } = await sb.from('profiles').upsert([payload], { onConflict:'user_id' });
+  if (error) throw error;
+  userProfile = { ...userProfile, ...payload };
+  applyCurrencyState(option.code, rate, option.symbol);
+  localStorage.setItem('lancify_currency_set', '1');
+  if (!opts.silent) showToast('Currency preferences updated.');
+  return true;
+}
+
+function shouldShowCurrencyOnboarding() {
+  return !!currentUser && localStorage.getItem('lancify_currency_set') !== '1' && (!currencyState.code || currencyState.code === 'USD');
+}
+
+function maybeShowCurrencyOnboarding() {
+  if (!shouldShowCurrencyOnboarding()) return;
+  const upgrade = el('upgrade-modal');
+  if (upgrade && upgrade.style.display === 'block') {
+    setTimeout(maybeShowCurrencyOnboarding, 1200);
+    return;
+  }
+  setVal('currency-onboarding-select', currencyState.code || 'USD');
+  el('currency-modal')?.classList.add('show');
+}
+
+async function confirmCurrencyOnboarding() {
+  const btn = el('currency-set-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Setting...'; }
+  try {
+    await updateCurrencyPreference(val('currency-onboarding-select') || 'USD', { silent:true });
+    closeModal('currency-modal');
+    showToast('Currency set.');
+  } catch (error) {
+    console.error('Currency update error:', error);
+    showToast('Could not update currency. Try again.');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Set Currency'; }
+  }
+}
+
+function skipCurrencyOnboarding() {
+  localStorage.setItem('lancify_currency_set', '1');
+  closeModal('currency-modal');
+}
+
+async function updateCurrencyFromSettings() {
+  const btn = el('settings-currency-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Updating...'; }
+  try {
+    await updateCurrencyPreference(val('settings-currency-select') || 'USD');
+  } catch (error) {
+    console.error('Currency settings error:', error);
+    showToast('Currency update failed. Try again.');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Update Currency'; }
+  }
+}
+
+function syncSettingsUi() {
+  const emailNotif = el('notif-email');
+  if(emailNotif) emailNotif.checked = localStorage.getItem('lancify_notif_email') === 'true';
+  const currency = el('settings-currency-select');
+  if(currency) currency.value = currencyState.code || 'USD';
+  setText('settings-currency-current', `Current currency: ${getCurrencyName()} (${getCurrencySymbol()})`);
+  setText('settings-currency-rate', `1 USD = ${getCurrencySymbol()}${Number(currencyState.rate || 1).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
 }
 
 // Ensure these are called after Settings modal opens
