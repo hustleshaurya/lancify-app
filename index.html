@@ -565,7 +565,7 @@ html.dark #theme-icon-moon{display:none}
 .content-scroll{
   flex:1;
   overflow-y:auto;
-  overflow-x:hidden;
+  overflow-x:auto;
   background:var(--bg);
   height:0;
   min-height:0;
@@ -1452,6 +1452,8 @@ html:not(.dark) .stat-card { border-color: #e0e0e0; box-shadow: 0 1px 4px rgba(0
 .crm-modal-actions-right{display:flex;gap:10px;justify-content:flex-end}
 #page-pipeline .content-inner.wide{max-width:min(1760px, calc(100vw - 24px));padding-left:24px;padding-right:24px;overflow-x:clip}
 #page-opportunity .content-inner.wide{max-width:min(1720px, calc(100vw - 28px));padding-left:24px;padding-right:24px}
+#page-proposal .content-inner.wide,#page-email .content-inner.wide{padding-left:24px;padding-right:24px;max-width:calc(100vw - var(--sidebar-w) - 2px)}
+#page-opportunity .content-inner.wide{max-width:min(1720px, calc(100vw - 28px));padding-left:24px;padding-right:24px}
 
 /* Analytics workspace */
 .analytics-shell{display:grid;gap:16px}
@@ -1598,7 +1600,7 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 .tw-page-title{font-size:26px;font-weight:800;letter-spacing:-.6px;color:var(--text-main);margin:0 0 6px;line-height:1.15}
 .tw-page-desc{font-size:13.5px;color:var(--text-muted);margin:0;line-height:1.6;max-width:52ch}
 /* Two-column layout */
-.tw-tool-layout{display:grid;grid-template-columns:minmax(340px,420px) minmax(0,1fr);gap:24px;align-items:start}
+.tw-tool-layout{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:20px;align-items:start}
 /* Form panel */
 .tw-form-panel{
   display:flex;flex-direction:column;gap:18px;
