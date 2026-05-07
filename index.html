@@ -565,7 +565,7 @@ html.dark #theme-icon-moon{display:none}
 .content-scroll{
   flex:1;
   overflow-y:auto;
-  overflow-x:auto;
+  overflow-x:hidden;
   background:var(--bg);
   height:0;
   min-height:0;
@@ -1600,7 +1600,7 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 .tw-page-title{font-size:26px;font-weight:800;letter-spacing:-.6px;color:var(--text-main);margin:0 0 6px;line-height:1.15}
 .tw-page-desc{font-size:13.5px;color:var(--text-muted);margin:0;line-height:1.6;max-width:52ch}
 /* Two-column layout */
-.tw-tool-layout{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:20px;align-items:start}
+.tw-tool-layout{display:grid;grid-template-columns:1fr;gap:20px;align-items:start;max-width:800px}
 /* Form panel */
 .tw-form-panel{
   display:flex;flex-direction:column;gap:18px;
@@ -1668,7 +1668,7 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 /* Output panel */
 .tw-output-panel{
   background:var(--bg2);border:1px solid var(--border);border-radius:18px;
-  overflow:visible;min-height:460px;display:flex;flex-direction:column;
+  overflow:visible;min-height:0;display:flex;flex-direction:column;
   box-shadow:0 18px 45px rgba(0,0,0,0.08)
 }
 .tw-output-topbar{
@@ -1707,8 +1707,8 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
 .tw-action-btn:hover{background:var(--bg3);color:var(--text-main);border-color:var(--border2)}
 /* Empty state */
 .tw-empty-state{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:48px 32px;flex:1;gap:12px
+  display:flex;flex-direction:row;align-items:center;
+  text-align:left;padding:24px 28px;flex:1;gap:20px
 }
 .tw-empty-icon{
   width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;
@@ -7576,7 +7576,7 @@ body,
          </div>
 
       <div id="page-proposal" class="page">
-        <div class="content-inner wide tw-tool-page">
+        <div class="content-inner tw-tool-page">
 
           <div class="tw-page-header">
             <div class="tw-page-header-left">
@@ -7661,7 +7661,7 @@ body,
 
 
       <div id="page-email" class="page">
-        <div class="content-inner wide tw-tool-page">
+        <div class="content-inner tw-tool-page">
 
           <div class="tw-page-header">
             <div class="tw-page-header-left">
