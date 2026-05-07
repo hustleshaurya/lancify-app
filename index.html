@@ -1692,7 +1692,7 @@ html.dark .acct-v2-chip:hover{background:rgba(255,255,255,0.07);color:#f1f5f9}
   transition:background .14s,border-color .14s;font-family:inherit
 }
 .tw-copy-btn:hover{background:var(--bg3);border-color:var(--border2)}
-.tw-output-body{padding:20px;flex:1;overflow-y:auto}
+.tw-output-body{padding:20px;flex:1;overflow-y:auto;color:var(--text-main)}
 .tw-output-footer-actions{
   display:flex;align-items:center;gap:8px;padding:14px 20px;
   border-top:1px solid var(--border);flex-wrap:wrap
@@ -15845,36 +15845,48 @@ function renderAiResultMarkup({kicker,title,subject,body,tips=[],pills=[],altern
     </div>`;
 }
 function renderEmailResultMarkup(result = {}) {
-  return `
-    <div class="result-container ai-result-shell">
-      <div class="result-section ai-result-body-card">
-        <label class="ai-result-label">Subject Line</label>
-        <div class="subject-pill ai-result-subject">${escapeHtml(result.subject || '')}</div>
-        ${result.alternativeSubject ? `<div class="alt-subject" style="font-size:12px;color:var(--text-muted);margin-top:8px">Alt: ${escapeHtml(result.alternativeSubject)}</div>` : ''}
-      </div>
-      <div class="result-section ai-result-body-card" style="margin-top:12px">
-        <label class="ai-result-label">Email Body</label>
-        <div style="white-space:pre-wrap;font-size:14px;line-height:1.75;color:var(--text-main)">${escapeHtml(result.body || '')}</div>
-        <button class="stage-btn" style="margin-top:12px" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.body || '')}','Email copied.')">Copy Email</button>
-      </div>
-      ${result.tips?.length > 0 ? `<div class="result-section ai-result-side-card" style="margin-top:12px"><label class="ai-result-label">Why This Works</label><ol class="ai-result-list">${result.tips.map(tip => `<li>${escapeHtml(tip)}</li>`).join('')}</ol></div>` : ''}
-    </div>`;
+  const card = 'border-radius:12px;padding:16px 18px;margin-bottom:12px;border:1px solid var(--border)';
+  const label = 'font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:block';
+  const bodyText = 'white-space:pre-wrap;font-size:14px;line-height:1.8;color:var(--text-main)';
+  const pill = 'display:inline-flex;align-items:center;padding:6px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:600;border:1px solid rgba(232,80,10,0.2);word-break:break-word;max-width:100%';
+  const copyBtn = 'margin-top:14px;height:32px;padding:0 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit';
+  const tipItem = 'display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-main);margin-bottom:8px';
+  const dot = 'width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px';
+  return `<div style="display:grid;gap:0">
+    <div style="${card};background:var(--bg3)">
+      <span style="${label}">Subject Line</span>
+      <div style="${pill}">${escapeHtml(result.subject || '—')}</div>
+      ${result.alternativeSubject ? `<div style="font-size:12px;color:var(--text-muted);margin-top:8px">Alt: ${escapeHtml(result.alternativeSubject)}</div>` : ''}
+    </div>
+    <div style="${card};background:var(--bg3)">
+      <span style="${label}">Email Body</span>
+      <div style="${bodyText}">${escapeHtml(result.body || '')}</div>
+      <button style="${copyBtn}" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.body || '')}','Email copied.')">📋 Copy Email</button>
+    </div>
+    ${result.tips?.length > 0 ? `<div style="${card};background:var(--bg3)"><span style="${label}">💡 Why This Works</span><div>${result.tips.map(t=>`<div style="${tipItem}"><span style="${dot}"></span><span>${escapeHtml(t)}</span></div>`).join('')}</div></div>` : ''}
+  </div>`;
 }
 function renderProposalResultMarkup(result = {}) {
-  return `
-    <div class="result-container ai-result-shell">
-      <div class="result-section ai-result-body-card">
-        <label class="ai-result-label">Subject Line</label>
-        <div class="subject-pill ai-result-subject">${escapeHtml(result.subject || '')}</div>
-      </div>
-      <div class="result-section ai-result-body-card" style="margin-top:12px">
-        <label class="ai-result-label">Proposal</label>
-        <div style="white-space:pre-wrap;font-size:14px;line-height:1.75;color:var(--text-main)">${escapeHtml(result.proposal || '')}</div>
-        <button class="stage-btn" style="margin-top:12px" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.proposal || '')}','Proposal copied.')">Copy Proposal</button>
-      </div>
-      ${result.tips?.length > 0 ? `<div class="result-section ai-result-side-card" style="margin-top:12px"><label class="ai-result-label">Why This Works</label><ol class="ai-result-list">${result.tips.map(tip => `<li>${escapeHtml(tip)}</li>`).join('')}</ol></div>` : ''}
-      ${result.redFlag ? `<div class="red-flag-box" style="background:#fffbeb;border:1px solid #f59e0b;border-radius:8px;padding:12px;margin-top:12px;color:#92400e">${escapeHtml(result.redFlag)}</div>` : ''}
-    </div>`;
+  const card = 'border-radius:12px;padding:16px 18px;margin-bottom:12px;border:1px solid var(--border)';
+  const label = 'font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:block';
+  const bodyText = 'white-space:pre-wrap;font-size:14px;line-height:1.8;color:var(--text-main)';
+  const pill = 'display:inline-flex;align-items:center;padding:6px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:600;border:1px solid rgba(232,80,10,0.2);word-break:break-word;max-width:100%';
+  const copyBtn = 'margin-top:14px;height:32px;padding:0 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-main);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit';
+  const tipItem = 'display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-main);margin-bottom:8px';
+  const dot = 'width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px';
+  return `<div style="display:grid;gap:0">
+    <div style="${card};background:var(--bg3)">
+      <span style="${label}">Subject Line</span>
+      <div style="${pill}">${escapeHtml(result.subject || '—')}</div>
+    </div>
+    <div style="${card};background:var(--bg3)">
+      <span style="${label}">Proposal</span>
+      <div style="${bodyText}">${escapeHtml(result.proposal || '')}</div>
+      <button style="${copyBtn}" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.proposal || '')}','Proposal copied.')">📋 Copy Proposal</button>
+    </div>
+    ${result.tips?.length > 0 ? `<div style="${card};background:var(--bg3)"><span style="${label}">💡 Why This Works</span><div>${result.tips.map(t=>`<div style="${tipItem}"><span style="${dot}"></span><span>${escapeHtml(t)}</span></div>`).join('')}</div></div>` : ''}
+    ${result.redFlag ? `<div style="${card};background:#1a0e00;border-color:#92400e"><span style="${label};color:#f59e0b">⚠️ Red Flag</span><div style="font-size:13px;line-height:1.65;color:#fbbf24">${escapeHtml(result.redFlag)}</div></div>` : ''}
+  </div>`;
 }
 function renderGigCardMarkup(niche){
   const demand = niche.demand || 'Demand';
