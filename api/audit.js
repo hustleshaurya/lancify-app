@@ -1,3 +1,5 @@
+export const maxDuration = 60; // Increase Vercel function timeout to 60s
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -20,6 +22,8 @@ export default async function handler(req, res) {
   } = req.body;
 
   const groqApiKey = process.env.GROQ_API_KEY;
+  const apifyToken = process.env.APIFY_API_TOKEN;
+  const youtubeApiKey = process.env.YOUTUBE_API_KEY; // Same key already used in opportunity.js
   const modelName = "llama-3.3-70b-versatile";
 
   // ── 1. DETECT PLATFORM FROM URL ──────────────────────────────────────────
@@ -42,10 +46,324 @@ export default async function handler(req, res) {
     ? detectPlatform(clientUrl)
     : (platform || 'Website');
 
-  // ── 2. SCRAPE URL VIA JINA ────────────────────────────────────────────────
+  // ── 2. EXTRACT INSTAGRAM USERNAME FROM URL ────────────────────────────────
+  function extractInstagramUsername(url) {
+    try {
+      const u = url.startsWith('http') ? url : 'https://' + url;
+      const parsed = new URL(u);
+      const parts = parsed.pathname.split('/').filter(Boolean);
+      if (parts.length > 0) return parts[0];
+    } catch (e) {}
+    return null;
+  }
+
+  // ── 3. SCRAPE INSTAGRAM VIA APIFY ─────────────────────────────────────────
+  async function scrapeInstagramWithApify(username) {
+    if (!apifyToken || !username) return null;
+    try {
+      console.log(`[Apify] Scraping Instagram profile: ${username}`);
+
+      // Start the Apify Instagram Scraper actor run
+      const runRes = await fetch(
+        `https://api.apify.com/v2/acts/apify~instagram-scraper/runs?token=${apifyToken}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            directUrls: [`https://www.instagram.com/${username}/`],
+            resultsType: 'details',
+            resultsLimit: 1,
+            addParentData: false,
+          }),
+        }
+      );
+
+      if (!runRes.ok) {
+        console.log('[Apify] Failed to start actor run:', await runRes.text());
+        return null;
+      }
+
+      const runData = await runRes.json();
+      const runId = runData?.data?.id;
+      if (!runId) return null;
+
+      console.log(`[Apify] Run started: ${runId}, polling for results...`);
+
+      // Poll for completion (max 45s)
+      const maxWait = 45000;
+      const pollInterval = 3000;
+      const startTime = Date.now();
+
+      while (Date.now() - startTime < maxWait) {
+        await new Promise(r => setTimeout(r, pollInterval));
+
+        const statusRes = await fetch(
+          `https://api.apify.com/v2/actor-runs/${runId}?token=${apifyToken}`
+        );
+        if (!statusRes.ok) continue;
+
+        const statusData = await statusRes.json();
+        const status = statusData?.data?.status;
+        console.log(`[Apify] Run status: ${status}`);
+
+        if (status === 'SUCCEEDED') {
+          const datasetId = statusData?.data?.defaultDatasetId;
+          if (!datasetId) return null;
+
+          const itemsRes = await fetch(
+            `https://api.apify.com/v2/datasets/${datasetId}/items?token=${apifyToken}&limit=1`
+          );
+          if (!itemsRes.ok) return null;
+
+          const items = await itemsRes.json();
+          if (!items || items.length === 0) return null;
+
+          const profile = items[0];
+          console.log(`[Apify] Got profile data for: ${profile.username}`);
+          return profile;
+        }
+
+        if (status === 'FAILED' || status === 'ABORTED' || status === 'TIMED-OUT') {
+          console.log(`[Apify] Run ended with status: ${status}`);
+          return null;
+        }
+      }
+
+      console.log('[Apify] Polling timed out');
+      return null;
+    } catch (e) {
+      console.log('[Apify] Error:', e.message);
+      return null;
+    }
+  }
+
+  // ── 4. FORMAT APIFY INSTAGRAM DATA INTO CONTEXT ───────────────────────────
+  function formatInstagramData(profile) {
+    if (!profile) return null;
+    const {
+      username, fullName, biography, followersCount, followingCount,
+      postsCount, isVerified, isBusinessAccount, businessCategoryName,
+      externalUrl, latestPosts, highlightReelCount,
+      igtvVideoCount, hasChannel,
+    } = profile;
+
+    const recentPosts = (latestPosts || []).slice(0, 6).map((p, i) => {
+      const likes = p.likesCount || 0;
+      const comments = p.commentsCount || 0;
+      const caption = (p.caption || '').slice(0, 120);
+      const type = p.type || 'GraphImage';
+      return `  Post ${i+1}: ${type} | ${likes} likes | ${comments} comments | Caption: "${caption}"`;
+    }).join('\n');
+
+    const recentPostsArr = (latestPosts || []).slice(0, 6);
+    const avgLikes = recentPostsArr.length > 0
+      ? Math.round(recentPostsArr.reduce((s, p) => s + (p.likesCount || 0), 0) / recentPostsArr.length)
+      : 0;
+    const avgComments = recentPostsArr.length > 0
+      ? Math.round(recentPostsArr.reduce((s, p) => s + (p.commentsCount || 0), 0) / recentPostsArr.length)
+      : 0;
+    const engagementRate = followersCount > 0
+      ? ((avgLikes + avgComments) / followersCount * 100).toFixed(2)
+      : '0.00';
+
+    return `
+REAL INSTAGRAM PROFILE DATA (scraped live via Apify):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Username: @${username}
+Full Name: ${fullName || 'Not set'}
+Bio: "${biography || 'No bio set'}"
+Followers: ${(followersCount || 0).toLocaleString()}
+Following: ${(followingCount || 0).toLocaleString()}
+Total Posts: ${postsCount || 0}
+Verified: ${isVerified ? 'YES' : 'No'}
+Business Account: ${isBusinessAccount ? 'YES — Category: ' + (businessCategoryName || 'Unknown') : 'No (Personal account)'}
+External Link in Bio: ${externalUrl || 'NONE — no link set'}
+Highlights: ${highlightReelCount || 0} highlight reels
+IGTV Videos: ${igtvVideoCount || 0} | Has Channel: ${hasChannel ? 'Yes' : 'No'}
+
+RECENT POSTS (last ${recentPostsArr.length} posts):
+${recentPosts || 'No recent posts found'}
+
+ENGAGEMENT METRICS:
+  Average Likes per Post: ${avgLikes}
+  Average Comments per Post: ${avgComments}
+  Estimated Engagement Rate: ${engagementRate}%
+  (Industry benchmarks: below 1% = poor, 1-3% = average, 3-6% = good, 6%+ = excellent)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+  }
+
+
+  // ── 5a. EXTRACT YOUTUBE CHANNEL ID OR HANDLE FROM URL ─────────────────────
+  function extractYouTubeIdentifier(url) {
+    try {
+      const u = url.startsWith('http') ? url : 'https://' + url;
+      const parsed = new URL(u);
+      const path = parsed.pathname;
+      // /channel/UCxxxxxx
+      const channelMatch = path.match(/\/channel\/(UC[\w-]+)/);
+      if (channelMatch) return { type: 'id', value: channelMatch[1] };
+      // /@handle or /c/handle or /user/handle
+      const handleMatch = path.match(/\/(?:@|c\/|user\/)([\w.-]+)/);
+      if (handleMatch) return { type: 'handle', value: handleMatch[1] };
+      // youtu.be or bare path
+      const parts = path.split('/').filter(Boolean);
+      if (parts.length > 0) return { type: 'handle', value: parts[0].replace('@', '') };
+    } catch (e) {}
+    return null;
+  }
+
+  // ── 5b. SCRAPE YOUTUBE CHANNEL VIA OFFICIAL DATA API v3 ───────────────────
+  async function scrapeYouTubeChannel(identifier) {
+    if (!youtubeApiKey || !identifier) return null;
+    try {
+      console.log('[YouTube] Fetching channel:', identifier.type, identifier.value);
+
+      let channelId = null;
+
+      if (identifier.type === 'id') {
+        channelId = identifier.value;
+      } else {
+        // Resolve handle → channel ID via search
+        const searchRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel` +
+          `&q=${encodeURIComponent(identifier.value)}&maxResults=1&key=${youtubeApiKey}`
+        );
+        if (!searchRes.ok) return null;
+        const searchData = await searchRes.json();
+        channelId = searchData?.items?.[0]?.id?.channelId;
+        if (!channelId) return null;
+      }
+
+      // Fetch channel details
+      const [channelRes, videosRes] = await Promise.all([
+        fetch(
+          `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings` +
+          `&id=${channelId}&key=${youtubeApiKey}`
+        ),
+        fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}` +
+          `&type=video&order=date&maxResults=6&key=${youtubeApiKey}`
+        ),
+      ]);
+
+      if (!channelRes.ok) return null;
+      const channelData = await channelRes.json();
+      const channel = channelData?.items?.[0];
+      if (!channel) return null;
+
+      const videosData = videosRes.ok ? await videosRes.json() : null;
+      const recentVideoIds = (videosData?.items || []).map(v => v.id?.videoId).filter(Boolean);
+
+      // Fetch video stats
+      let videoDetails = [];
+      if (recentVideoIds.length > 0) {
+        const statsRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics` +
+          `&id=${recentVideoIds.join(',')}&key=${youtubeApiKey}`
+        );
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          videoDetails = statsData?.items || [];
+        }
+      }
+
+      return { channel, videoDetails };
+    } catch (e) {
+      console.log('[YouTube] API error:', e.message);
+      return null;
+    }
+  }
+
+  // ── 5c. FORMAT YOUTUBE DATA INTO AUDIT CONTEXT ────────────────────────────
+  function formatYouTubeData(data) {
+    if (!data?.channel) return null;
+    const { channel, videoDetails } = data;
+    const snippet = channel.snippet || {};
+    const stats = channel.statistics || {};
+    const branding = channel.brandingSettings?.channel || {};
+
+    const subs = parseInt(stats.subscriberCount || 0);
+    const totalViews = parseInt(stats.viewCount || 0);
+    const videoCount = parseInt(stats.videoCount || 0);
+    const avgViewsPerVideo = videoCount > 0 ? Math.round(totalViews / videoCount) : 0;
+
+    const recentVideos = videoDetails.map((v, i) => {
+      const vs = v.statistics || {};
+      const vsnip = v.snippet || {};
+      const views = parseInt(vs.viewCount || 0);
+      const likes = parseInt(vs.likeCount || 0);
+      const comments = parseInt(vs.commentCount || 0);
+      const title = (vsnip.title || '').slice(0, 80);
+      const publishedAt = (vsnip.publishedAt || '').slice(0, 10);
+      return `  Video ${i+1}: "${title}" | ${views.toLocaleString()} views | ${likes} likes | ${comments} comments | ${publishedAt}`;
+    }).join('\n');
+
+    const recentAvgViews = videoDetails.length > 0
+      ? Math.round(videoDetails.reduce((s, v) => s + parseInt(v.statistics?.viewCount || 0), 0) / videoDetails.length)
+      : 0;
+
+    const viewSubRatio = subs > 0 ? (recentAvgViews / subs).toFixed(3) : '0.000';
+    const hasBannerArt = !!(branding.bannerExternalUrl || snippet.thumbnails?.high);
+    const hasDescription = !!(snippet.description && snippet.description.length > 50);
+    const descPreview = (snippet.description || 'No description').slice(0, 200);
+    const keywords = (branding.keywords || 'None listed').slice(0, 150);
+    const country = snippet.country || 'Not set';
+    const customUrl = snippet.customUrl || 'No custom URL';
+
+    return `
+REAL YOUTUBE CHANNEL DATA (fetched live via YouTube Data API v3):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Channel Name: ${snippet.title || 'Unknown'}
+Handle / Custom URL: ${customUrl}
+Country: ${country}
+Subscribers: ${subs.toLocaleString()}
+Total Videos: ${videoCount.toLocaleString()}
+Total Views: ${totalViews.toLocaleString()}
+Avg Views Per Video (all-time): ${avgViewsPerVideo.toLocaleString()}
+Avg Views Per Video (recent 6): ${recentAvgViews.toLocaleString()}
+View/Sub Ratio (recent): ${viewSubRatio} (benchmark: 0.1+ is strong, below 0.05 = low engagement)
+Has Banner Art: ${hasBannerArt ? 'Yes' : 'NO — missing channel art'}
+Has Description: ${hasDescription ? 'Yes' : 'NO — about section empty or very short'}
+Channel Keywords: ${keywords}
+Channel Description Preview: "${descPreview}..."
+
+RECENT 6 VIDEOS:
+${recentVideos || 'No recent videos found'}
+
+ENGAGEMENT SIGNALS:
+  If view/sub ratio < 0.05: thumbnails and titles need work (click-through problem)
+  If subs > 10K but avg views < 500: retention or algorithm signal issue
+  If no banner art: profile presentation is incomplete — affects first impressions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+  }
+
+  // ── 5. SCRAPE URL VIA JINA (for non-Instagram URLs) ───────────────────────
   let scrapedContent = '';
   const urlToScrape = mode === 'quick' ? clientUrl : websiteUrl;
-  if (urlToScrape && urlToScrape.length > 5) {
+  let instagramProfileData = null;
+
+  if (detectedPlatform === 'Instagram' && mode === 'quick') {
+    // Use Apify for Instagram — structured profile data
+    const username = extractInstagramUsername(urlToScrape);
+    if (username) {
+      const profile = await scrapeInstagramWithApify(username);
+      instagramProfileData = formatInstagramData(profile);
+      if (instagramProfileData) {
+        scrapedContent = instagramProfileData;
+      }
+    }
+  } else if (detectedPlatform === 'YouTube' && mode === 'quick') {
+    // Use YouTube Data API v3 — official, reliable, same key as opportunity.js
+    const ytIdentifier = extractYouTubeIdentifier(urlToScrape);
+    if (ytIdentifier) {
+      const ytData = await scrapeYouTubeChannel(ytIdentifier);
+      const ytFormatted = formatYouTubeData(ytData);
+      if (ytFormatted) {
+        scrapedContent = ytFormatted;
+      }
+    }
+  } else if (urlToScrape && urlToScrape.length > 5) {
+    // Use Jina for all other platforms (websites, Yelp, LinkedIn, etc.)
     try {
       const jinaRes = await fetch(`https://r.jina.ai/${urlToScrape}`);
       if (jinaRes.ok) {
@@ -57,38 +375,48 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── 3. BUILD SKILL × PLATFORM LENS ───────────────────────────────────────
+  // ── 6. BUILD SKILL × PLATFORM LENS ───────────────────────────────────────
   const SKILL_LENSES = {
     'Web Design & Development': {
       Website: 'CTA clarity, above-fold content, trust badges, page load signals, mobile layout issues, conversion friction, lead capture forms, social proof placement.',
+      YouTube: 'Channel homepage layout, external links section, banner design, about page completeness, website link in channel links, video end screen CTA design, community tab presence.',
       default: 'Landing page design, conversion elements, visual hierarchy, mobile responsiveness.',
     },
     'SEO & Content Strategy': {
       Website: 'Meta title/description signals, content depth, keyword focus, blog presence, internal linking signals, structured headers, local SEO signals.',
+      YouTube: 'Video title keyword optimization, description keyword depth, tags usage, chapter markers for SEO, search-intent alignment of titles, playlist organization for topic clusters, closed captions.',
       default: 'Content quality, keyword usage, metadata signals.',
     },
     'Social Media Management': {
-      Instagram: 'Bio clarity, link-in-bio effectiveness, posting consistency signals, highlight covers, CTA in bio, engagement hooks in captions, story usage.',
+      Instagram: 'Bio clarity and keyword optimization, link-in-bio effectiveness, posting consistency (frequency and gaps), highlight covers structure, CTA in bio, engagement rate vs follower count benchmark, hashtag strategy, caption hooks, story usage signals, content variety (Reels vs static vs carousel), brand voice consistency, comment response rate.',
+      YouTube: 'Upload frequency and consistency, view/subscriber ratio trend, community tab usage, Shorts vs long-form balance, playlist structure and naming, comment response rate, channel branding consistency, subscriber-to-view engagement gap signals.',
       Facebook: 'Page completeness, posting frequency, CTA button, cover photo, about section, review responses.',
       default: 'Profile completeness, content consistency, engagement signals, CTA strength.',
     },
     'Copywriting & Brand Voice': {
+      Instagram: 'Bio copy clarity, value proposition in bio, CTA strength in bio and captions, caption hook quality, storytelling vs promotional balance, brand voice consistency across posts.',
+      YouTube: 'Video title hook strength and click appeal, description opening line quality, CTA copy in descriptions, channel description value proposition, end screen copy, community post copy quality.',
       default: 'Headline strength, value proposition clarity, CTA copy, brand voice consistency, emotional triggers, trust language, objection handling in copy.',
     },
     'Video Editing & Production': {
       YouTube: 'Thumbnail quality and consistency, title clarity and click appeal, description completeness, end screen CTA, playlist structure, channel art.',
+      Instagram: 'Reel quality and consistency, video hook strength (first 3 seconds), caption engagement, thumbnail covers for Reels, editing style consistency.',
       default: 'Video quality signals, thumbnail design, title/description optimization.',
     },
     'Email Marketing': {
       Website: 'Opt-in form visibility, lead magnet presence, popup strategy, newsletter CTA placement, nurture sequence signals.',
+      Instagram: 'Link-in-bio email capture, lead magnet mentions in posts, story swipe-up to email opt-in, newsletter promotion in captions.',
       default: 'Email capture strategy, list building signals, CTA placement.',
     },
     'UI/UX Design': {
       Website: 'Navigation clarity, user flow logic, visual hierarchy, friction points in key paths, form design, error state handling, mobile UX.',
+      Instagram: 'Visual grid coherence, profile aesthetic consistency, highlight cover design quality, story template consistency, branded content elements.',
       default: 'User flow, navigation structure, visual clarity, interaction design.',
     },
     'Paid Ads & Performance Marketing': {
       Website: 'Landing page-to-ad alignment, offer clarity, trust signals above fold, page speed indicators, conversion elements, retargeting pixel signals.',
+      Instagram: 'Ad-ready content quality, offer clarity in posts, engagement rate as audience warmth signal, CTA strength in posts and bio.',
+      YouTube: 'In-video CTA placement and clarity, link in description above the fold, channel page conversion funnel, sponsorship or product offer framing, end screen and card CTA optimization.',
       Facebook: 'Ad creative quality, landing page relevance, audience targeting signals, offer clarity.',
       default: 'Landing page conversion elements, offer clarity, trust signals, CTA strength.',
     },
@@ -103,17 +431,44 @@ export default async function handler(req, res) {
   const lensObj = SKILL_LENSES[skillKey] || SKILL_LENSES['Web Design & Development'];
   const focusAreas = lensObj[detectedPlatform] || lensObj['default'] || lensObj[Object.keys(lensObj)[0]];
 
-  // ── 4. BUILD CONTEXT SNIPPET ───────────────────────────────────────────────
+  // ── 7. BUILD CONTEXT SNIPPET ───────────────────────────────────────────────
+  // Determine if we have structured platform data (Instagram/YouTube) vs raw page scrape
+  const hasStructuredData = !!(instagramProfileData || (detectedPlatform === 'YouTube' && scrapedContent));
   let contextSnippet = '';
 
-  if (scrapedContent) {
+  if (scrapedContent && hasStructuredData) {
+    const platformLabel = detectedPlatform === 'Instagram' ? 'Instagram' : 'YouTube channel';
+    const specificInstructions = detectedPlatform === 'YouTube'
+      ? `- Use actual subscriber count, view/sub ratio, recent video titles and view counts in your analysis.
+- If view/sub ratio is below 0.05, flag thumbnail/title CTR as a critical issue.
+- If avg views are low vs subscribers, flag retention or algorithm issues.
+- If no banner art or empty description, flag it as a quick win.
+- Reference specific recent video titles and their performance in your findings.`
+      : `- Use actual engagement rate, follower count, bio text, and post patterns in your analysis.
+- If engagement rate is below 1%, flag it as critical. If no link in bio, that is a critical miss.
+- Reference specific caption text or post types from the real data.`;
+
+    contextSnippet = `
+${scrapedContent}
+
+Your freelance skill being offered: ${skillKey}
+Focus lens for ${skillKey} on ${detectedPlatform}: ${focusAreas}
+
+CRITICAL INSTRUCTIONS:
+- Base your ENTIRE audit on the REAL ${platformLabel} data above. Every claim must reference actual numbers.
+- Identify the most critical friction points a ${skillKey} freelancer can specifically fix.
+${specificInstructions}
+- Frame ALL recommendations around what ${skillKey} can specifically deliver as a fix.
+- The cold email must mention at least ONE specific real detail (subscriber count, view count, video title, bio text, etc.).
+- Do NOT invent data. Every number cited must come from the data above.`;
+  } else if (scrapedContent) {
     contextSnippet = `
 The client's ${detectedPlatform} was scraped. Here is the actual page content:
 """${scrapedContent}"""
 
 Focus lens for ${skillKey} on ${detectedPlatform}: ${focusAreas}
 
-Read the content carefully. Find ONE real, specific friction point a first-time visitor would actually get stuck on.
+Read the content carefully. Find real, specific friction points a first-time visitor would actually get stuck on.
 Do NOT make up generic problems. Base the entire audit on what you actually see in the content above.`;
   } else if (mode === 'advanced') {
     contextSnippet = `
@@ -129,29 +484,38 @@ Base the entire audit on these specific issues. Use the focus areas to frame rec
     contextSnippet = `
 No scraped content available. Use your knowledge of ${detectedPlatform} best practices for ${skillKey}.
 Focus lens: ${focusAreas}
-Generate a realistic, specific audit based on common issues you'd find on a typical ${detectedPlatform} profile for a business in this category.`;
+Generate a realistic, specific audit based on common issues for a ${detectedPlatform} profile in this niche.`;
   }
 
-  // ── 5. TONE RULES (injected into all prompts) ─────────────────────────────
+  // ── 8. TONE RULES ─────────────────────────────────────────────────────────
   const TONE_RULES = `
 TONE RULES — NON-NEGOTIABLE:
 1. Write like a sharp human consultant, not a marketing bot.
 2. Every sentence under 15 words.
-3. Be location and detail specific — name exact page sections.
+3. Be location and detail specific — name exact profile sections, bio lines, post types.
 4. Never use: "leverage", "seamless", "game-changer", "innovative", "cutting-edge", "value-driven", "synergy", "however", "hemorrhage", "massive", "critical failure".
 5. Use realistic numbers. Don't invent impact percentages above 50%.
 6. First person always: "I noticed", "I found", "I can fix".
-7. The cold email must feel like a real person wrote it after genuinely browsing the site for 5 minutes.
+7. The cold email must feel like a real person wrote it after genuinely browsing the profile for 5 minutes.
 8. Before finalizing any section: ask "does this sound like AI?" If yes, rewrite it more naturally.
 9. Specificity > comprehensiveness. One sharp insight beats five vague ones.
 10. Frame everything as opportunity, not failure.`;
 
-  // ── 6. BUILD SYSTEM PROMPT ────────────────────────────────────────────────
+  // ── 9. BUILD SYSTEM PROMPT ────────────────────────────────────────────────
   const clientName = mode === 'quick'
-    ? (urlToScrape ? (() => { try { return new URL(urlToScrape.startsWith('http') ? urlToScrape : 'https://' + urlToScrape).hostname.replace('www.', '').split('.')[0]; } catch { return 'Client'; } })() : 'Client')
+    ? (urlToScrape ? (() => {
+        try {
+          const u = urlToScrape.startsWith('http') ? urlToScrape : 'https://' + urlToScrape;
+          const host = new URL(u).hostname.replace('www.', '').split('.')[0];
+          if (detectedPlatform === 'Instagram') {
+            return extractInstagramUsername(urlToScrape) || host;
+          }
+          return host;
+        } catch { return 'Client'; }
+      })() : 'Client')
     : (target || 'Client');
 
-  const pitchPrice = mode === 'quick' ? `$${price || 300}` : `$${price || 300}`;
+  const pitchPrice = `$${price || 300}`;
   const pitchTimeline = timeline || '1 week';
 
   const systemPrompt = `You are a sharp, experienced freelance digital consultant. You write premium audit reports for cold outreach.
@@ -174,20 +538,20 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
   "client_name": "${clientName}",
   "platform": "${detectedPlatform}",
   "health_score": <number 0-100, realistic based on what you found>,
-  "email_subject": "<lowercase, specific, curiosity-driven. Never generic. Max 8 words.>",
-  "email_body": "<under 120 words. First person. Mention exactly what you saw. End with a soft, low-commitment ask.>",
-  "sec1_assessment": "<2 sentences. Start with something specific you noticed that is genuinely good.>",
-  "sec2_bottleneck": "<2 sentences. Name ONE specific friction point. Mention exactly where on the page/profile it is.>",
+  "email_subject": "<lowercase, specific, curiosity-driven. Reference something real. Max 8 words.>",
+  "email_body": "<under 120 words. First person. Mention something SPECIFIC from the real profile. End with a soft ask.>",
+  "sec1_assessment": "<2 sentences. Start with something specific and genuinely positive. Name exact elements.>",
+  "sec2_bottleneck": "<2 sentences. Name ONE specific friction point with exact location on the profile.>",
   "sec3_revenue_leak": {
     "summary": "<2 sentences on where leads are leaking>",
     "funnel_rows": [
-      { "stage": "Profile visitors per month", "users": "~1,200", "drop_rate": "—", "lost": "—" },
-      { "stage": "Leave: services unclear", "users": "~1,200", "drop_rate": "25%", "lost": "~300" },
-      { "stage": "Leave: no trust signals", "users": "~900", "drop_rate": "15%", "lost": "~135" },
-      { "stage": "Leave: no CTA", "users": "~765", "drop_rate": "10%", "lost": "~77" },
-      { "stage": "Estimated conversions", "users": "~40–60/mo", "drop_rate": "3–5%", "lost": "~120 potential" }
+      { "stage": "Profile visitors per month", "users": "<realistic estimate>", "drop_rate": "—", "lost": "—" },
+      { "stage": "Leave: unclear value proposition", "users": "<number>", "drop_rate": "<realistic %>", "lost": "<number>" },
+      { "stage": "Leave: no trust signals", "users": "<number>", "drop_rate": "<realistic %>", "lost": "<number>" },
+      { "stage": "Leave: no clear CTA", "users": "<number>", "drop_rate": "<realistic %>", "lost": "<number>" },
+      { "stage": "Estimated conversions", "users": "<range>", "drop_rate": "<rate>", "lost": "<potential>" }
     ],
-    "opportunity": "<1 sentence. Realistic revenue opportunity framing. Don't exaggerate.>"
+    "opportunity": "<1 sentence. Realistic revenue opportunity. No exaggeration.>"
   },
   "sec4_scores": [
     { "label": "Profile Completeness", "score": <number>, "max": 10 },
@@ -202,10 +566,10 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
   "sec5_issues": [
     {
       "priority": "CRITICAL",
-      "title": "<short, specific title>",
-      "found": "<what exactly was observed, location-specific>",
+      "title": "<short specific title>",
+      "found": "<exact observation with location — quote real bio text if available, cite real numbers>",
       "impact": "<plain-language business impact>",
-      "fix": "<specific, actionable, free-to-implement fix>",
+      "fix": "<specific actionable fix the freelancer can deliver>",
       "impact_score": <1-10>,
       "ease": "Easy|Medium|Hard",
       "roi": "High|Medium|Low"
@@ -213,7 +577,7 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
     {
       "priority": "CRITICAL",
       "title": "<second critical issue>",
-      "found": "<observation>",
+      "found": "<observation with specific location>",
       "impact": "<impact>",
       "fix": "<fix>",
       "impact_score": <1-10>,
@@ -232,42 +596,42 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
     },
     {
       "priority": "QUICK WIN",
-      "title": "<quick win title>",
+      "title": "<quick win — implementable in under 30 min>",
       "found": "<observation>",
       "impact": "<impact>",
-      "fix": "<fix>",
+      "fix": "<specific fix with time estimate>",
       "impact_score": <1-10>,
       "ease": "Easy",
       "roi": "Medium|High"
     }
   ],
   "sec6_competitor_insights": [
-    { "insight": "<behavioral/psychological framing of what competitors do better>" },
-    { "insight": "<second insight>" },
+    { "insight": "<what top competitors in this niche do differently — psychological framing>" },
+    { "insight": "<second competitor advantage insight>" },
     { "insight": "<third insight>" }
   ],
   "sec7_psychology": [
-    { "title": "<psychology principle>", "body": "<2 sentences explaining why visitors behave this way and how to use it>" },
+    { "title": "<psychology principle name>", "body": "<2 sentences on why visitors behave this way and how to use it>" },
     { "title": "<second principle>", "body": "<2 sentences>" }
   ],
   "sec8_rewrites": [
     {
       "before_title": "Current Version",
-      "before": "<actual or representative current copy>",
+      "before": "<actual current bio/caption text if scraped, or representative current copy>",
       "after_title": "Suggested Rewrite",
-      "after": "<improved version, specific and actionable>"
+      "after": "<improved version, specific to their niche, platform, and audience>"
     }
   ],
   "sec9_action_plan": [
-    { "fix": "<specific fix>", "difficulty": "Easy|Medium|Hard", "impact": "↑↑↑ High|↑↑ Medium|↑ Low", "priority": "Do First|Week 1|Week 2" },
+    { "fix": "<specific fix with exact deliverable>", "difficulty": "Easy|Medium|Hard", "impact": "↑↑↑ High|↑↑ Medium|↑ Low", "priority": "Do First|Week 1|Week 2" },
     { "fix": "<fix 2>", "difficulty": "Easy", "impact": "↑↑↑ High", "priority": "Do First" },
     { "fix": "<fix 3>", "difficulty": "Easy", "impact": "↑↑ Medium", "priority": "Week 1" },
     { "fix": "<fix 4>", "difficulty": "Easy", "impact": "↑ Medium", "priority": "Week 2" }
   ],
-  "sec5_pitch": "<2 sentences max. Exact deliverables. Expected outcome. Timeframe and price.>"
+  "sec5_pitch": "<2 sentences max. Exact deliverables tied to the specific issues found. Expected outcome. Timeframe and price.>"
 }`;
 
-  // ── 7. CALL GROQ ──────────────────────────────────────────────────────────
+  // ── 10. CALL GROQ ──────────────────────────────────────────────────────────
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -279,7 +643,8 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
         model: modelName,
         messages: [{ role: "system", content: systemPrompt }],
         temperature: 0.7,
-        response_format: { type: "json_object" }
+        response_format: { type: "json_object" },
+        max_tokens: 4000,
       })
     });
 
