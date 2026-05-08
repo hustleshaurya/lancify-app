@@ -5287,7 +5287,7 @@ html.dark .status-pill.pending{color:#fbbf24}
   background:var(--bg);
   color:var(--text-main);
 }
-.audit-tab-icon{font-size:14px;}
+.audit-tab-icon{display:none;}
 
 /* SECTION HEADERS */
 .audit-section-header{
@@ -7756,10 +7756,10 @@ body,
               <!-- Mode Toggle Tabs -->
               <div class="audit-mode-tabs">
                 <button class="audit-mode-tab active" id="tab-quick" onclick="switchAuditMode('quick')">
-                  <span class="audit-tab-icon">⚡</span> Quick Audit
+                  Quick Audit
                 </button>
                 <button class="audit-mode-tab" id="tab-advanced" onclick="switchAuditMode('advanced')">
-                  <span class="audit-tab-icon">🎯</span> Advanced Audit
+                  Advanced Audit
                 </button>
               </div>
 
@@ -7812,7 +7812,7 @@ body,
 
                 <button class="btn btn-primary btn-full audit-cta-btn" id="audit-q-btn" style="margin-top:20px" onclick="checkCredits(4, generateAuditQuick)">
                   <span class="btn-spinner"></span>
-                  <span class="btn-text-default">⚡ Generate Quick Audit</span>
+                  <span class="btn-text-default">Generate Quick Audit</span>
                   <span class="btn-text-loading">Analyzing...</span>
                 </button>
                 <div class="tool-limit-note hidden" id="audit-q-daily-limit"></div>
@@ -7927,7 +7927,7 @@ body,
 
                 <button class="btn btn-primary btn-full audit-cta-btn" id="audit-btn" style="margin-top:4px" onclick="checkCredits(4, generateAuditAdvanced)">
                   <span class="btn-spinner"></span>
-                  <span class="btn-text-default">🎯 Generate Advanced Audit</span>
+                  <span class="btn-text-default">Generate Advanced Audit</span>
                   <span class="btn-text-loading">Analyzing...</span>
                 </button>
                 <div class="tool-limit-note hidden" id="audit-daily-limit"></div>
@@ -12837,21 +12837,26 @@ async function generateAuditQuick() {
   startAuditLoadingSteps();
   let ok = false;
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
     const res = await fetch('/api/audit', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
+      signal: controller.signal,
       body: JSON.stringify({
         mode: 'quick',
         skill, clientUrl: url, platform, price,
         target: new URL(url.startsWith('http')?url:'https://'+url).hostname.replace('www.','')
       })
     });
+    clearTimeout(timeoutId);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     renderAuditResult(data, data.client_name || url, platform, price);
     ok = true;
   } catch(e) {
-    showToast('Error generating audit. Try again.');
+    const msg = e.name === 'AbortError' ? 'Audit is taking longer — please try again.' : 'Error generating audit. Try again.';
+    showToast(msg);
     showAuditState('idle');
     ok = false;
   }
@@ -12869,9 +12874,12 @@ async function generateAuditAdvanced() {
   startAuditLoadingSteps();
   let ok = false;
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
     const res = await fetch('/api/audit', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
+      signal: controller.signal,
       body: JSON.stringify({
         mode: 'advanced',
         target: targetVal,
@@ -12886,12 +12894,14 @@ async function generateAuditAdvanced() {
         observation: val('audit-obs')
       })
     });
+    clearTimeout(timeoutId);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     renderAuditResult(data, targetVal, val('audit-platform'), val('audit-price'));
     ok = true;
   } catch(e) {
-    showToast('Error generating audit. Try again.');
+    const msg = e.name === 'AbortError' ? 'Audit is taking longer — please try again.' : 'Error generating audit. Try again.';
+    showToast(msg);
     showAuditState('idle');
     ok = false;
   }
