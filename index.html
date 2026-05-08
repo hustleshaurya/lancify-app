@@ -398,10 +398,10 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 .sb-workspace{padding:8px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden}
 .sb-workspace-btn{
   display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border-radius:7px;
-  cursor:pointer;background:transparent;border:none;text-align:left;font-family:inherit;min-width:0;
+  cursor:default;background:var(--bg-panel);border:1px solid var(--border);text-align:left;font-family:inherit;min-width:0;
 }
-.sb-workspace-btn:hover{background:var(--bg-hover)}
-.ws-dot{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);flex-shrink:0}
+.sb-workspace-btn:hover{background:var(--bg-panel)}
+.ws-dot{width:8px;height:8px;border-radius:50%;background:#E8500A;box-shadow:0 0 0 3px rgba(232,80,10,.12);flex-shrink:0}
 .ws-name{font-size:13px;font-weight:500;color:var(--text-main);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .ws-chevron{color:var(--text3);flex-shrink:0}
 /* Collapsed workspace */
@@ -443,16 +443,17 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 .nav-label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .15s}
 .pro-badge{
   margin-left:auto;
-  background:transparent;
-  color:var(--text3);
-  font-size:9.5px;font-weight:500;
-  letter-spacing:.03em;
-  padding:1px 0;
-  border-radius:99px;
+  background:#f59e0b;
+  color:#111;
+  font-size:9px;font-weight:800;
+  letter-spacing:.04em;
+  padding:1px 6px;
+  border-radius:4px;
   line-height:1.5;flex-shrink:0;
   white-space:nowrap;
   transition:opacity .15s;
 }
+.pro-badge.pro{background:#E8500A;color:#fff;}
 
 /* Collapsed nav */
 .sidebar.collapsed .nav-item { justify-content: center; padding: 9px 0; gap: 0; }
@@ -490,16 +491,17 @@ html.dark .sidebar:not(.collapsed) .logo-img-dark{display:block}
 .nav-label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .15s}
 .pro-badge{
   margin-left:auto;
-  background:transparent;
-  color:var(--text3);
-  font-size:9.5px;font-weight:500;
-  letter-spacing:.03em;
-  padding:1px 0;
-  border-radius:99px;
+  background:#f59e0b;
+  color:#111;
+  font-size:9px;font-weight:800;
+  letter-spacing:.04em;
+  padding:1px 6px;
+  border-radius:4px;
   line-height:1.5;flex-shrink:0;
   white-space:nowrap;
   transition:opacity .15s;
 }
+.pro-badge.pro{background:#E8500A;color:#fff;}
 
 /* Collapsed nav */
 .sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;gap:0}
@@ -3253,7 +3255,7 @@ function routeToAudit(targetName, platform) {
     'YouTube':   'YouTube',
     'LinkedIn':  'LinkedIn',
     'Website':   'Website',
-    'Google Maps': 'Website',
+    'Google Maps': 'Google Business',
     'Amazon':    'Website',
     'Product Hunt': 'Website',
     'Shopify store': 'Website',
@@ -5356,7 +5358,7 @@ html.dark .status-pill.pending{color:#fbbf24}
   pointer-events:none;
   z-index:1;
 }
-.audit-price-wrap input{padding-left:24px;}
+.audit-price-wrap input{padding-left:34px;}
 
 /* CTA button */
 .audit-cta-btn{
@@ -7424,11 +7426,10 @@ body,
     </div>
 
     <div class="sb-workspace">
-      <button class="sb-workspace-btn" onclick="toggleAccountDropdown()">
+      <div class="sb-workspace-btn" aria-label="Current workspace">
         <div class="ws-dot"></div>
         <span class="ws-name" id="ws-name">My Workspace</span>
-        <i data-lucide="chevron-down" class="ws-chevron" style="width:13px;height:13px;stroke-width:2"></i>
-      </button>
+      </div>
     </div>
 
     <nav class="sb-nav" id="sidebar-nav">
@@ -7480,15 +7481,16 @@ body,
           <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
         </button>
         <div class="nav-folder-children" id="folder-growth">
-          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span></div>
+          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span><span class="pro-badge pro">PRO</span></div>
           <div class="nav-item plan-locked" data-page="sequence" data-tooltip="Sequences" onclick="navigate('sequence')">
             <i data-lucide="git-branch" class="icon"></i>
             <span class="nav-label"> Sequences</span>
-            <span class="pro-badge" style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;letter-spacing:.04em;">ELITE</span>
+            <span class="pro-badge">ELITE</span>
           </div>
           <div class="nav-item" data-page="roadmap" data-tooltip="Growth Roadmap" onclick="navigate('roadmap')">
             <i data-lucide="map" class="icon"></i>
             <span class="nav-label"> Growth Roadmap</span>
+            <span class="pro-badge pro">PRO</span>
           </div>
         </div>
       </div>
@@ -7810,7 +7812,7 @@ body,
                   </div>
                 </div>
 
-                <button class="btn btn-primary btn-full audit-cta-btn" id="audit-q-btn" style="margin-top:20px" onclick="checkCredits(4, generateAuditQuick)">
+                <button type="button" class="btn btn-primary btn-full audit-cta-btn" id="audit-q-btn" style="margin-top:20px" onclick="checkCredits(4, generateAuditQuick, this)">
                   <span class="btn-spinner"></span>
                   <span class="btn-text-default">Generate Quick Audit</span>
                   <span class="btn-text-loading">Analyzing...</span>
@@ -7925,7 +7927,7 @@ body,
                   </div>
                 </div>
 
-                <button class="btn btn-primary btn-full audit-cta-btn" id="audit-btn" style="margin-top:4px" onclick="checkCredits(4, generateAuditAdvanced)">
+                <button type="button" class="btn btn-primary btn-full audit-cta-btn" id="audit-btn" style="margin-top:4px" onclick="checkCredits(4, generateAuditAdvanced, this)">
                   <span class="btn-spinner"></span>
                   <span class="btn-text-default">Generate Advanced Audit</span>
                   <span class="btn-text-loading">Analyzing...</span>
@@ -8059,7 +8061,7 @@ body,
                 <input type="text" id="prop-exp" class="tw-input" placeholder="e.g. I designed thumbnails for a 100k YouTube channel">
               </div>
 
-              <button type="button" class="tw-generate-btn" id="prop-btn" onclick="checkCredits(3, generateProposal)">
+              <button type="button" class="tw-generate-btn" id="prop-btn" onclick="checkCredits(3, generateProposal, this)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -8150,7 +8152,7 @@ body,
                 <textarea id="email-context" class="tw-textarea tw-textarea-lg" rows="9" placeholder="e.g. Delivered 5 YouTube thumbnails, client is Rahul, invoice #42 for $350 is 5 days overdue…"></textarea>
               </div>
 
-              <button type="button" class="tw-generate-btn" id="email-btn" onclick="checkCredits(2, generateEmail)">
+              <button type="button" class="tw-generate-btn" id="email-btn" onclick="checkCredits(2, generateEmail, this)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
@@ -8355,7 +8357,7 @@ body,
                   <option value="Freelancer.com">Freelancer.com</option>
                 </select>
               </div>
-              <button class="btn btn-primary btn-full" id="gig-btn" style="margin-top:18px" onclick="checkCredits(2, findGigs)">
+              <button type="button" class="btn btn-primary btn-full" id="gig-btn" style="margin-top:18px" onclick="checkCredits(2, findGigs, this)">
                 <span class="btn-spinner"></span>
                 <span class="btn-text-default">Find Gigs →</span>
                 <span class="btn-text-loading">Searching…</span>
@@ -8447,7 +8449,7 @@ body,
                 </select>
               </div>
             </div>
-            <button class="btn btn-primary btn-full" id="rm-btn" onclick="checkCredits(8, generateRoadmap)">Generate 30-Day Growth Map</button>
+            <button type="button" class="btn btn-primary btn-full" id="rm-btn" onclick="checkCredits(8, generateRoadmap, this)">Generate 30-Day Growth Map</button>
             <div class="inline-loader" id="rm-loader"><div class="spin"></div><span>Building your custom growth map…</span></div>
           </div>
           <div id="rm-loading-steps" style="display:none;text-align:center;padding:32px;border:1px solid var(--border);border-radius:16px;margin-top:16px;">
@@ -8907,7 +8909,7 @@ body,
                 <textarea id="inv-notes" rows="3" placeholder="Optional: payment terms, revision policy, etc."></textarea>
               </div>
               <div style="display:flex;gap:8px">
-                <button class="btn btn-primary" onclick="createAndDownloadInvoice()" style="display:flex;align-items:center;gap:6px;">
+                <button type="button" class="btn btn-primary" id="invoice-create-btn" onclick="createAndDownloadInvoice()" style="display:flex;align-items:center;gap:6px;">
                   <i data-lucide="file-down" style="width:14px;height:14px"></i> Create & Download Invoice
                 </button>
               </div>
@@ -12940,7 +12942,8 @@ async function downloadAuditPDF() {
     const isQuick = auditCurrentMode === 'quick';
     const targetName = d.client_name || val('audit-target') || 'Client';
     const platformName = d.platform || val('audit-platform') || 'Platform';
-    const priceVal = isQuick ? ('$' + (val('audit-q-price')||'300')) : (val('audit-price') || '$300');
+    const rawPrice = isQuick ? (val('audit-q-price') || '300') : (val('audit-price') || '300');
+    const priceVal = String(rawPrice).trim().startsWith('$') ? String(rawPrice).trim() : `$${String(rawPrice).trim() || '300'}`;
     const timeline = isQuick ? '5–7 Business Days' : (val('audit-timeline') || '1 week');
     const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     const healthScore = d.health_score || 52;
@@ -12971,9 +12974,9 @@ async function downloadAuditPDF() {
     doc.setFont('helvetica','bold');
     doc.setFontSize(28);
     doc.setTextColor(255,255,255);
-    doc.text('GROWTH &', 20, 75);
+    doc.text('CONVERSION', 20, 75);
     doc.setTextColor(201,151,58);
-    doc.text('UX DIAGNOSTIC', 20, 88);
+    doc.text('AUDIT DOSSIER', 20, 88);
 
     doc.setFont('helvetica','normal');
     doc.setFontSize(11);
@@ -13139,6 +13142,19 @@ async function downloadAuditPDF() {
     y += 4;
     y = addText(d.sec2_bottleneck || 'The primary conversion bottleneck is the lack of specific services and clear call-to-action.', 20, y, 170, doc, 10.5, [190,205,225]);
     y += 8;
+
+    y = checkY(y, 24);
+    doc.setFillColor(18,40,72);
+    doc.roundedRect(20, y, 170, 20, 3, 3, 'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8);
+    doc.setTextColor(...SEC_COLOR);
+    doc.text('RECOMMENDED NEXT MOVE', 26, y+7);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(190,205,225);
+    doc.text(doc.splitTextToSize(d.sec5_pitch || `Fix the highest-leverage conversion gaps in ${timeline} for ${priceVal}.`, 150), 26, y+14);
+    y += 28;
 
     // Score table
     const scoreRows = d.sec4_scores || [
@@ -13757,8 +13773,48 @@ function dismissToolPrefill(tool) {
   el(`${tool}-prefill-banner`)?.classList.remove('show');
 }
 
-function routeToAudit(targetName, platform, observation = '', price = '', service = '', websiteUrl = ''){
-  setVal('audit-target', targetName);
+function sanitizeAuditPriceValue(raw, fallback = 300) {
+  const text = String(raw || '').toLowerCase();
+  const matches = [...text.matchAll(/(\d+(?:,\d{3})*(?:\.\d+)?)\s*k?/g)];
+  const values = matches.map(match => {
+    const base = Number(match[1].replace(/,/g, ''));
+    if (!Number.isFinite(base)) return null;
+    return match[0].includes('k') ? base * 1000 : base;
+  }).filter(value => Number.isFinite(value) && value > 0);
+  if (!values.length) return String(fallback);
+  const estimate = values.length > 1 ? Math.round((values[0] + values[1]) / 2) : Math.round(values[0]);
+  return String(Math.max(1, estimate));
+}
+
+function mapAuditService(service = '') {
+  const raw = String(service || '').trim();
+  const options = [
+    'Web Design & Development',
+    'SEO & Content Strategy',
+    'Social Media Management',
+    'Copywriting & Brand Voice',
+    'Video Editing & Production',
+    'Email Marketing',
+    'UI/UX Design',
+    'Paid Ads & Performance Marketing',
+    'Yelp / Google Business Optimization'
+  ];
+  if (options.includes(raw)) return raw;
+  const lower = raw.toLowerCase();
+  if (/seo|content/.test(lower)) return 'SEO & Content Strategy';
+  if (/social|instagram|facebook|community/.test(lower)) return 'Social Media Management';
+  if (/copy|cro|funnel|landing|offer/.test(lower)) return 'Copywriting & Brand Voice';
+  if (/video|youtube|short|reel|thumbnail/.test(lower)) return 'Video Editing & Production';
+  if (/email|newsletter|sequence/.test(lower)) return 'Email Marketing';
+  if (/ux|ui|product|app/.test(lower)) return 'UI/UX Design';
+  if (/ads|paid|performance|retarget/.test(lower)) return 'Paid Ads & Performance Marketing';
+  if (/yelp|google business|maps|local/.test(lower)) return 'Yelp / Google Business Optimization';
+  return 'Web Design & Development';
+}
+
+function routeToAudit(targetName, platform, observation = '', price = '', service = '', websiteUrl = '', extra = {}){
+  const businessName = targetName || extra.name || 'Saved lead';
+  setVal('audit-target', businessName);
   const platformMap = {
     'Instagram': 'Instagram',
     'YouTube':   'YouTube',
@@ -13772,24 +13828,23 @@ function routeToAudit(targetName, platform, observation = '', price = '', servic
   const mappedPlatform = platformMap[platform] || 'Instagram';
   setVal('audit-platform', mappedPlatform);
   if (websiteUrl) setVal('audit-url', websiteUrl);
-  if (observation) setVal('audit-obs', observation);
-  if (price) setVal('audit-price', normalizeDealValue(price, price));
+  const primaryIssue = observation || extra.problem || extra.description || `The ${mappedPlatform} presence does not make the offer and next step clear enough for a cold prospect.`;
+  setVal('audit-weakness', primaryIssue);
+  setVal('audit-weakness2', extra.secondaryWeakness || extra.quickDm || '');
+  setVal('audit-positives', extra.positives || 'The business has enough visible activity to turn into a stronger trust-building pitch.');
+  setVal('audit-obs', extra.offerDescription || (service ? `I can turn this into a sharper ${service} offer with clearer positioning, proof, and CTA flow.` : 'I will package the fixes into a concise conversion-focused improvement plan.'));
+  if (price) setVal('audit-price', sanitizeAuditPriceValue(price, 300));
   if (service) {
-    const serviceMap = {
-      'Copywriting & CRO': 'Copywriting',
-      'Funnel & Conversion Setup': 'Web Design',
-      'Social Media System': 'Social Media',
-      'Email Marketing Setup': 'Copywriting',
-      'YouTube / Short-Form Optimization': 'Video Editing',
-      'SEO': 'SEO'
-    };
-    const mappedService = serviceMap[service];
-    if (mappedService) setVal('audit-service', mappedService);
+    setVal('audit-service', mapAuditService(service));
   }
+  if (websiteUrl) setVal('audit-q-url', websiteUrl);
+  setVal('audit-q-price', sanitizeAuditPriceValue(price, 300));
   if (typeof toggleAuditUrl === 'function') toggleAuditUrl();
-  showToolPrefill('audit', targetName);
+  if (typeof switchAuditMode === 'function') switchAuditMode('advanced');
+  showToolPrefill('audit', businessName);
   navigate('audit');
-  showToast(`Audit pre-filled for "${targetName}".`);
+  if (typeof switchAuditMode === 'function') switchAuditMode('advanced');
+  showToast(`Advanced audit pre-filled for "${businessName}".`);
 }
 
 function routeToProposal(jobDesc, platform = '', niche = '', leadName = ''){
@@ -13831,13 +13886,23 @@ function routeSavedLeadToProposal(id) {
 function routeSavedLeadToAudit(id) {
   const lead = opportunityClients.find(item => item.id === id);
   if (!lead) return;
+  const issue = lead.problem || lead.description || lead.quickDm || `The ${lead.platform || 'online'} profile has a weak conversion path from visitor interest to a clear next step.`;
   routeToAudit(
     lead.name || '',
     lead.platform || '',
-    lead.problem || lead.description || '',
+    issue,
     lead.potentialValue || '',
     lead.service || lead.skill || '',
-    lead.profileUrl || lead.websiteUrl || ''
+    lead.profileUrl || lead.websiteUrl || '',
+    {
+      problem: issue,
+      description: lead.description || '',
+      quickDm: lead.quickDm || '',
+      positives: lead.reason || lead.goodSignal || '',
+      offerDescription: lead.service
+        ? `I will fix the exact gap above with a ${lead.service} sprint, then package it into a clear offer, proof, and CTA flow.`
+        : ''
+    }
   );
 }
 
@@ -14698,10 +14763,18 @@ async function createInvoice(opts = {}){
 }
 
 async function createAndDownloadInvoice(){
-  const created = await createInvoice({ keepForm: true, silentSuccess: true, resetPicker: true });
-  if (!created) return;
-  previewInvoicePdf();
-  clearInvoiceForm({ resetPicker: true });
+  if (window._invoiceCreateRunning) return;
+  window._invoiceCreateRunning = true;
+  setButtonLoading('invoice-create-btn', true);
+  try {
+    const created = await createInvoice({ keepForm: true, silentSuccess: true, resetPicker: true });
+    if (!created) return;
+    previewInvoicePdf();
+    clearInvoiceForm({ resetPicker: true });
+  } finally {
+    setButtonLoading('invoice-create-btn', false);
+    window._invoiceCreateRunning = false;
+  }
 }
 
 async function setInvoiceStatus(id, status){
@@ -18038,12 +18111,18 @@ function nextWizardStep() {}
 function skipOnboarding()  { obNext(); }
 function finishOnboarding(){ _obFinish(); }
 
-async function checkCredits(cost, callback) {
+async function checkCredits(cost, callback, triggerEl = null) {
   const featureKey = _featureFromCallbackName(callback?.name || '');
-  const allowed = await _consumeCredits(cost, featureKey);
-  if (!allowed) return false;
+  const trigger = triggerEl || window.event?.currentTarget || null;
+  const actionKey = trigger?.id || callback?.name || featureKey || 'action';
+  window._lancifyRunningActions = window._lancifyRunningActions || new Set();
+  if (window._lancifyRunningActions.has(actionKey)) return false;
+  window._lancifyRunningActions.add(actionKey);
+  if (trigger?.id) setButtonLoading(trigger.id, true);
 
   try {
+    const allowed = await _consumeCredits(cost, featureKey);
+    if (!allowed) return false;
     const result = await callback();
     const success = result !== false;
     if (success) {
@@ -18058,6 +18137,9 @@ async function checkCredits(cost, callback) {
     await _refundCredits(cost);
     showToast('Action failed. Credits were refunded.');
     return false;
+  } finally {
+    if (trigger?.id) setButtonLoading(trigger.id, false);
+    window._lancifyRunningActions.delete(actionKey);
   }
 }
 
