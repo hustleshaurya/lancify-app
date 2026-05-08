@@ -499,7 +499,11 @@ TONE RULES — NON-NEGOTIABLE:
 7. The cold email must feel like a real person wrote it after genuinely browsing the profile for 5 minutes.
 8. Before finalizing any section: ask "does this sound like AI?" If yes, rewrite it more naturally.
 9. Specificity > comprehensiveness. One sharp insight beats five vague ones.
-10. Frame everything as opportunity, not failure.`;
+10. Frame everything as opportunity, not failure.
+11. Make the report feel paid: executive, decisive, and easy to approve.
+12. Tie each fix to money, trust, speed, or missed replies.
+13. Use client-ready language the freelancer can send without editing.
+14. Do not apologize, hedge, or over-explain methodology.`;
 
   // ── 9. BUILD SYSTEM PROMPT ────────────────────────────────────────────────
   const clientName = mode === 'quick'
@@ -515,10 +519,12 @@ TONE RULES — NON-NEGOTIABLE:
       })() : 'Client')
     : (target || 'Client');
 
-  const pitchPrice = `$${price || 300}`;
+  const cleanPrice = String(price || 300).trim();
+  const pitchPrice = cleanPrice.startsWith('$') ? cleanPrice : `$${cleanPrice}`;
   const pitchTimeline = timeline || '1 week';
 
-  const systemPrompt = `You are a sharp, experienced freelance digital consultant. You write premium audit reports for cold outreach.
+  const systemPrompt = `You are a senior freelance growth consultant writing a premium conversion audit that helps a prospect quickly say yes.
+This report will be exported as a polished PDF, so the content must feel executive, specific, and launch-ready.
 
 You are auditing: ${clientName}
 Platform: ${detectedPlatform}
@@ -539,11 +545,11 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
   "platform": "${detectedPlatform}",
   "health_score": <number 0-100, realistic based on what you found>,
   "email_subject": "<lowercase, specific, curiosity-driven. Reference something real. Max 8 words.>",
-  "email_body": "<under 120 words. First person. Mention something SPECIFIC from the real profile. End with a soft ask.>",
-  "sec1_assessment": "<2 sentences. Start with something specific and genuinely positive. Name exact elements.>",
-  "sec2_bottleneck": "<2 sentences. Name ONE specific friction point with exact location on the profile.>",
+  "email_body": "<under 120 words. First person. Mention something SPECIFIC from the real profile. End with a soft ask that is easy to reply to.>",
+  "sec1_assessment": "<2 sentences. Start with one specific positive signal, then state the business opportunity in plain language.>",
+  "sec2_bottleneck": "<2 sentences. Name ONE specific friction point with exact location on the profile and why it delays a buyer decision.>",
   "sec3_revenue_leak": {
-    "summary": "<2 sentences on where leads are leaking>",
+    "summary": "<2 sentences on where leads are leaking and what behavior causes the leak>",
     "funnel_rows": [
       { "stage": "Profile visitors per month", "users": "<realistic estimate>", "drop_rate": "—", "lost": "—" },
       { "stage": "Leave: unclear value proposition", "users": "<number>", "drop_rate": "<realistic %>", "lost": "<number>" },
@@ -551,7 +557,7 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
       { "stage": "Leave: no clear CTA", "users": "<number>", "drop_rate": "<realistic %>", "lost": "<number>" },
       { "stage": "Estimated conversions", "users": "<range>", "drop_rate": "<rate>", "lost": "<potential>" }
     ],
-    "opportunity": "<1 sentence. Realistic revenue opportunity. No exaggeration.>"
+    "opportunity": "<1 sentence. Realistic revenue opportunity with a conservative assumption. No exaggeration.>"
   },
   "sec4_scores": [
     { "label": "Profile Completeness", "score": <number>, "max": 10 },
@@ -568,8 +574,8 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
       "priority": "CRITICAL",
       "title": "<short specific title>",
       "found": "<exact observation with location — quote real bio text if available, cite real numbers>",
-      "impact": "<plain-language business impact>",
-      "fix": "<specific actionable fix the freelancer can deliver>",
+      "impact": "<plain-language business impact tied to trust, replies, bookings, or conversion>",
+      "fix": "<specific actionable fix the freelancer can deliver with a visible deliverable>",
       "impact_score": <1-10>,
       "ease": "Easy|Medium|Hard",
       "roi": "High|Medium|Low"
@@ -628,7 +634,7 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
     { "fix": "<fix 3>", "difficulty": "Easy", "impact": "↑↑ Medium", "priority": "Week 1" },
     { "fix": "<fix 4>", "difficulty": "Easy", "impact": "↑ Medium", "priority": "Week 2" }
   ],
-  "sec5_pitch": "<2 sentences max. Exact deliverables tied to the specific issues found. Expected outcome. Timeframe and price.>"
+  "sec5_pitch": "<2 sentences max. Write this as the close of a premium proposal: exact deliverables, expected outcome, ${pitchTimeline} timeline, and ${pitchPrice} price.>"
 }`;
 
   // ── 10. CALL GROQ ──────────────────────────────────────────────────────────
