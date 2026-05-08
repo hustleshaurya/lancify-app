@@ -5224,43 +5224,282 @@ html.dark .status-pill.pending{color:#fbbf24}
   color:var(--text-muted);
   line-height:1.6;
 }
-.audit-progress-list{
+/* ── Legacy audit classes (kept for compat) ── */
+.audit-progress-list{display:grid;gap:12px;margin-top:4px;}
+.audit-progress-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);}
+.audit-progress-dot{width:18px;height:18px;border-radius:999px;border:1.5px solid var(--border2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.audit-progress-item.ready .audit-progress-dot{background:var(--accent);border-color:var(--accent);color:#fff;}
+.audit-download-card{display:grid;gap:10px;align-items:start;padding:18px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel);}
+.audit-download-card p{color:var(--text-muted)}
+
+/* ════════════════════════════════════════
+   NEW DUAL-MODE AUDIT LAYOUT
+════════════════════════════════════════ */
+.audit-dual-layout{
   display:grid;
-  gap:12px;
-  margin-top:4px;
+  grid-template-columns:55% 1fr;
+  gap:16px;
+  align-items:start;
+  min-height:600px;
 }
-.audit-progress-item{
+/* LEFT PANEL */
+.audit-left-panel{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+/* MODE TABS */
+.audit-mode-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:22px;
+  background:var(--bg-hover);
+  border-radius:10px;
+  padding:4px;
+}
+.audit-mode-tab{
+  flex:1;
   display:flex;
   align-items:center;
-  gap:10px;
-  font-size:14px;
+  justify-content:center;
+  gap:6px;
+  padding:8px 12px;
+  border-radius:7px;
+  border:none;
+  background:transparent;
+  color:var(--text-muted);
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.18s ease;
+  letter-spacing:-.01em;
+}
+.audit-mode-tab.active{
+  background:#FF5C00;
+  color:#fff;
+  box-shadow:0 2px 8px rgba(255,92,0,0.3);
+}
+.audit-mode-tab:not(.active):hover{
+  background:var(--bg);
+  color:var(--text-main);
+}
+.audit-tab-icon{font-size:14px;}
+
+/* SECTION HEADERS */
+.audit-section-header{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.audit-section-label{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
   color:var(--text-muted);
 }
-.audit-progress-dot{
-  width:18px;
-  height:18px;
-  border-radius:999px;
-  border:1.5px solid var(--border2);
+.audit-section-label-letter{
+  width:20px;
+  height:20px;
+  border-radius:5px;
+  background:#FF5C00;
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   flex-shrink:0;
 }
-.audit-progress-item.ready .audit-progress-dot{
-  background:var(--accent);
-  border-color:var(--accent);
-  color:#fff;
-}
-.audit-download-card{
-  display:grid;
-  gap:10px;
-  align-items:start;
-  padding:18px;
-  border-radius:12px;
+.audit-required{color:#EF4444;margin-left:2px;}
+
+/* URL input with badge */
+.audit-url-wrap{position:relative;display:flex;align-items:center;}
+.audit-url-wrap input{flex:1;padding-right:130px;}
+.audit-platform-badge{
+  position:absolute;
+  right:8px;
+  background:var(--bg-hover);
   border:1px solid var(--border);
-  background:var(--bg-panel);
+  border-radius:5px;
+  padding:3px 8px;
+  font-size:11px;
+  font-weight:500;
+  color:var(--text-main);
+  white-space:nowrap;
+  pointer-events:none;
 }
-.audit-download-card p{color:var(--text-muted)}
+.audit-url-hints{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
+.audit-url-tag{
+  font-size:11px;
+  color:var(--text-muted);
+  background:var(--bg-hover);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:2px 7px;
+}
+
+/* Price input */
+.audit-price-wrap{display:flex;align-items:center;position:relative;}
+.audit-price-prefix{
+  position:absolute;
+  left:12px;
+  color:var(--text-muted);
+  font-size:14px;
+  pointer-events:none;
+  z-index:1;
+}
+.audit-price-wrap input{padding-left:24px;}
+
+/* CTA button */
+.audit-cta-btn{
+  background:linear-gradient(135deg,#FF5C00,#FF7A2E) !important;
+  border:none !important;
+  box-shadow:0 4px 14px rgba(255,92,0,0.25) !important;
+}
+.audit-cta-btn:hover{
+  box-shadow:0 6px 20px rgba(255,92,0,0.35) !important;
+  transform:translateY(-1px);
+}
+
+/* RIGHT PANEL */
+.audit-right-panel{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:22px;
+  min-height:480px;
+  display:flex;
+  flex-direction:column;
+  position:sticky;
+  top:72px;
+}
+
+/* IDLE STATE */
+.audit-idle{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  padding:20px 12px;
+  flex:1;
+}
+.audit-idle-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:var(--bg-hover);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:#FF5C00;
+  margin-bottom:16px;
+}
+.audit-idle-title{font-size:17px;font-weight:600;margin-bottom:8px;color:var(--text-main);}
+.audit-idle-copy{font-size:13px;color:var(--text-muted);line-height:1.55;max-width:260px;margin-bottom:22px;}
+
+/* Steps list (idle + live) */
+.audit-steps-list{display:grid;gap:10px;width:100%;max-width:280px;text-align:left;}
+.audit-step-item{
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;color:var(--text-muted);
+  opacity:0.5;
+}
+.audit-step-dot{
+  width:16px;height:16px;border-radius:50%;
+  border:1.5px solid var(--border2);
+  flex-shrink:0;
+}
+/* Live steps */
+.audit-steps-live{max-width:100%;text-align:left;}
+.audit-step-pending{opacity:0.4;}
+.audit-step-active{opacity:1 !important;color:var(--text-main) !important;}
+.audit-step-done{opacity:1 !important;color:var(--text-main) !important;}
+.audit-step-dot-live{
+  width:16px;height:16px;border-radius:50%;
+  border:1.5px solid var(--border2);
+  flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.audit-step-done .audit-step-dot-live{
+  background:#22C55E;border-color:#22C55E;
+}
+.audit-step-done .audit-step-dot-live::after{
+  content:'✓';color:#fff;font-size:9px;font-weight:700;
+}
+.audit-step-active .audit-step-dot-live,
+.audit-step-spin{
+  border-color:#FF5C00 !important;
+  border-top-color:transparent !important;
+  animation:auditSpin 0.7s linear infinite;
+}
+@keyframes auditSpin{to{transform:rotate(360deg)}}
+
+/* Loading panel */
+.audit-loading-panel{
+  display:flex;flex-direction:column;gap:16px;flex:1;
+}
+.audit-loading-title{
+  font-size:14px;font-weight:600;color:var(--text-main);
+  padding-bottom:12px;border-bottom:1px solid var(--border);
+}
+
+/* Health score ring */
+.audit-result-panel-inner{display:flex;flex-direction:column;gap:14px;flex:1;}
+.audit-health-row{
+  display:flex;align-items:center;gap:16px;
+  padding:14px;background:var(--bg-hover);
+  border-radius:10px;border:1px solid var(--border);
+}
+.audit-health-score-wrap{position:relative;width:80px;height:80px;flex-shrink:0;}
+.audit-score-ring{width:80px;height:80px;}
+.audit-health-num{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:700;color:var(--text-main);
+}
+.audit-health-title{font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text-main);}
+.audit-issue-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.audit-issue-tag{
+  font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;
+}
+.audit-issue-tag.critical{background:rgba(239,68,68,0.12);color:#EF4444;border:1px solid rgba(239,68,68,0.2);}
+.audit-issue-tag.high{background:rgba(245,158,11,0.12);color:#F59E0B;border:1px solid rgba(245,158,11,0.2);}
+.audit-issue-tag.quickwin{background:rgba(34,197,94,0.12);color:#22C55E;border:1px solid rgba(34,197,94,0.2);}
+
+/* Email preview card */
+.audit-email-preview-card{
+  border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;background:var(--bg-panel);
+}
+.audit-email-preview-header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+  padding:12px 14px;border-bottom:1px solid var(--border);
+  background:var(--bg-hover);
+}
+.audit-email-kicker{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#FF5C00;margin-bottom:3px;}
+.audit-email-subject{font-size:13px;font-weight:500;color:var(--text-main);}
+.audit-email-body-preview{
+  padding:12px 14px;font-size:13px;line-height:1.65;
+  color:var(--text-muted);max-height:160px;overflow-y:auto;
+  white-space:pre-wrap;
+}
+
+/* Action row */
+.audit-action-row{display:grid;gap:8px;}
+
+/* Screenshot upload area */
+.audit-screenshot-upload{min-height:80px;}
+
+/* Responsive */
+@media(max-width:900px){
+  .audit-dual-layout{grid-template-columns:1fr;}
+  .audit-right-panel{position:static;}
+}
 .btn.is-loading{
   pointer-events:none;
 }
@@ -7500,81 +7739,285 @@ body,
 
       <div id="page-audit" class="page">
         <div class="content-inner">
-          <div class="page-hd"><h1>Trojan Horse Audit</h1><p>Generate a clinical, 3-point growth diagnostic to send as a cold pitch.</p></div>
-          <div class="tool-prefill-banner" id="audit-prefill-banner"><span id="audit-prefill-text">Pre-filled from lead</span><button type="button" onclick="dismissToolPrefill('audit')">x</button></div>
-          <div class="tool-grid">
-            <div class="card tool-form-card">
-              <div class="tool-section-kicker">Target Intelligence</div>
-              <div class="field-group">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
-                  <div><label class="field-label">Business Name</label><input type="text" id="audit-target" placeholder="e.g. Bombay Roastery"></div>
-                  <div><label class="field-label">Platform</label><select id="audit-platform" onchange="toggleAuditUrl()"><option>Instagram</option><option>Website</option><option>LinkedIn</option><option>YouTube</option></select></div>
-                </div>
-              </div>
-              <div class="field-group" id="audit-url-wrap" style="display:none"><label class="field-label">Website URL</label><input type="url" id="audit-url" placeholder="https://example.com"></div>
-              <div class="field-group">
-                <label class="field-label">Client Logo <span class="field-optional">(Optional)</span></label>
-                <div class="file-upload"><input type="file" id="audit-logo" accept="image/*" onchange="updateLogoText(this)"><i data-lucide="upload-cloud" style="width:20px;height:20px;color:var(--text3);margin-bottom:5px"></i><div class="file-upload-text" id="audit-logo-text">Click or drag logo to upload</div></div>
-              </div>
-              <div class="field-group">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
-                  <div><label class="field-label">Primary Weakness</label><select id="audit-weakness"><option value="No clear CTA">No clear Call-to-Action</option><option value="Poor branding">Poor branding</option><option value="Weak website">Weak website</option><option value="No social proof">No social proof</option></select></div>
-                  <div><label class="field-label">Your Service</label><select id="audit-service"><option>Web Design</option><option>Social Media</option><option>Copywriting</option><option>Video Editing</option><option>SEO</option></select></div>
-                </div>
-              </div>
-              <div class="field-group"><label class="field-label">Pitch Price</label><input type="text" id="audit-price" placeholder="$250"></div>
-              <div class="field-group" style="margin-bottom:0"><label class="field-label">Your Observation <span class="field-optional">(Hook)</span></label><textarea id="audit-obs" rows="3" placeholder="e.g. Their bio link is broken and CTA is unclear…"></textarea></div>
-              <button class="btn btn-primary btn-full" id="audit-btn" style="margin-top:18px" onclick="checkCredits(4, generateAudit)">
-                <span class="btn-spinner"></span>
-                <span class="btn-text-default">Generate Audit Dossier</span>
-                <span class="btn-text-loading">Generating...</span>
-              </button>
-              <div class="tool-limit-note hidden" id="audit-daily-limit"></div>
-              <div class="inline-loader" id="audit-loader"><div class="spin"></div><span>Compiling intelligence report…</span></div>
+          <div class="page-hd">
+            <div>
+              <h1>Audit Generator</h1>
+              <p>Generate AI-powered audit dossiers that convert cold prospects into paying clients.</p>
             </div>
-            <div class="result-panel">
-              <div id="audit-result-box" class="tool-output-card" style="display:none">
-                
-                <div class="result-box" style="flex:1; min-height:220px;">
-                  <div class="result-box-header">
-                    <div>
-                      <div class="tool-section-kicker">Generated Output</div>
-                      <div class="tool-output-heading">The Trojan Horse Email</div>
-                    </div>
-                    <button class="copy-btn" onclick="copyEl('audit-email-text')">Copy Email</button>
-                  </div>
-                  <div class="result-box-body" id="audit-email-text" style="font-size:14px; line-height:1.7;"></div>
+          </div>
+          <div class="tool-prefill-banner" id="audit-prefill-banner"><span id="audit-prefill-text">Pre-filled from lead</span><button type="button" onclick="dismissToolPrefill('audit')">x</button></div>
+
+          <!-- DUAL PANEL LAYOUT -->
+          <div class="audit-dual-layout">
+
+            <!-- LEFT PANEL: Config -->
+            <div class="audit-left-panel">
+
+              <!-- Mode Toggle Tabs -->
+              <div class="audit-mode-tabs">
+                <button class="audit-mode-tab active" id="tab-quick" onclick="switchAuditMode('quick')">
+                  <span class="audit-tab-icon">⚡</span> Quick Audit
+                </button>
+                <button class="audit-mode-tab" id="tab-advanced" onclick="switchAuditMode('advanced')">
+                  <span class="audit-tab-icon">🎯</span> Advanced Audit
+                </button>
+              </div>
+
+              <!-- ═══════════ QUICK MODE ═══════════ -->
+              <div id="audit-mode-quick" class="audit-mode-panel">
+
+                <div class="audit-section-header">
+                  <span class="audit-section-label">Your Skill</span>
+                </div>
+                <div class="field-group" style="margin-bottom:14px">
+                  <select id="audit-q-skill" onchange="checkAuditQuickSkillOther()">
+                    <option value="Web Design & Development">Web Design &amp; Development</option>
+                    <option value="SEO & Content Strategy">SEO &amp; Content Strategy</option>
+                    <option value="Social Media Management">Social Media Management</option>
+                    <option value="Copywriting & Brand Voice">Copywriting &amp; Brand Voice</option>
+                    <option value="Video Editing & Production">Video Editing &amp; Production</option>
+                    <option value="Email Marketing">Email Marketing</option>
+                    <option value="UI/UX Design">UI/UX Design</option>
+                    <option value="Paid Ads & Performance Marketing">Paid Ads &amp; Performance Marketing</option>
+                    <option value="Yelp / Google Business Optimization">Yelp / Google Business Optimization</option>
+                    <option value="other">Other...</option>
+                  </select>
+                  <input type="text" id="audit-q-skill-other" placeholder="Describe your skill..." style="display:none;margin-top:8px">
                 </div>
 
-                <div class="audit-download-card">
-                  <div class="tool-section-kicker">Audit Dossier</div>
-                  <div class="tool-output-heading">Client Audit Dossier Ready</div>
-                  <p>Attach this PDF to your outreach email to show a clean diagnostic before you ask for implementation work.</p>
-                  <button class="btn btn-primary" style="width:max-content" onclick="downloadAuditPDF()">
-                    <i data-lucide="download" style="width:16px;height:16px"></i>
-                    <span>Download PDF Audit</span>
+                <div class="audit-section-header">
+                  <span class="audit-section-label">Client URL</span>
+                </div>
+                <div class="field-group" style="margin-bottom:6px">
+                  <div class="audit-url-wrap">
+                    <input type="url" id="audit-q-url" placeholder="Paste any URL — website, Instagram, LinkedIn, YouTube, Yelp..." oninput="detectAuditPlatform(this.value)">
+                    <span id="audit-q-platform-badge" class="audit-platform-badge" style="display:none"></span>
+                  </div>
+                </div>
+                <div class="audit-url-hints">
+                  <span class="audit-url-tag">instagram.com/brand</span>
+                  <span class="audit-url-tag">yelp.com/biz/name</span>
+                  <span class="audit-url-tag">theirbrand.com</span>
+                </div>
+
+                <div class="audit-section-header" style="margin-top:18px">
+                  <span class="audit-section-label">Your Pitch Price</span>
+                </div>
+                <div class="field-group" style="margin-bottom:0">
+                  <div class="audit-price-wrap">
+                    <span class="audit-price-prefix">$</span>
+                    <input type="number" id="audit-q-price" placeholder="300" value="300">
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-full audit-cta-btn" id="audit-q-btn" style="margin-top:20px" onclick="checkCredits(4, generateAuditQuick)">
+                  <span class="btn-spinner"></span>
+                  <span class="btn-text-default">⚡ Generate Quick Audit</span>
+                  <span class="btn-text-loading">Analyzing...</span>
+                </button>
+                <div class="tool-limit-note hidden" id="audit-q-daily-limit"></div>
+              </div>
+
+              <!-- ═══════════ ADVANCED MODE ═══════════ -->
+              <div id="audit-mode-advanced" class="audit-mode-panel" style="display:none">
+
+                <!-- Section A -->
+                <div class="audit-section-header">
+                  <span class="audit-section-label-letter">A</span>
+                  <span class="audit-section-label">Target Intelligence</span>
+                </div>
+
+                <div class="field-group">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div>
+                      <label class="field-label">Business Name</label>
+                      <input type="text" id="audit-target" placeholder="e.g. Bombay Roastery">
+                    </div>
+                    <div>
+                      <label class="field-label">Platform</label>
+                      <select id="audit-platform" onchange="toggleAuditUrl()">
+                        <option>Instagram</option>
+                        <option>Website</option>
+                        <option>Facebook</option>
+                        <option>LinkedIn</option>
+                        <option>YouTube</option>
+                        <option>Yelp</option>
+                        <option>Google Business</option>
+                        <option>TikTok</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="field-group" id="audit-url-wrap" style="display:none">
+                  <label class="field-label">Client URL <span class="field-optional">(optional — enables auto-scrape)</span></label>
+                  <input type="url" id="audit-url" placeholder="https://example.com">
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Client Logo <span class="field-optional">(Optional)</span></label>
+                  <div class="file-upload"><input type="file" id="audit-logo" accept="image/*" onchange="updateLogoText(this)"><i data-lucide="upload-cloud" style="width:20px;height:20px;color:var(--text3);margin-bottom:5px"></i><div class="file-upload-text" id="audit-logo-text">Click or drag logo to upload</div></div>
+                </div>
+
+                <!-- Section B -->
+                <div class="audit-section-header">
+                  <span class="audit-section-label-letter">B</span>
+                  <span class="audit-section-label">Your Findings</span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label">Primary Issue Found <span class="audit-required">*</span></label>
+                  <input type="text" id="audit-weakness" placeholder='e.g. "Their pricing page has no CTA above the fold"'>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Secondary Issue <span class="field-optional">(optional)</span></label>
+                  <input type="text" id="audit-weakness2" placeholder="e.g. No trust signals, no license number visible">
+                </div>
+                <div class="field-group">
+                  <label class="field-label">What You Noticed That's Good <span class="field-optional">(optional)</span></label>
+                  <input type="text" id="audit-positives" placeholder='e.g. "Good photo quality, active posting schedule"'>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Supporting Evidence <span class="field-optional">(screenshots — up to 3)</span></label>
+                  <div class="file-upload audit-screenshot-upload" id="audit-screenshot-upload-area">
+                    <input type="file" id="audit-screenshots" accept="image/*" multiple onchange="updateScreenshotText(this)">
+                    <i data-lucide="camera" style="width:20px;height:20px;color:var(--text3);margin-bottom:5px"></i>
+                    <div class="file-upload-text" id="audit-screenshots-text">Upload screenshots of the issues you found</div>
+                  </div>
+                </div>
+
+                <!-- Section C -->
+                <div class="audit-section-header">
+                  <span class="audit-section-label-letter">C</span>
+                  <span class="audit-section-label">Your Offer</span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label">Your Freelance Skill</label>
+                  <select id="audit-service">
+                    <option value="Web Design & Development">Web Design &amp; Development</option>
+                    <option value="SEO & Content Strategy">SEO &amp; Content Strategy</option>
+                    <option value="Social Media Management">Social Media Management</option>
+                    <option value="Copywriting & Brand Voice">Copywriting &amp; Brand Voice</option>
+                    <option value="Video Editing & Production">Video Editing &amp; Production</option>
+                    <option value="Email Marketing">Email Marketing</option>
+                    <option value="UI/UX Design">UI/UX Design</option>
+                    <option value="Paid Ads & Performance Marketing">Paid Ads &amp; Performance Marketing</option>
+                    <option value="Yelp / Google Business Optimization">Yelp / Google Business Optimization</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Your Service Description</label>
+                  <textarea id="audit-obs" rows="2" placeholder="e.g. I'll rewrite their landing page copy and add a proper CTA flow"></textarea>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" class="field-group">
+                  <div>
+                    <label class="field-label">Pitch Price ($)</label>
+                    <div class="audit-price-wrap"><span class="audit-price-prefix">$</span><input type="number" id="audit-price" placeholder="300" value="300"></div>
+                  </div>
+                  <div>
+                    <label class="field-label">Timeline</label>
+                    <select id="audit-timeline">
+                      <option value="3 days">3 days</option>
+                      <option value="1 week" selected>1 week</option>
+                      <option value="2 weeks">2 weeks</option>
+                      <option value="1 month">1 month</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-full audit-cta-btn" id="audit-btn" style="margin-top:4px" onclick="checkCredits(4, generateAuditAdvanced)">
+                  <span class="btn-spinner"></span>
+                  <span class="btn-text-default">🎯 Generate Advanced Audit</span>
+                  <span class="btn-text-loading">Analyzing...</span>
+                </button>
+                <div class="tool-limit-note hidden" id="audit-daily-limit"></div>
+              </div>
+            </div><!-- /left panel -->
+
+            <!-- RIGHT PANEL: Live Status + Preview -->
+            <div class="audit-right-panel" id="audit-right-panel">
+
+              <!-- IDLE STATE -->
+              <div id="audit-idle-state" class="audit-idle">
+                <div class="audit-idle-icon">
+                  <i data-lucide="crosshair" style="width:28px;height:28px"></i>
+                </div>
+                <div class="audit-idle-title">Awaiting Target Intelligence</div>
+                <p class="audit-idle-copy">Enter the target details to generate a focused growth diagnostic built for premium outbound.</p>
+                <div class="audit-steps-list" id="audit-steps-list">
+                  <div class="audit-step-item" id="astep-0"><span class="audit-step-dot"></span><span>Scanning client profile</span></div>
+                  <div class="audit-step-item" id="astep-1"><span class="audit-step-dot"></span><span>Identifying conversion gaps</span></div>
+                  <div class="audit-step-item" id="astep-2"><span class="audit-step-dot"></span><span>Building audit dossier</span></div>
+                  <div class="audit-step-item" id="astep-3"><span class="audit-step-dot"></span><span>Drafting cold email</span></div>
+                  <div class="audit-step-item" id="astep-4"><span class="audit-step-dot"></span><span>Packaging PDF</span></div>
+                </div>
+              </div>
+
+              <!-- LOADING STATE -->
+              <div id="audit-loading-state" class="audit-loading-panel" style="display:none">
+                <div class="audit-loading-title">Generating Intelligence Report</div>
+                <div class="audit-steps-list audit-steps-live" id="audit-live-steps">
+                  <div class="audit-step-item audit-step-pending" id="lstep-0"><span class="audit-step-dot-live audit-step-spin"></span><span>Scanning client profile...</span></div>
+                  <div class="audit-step-item audit-step-pending" id="lstep-1"><span class="audit-step-dot-live"></span><span>Identifying conversion gaps...</span></div>
+                  <div class="audit-step-item audit-step-pending" id="lstep-2"><span class="audit-step-dot-live"></span><span>Building audit dossier...</span></div>
+                  <div class="audit-step-item audit-step-pending" id="lstep-3"><span class="audit-step-dot-live"></span><span>Drafting cold email...</span></div>
+                  <div class="audit-step-item audit-step-pending" id="lstep-4"><span class="audit-step-dot-live"></span><span>Packaging PDF...</span></div>
+                </div>
+              </div>
+
+              <!-- RESULT STATE -->
+              <div id="audit-result-state" style="display:none" class="audit-result-panel-inner">
+
+                <!-- Health Score -->
+                <div class="audit-health-row">
+                  <div class="audit-health-score-wrap">
+                    <svg class="audit-score-ring" viewBox="0 0 80 80">
+                      <circle cx="40" cy="40" r="34" fill="none" stroke="#222" stroke-width="6"/>
+                      <circle cx="40" cy="40" r="34" fill="none" stroke-width="6" stroke-linecap="round"
+                        id="audit-score-ring-fill"
+                        stroke-dasharray="213.6"
+                        stroke-dashoffset="213.6"
+                        transform="rotate(-90 40 40)"
+                        style="transition:stroke-dashoffset 1s ease,stroke 0.5s"/>
+                    </svg>
+                    <div class="audit-health-num" id="audit-health-num">--</div>
+                  </div>
+                  <div class="audit-health-labels">
+                    <div class="audit-health-title">Health Score</div>
+                    <div class="audit-issue-tags" id="audit-issue-tags"></div>
+                  </div>
+                </div>
+
+                <!-- Email Preview -->
+                <div class="audit-email-preview-card">
+                  <div class="audit-email-preview-header">
+                    <div>
+                      <div class="audit-email-kicker">Cold Email</div>
+                      <div class="audit-email-subject" id="audit-email-subject-preview"></div>
+                    </div>
+                    <button class="copy-btn" onclick="copyEl('audit-email-body-preview')">Copy</button>
+                  </div>
+                  <div class="audit-email-body-preview" id="audit-email-body-preview"></div>
+                </div>
+
+                <!-- Actions -->
+                <div class="audit-action-row">
+                  <button class="btn btn-primary btn-full" onclick="downloadAuditPDF()" style="background:linear-gradient(135deg,#FF5C00,#FF7A2E)">
+                    <i data-lucide="download" style="width:15px;height:15px"></i>
+                    <span>Download PDF Dossier</span>
+                  </button>
+                  <button class="btn btn-secondary" onclick="copyEl('audit-email-body-preview')" style="width:100%">
+                    <i data-lucide="copy" style="width:15px;height:15px"></i>
+                    <span>Copy Email</span>
                   </button>
                 </div>
 
               </div>
-              
-              <div class="card-dashed empty-state" id="audit-empty">
-                <div class="empty-state-icon">
-                  <i data-lucide="crosshair" style="width:24px;height:24px"></i>
-                </div>
-                <div class="empty-state-heading">Awaiting Target Intelligence</div>
-                <p class="empty-state-copy">Enter the target details to generate a focused growth diagnostic built for premium outbound.</p>
-                <div class="audit-progress-list">
-                  <div class="audit-progress-item"><span class="audit-progress-dot"></span><span>Inspect the current surface and spot the friction</span></div>
-                  <div class="audit-progress-item"><span class="audit-progress-dot"></span><span>Frame the highest-impact weakness</span></div>
-                  <div class="audit-progress-item"><span class="audit-progress-dot"></span><span>Draft the outreach email with a specific hook</span></div>
-                  <div class="audit-progress-item"><span class="audit-progress-dot"></span><span>Package the findings into a premium PDF dossier</span></div>
-                </div>
-              </div>
-            </div>
-             </div>
-           </div>
-         </div>
+            </div><!-- /right panel -->
+
+          </div><!-- /dual layout -->
+        </div>
+      </div>
 
       <div id="page-proposal" class="page">
         <div class="content-inner tw-tool-page">
@@ -12241,19 +12684,230 @@ async function loadStats(uid){
 }
 
 /* ─── AUDIT ─── */
-function toggleAuditUrl(){ const v=val('audit-platform'); el('audit-url-wrap').style.display=(v==='Website')?'block':'none'; }
+function toggleAuditUrl(){ const v=val('audit-platform'); el('audit-url-wrap').style.display=(v==='Website'||v==='Yelp'||v==='Google Business')?'block':'none'; }
 
-let auditLogoBase64 = null; // Global variable to hold the logo image
+let auditLogoBase64 = null;
+let savedAuditData = null;
+let auditCurrentMode = 'quick';
+
+function switchAuditMode(mode) {
+  auditCurrentMode = mode;
+  el('tab-quick').classList.toggle('active', mode==='quick');
+  el('tab-advanced').classList.toggle('active', mode==='advanced');
+  el('audit-mode-quick').style.display = mode==='quick' ? 'block' : 'none';
+  el('audit-mode-advanced').style.display = mode==='advanced' ? 'block' : 'none';
+  // Reset right panel to idle
+  showAuditState('idle');
+}
+
+function checkAuditQuickSkillOther() {
+  const v = val('audit-q-skill');
+  el('audit-q-skill-other').style.display = v==='other' ? 'block' : 'none';
+}
+
+function detectAuditPlatform(url) {
+  const badge = el('audit-q-platform-badge');
+  if (!url || url.length < 4) { badge.style.display='none'; return; }
+  const platforms = [
+    ['instagram.com','📷 Instagram'],['facebook.com','👥 Facebook'],
+    ['linkedin.com','💼 LinkedIn'],['youtube.com','▶️ YouTube'],
+    ['youtu.be','▶️ YouTube'],['yelp.com','⭐ Yelp'],
+    ['tiktok.com','🎵 TikTok'],['twitter.com','🐦 Twitter'],
+    ['x.com','🐦 Twitter'],['google.com/maps','📍 Google Business']
+  ];
+  for (const [host, label] of platforms) {
+    if (url.includes(host)) {
+      badge.textContent = label;
+      badge.style.display = 'inline';
+      return;
+    }
+  }
+  badge.textContent = '🌐 Website';
+  badge.style.display = 'inline';
+}
+
+function getDetectedPlatform(url) {
+  if (!url) return 'Website';
+  const platforms = [
+    ['instagram.com','Instagram'],['facebook.com','Facebook'],
+    ['linkedin.com','LinkedIn'],['youtube.com','YouTube'],
+    ['youtu.be','YouTube'],['yelp.com','Yelp'],
+    ['tiktok.com','TikTok'],['twitter.com','Twitter'],
+    ['x.com','Twitter'],['google.com/maps','Google Business']
+  ];
+  for (const [host, label] of platforms) {
+    if (url.includes(host)) return label;
+  }
+  return 'Website';
+}
+
+function showAuditState(state) {
+  el('audit-idle-state').style.display = state==='idle' ? 'flex' : 'none';
+  el('audit-loading-state').style.display = state==='loading' ? 'flex' : 'none';
+  el('audit-result-state').style.display = state==='result' ? 'flex' : 'none';
+}
+
+let auditStepTimer = null;
+function startAuditLoadingSteps() {
+  showAuditState('loading');
+  const steps = ['lstep-0','lstep-1','lstep-2','lstep-3','lstep-4'];
+  steps.forEach(id => {
+    const el2 = el(id);
+    if (el2) {
+      el2.classList.remove('audit-step-done','audit-step-active');
+      el2.classList.add('audit-step-pending');
+      const dot = el2.querySelector('.audit-step-dot-live');
+      if (dot) { dot.classList.remove('audit-step-spin'); }
+    }
+  });
+  let idx = 0;
+  const advance = () => {
+    if (idx > 0) {
+      const prev = el(steps[idx-1]);
+      if (prev) { prev.classList.remove('audit-step-active'); prev.classList.add('audit-step-done'); const dot = prev.querySelector('.audit-step-dot-live'); if(dot) dot.classList.remove('audit-step-spin'); }
+    }
+    if (idx < steps.length) {
+      const cur = el(steps[idx]);
+      if (cur) { cur.classList.remove('audit-step-pending'); cur.classList.add('audit-step-active'); const dot = cur.querySelector('.audit-step-dot-live'); if(dot) dot.classList.add('audit-step-spin'); }
+      idx++;
+      auditStepTimer = setTimeout(advance, 1200 + Math.random()*600);
+    }
+  };
+  advance();
+}
+
+function stopAuditLoadingSteps() {
+  if (auditStepTimer) clearTimeout(auditStepTimer);
+  // Mark all done
+  ['lstep-0','lstep-1','lstep-2','lstep-3','lstep-4'].forEach(id => {
+    const e2 = el(id);
+    if (e2) { e2.classList.remove('audit-step-pending','audit-step-active'); e2.classList.add('audit-step-done'); const dot = e2.querySelector('.audit-step-dot-live'); if(dot) dot.classList.remove('audit-step-spin'); }
+  });
+}
+
+function renderAuditResult(data, targetName, platform, price) {
+  savedAuditData = data;
+  stopAuditLoadingSteps();
+
+  // Health score
+  const score = data.health_score || 52;
+  const numEl = el('audit-health-num');
+  if (numEl) numEl.textContent = score;
+  const ring = el('audit-score-ring-fill');
+  if (ring) {
+    const circumference = 213.6;
+    const offset = circumference - (score/100)*circumference;
+    ring.style.strokeDashoffset = offset;
+    ring.style.stroke = score < 50 ? '#EF4444' : score < 70 ? '#F59E0B' : '#22C55E';
+  }
+
+  // Issue tags
+  const tagsEl = el('audit-issue-tags');
+  if (tagsEl) {
+    const issues = data.sec5_issues || [];
+    const critical = issues.filter(i=>i.priority==='CRITICAL').length || (data.sec5_issues ? 0 : 3);
+    const high = issues.filter(i=>i.priority==='HIGH').length || 2;
+    const qw = issues.filter(i=>i.priority==='QUICK WIN').length || 2;
+    tagsEl.innerHTML = `
+      ${critical>0?`<span class="audit-issue-tag critical">${critical} Critical</span>`:''}
+      ${high>0?`<span class="audit-issue-tag high">${high} High</span>`:''}
+      ${qw>0?`<span class="audit-issue-tag quickwin">${qw} Quick Win${qw>1?'s':''}</span>`:''}
+    `;
+  }
+
+  // Email preview
+  const subEl = el('audit-email-subject-preview');
+  const bodyEl = el('audit-email-body-preview');
+  if (subEl) subEl.textContent = data.email_subject || '';
+  if (bodyEl) bodyEl.textContent = data.email_body || '';
+
+  showAuditState('result');
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+  recordActivity('audit', `Generated an audit for ${targetName}`);
+}
+
+async function generateAuditQuick() {
+  const url = val('audit-q-url');
+  if (!url) { showToast('Enter a client URL'); return false; }
+  const skill = val('audit-q-skill') === 'other' ? val('audit-q-skill-other') : val('audit-q-skill');
+  const price = val('audit-q-price') || '300';
+  const platform = getDetectedPlatform(url);
+
+  setButtonLoading('audit-q-btn', true);
+  startAuditLoadingSteps();
+  let ok = false;
+  try {
+    const res = await fetch('/api/audit', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        mode: 'quick',
+        skill, clientUrl: url, platform, price,
+        target: new URL(url.startsWith('http')?url:'https://'+url).hostname.replace('www.','')
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderAuditResult(data, data.client_name || url, platform, price);
+    ok = true;
+  } catch(e) {
+    showToast('Error generating audit. Try again.');
+    showAuditState('idle');
+    ok = false;
+  }
+  setButtonLoading('audit-q-btn', false);
+  return ok;
+}
+
+async function generateAuditAdvanced() {
+  const targetVal = val('audit-target');
+  if (!targetVal) { showToast('Enter a business name'); return false; }
+  const weakness = val('audit-weakness');
+  if (!weakness) { showToast('Enter the primary issue you found'); return false; }
+
+  setButtonLoading('audit-btn', true);
+  startAuditLoadingSteps();
+  let ok = false;
+  try {
+    const res = await fetch('/api/audit', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        mode: 'advanced',
+        target: targetVal,
+        platform: val('audit-platform'),
+        websiteUrl: val('audit-url'),
+        weakness,
+        secondaryWeakness: val('audit-weakness2'),
+        positives: val('audit-positives'),
+        service: val('audit-service'),
+        price: val('audit-price') || '300',
+        timeline: val('audit-timeline'),
+        observation: val('audit-obs')
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderAuditResult(data, targetVal, val('audit-platform'), val('audit-price'));
+    ok = true;
+  } catch(e) {
+    showToast('Error generating audit. Try again.');
+    showAuditState('idle');
+    ok = false;
+  }
+  setButtonLoading('audit-btn', false);
+  return ok;
+}
+
+// Legacy wrapper kept for any external callers
+async function generateAudit() { return generateAuditAdvanced(); }
 
 function updateLogoText(input) { 
   const f = input.files[0]; 
   if (f) {
     setText('audit-logo-text', f.name);
-    // Convert image to Base64 so jsPDF can embed it
     const reader = new FileReader();
-    reader.onload = function(e) {
-      auditLogoBase64 = e.target.result;
-    };
+    reader.onload = function(e) { auditLogoBase64 = e.target.result; };
     reader.readAsDataURL(f);
   } else {
     auditLogoBase64 = null;
@@ -12261,53 +12915,9 @@ function updateLogoText(input) {
   }
 }
 
-async function generateAudit(){
-  const targetVal=val('audit-target'); if(!targetVal) { showToast('Enter a business name'); return false; }
-  let ok = false;
-  setButtonLoading('audit-btn', true); loader('audit',true); toggleResult('audit',false);
-  try {
-    const res=await fetch('/api/audit',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        target:      targetVal,
-        platform:    val('audit-platform'),
-        websiteUrl:  val('audit-url'),
-        weakness:    val('audit-weakness'),
-        service:     val('audit-service'),
-        price:       val('audit-price'),
-        observation: val('audit-obs')
-      })
-    });
-    const data=await res.json();
-    if(data.error) throw new Error(data.error);
-
-    savedAuditData = data;
-    recordActivity('audit', `Generated an audit for ${targetVal}`);
-
-    el('audit-email-text').innerHTML = renderAiResultMarkup({
-      kicker: 'Audit email',
-      title: 'A proof-backed outreach draft built around real friction',
-      subject: data.email_subject || '',
-      body: `${data.email_body || ''}\n\nP.S. I attached a quick PDF breakdown of the exact fixes for your site.`,
-      tips: [
-        'Leads with a specific observation instead of a generic compliment.',
-        'Turns the audit into a reason to reply, not just read.',
-        'Keeps the ask clear and low-friction.'
-      ],
-      pills: [
-        `<strong>Platform</strong> ${escapeHtml(val('audit-platform') || 'Website')}`,
-        `<strong>Service</strong> ${escapeHtml(val('audit-service') || 'Creative')}`,
-        `<strong>Price</strong> ${escapeHtml(val('audit-price') || 'Custom quote')}`
-      ]
-    });
-
-    toggleResult('audit',true);
-    lucide.createIcons();
-    ok = true;
-  } catch(e){ showToast('Error. Try again.'); toggleResult('audit',false,true); ok = false; }
-  setButtonLoading('audit-btn', false); loader('audit',false);
-  return ok;
+function updateScreenshotText(input) {
+  const count = input.files.length;
+  setText('audit-screenshots-text', count > 0 ? `${count} screenshot${count>1?'s':''} attached` : 'Upload screenshots of the issues you found');
 }
 
 async function downloadAuditPDF() {
@@ -12317,116 +12927,442 @@ async function downloadAuditPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
     const d = savedAuditData;
-    const targetName = val('audit-target') || 'Client';
-    const platformName = val('audit-platform') || 'Platform';
-    const priceVal = val('audit-price') || 'Custom Quote';
+    const isQuick = auditCurrentMode === 'quick';
+    const targetName = d.client_name || val('audit-target') || 'Client';
+    const platformName = d.platform || val('audit-platform') || 'Platform';
+    const priceVal = isQuick ? ('$' + (val('audit-q-price')||'300')) : (val('audit-price') || '$300');
+    const timeline = isQuick ? '5–7 Business Days' : (val('audit-timeline') || '1 week');
     const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const healthScore = d.health_score || 52;
 
-    // Premium Agency Top Accent Line
-    doc.setFillColor(232, 80, 10);
-    doc.rect(0, 0, 210, 6, 'F');
+    /* ── COVER PAGE ── */
+    // Navy background
+    doc.setFillColor(11, 31, 58);
+    doc.rect(0, 0, 210, 297, 'F');
 
-    let yOffset = 25;
+    // Gold accent top bar
+    doc.setFillColor(201, 151, 58);
+    doc.rect(0, 0, 210, 5, 'F');
 
-    // Inject the Client Logo if uploaded
+    // Logo area
     if (auditLogoBase64) {
-       try {
-         doc.addImage(auditLogoBase64, 150, 15, 40, 20, '', 'FAST');
-       } catch (err) {
-         console.log("Logo format issue", err);
-       }
+      try { doc.addImage(auditLogoBase64, 20, 18, 35, 18, '', 'FAST'); } catch(e){}
     }
 
-    // Official Title
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(22);
-    doc.setTextColor(20, 20, 20);
-    doc.text('GROWTH & UX DIAGNOSTIC', 20, yOffset);
-    
-    yOffset += 8;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`PREPARED EXCLUSIVELY FOR: ${targetName.toUpperCase()}`, 20, yOffset);
+    // Watermark
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8);
+    doc.setTextColor(201,151,58);
+    doc.text('CONFIDENTIAL REPORT', 20, auditLogoBase64 ? 15 : 22);
+    doc.setTextColor(120,130,145);
+    doc.text('PREPARED BY · FREELANCE GROWTH AUDIT', 20, auditLogoBase64 ? 20 : 27);
 
-    yOffset += 6;
-    doc.text(`DATE: ${dateStr}   |   PLATFORM: ${platformName.toUpperCase()}`, 20, yOffset);
+    // Big title
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(28);
+    doc.setTextColor(255,255,255);
+    doc.text('GROWTH &', 20, 75);
+    doc.setTextColor(201,151,58);
+    doc.text('UX DIAGNOSTIC', 20, 88);
 
-    yOffset += 12;
-    doc.setDrawColor(230, 230, 230);
-    doc.line(20, yOffset, 190, yOffset);
-    yOffset += 15;
-
-    // Shaded Premium Sections Function
-    const addPremiumSection = (title, text) => {
-      if (yOffset > 250) { doc.addPage(); yOffset = 20; }
-      
-      // Shaded Header Box
-      doc.setFillColor(248, 248, 250);
-      doc.roundedRect(20, yOffset - 6, 170, 10, 2, 2, 'F');
-      
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(40, 40, 40);
-      doc.text(title.toUpperCase(), 24, yOffset);
-      yOffset += 10;
-      
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(11);
-      doc.setTextColor(70, 70, 70);
-      
-      const lines = doc.splitTextToSize(String(text || 'N/A'), 165);
-      doc.text(lines, 24, yOffset);
-      yOffset += (lines.length * 6) + 12; 
-    };
-
-    addPremiumSection('1. Initial Brand Assessment', d.sec1_assessment);
-    addPremiumSection('2. The Primary Conversion Bottleneck', d.sec2_bottleneck);
-    addPremiumSection('3. Estimated Opportunity Cost', d.sec3_impact);
-
-    const fixes = Array.isArray(d.sec4_fixes) ? d.sec4_fixes.map(f => `✓  ${f}`).join('\n') : (d.sec4_fixes||'');
-    addPremiumSection('4. Recommended Action Plan', fixes);
-    addPremiumSection('5. Implementation Strategy', d.sec5_pitch);
-
-    // 💰 THE OFFICIAL "INVOICE" BLOCK AT THE BOTTOM 💰
-    if (yOffset > 230) { doc.addPage(); yOffset = 20; }
-    
-    yOffset += 5;
-    doc.setDrawColor(220, 220, 220);
-    doc.setFillColor(252, 252, 252);
-    doc.roundedRect(20, yOffset, 170, 35, 3, 3, 'FD'); 
-    
-    // Purple accent line on the left of the invoice box
-    doc.setFillColor(232, 80, 10);
-    doc.rect(20, yOffset, 4, 35, 'F');
-    
-    yOffset += 12;
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('helvetica','normal');
     doc.setFontSize(11);
-    doc.setTextColor(20, 20, 20);
-    doc.text('Project Investment:', 30, yOffset);
-    doc.setFont('helvetica', 'normal');
-    doc.text(String(priceVal), 80, yOffset);
-    
-    yOffset += 8;
-    doc.setFont('helvetica', 'bold');
-    doc.text('Estimated Timeline:', 30, yOffset);
-    doc.setFont('helvetica', 'normal');
-    doc.text('5 - 7 Business Days', 80, yOffset);
+    doc.setTextColor(150,165,185);
+    doc.text(`${platformName} Profile & Conversion Audit · Premium Edition`, 20, 100);
 
-    yOffset += 10;
-    doc.setFont('helvetica', 'italic');
+    // Divider
+    doc.setDrawColor(201,151,58);
+    doc.setLineWidth(0.5);
+    doc.line(20, 107, 190, 107);
+
+    // Prepared for block
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(201,151,58);
+    doc.text('PREPARED FOR', 20, 120);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(18);
+    doc.setTextColor(255,255,255);
+    doc.text(targetName, 20, 133);
+    doc.setFont('helvetica','normal');
     doc.setFontSize(10);
-    doc.setTextColor(120, 120, 120);
-    doc.text('To authorize this implementation, simply reply to the email provided.', 30, yOffset);
+    doc.setTextColor(120,135,155);
+    doc.text(`Platform: ${platformName}`, 20, 142);
+
+    // Audit date
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(201,151,58);
+    doc.text('AUDIT DATE', 20, 158);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(11);
+    doc.setTextColor(200,210,225);
+    doc.text(dateStr, 20, 165);
+
+    // Health Score box
+    const scoreColor = healthScore < 50 ? [239,68,68] : healthScore < 70 ? [245,158,11] : [34,197,94];
+    doc.setFillColor(20,45,80);
+    doc.roundedRect(130, 115, 60, 55, 4, 4, 'F');
+    doc.setDrawColor(...scoreColor);
+    doc.setLineWidth(0.8);
+    doc.roundedRect(130, 115, 60, 55, 4, 4, 'D');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(34);
+    doc.setTextColor(...scoreColor);
+    doc.text(String(healthScore), 160, 143, {align:'center'});
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8);
+    doc.setTextColor(150,165,185);
+    doc.text('/100', 160, 150, {align:'center'});
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(201,151,58);
+    doc.text('HEALTH SCORE', 160, 160, {align:'center'});
+
+    // Key findings
+    doc.setFillColor(20,45,80);
+    doc.roundedRect(20, 178, 170, 45, 4, 4, 'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(201,151,58);
+    doc.text('KEY FINDINGS AT A GLANCE', 105, 188, {align:'center'});
+
+    const issues = d.sec5_issues || [];
+    const critCount = issues.filter(i=>i.priority==='CRITICAL').length || 3;
+    const qwCount = issues.filter(i=>i.priority==='QUICK WIN').length || 2;
+    const cols = [[critCount+'\nCritical\nIssues',55],[qwCount+'\nQuick\nWins',95],['$800-$2K\nMonthly\nLead Loss',135],['7 Days\nFix\nTimeline',172]];
+    cols.forEach(([text,x]) => {
+      const parts = text.split('\n');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(14);
+      doc.setTextColor(255,255,255);
+      doc.text(parts[0], x, 200, {align:'center'});
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(8);
+      doc.setTextColor(150,165,185);
+      parts.slice(1).forEach((p,i) => doc.text(p, x, 207+(i*5), {align:'center'}));
+    });
+
+    // Table of contents
+    const toc = ['· 01 Executive Summary','· 02 Revenue Leak Estimate','· 03 Performance Scores','· 04 Issue Analysis + Priority Matrix','· 05 Competitor Behavior Analysis','· 06 Customer Psychology Insights','· 07 Done-For-You Rewrites','· 08 Action Plan & Investment'];
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(150,165,185);
+    doc.text('THIS REPORT INCLUDES', 20, 237);
+    toc.forEach((t,i) => doc.text(t, 20, 244+(i*6.5)));
 
     // Footer
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(180, 180, 180);
-    doc.text('Confidential | Generated for client review only', 20, 285);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(80,90,105);
+    doc.text(`Confidential · For Client Review Only · Not for Distribution`, 105, 285, {align:'center'});
+    doc.text('freelancegrowthaudit.com', 105, 291, {align:'center'});
 
-    doc.save(`Audit-Report-${targetName.replace(/\s+/g, '-')}.pdf`);
+    /* ── CONTENT PAGES ── */
+    const addPage = () => {
+      doc.addPage();
+      // Navy bg
+      doc.setFillColor(11,31,58);
+      doc.rect(0,0,210,297,'F');
+      // Top bar
+      doc.setFillColor(201,151,58);
+      doc.rect(0,0,210,3,'F');
+      // Header
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(7);
+      doc.setTextColor(201,151,58);
+      doc.text('GROWTH & UX DIAGNOSTIC · PREMIUM EDITION', 20, 12);
+      doc.setTextColor(80,95,115);
+      doc.text(`${targetName} · Confidential`, 190, 12, {align:'right'});
+      doc.setDrawColor(30,55,90);
+      doc.setLineWidth(0.3);
+      doc.line(20,15,190,15);
+    };
+
+    let pg = 0;
+    const getPage = () => {
+      pg++;
+      addPage();
+      return 25;
+    };
+
+    const SEC_COLOR = [201,151,58];
+    const sectionHeader = (num, title, y) => {
+      doc.setFillColor(20,45,80);
+      doc.roundedRect(20, y-6, 170, 12, 2, 2, 'F');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(9);
+      doc.setTextColor(...SEC_COLOR);
+      doc.text(`0${num}`, 26, y+1);
+      doc.setTextColor(210,220,235);
+      doc.text(title.toUpperCase(), 38, y+1);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(80,95,115);
+      doc.text(`Freelance Growth Audit · ${dateStr}`, 190, y+1, {align:'right'});
+      return y + 16;
+    };
+
+    const addText = (text, x, y, maxW, doc2, fontSize=10, color=[180,195,215]) => {
+      doc2.setFont('helvetica','normal');
+      doc2.setFontSize(fontSize);
+      doc2.setTextColor(...color);
+      const lines = doc2.splitTextToSize(String(text||''), maxW);
+      doc2.text(lines, x, y);
+      return y + lines.length * (fontSize * 0.38) + 4;
+    };
+
+    const checkY = (y, needed=30) => {
+      if (y > 270 - needed) { return getPage(); }
+      return y;
+    };
+
+    /* ── PAGE 1: Exec Summary ── */
+    let y = getPage();
+    y = sectionHeader(1, 'Executive Summary', y);
+    doc.setFont('helvetica','italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(140,160,185);
+    doc.text('The 30-second brief every decision-maker needs', 20, y);
+    y += 10;
+    y = addText(d.sec1_assessment || 'Strong visual identity with active content presence.', 20, y, 170, doc, 10.5, [190,205,225]);
+    y += 4;
+    y = addText(d.sec2_bottleneck || 'The primary conversion bottleneck is the lack of specific services and clear call-to-action.', 20, y, 170, doc, 10.5, [190,205,225]);
+    y += 8;
+
+    // Score table
+    const scoreRows = d.sec4_scores || [
+      {label:'Profile Completeness',score:5,max:10},
+      {label:'Trust Signals & Social Proof',score:4,max:10},
+      {label:'Clarity of Services',score:3,max:10},
+      {label:'Call-to-Action Strength',score:4,max:10},
+      {label:'Photo Quality & Quantity',score:7,max:10},
+      {label:'Review Response Rate',score:0,max:10},
+      {label:'Competitor Differentiation',score:5,max:10},
+      {label:'Mobile Experience',score:4,max:10},
+    ];
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...SEC_COLOR);
+    ['Category','Your Score','Benchmark','Gap','Priority'].forEach((h,i) => {
+      doc.text(h, [20,90,115,140,165][i], y);
+    });
+    y += 5;
+    doc.setDrawColor(30,55,90);
+    doc.line(20,y,190,y);
+    y += 5;
+    scoreRows.forEach(row => {
+      y = checkY(y, 8);
+      const gap = row.score - (row.max*0.8);
+      const gapStr = gap >= 0 ? `+${gap.toFixed(0)}` : gap.toFixed(0);
+      const priority = row.score <= 3 ? 'CRITICAL' : row.score <= 5 ? 'HIGH' : 'LOW';
+      const priorityColor = priority==='CRITICAL' ? [239,68,68] : priority==='HIGH' ? [245,158,11] : [34,197,94];
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(9);
+      doc.setTextColor(190,205,225);
+      doc.text(row.label, 20, y);
+      doc.text(`${row.score} / ${row.max}`, 90, y);
+      doc.text(`${row.max*0.8} / ${row.max}`, 115, y);
+      doc.setTextColor(gap<0?239:34, gap<0?68:197, gap<0?68:94);
+      doc.text(gapStr, 140, y);
+      doc.setTextColor(...priorityColor);
+      doc.text(priority, 165, y);
+      y += 7;
+    });
+
+    /* ── PAGE 2: Revenue Leak ── */
+    y = getPage();
+    y = sectionHeader(2, 'Revenue Leak Estimate', y);
+    doc.setFont('helvetica','italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(140,160,185);
+    doc.text("Where your leads are going — and how we calculated it", 20, y);
+    y += 10;
+
+    const funnelRows = (d.sec3_revenue_leak && d.sec3_revenue_leak.funnel_rows) ? d.sec3_revenue_leak.funnel_rows : [
+      {stage:'Yelp profile visitors per month',users:'~1,200',drop_rate:'—',lost:'—'},
+      {stage:'Leave: services not clear within 5 seconds',users:'~1,200',drop_rate:'25%',lost:'~300'},
+      {stage:'Leave: no trust signals / license visible',users:'~900',drop_rate:'15%',lost:'~135'},
+      {stage:'Leave: no CTA or reason to call',users:'~765',drop_rate:'10%',lost:'~77'},
+      {stage:'Leave: unanswered negative reviews',users:'~688',drop_rate:'8%',lost:'~55'},
+      {stage:'Estimated callers reaching you',users:'~633',drop_rate:'—',lost:'~567 lost'},
+      {stage:'Est. actual calls converted',users:'~40–60 / month',drop_rate:'3–5%',lost:'~120–180 potential'},
+    ];
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8);
+    doc.setTextColor(...SEC_COLOR);
+    ['Funnel Stage','Est. Users/Month','Drop Rate','Users Lost'].forEach((h,i) => {
+      doc.text(h, [20,105,140,165][i], y);
+    });
+    y += 5;
+    doc.setDrawColor(30,55,90);
+    doc.line(20,y,190,y);
+    y += 5;
+    funnelRows.forEach((row,ri) => {
+      y = checkY(y, 7);
+      if (ri%2===0) {
+        doc.setFillColor(18,40,72);
+        doc.rect(20,y-4,170,7,'F');
+      }
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(180,200,225);
+      const stageLine = doc.splitTextToSize(row.stage, 80);
+      doc.text(stageLine, 20, y);
+      doc.text(row.users||'', 105, y);
+      doc.text(row.drop_rate||'', 140, y);
+      doc.setTextColor(239,68,68);
+      doc.text(row.lost||'', 165, y);
+      doc.setTextColor(180,200,225);
+      y += stageLine.length*4.5 + 2;
+    });
+
+    y += 6;
+    y = checkY(y, 20);
+    doc.setFillColor(20,45,80);
+    doc.roundedRect(20, y, 170, 18, 3, 3, 'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...SEC_COLOR);
+    doc.text('■ The Opportunity:', 26, y+7);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(190,205,225);
+    const oppText = (d.sec3_revenue_leak && d.sec3_revenue_leak.opportunity) || 'A modest 10% improvement across all leak points could add 12–18 additional calls per month.';
+    const oppLines = doc.splitTextToSize(oppText, 145);
+    doc.text(oppLines, 26, y+13);
+    y += 24;
+
+    /* ── PAGE 3: Issue Analysis ── */
+    y = getPage();
+    y = sectionHeader(4, 'Issue Analysis + Priority Matrix', y);
+    doc.setFont('helvetica','italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(140,160,185);
+    doc.text('Ranked by revenue impact — fix in this exact order', 20, y);
+    y += 12;
+
+    const issues2 = d.sec5_issues || [];
+    if (issues2.length === 0) {
+      // Fallback from old schema
+      const fallbackIssues = [
+        {priority:'CRITICAL',title:'No Services Listed',found:d.sec2_bottleneck||'',impact:'Visitors can\'t self-qualify.',fix:(d.sec4_fixes||['Rewrite the about section with specific services'])[0]||'',impact_score:10,ease:'Medium',roi:'High'},
+        {priority:'HIGH',title:'Weak Call-to-Action',found:'No clear prompt to contact.',impact:'Leads hesitate and leave.',fix:(d.sec4_fixes||[''])[1]||'Add a clear CTA button',impact_score:8,ease:'Easy',roi:'High'},
+        {priority:'QUICK WIN',title:'Add Trust Signals',found:'No license or insurance visible.',impact:'Trust gap vs competitors.',fix:(d.sec4_fixes||[''])[2]||'Add license number and insured badge',impact_score:6,ease:'Easy',roi:'Medium'},
+      ];
+      issues2.push(...fallbackIssues);
+    }
+
+    issues2.forEach(issue => {
+      y = checkY(y, 45);
+      const pColor = issue.priority==='CRITICAL' ? [239,68,68] : issue.priority==='HIGH' ? [245,158,11] : [34,197,94];
+      const pBg = issue.priority==='CRITICAL' ? [60,15,15] : issue.priority==='HIGH' ? [60,45,10] : [10,50,25];
+      doc.setFillColor(18,38,68);
+      doc.roundedRect(20, y, 170, 38, 3, 3, 'F');
+      doc.setFillColor(...pBg);
+      doc.roundedRect(20, y, 30, 8, 2, 2, 'F');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(7);
+      doc.setTextColor(...pColor);
+      doc.text(issue.priority, 35, y+5.5, {align:'center'});
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(10);
+      doc.setTextColor(210,225,245);
+      doc.text(issue.title||'', 55, y+5.5);
+      // Scores
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(130,150,175);
+      doc.text(`IMPACT ${issue.impact_score||'—'}/10`, 130, y+5.5);
+      doc.text(`EASE: ${issue.ease||'—'}`, 155, y+5.5);
+      // Found
+      doc.setFontSize(8.5);
+      doc.setTextColor(160,180,210);
+      const foundLines = doc.splitTextToSize('FOUND: '+(issue.found||''), 165);
+      doc.text(foundLines, 22, y+15);
+      // Fix
+      doc.setTextColor(...pColor);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8);
+      doc.text('FIX: ', 22, y+25);
+      doc.setFont('helvetica','normal');
+      doc.setTextColor(190,210,235);
+      const fixLines = doc.splitTextToSize(issue.fix||'', 155);
+      doc.text(fixLines, 32, y+25);
+      y += 44;
+    });
+
+    /* ── PAGE 4: Action Plan & Pitch ── */
+    y = checkY(y, 60);
+    if (y > 220) { y = getPage(); }
+    y = sectionHeader(8, 'Action Plan & Investment', y);
+
+    const actionPlan = d.sec9_action_plan || [
+      {fix:'Rewrite bio with services + emergency CTA',difficulty:'Medium',impact:'↑↑↑ High',priority:'Do First'},
+      {fix:'Add license, insured badge, year established',difficulty:'Easy',impact:'↑↑↑ High',priority:'Do First'},
+      {fix:'Add pinned post with offer + CTA',difficulty:'Easy',impact:'↑↑↑ High',priority:'Do First'},
+      {fix:'Respond to all reviews',difficulty:'Easy',impact:'↑↑ Medium',priority:'Week 1'},
+    ];
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8);
+    doc.setTextColor(...SEC_COLOR);
+    ['Fix','Difficulty','Impact','Priority'].forEach((h,i) => {
+      doc.text(h, [20,110,135,165][i], y);
+    });
+    y += 5;
+    doc.setDrawColor(30,55,90);
+    doc.line(20,y,190,y);
+    y += 5;
+    actionPlan.forEach((row,ri) => {
+      y = checkY(y, 8);
+      if (ri%2===0) {
+        doc.setFillColor(18,40,72);
+        doc.rect(20,y-4,170,7,'F');
+      }
+      const fixLines = doc.splitTextToSize(row.fix||'', 85);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(190,205,225);
+      doc.text(fixLines, 20, y);
+      doc.text(row.difficulty||'', 110, y);
+      doc.setTextColor(34,197,94);
+      doc.text(row.impact||'', 135, y);
+      doc.setTextColor(...SEC_COLOR);
+      doc.text(row.priority||'', 165, y);
+      doc.setTextColor(190,205,225);
+      y += fixLines.length*4.5 + 2;
+    });
+
+    y += 10;
+    y = checkY(y, 40);
+    // Investment box
+    doc.setFillColor(20,45,80);
+    doc.roundedRect(20, y, 170, 45, 4, 4, 'F');
+    doc.setFillColor(...SEC_COLOR);
+    doc.rect(20, y, 4, 45, 'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(12);
+    doc.setTextColor(255,255,255);
+    doc.text('IMPLEMENTATION INVESTMENT', 30, y+12);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(9);
+    doc.setTextColor(150,165,185);
+    doc.text(`Timeline: ${timeline} · Revisions: 2 rounds included`, 30, y+20);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...SEC_COLOR);
+    doc.text('One-time payment · No retainer · No hidden fees', 30, y+28);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(20);
+    doc.setTextColor(255,255,255);
+    doc.text(priceVal, 180, y+28, {align:'right'});
+    doc.setFont('helvetica','italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(130,150,180);
+    doc.text('To move forward, simply reply to this email with the word APPROVED.', 30, y+38);
+
+    doc.save(`Lancify_Audit_${targetName.replace(/\s+/g,'-')}_${new Date().toLocaleDateString('en-US',{month:'short',year:'numeric'}).replace(' ','-')}.pdf`);
+    showToast('PDF downloaded!');
   } catch(e) {
     console.error(e);
     showToast('PDF error. Try again.');
