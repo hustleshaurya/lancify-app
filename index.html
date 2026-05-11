@@ -3759,6 +3759,8 @@ body.pricing-route .content { margin-left: 0 !important; padding-top: 0 !importa
   font-size: 12px;
   color: var(--text-muted);
 }
+.tool-limit-note[data-limit-state="empty"]{color:#ef4444}
+.tool-limit-note[data-limit-state="unlimited"]{color:var(--text3)}
 .tool-limit-note.hidden {
   display: none;
 }
@@ -7036,10 +7038,13 @@ html.dark .roadmap-teaser{
 }
 .ob-welcome-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:-6px 0 8px}
 .ob-welcome-pill{
-  height:27px;display:inline-flex;align-items:center;gap:6px;padding:0 10px;border-radius:999px;
-  background:rgba(255,255,255,.045);color:rgba(255,255,255,.74);font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,.10)
+  height:26px;display:inline-flex;align-items:center;gap:6px;padding:0 10px;border-radius:999px;
+  background:rgba(255,255,255,.04);color:rgba(255,255,255,.74);font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,.10)
 }
-.ob-welcome-pill i{width:12px;height:12px;color:#E8500A;stroke-width:1.9}
+.ob-welcome-pill i,
+.ob-welcome-pill svg{
+  width:13px !important;height:13px !important;color:#cfd3d8 !important;stroke-width:1.8 !important;flex-shrink:0
+}
 .ob-chip{
   border-radius:10px !important;
   border:1px solid rgba(255,255,255,0.11) !important;
@@ -7063,8 +7068,13 @@ html.dark .roadmap-teaser{
 #onboarding-wizard textarea::placeholder{color:rgba(255,255,255,0.32) !important}
 #onboarding-wizard .field-label{color:rgba(255,255,255,0.58) !important}
 #onboarding-wizard .ob-footer{border-top-color:rgba(255,255,255,0.10) !important}
-#onboarding-wizard #ob-back-btn,
-#onboarding-wizard #ob-next-btn{color:rgba(255,255,255,0.92) !important}
+#onboarding-wizard #ob-back-btn{color:rgba(255,255,255,0.52) !important}
+#onboarding-wizard #ob-back-btn:hover{color:rgba(255,255,255,0.90) !important;background:rgba(255,255,255,0.055) !important}
+#onboarding-wizard #ob-next-btn{
+  background:#E8500A !important;color:#fff !important;border:1px solid rgba(232,80,10,.95) !important;
+  box-shadow:0 12px 28px rgba(232,80,10,.22) !important
+}
+#onboarding-wizard #ob-next-btn:hover:not(:disabled){opacity:1 !important;filter:brightness(1.06)}
 .kanban-col-header,
 .pipeline-col-header,
 .kanban-header,
@@ -7171,8 +7181,6 @@ html:not(.dark) body{
   font-weight:600 !important;
   font-size:26px !important;
 }
-.pipeline-col-header,
-.kanban-col-header,
 .client-badge,
 .stage-badge,
 .pipeline-add-btn,
@@ -7181,6 +7189,19 @@ html:not(.dark) body{
   color:#E8500A !important;
   border-color:rgba(232,80,10,0.2) !important;
 }
+.pipeline-col-header,
+.kanban-col-header{
+  background:transparent !important;
+  color:var(--text-main) !important;
+  border-color:transparent !important;
+}
+.audit-price-wrap{position:relative !important}
+.audit-price-prefix{
+  left:14px !important;top:50% !important;transform:translateY(-50%) !important;width:22px !important;
+  display:inline-flex !important;align-items:center !important;justify-content:flex-start !important;
+  line-height:1 !important;color:var(--text-muted) !important
+}
+.audit-price-wrap input{padding-left:42px !important}
 .clients-page .btn-primary{
   background:#E8500A !important;
   color:#fff !important;
@@ -7670,16 +7691,14 @@ body,
           <i data-lucide="chevron-down" class="nav-folder-chevron"></i>
         </button>
         <div class="nav-folder-children" id="folder-growth">
-          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span><span class="pro-badge pro">PRO</span></div>
+          <div class="nav-item" data-page="gig" data-tooltip="Gig Finder" onclick="navigate('gig')"><i data-lucide="search" class="icon"></i><span class="nav-label"> Gig Finder</span></div>
           <div class="nav-item plan-locked" data-page="sequence" data-tooltip="Sequences" onclick="navigate('sequence')">
             <i data-lucide="git-branch" class="icon"></i>
             <span class="nav-label"> Sequences</span>
-            <span class="pro-badge">ELITE</span>
           </div>
           <div class="nav-item" data-page="roadmap" data-tooltip="Growth Roadmap" onclick="navigate('roadmap')">
             <i data-lucide="map" class="icon"></i>
             <span class="nav-label"> Growth Roadmap</span>
-            <span class="pro-badge pro">PRO</span>
           </div>
         </div>
       </div>
@@ -11441,6 +11460,8 @@ function _featureFromCallbackName(name){
     quickFindClients: 'opportunity_scan',
     scanOpportunities: 'opportunity_scan',
     generateAudit: 'audit_generate',
+    generateAuditQuick: 'audit_generate',
+    generateAuditAdvanced: 'audit_generate',
     generateProposal: 'proposal_generate',
     generateEmail: 'email_generate',
     findGigs: 'gig_scan',
@@ -11448,6 +11469,20 @@ function _featureFromCallbackName(name){
     generateSequence: 'sequence_generate'
   };
   return map[name] || '';
+}
+
+function _featureFromTrigger(trigger){
+  const id = trigger?.id || '';
+  const map = {
+    'audit-q-btn': 'audit_generate',
+    'audit-btn': 'audit_generate',
+    'prop-btn': 'proposal_generate',
+    'email-btn': 'email_generate',
+    'gig-btn': 'gig_scan',
+    'rm-btn': 'roadmap_generate',
+    'seq-generate-btn': 'sequence_generate',
+  };
+  return map[id] || '';
 }
 
 function _creditWarningThreshold(total){
@@ -11484,23 +11519,35 @@ function _featureRemaining(feature){
 
 function _updateDailyLimitUi(){
   const meta = {
-    opportunity_scan: { id: 'opp-daily-limit', label: 'lead scans' },
-    proposal_generate: { id: 'proposal-daily-limit', label: 'proposals' },
-    email_generate: { id: 'email-daily-limit', label: 'emails' },
-    audit_generate: { id: 'audit-daily-limit', label: 'audits' },
+    opportunity_scan: { ids: ['opp-daily-limit'], label: 'lead scans' },
+    proposal_generate: { ids: ['proposal-daily-limit'], label: 'proposals' },
+    email_generate: { ids: ['email-daily-limit'], label: 'emails' },
+    audit_generate: { ids: ['audit-q-daily-limit', 'audit-daily-limit'], label: 'audits' },
   };
+  const planKey = _currentPlanKey();
+  const planLabel = planKey === 'free' ? 'Starter' : _planRules().name.replace(/\s+Plan$/, '');
   Object.entries(meta).forEach(([feature, config]) => {
-    const node = el(config.id);
-    if (!node) return;
-    if (_currentPlanKey() !== 'free') {
-      node.classList.add('hidden');
-      node.textContent = '';
-      return;
-    }
     const limit = _featureLimit(feature);
-    const remaining = _featureRemaining(feature);
-    node.textContent = `${remaining} of ${limit} ${config.label} remaining today`;
-    node.classList.remove('hidden');
+    const used = _featureUsageCount(feature);
+    let text = '';
+    let state = 'limited';
+    if (Number.isFinite(limit)) {
+      const remaining = Math.max(0, limit - used);
+      text = `${remaining} of ${limit} ${config.label} remaining today`;
+      state = remaining <= 0 ? 'empty' : 'limited';
+    } else {
+      text = used > 0
+        ? `${used} ${config.label} used today · unlimited on ${planLabel}`
+        : `Unlimited ${config.label} today on ${planLabel}`;
+      state = 'unlimited';
+    }
+    config.ids.forEach(id => {
+      const node = el(id);
+      if (!node) return;
+      node.textContent = text;
+      node.dataset.limitState = state;
+      node.classList.remove('hidden');
+    });
   });
 }
 
@@ -18084,8 +18131,8 @@ function skipOnboarding()  { obNext(); }
 function finishOnboarding(){ _obFinish(); }
 
 async function checkCredits(cost, callback, triggerEl = null) {
-  const featureKey = _featureFromCallbackName(callback?.name || '');
   const trigger = triggerEl || window.event?.currentTarget || null;
+  const featureKey = _featureFromCallbackName(callback?.name || '') || _featureFromTrigger(trigger);
   const actionKey = trigger?.id || callback?.name || featureKey || 'action';
   window._lancifyRunningActions = window._lancifyRunningActions || new Set();
   if (window._lancifyRunningActions.has(actionKey)) return false;
@@ -18101,6 +18148,7 @@ async function checkCredits(cost, callback, triggerEl = null) {
       await _markFeatureUsage(featureKey);
       if (featureKey.includes('audit')) localStorage.setItem('lancify_audit_used', 'yes');
       if (featureKey.includes('email')) localStorage.setItem('lancify_email_used', 'yes');
+      _updateDailyLimitUi();
       renderDashboardOnboardingJourney();
     } else {
       await _refundCredits(cost);
