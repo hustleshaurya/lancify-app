@@ -2026,20 +2026,28 @@ html.dark .tw-empty-icon{background:rgba(255,255,255,0.05)}
 }
 #feature-picker-modal.show{display:flex}
 .feature-picker-shell{
-  width:min(780px,100%);max-height:calc(100vh - 48px);overflow:auto;padding:26px;border-radius:18px;
-  background:var(--bg-panel);border:1px solid var(--border);box-shadow:var(--shadow-lg);text-align:center
+  width:min(820px,100%);max-height:calc(100vh - 48px);overflow:auto;padding:28px;border-radius:18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)),
+    var(--bg-panel);
+  border:1px solid var(--border);box-shadow:0 32px 90px rgba(0,0,0,.42);text-align:center
 }
 .feature-picker-shell h2{font-size:30px;line-height:1.1;font-weight:800;letter-spacing:-.7px;color:var(--text-main);margin:0 0 8px}
 .feature-picker-shell p{font-size:14px;line-height:1.5;color:var(--text-muted);margin:0 0 20px}
 .feature-picker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;text-align:left}
 .feature-picker-card{
-  min-height:96px;max-height:110px;padding:13px 14px;border-radius:10px;border:1px solid var(--border);
-  background:var(--bg-panel);box-shadow:var(--shadow-sm);cursor:pointer;font-family:inherit;text-align:left;
-  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease
+  min-height:104px;max-height:112px;padding:13px 14px;border-radius:10px;border:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.012)), var(--bg-panel);
+  box-shadow:none;cursor:pointer;font-family:inherit;text-align:left;
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease
 }
-.feature-picker-card:hover{transform:translateY(-2px);border-color:var(--border2);box-shadow:var(--shadow-md)}
+.feature-picker-card:hover{transform:translateY(-2px);border-color:rgba(232,80,10,.38);box-shadow:0 14px 32px rgba(0,0,0,.22);background:linear-gradient(180deg, rgba(232,80,10,0.055), rgba(255,255,255,0.014)), var(--bg-panel)}
 .feature-picker-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-.feature-picker-emoji{font-size:22px;line-height:1}
+.feature-picker-icon{
+  width:26px;height:26px;border-radius:8px;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;
+  color:var(--text-muted);background:rgba(255,255,255,0.025)
+}
+.feature-picker-icon i{width:15px;height:15px;stroke-width:1.8}
 .feature-picker-badge{
   background:#E8500A;color:white;font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;letter-spacing:.04em;white-space:nowrap
 }
@@ -2052,46 +2060,64 @@ html.dark .tw-empty-icon{background:rgba(255,255,255,0.05)}
 .feature-picker-skip:hover{color:var(--text-main)}
 .journey-anchor{display:block}
 .ob-journey{
-  border-radius:12px;background:var(--bg-panel);border:1px solid var(--border);padding:16px 20px;margin:0 0 18px;box-shadow:var(--shadow-sm)
+  width:min(980px,100%);border-radius:14px;background:
+    linear-gradient(135deg, rgba(232,80,10,0.045), rgba(255,255,255,0.018) 42%, rgba(91,141,239,0.035)),
+    var(--bg-panel);
+  border:1px solid var(--border);padding:14px 16px;margin:0 0 18px;box-shadow:0 18px 46px rgba(0,0,0,.18)
 }
-.ob-journey-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
-.ob-journey-title{font-size:15px;font-weight:800;color:var(--text-main);display:flex;align-items:center;gap:8px}
-.ob-journey-count{font-size:12px;font-weight:700;color:var(--text-muted);margin-left:4px}
-.ob-journey-actions{display:flex;align-items:center;gap:10px}
-.ob-journey-track{width:118px;height:4px;border-radius:999px;background:var(--border);overflow:hidden}
+.ob-journey-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px}
+.ob-journey-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+.ob-journey-icon{
+  width:28px;height:28px;border-radius:9px;border:1px solid rgba(232,80,10,.22);
+  background:rgba(232,80,10,.08);color:#E8500A;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0
+}
+.ob-journey-icon i{width:15px;height:15px;stroke-width:1.9}
+.ob-journey-title{font-size:14px;font-weight:800;color:var(--text-main);display:flex;align-items:baseline;gap:8px;letter-spacing:-.15px}
+.ob-journey-count{font-size:11px;font-weight:700;color:var(--text-muted)}
+.ob-journey-kicker{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);font-weight:800;margin-bottom:2px}
+.ob-journey-actions{display:flex;align-items:center;gap:9px}
+.ob-journey-track{width:128px;height:4px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
 .ob-journey-fill{height:100%;width:0%;border-radius:999px;background:#E8500A;transition:width .25s ease}
-.ob-journey-dismiss{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text-muted);cursor:pointer;font-size:16px;line-height:1}
+.ob-journey-dismiss{width:26px;height:26px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.025);color:var(--text-muted);cursor:pointer;font-size:16px;line-height:1}
 .ob-journey-dismiss:hover{color:var(--text-main);border-color:var(--border2)}
-.ob-journey-steps{display:grid;gap:6px}
+.ob-journey-steps{display:grid;gap:0;border-top:1px solid var(--border)}
 .ob-journey-step{
-  min-height:52px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;
+  min-height:46px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;
   padding:7px 0;border-top:1px solid var(--border)
 }
 .ob-journey-step:first-child{border-top:none}
-.ob-journey-left{display:flex;align-items:center;gap:9px;min-width:0}
+.ob-journey-step.active{background:linear-gradient(90deg, rgba(232,80,10,.055), transparent 72%);margin:0 -8px;padding-left:8px;padding-right:8px;border-radius:10px}
+.ob-journey-left{display:flex;align-items:center;gap:10px;min-width:0}
 .ob-journey-check{
-  width:20px;height:20px;border-radius:999px;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;
-  color:transparent;font-size:12px;font-weight:900;flex-shrink:0
+  width:18px;height:18px;border-radius:999px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  color:transparent;font-size:11px;font-weight:900;flex-shrink:0
 }
-.ob-journey-step.done .ob-journey-check{background:#16a34a;border-color:#16a34a;color:#fff}
-.ob-journey-num{background:#E8500A;color:#fff;border-radius:4px;padding:2px 5px;font-size:9px;font-weight:800;letter-spacing:.04em;flex-shrink:0}
+.ob-journey-step.done .ob-journey-check{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.56);color:#22c55e}
+.ob-journey-num{background:rgba(232,80,10,.13);color:#E8500A;border:1px solid rgba(232,80,10,.22);border-radius:5px;padding:2px 5px;font-size:8.5px;font-weight:900;letter-spacing:.045em;flex-shrink:0}
 .ob-journey-copy{min-width:0}
-.ob-journey-step-title{font-size:13px;font-weight:800;color:var(--text-main);line-height:1.2}
-.ob-journey-sub{font-size:8px;color:var(--text-muted);line-height:1.25;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-journey-step-title{font-size:12.5px;font-weight:800;color:var(--text-main);line-height:1.2}
+.ob-journey-sub{font-size:10px;color:var(--text-muted);line-height:1.25;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ob-journey-step.done .ob-journey-step-title{text-decoration:line-through;color:var(--text-muted)}
 .ob-journey-cta{
-  height:28px;padding:0 12px;border-radius:6px;font-size:12px;font-weight:600;background:var(--btn-bg);
-  color:var(--btn-text);border:none;cursor:pointer;font-family:inherit;white-space:nowrap
+  height:28px;padding:0 10px;border-radius:7px;font-size:11.5px;font-weight:700;background:rgba(232,80,10,.10);
+  color:#E8500A;border:1px solid rgba(232,80,10,.24);cursor:pointer;font-family:inherit;white-space:nowrap
 }
+.ob-journey-cta:hover{background:rgba(232,80,10,.16);border-color:rgba(232,80,10,.42);transform:translateY(-1px)}
 .ob-journey-celebration{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--text-main);font-size:14px;font-weight:800}
+.ob-journey-celebration-main{display:flex;align-items:center;gap:10px}
+.ob-journey-celebration-main i{width:18px;height:18px;color:#22c55e}
 @media (max-width:760px){
-  .feature-picker-grid{grid-template-columns:1fr}
+  .feature-picker-grid{grid-template-columns:1fr 1fr}
   .feature-picker-card{max-height:none}
   .ob-journey-head,.ob-journey-celebration{align-items:flex-start;flex-direction:column}
   .ob-journey-actions{width:100%;justify-content:space-between}
   .ob-journey-track{flex:1;width:auto}
   .ob-journey-step{grid-template-columns:1fr}
   .ob-journey-cta{width:max-content}
+}
+@media (max-width:520px){
+  .feature-picker-shell{padding:22px 18px}
+  .feature-picker-grid{grid-template-columns:1fr}
 }
 
 #signup-onboarding-modal{
@@ -2104,11 +2130,11 @@ html.dark .tw-empty-icon{background:rgba(255,255,255,0.05)}
 }
 #signup-onboarding-modal.show{display:flex}
 .signup-onboarding-shell{
-  width:min(760px, 100%);padding:42px 38px;border-radius:28px;border:1px solid var(--border);
+  width:min(720px, 100%);padding:38px 34px;border-radius:22px;border:1px solid rgba(255,255,255,.10);
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+    linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025)),
     var(--bg-panel);
-  box-shadow:var(--shadow-lg);text-align:center
+  box-shadow:0 32px 90px rgba(0,0,0,.42);text-align:center
 }
 .signup-onboarding-logo{height:26px;margin:0 auto 22px;display:block;opacity:.94}
 .signup-onboarding-shell h2{
@@ -2120,9 +2146,11 @@ html.dark .tw-empty-icon{background:rgba(255,255,255,0.05)}
 .signup-onboarding-pills{display:grid;gap:10px;max-width:460px;margin:0 auto 28px}
 .signup-onboarding-pill{
   opacity:0;transform:translateY(10px);animation:signup-pill-in .5s ease forwards;
-  display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 16px;border-radius:999px;
-  border:1px solid var(--border);background:var(--bg);font-size:13px;font-weight:600;color:var(--text-main)
+  display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 15px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035);font-size:13px;font-weight:650;color:var(--text-main);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)
 }
+.signup-onboarding-pill:hover{transform:translateY(-1px);border-color:rgba(232,80,10,.26);background:rgba(232,80,10,.055)}
 .signup-onboarding-pill:nth-child(2){animation-delay:.12s}
 .signup-onboarding-pill:nth-child(3){animation-delay:.24s}
 .signup-onboarding-pill i{width:15px;height:15px;color:var(--accent-primary)}
@@ -2919,7 +2947,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   background: var(--bg-hover);
 }
 
-/* ✅ Active state ? driven by :has(input:checked), no JS class needed */
+/* Active state is driven by :has(input:checked), no JS class needed */
 .ps-toggle:has(input:checked) {
   border-color: var(--text-main);
   background: var(--bg-panel);
@@ -3091,7 +3119,7 @@ html.dark .opp-radar-icon::before { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4)
   gap: 6px;
 }
 
-/* 🔥 Score Badge */
+/* Score Badge */
 .opp-score-badge {
   display: flex;
   flex-direction: column;
@@ -6943,11 +6971,15 @@ html.dark .roadmap-teaser{
   width:min(480px, 100%) !important;
   max-height:calc(100vh - 40px) !important;
   overflow-y:auto !important;
-  background:#ffffff !important;
-  border:1px solid #ebebeb !important;
-  box-shadow:0 8px 32px rgba(0,0,0,0.08) !important;
-  border-radius:18px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.072), rgba(255,255,255,0.026)),
+    rgba(15,15,15,0.92) !important;
+  border:1px solid rgba(255,255,255,0.12) !important;
+  box-shadow:0 34px 110px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  border-radius:20px !important;
   padding:0 !important;
+  color:rgba(255,255,255,0.92) !important;
+  backdrop-filter:blur(24px) !important;
 }
 #onboarding-wizard.ob-compact-welcome{
   max-width:460px !important;
@@ -6975,7 +7007,7 @@ html.dark .roadmap-teaser{
   font-size:26px !important;
   font-weight:600 !important;
   line-height:1.15 !important;
-  color:#171717 !important;
+  color:rgba(255,255,255,0.94) !important;
 }
 .ob-title.welcome-title{
   font-family:'Instrument Serif',serif !important;
@@ -6985,14 +7017,14 @@ html.dark .roadmap-teaser{
 }
 .ob-subtitle{
   font-size:14px !important;
-  color:var(--text-muted) !important;
+  color:rgba(255,255,255,0.56) !important;
 }
 .ob-step-label{
   font-size:11px !important;
   font-weight:600 !important;
   letter-spacing:.08em !important;
   text-transform:uppercase !important;
-  color:var(--text-muted) !important;
+  color:rgba(255,255,255,0.42) !important;
 }
 .ob-label-pulse{
   width:7px;height:7px;border-radius:999px;background:#E8500A;display:inline-block;margin-right:3px;
@@ -7002,17 +7034,37 @@ html.dark .roadmap-teaser{
   70%{box-shadow:0 0 0 7px rgba(232,80,10,0)}
   100%{box-shadow:0 0 0 0 rgba(232,80,10,0)}
 }
-.ob-welcome-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:-8px 0 8px}
-.ob-welcome-pill{height:25px;display:inline-flex;align-items:center;padding:0 10px;border-radius:999px;background:rgba(232,80,10,.08);color:#E8500A;font-size:11px;font-weight:700;border:1px solid rgba(232,80,10,.18)}
-.ob-chip{
-  border-radius:999px !important;
-  border:1px solid var(--border) !important;
-  background:#ffffff !important;
-  color:#171717 !important;
+.ob-welcome-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:-6px 0 8px}
+.ob-welcome-pill{
+  height:27px;display:inline-flex;align-items:center;gap:6px;padding:0 10px;border-radius:999px;
+  background:rgba(255,255,255,.045);color:rgba(255,255,255,.74);font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,.10)
 }
-.ob-chip-desc{display:block;margin-top:3px;font-size:10px;font-weight:500;color:var(--text-muted);line-height:1.2}
+.ob-welcome-pill i{width:12px;height:12px;color:#E8500A;stroke-width:1.9}
+.ob-chip{
+  border-radius:10px !important;
+  border:1px solid rgba(255,255,255,0.11) !important;
+  background:rgba(255,255,255,0.045) !important;
+  color:rgba(255,255,255,0.88) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.035) !important;
+  transition:transform .14s ease,border-color .14s ease,background .14s ease,color .14s ease !important;
+}
+.ob-chip:hover{transform:translateY(-1px);border-color:rgba(232,80,10,0.30) !important;background:rgba(232,80,10,0.075) !important}
+.ob-chip-desc{display:block;margin-top:3px;font-size:10px;font-weight:500;color:rgba(255,255,255,0.46);line-height:1.2}
 .ob-chip.selected .ob-chip-desc{color:#E8500A}
 .ob-skill-other{margin-top:10px}
+#onboarding-wizard input,
+#onboarding-wizard textarea,
+#onboarding-wizard select{
+  background:rgba(255,255,255,0.055) !important;
+  border-color:rgba(255,255,255,0.13) !important;
+  color:rgba(255,255,255,0.92) !important;
+}
+#onboarding-wizard input::placeholder,
+#onboarding-wizard textarea::placeholder{color:rgba(255,255,255,0.32) !important}
+#onboarding-wizard .field-label{color:rgba(255,255,255,0.58) !important}
+#onboarding-wizard .ob-footer{border-top-color:rgba(255,255,255,0.10) !important}
+#onboarding-wizard #ob-back-btn,
+#onboarding-wizard #ob-next-btn{color:rgba(255,255,255,0.92) !important}
 .kanban-col-header,
 .pipeline-col-header,
 .kanban-header,
@@ -7324,7 +7376,7 @@ body,
     <div class="signup-onboarding-pills">
       <div class="signup-onboarding-pill"><i data-lucide="target"></i>Find real clients in minutes</div>
       <div class="signup-onboarding-pill"><i data-lucide="pen-square"></i>AI writes your pitch so you don't freeze</div>
-      <div class="signup-onboarding-pill"><i data-lucide="rocket"></i>Follow up like a pro, close with confidence</div>
+      <div class="signup-onboarding-pill"><i data-lucide="badge-check"></i>Follow up like a pro, close with confidence</div>
     </div>
     <button class="btn btn-primary" style="height:48px;padding:0 24px;font-size:15px" onclick="handleSignupOnboardingCta()">Show me how →</button>
     <div class="signup-onboarding-note">Takes 30 seconds. No setup required.</div>
@@ -7348,31 +7400,36 @@ body,
     <div class="feature-picker-grid">
       <button class="feature-picker-card" type="button" onclick="chooseFirstFeature('find_clients')">
         <div class="feature-picker-card-top">
-          <span class="feature-picker-emoji">🎯</span>
-          <span class="feature-picker-badge">✦ RECOMMENDED</span>
+          <span class="feature-picker-icon"><i data-lucide="crosshair"></i></span>
+          <span class="feature-picker-badge">RECOMMENDED</span>
         </div>
         <div class="feature-picker-title">Find Clients</div>
         <div class="feature-picker-copy">Discover leads ready to hire right now</div>
       </button>
       <button class="feature-picker-card" type="button" onclick="chooseFirstFeature('audit')">
-        <div class="feature-picker-card-top"><span class="feature-picker-emoji">📋</span></div>
+        <div class="feature-picker-card-top"><span class="feature-picker-icon"><i data-lucide="scan-search"></i></span></div>
         <div class="feature-picker-title">Generate Audit</div>
         <div class="feature-picker-copy">Prove your value before asking for money</div>
       </button>
       <button class="feature-picker-card" type="button" onclick="chooseFirstFeature('email')">
-        <div class="feature-picker-card-top"><span class="feature-picker-emoji">✉️</span></div>
+        <div class="feature-picker-card-top"><span class="feature-picker-icon"><i data-lucide="mail"></i></span></div>
         <div class="feature-picker-title">Write Outreach Email</div>
         <div class="feature-picker-copy">Send a pitch that gets replies</div>
       </button>
       <button class="feature-picker-card" type="button" onclick="chooseFirstFeature('proposal')">
-        <div class="feature-picker-card-top"><span class="feature-picker-emoji">📄</span></div>
+        <div class="feature-picker-card-top"><span class="feature-picker-icon"><i data-lucide="file-text"></i></span></div>
         <div class="feature-picker-title">Generate Proposal</div>
         <div class="feature-picker-copy">Close deals with a professional proposal</div>
       </button>
       <button class="feature-picker-card" type="button" onclick="chooseFirstFeature('invoice')">
-        <div class="feature-picker-card-top"><span class="feature-picker-emoji">🧾</span></div>
+        <div class="feature-picker-card-top"><span class="feature-picker-icon"><i data-lucide="receipt-text"></i></span></div>
         <div class="feature-picker-title">Create Invoice</div>
         <div class="feature-picker-copy">Get paid fast with a clean invoice</div>
+      </button>
+      <button class="feature-picker-card" type="button" onclick="chooseFirstFeature('crm')">
+        <div class="feature-picker-card-top"><span class="feature-picker-icon"><i data-lucide="columns-3"></i></span></div>
+        <div class="feature-picker-title">CRM System</div>
+        <div class="feature-picker-copy">Manage leads, deals, and client pipeline</div>
       </button>
     </div>
     <button class="feature-picker-skip" type="button" onclick="skipFeaturePicker()">Skip for now →</button>
@@ -7380,7 +7437,7 @@ body,
 </div>
 
 <div id="guide-pref-screen" class="onboarding-screen" style="display:none; position:fixed; inset:0; z-index:10000; background:#000; align-items:center; justify-content:center; padding:20px;">
-  <div id="onboarding-wizard" style="text-align:center; padding:48px; background:#0d0d0d; border:1px solid #222; border-radius:18px; width:100%; max-width:560px;">
+  <div id="guide-pref-card" style="text-align:center; padding:48px; background:#0d0d0d; border:1px solid #222; border-radius:18px; width:100%; max-width:560px;">
     <div style="font-size:11px; font-weight:700; letter-spacing:.08em; color:#666; margin-bottom:12px; text-transform:uppercase;">One last thing</div>
     <h2 style="font-size:28px; font-weight:800; margin-bottom:16px; color:#fff;">Want Lancify to guide you to your first client?</h2>
     <p style="color:#a1a1a1; margin-bottom:32px; font-size:15px; line-height:1.6;">We'll show you exactly what to do, step by step. Takes 10 minutes. You can turn it off anytime.</p>
@@ -8226,7 +8283,7 @@ body,
                 <div class="sequence-platform-grid" id="seq-platform-grid">
                   <button class="sequence-platform-card active" type="button" data-platform="YouTube" onclick="selectSequencePlatform('YouTube', this)"><i data-lucide="play-circle" style="width:18px;height:18px"></i><span>YouTube</span></button>
                   <button class="sequence-platform-card" type="button" data-platform="LinkedIn" onclick="selectSequencePlatform('LinkedIn', this)"><i data-lucide="briefcase-business" style="width:18px;height:18px"></i><span>LinkedIn</span></button>
-                  <button class="sequence-platform-card" type="button" data-platform="Instagram" onclick="selectSequencePlatform('Instagram', this)"><span style="display:flex;flex-direction:column;align-items:center;line-height:1.05"><span style="font-size:15px">🅾</span><span>Instagram</span></span></button>
+                  <button class="sequence-platform-card" type="button" data-platform="Instagram" onclick="selectSequencePlatform('Instagram', this)"><i data-lucide="instagram" style="width:18px;height:18px"></i><span>Instagram</span></button>
                   <button class="sequence-platform-card" type="button" data-platform="Shopify" onclick="selectSequencePlatform('Shopify', this)"><i data-lucide="shopping-bag" style="width:18px;height:18px"></i><span>Shopify</span></button>
                   <button class="sequence-platform-card" type="button" data-platform="Website" onclick="selectSequencePlatform('Website', this)"><i data-lucide="globe" style="width:18px;height:18px"></i><span>Website</span></button>
                   <button class="sequence-platform-card" type="button" data-platform="Google Maps" onclick="selectSequencePlatform('Google Maps', this)"><i data-lucide="map-pinned" style="width:18px;height:18px"></i><span>Maps</span></button>
@@ -8619,8 +8676,8 @@ body,
 
     <!-- MODE TABS -->
     <div class="opp-mode-tabs">
-      <button class="opp-mode-tab active" id="tab-quick" onclick="switchOppMode('quick')"><i data-lucide="target" style="width:14px;height:14px"></i> Quick Find</button>
-      <button class="opp-mode-tab" id="tab-deep" onclick="switchOppMode('deep')"><i data-lucide="radar" style="width:14px;height:14px"></i> Advanced</button>
+      <button class="opp-mode-tab active" id="opp-tab-quick" onclick="switchOppMode('quick')"><i data-lucide="target" style="width:14px;height:14px"></i> Quick Find</button>
+      <button class="opp-mode-tab" id="opp-tab-deep" onclick="switchOppMode('deep')"><i data-lucide="radar" style="width:14px;height:14px"></i> Advanced</button>
     </div>
 
     <!-- ══ QUICK FIND PANEL ══ -->
@@ -8841,7 +8898,7 @@ body,
           </div>
           <div id="elite-filters-teaser" class="opp-deep-only" style="margin-top:14px;padding:14px 16px;border:1px dashed rgba(245,158,11,0.3);border-radius:12px;background:rgba(245,158,11,0.04);display:none;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;" onclick="showUpgradeModal()">
             <div>
-              <div style="font-size:12px;font-weight:700;color:#f59e0b;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px;">⚡ Elite Filters</div>
+              <div style="font-size:12px;font-weight:700;color:#f59e0b;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px;display:flex;align-items:center;gap:6px;"><i data-lucide="sliders-horizontal" style="width:13px;height:13px"></i>Elite Filters</div>
               <div style="font-size:12px;color:var(--text-muted);">Hot leads filter, budget qualifiers & advanced targeting — unlock on Elite</div>
             </div>
             <button style="background:#f59e0b;color:#000;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">Unlock Elite</button>
@@ -9371,7 +9428,7 @@ body,
           </div>
         </div>
         <button class="btn btn-primary btn-full" id="billing-upgrade-btn" style="height:40px;font-size:14px" onclick="closeModal('settings-modal');showUpgradeModal()">
-          ⚡ Upgrade to Pro — Unlimited Credits
+          <i data-lucide="zap" style="width:15px;height:15px"></i>Upgrade to Pro — Unlimited Credits
         </button>
         <div style="margin-top:14px;font-size:12px;color:var(--text3);text-align:center">Pro includes: Unlimited AI credits · PDF exports · Priority support</div>
       </div>
@@ -9444,8 +9501,8 @@ function setPlatformFilter(btn) {
 function switchOppMode(mode) {
   const quickPanel = el('opp-quick-panel');
   const deepPanel  = el('opp-deep-panel');
-  const tabQuick   = el('tab-quick');
-  const tabDeep    = el('tab-deep');
+  const tabQuick   = el('opp-tab-quick');
+  const tabDeep    = el('opp-tab-deep');
 
   if (mode === 'quick') {
     quickPanel.classList.remove('hidden');
@@ -9642,8 +9699,8 @@ let _activeSkill = null;
 function switchOppMode(mode) {
   const quickPanel = el('opp-quick-panel');
   const deepPanel  = el('opp-deep-panel');
-  const tabQuick   = el('tab-quick');
-  const tabDeep    = el('tab-deep');
+  const tabQuick   = el('opp-tab-quick');
+  const tabDeep    = el('opp-tab-deep');
   if (mode === 'deep' && !_planRules().deepScan) {
     showToast('Deep Scan is available on Pro plan and above.');
     showUpgradeModal();
@@ -10851,11 +10908,28 @@ const FIRST_FEATURE_ROUTES = {
   audit: 'audit',
   email: 'email',
   proposal: 'proposal',
-  invoice: 'invoice'
+  invoice: 'invoice',
+  crm: 'pipeline'
 };
 
 function isDashboardVisible() {
   return !!document.querySelector('#app-layout.show #page-home.page.active');
+}
+
+function showAppLayout() {
+  const layout = el('app-layout');
+  if (!layout) return;
+  layout.style.display = '';
+  layout.classList.add('show');
+  hide('loading-screen');
+}
+
+function ensureActivePage(preferredPage = currentPage || 'home') {
+  if (document.querySelector('.page.active')) return;
+  const page = _normalizePageRoute(preferredPage);
+  const fallback = el('page-' + page) ? page : 'home';
+  el('page-' + fallback)?.classList.add('active');
+  currentPage = fallback;
 }
 
 function isPlanRoute() {
@@ -10876,6 +10950,8 @@ function showFeaturePickerModal() {
   const modal = el('feature-picker-modal');
   if (!modal) { showPage('home'); return; }
   if (isPlanRoute()) history.replaceState(history.state || {}, '', '/');
+  showAppLayout();
+  ensureActivePage('home');
   modal.classList.add('show');
   document.body.style.overflow = 'hidden';
   renderBusinessDashboard();
@@ -10890,6 +10966,7 @@ function closeFeaturePickerModal() {
 function chooseFirstFeature(featureKey) {
   const route = FIRST_FEATURE_ROUTES[featureKey] || 'home';
   localStorage.setItem('lancify_first_feature', featureKey);
+  showAppLayout();
   closeFeaturePickerModal();
   renderBusinessDashboard();
   showPage(route);
@@ -10898,6 +10975,7 @@ function chooseFirstFeature(featureKey) {
 
 function skipFeaturePicker() {
   localStorage.setItem('lancify_first_feature', 'skipped');
+  showAppLayout();
   closeFeaturePickerModal();
   showPage('home');
   renderDashboardOnboardingJourney();
@@ -10935,11 +11013,12 @@ function renderDashboardOnboardingJourney() {
     target.innerHTML = `
       <section id="dashboard-onboarding-journey" class="ob-journey">
         <div class="ob-journey-celebration">
-          <span>🎉 You landed your first client workflow! Keep the momentum going.</span>
+          <span class="ob-journey-celebration-main"><i data-lucide="check-circle-2"></i>You landed your first client workflow. Keep the momentum going.</span>
           <button class="ob-journey-dismiss" type="button" onclick="dismissDashboardJourney()" aria-label="Dismiss onboarding journey">×</button>
         </div>
       </section>
     `;
+    lucide.createIcons();
     if (!_journeyCelebrateTimer) {
       _journeyCelebrateTimer = setTimeout(() => {
         localStorage.setItem('lancify_ob_journey_done', 'yes');
@@ -10960,7 +11039,13 @@ function renderDashboardOnboardingJourney() {
   target.innerHTML = `
     <section id="dashboard-onboarding-journey" class="ob-journey">
       <div class="ob-journey-head">
-        <div class="ob-journey-title">🚀 Your path to first client <span class="ob-journey-count">${completed} of ${steps.length} done</span></div>
+        <div class="ob-journey-title-wrap">
+          <span class="ob-journey-icon"><i data-lucide="route"></i></span>
+          <div>
+            <div class="ob-journey-kicker">Guided workflow</div>
+            <div class="ob-journey-title">Your path to first client <span class="ob-journey-count">${completed} of ${steps.length} done</span></div>
+          </div>
+        </div>
         <div class="ob-journey-actions">
           <div class="ob-journey-track" aria-hidden="true"><div class="ob-journey-fill" style="width:${progress}%"></div></div>
           <button class="ob-journey-dismiss" type="button" onclick="dismissDashboardJourney()" aria-label="Dismiss onboarding journey">×</button>
@@ -10968,7 +11053,7 @@ function renderDashboardOnboardingJourney() {
       </div>
       <div class="ob-journey-steps">
         ${steps.map(step => `
-          <div class="ob-journey-step ${step.done ? 'done' : ''}">
+          <div class="ob-journey-step ${step.done ? 'done' : ''} ${activeStep && activeStep.id === step.id ? 'active' : ''}">
             <div class="ob-journey-left">
               <span class="ob-journey-check">✓</span>
               <span class="ob-journey-num">STEP ${step.id}</span>
@@ -10983,6 +11068,7 @@ function renderDashboardOnboardingJourney() {
       </div>
     </section>
   `;
+  lucide.createIcons();
 }
 
 function dismissDashboardJourney() {
@@ -11493,7 +11579,7 @@ function _setPlanUi(){
   _updateDailyLimitUi();
   _syncPlanGatedUi();
   const eliteTeaser = el('elite-filters-teaser');
-  const isDeepMode = el('tab-deep')?.classList.contains('active');
+  const isDeepMode = el('opp-tab-deep')?.classList.contains('active');
   if (eliteTeaser) eliteTeaser.style.display = isDeepMode && planKey !== 'elite' ? 'flex' : 'none';
   const eliteFiltersPanel = el('elite-filters-panel');
   if (eliteFiltersPanel) eliteFiltersPanel.style.display = isDeepMode && planKey === 'elite' ? 'block' : 'none';
@@ -11761,10 +11847,10 @@ async function initApp() {
     renderSavedRoadmapPanel();
     setTimeout(() => initChecklistCollapse(), 500);
     setTimeout(() => _syncNavFolderHeights(), 100);
-    if (session?.user) onLogin(session.user);
+    if (session?.user) await onLogin(session.user);
     else showLogin();
     sb.auth.onAuthStateChange((_,s) => {
-      if(s?.user) onLogin(s.user);
+      if(s?.user) onLogin(s.user).catch(e => { console.error('Login route error:', e); showLogin(); });
       else { currentUser=null; showLogin(); }
     });
   } catch (e) {
@@ -11803,7 +11889,10 @@ function showLogin() {
   el('feature-picker-modal')?.classList.remove('show');
   closeUpgrade({ fromHistory: true, suppressPending: true });
   const al = el('app-layout');
-  if(al) al.style.display='none';
+  if(al) {
+    al.classList.remove('show');
+    al.style.display='none';
+  }
   if (el('auth-btn')) {
     el('auth-btn').disabled = false;
     el('auth-btn').textContent = 'Sign In';
@@ -11922,11 +12011,11 @@ function renderQuickGuideBanner(page) {
   if (localStorage.getItem('lancify_guide_mode') === 'off') return;
 
   const guides = {
-    opportunity: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
-    gig: "🎯 Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
-    audit: "⚡ Step 2: Enter your lead's website URL → Generate the audit → Copy the key finding to use in your pitch. Takes 2 minutes.",
-    email: "✉️ Step 3: Select 'Follow-up' email type → Enter your lead's name and context → Send or copy the email. This is what gets replies.",
-    roadmap: "📈 Step 4: Generate your Growth Map → reopen it daily → finish the checklist for that day."
+    opportunity: "Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
+    gig: "Step 1: Search for clients in your niche → Save the best match → Click Quick DM to send your first outreach. Come back when done.",
+    audit: "Step 2: Enter your lead's website URL → Generate the audit → Copy the key finding to use in your pitch. Takes 2 minutes.",
+    email: "Step 3: Select 'Follow-up' email type → Enter your lead's name and context → Send or copy the email. This is what gets replies.",
+    roadmap: "Step 4: Generate your Growth Map → reopen it daily → finish the checklist for that day."
   };
 
   if (!guides[page]) return;
@@ -11951,7 +12040,7 @@ function renderQuickGuideBanner(page) {
   const banner = document.createElement('div');
   banner.className = 'guide-banner';
   banner.innerHTML = `
-    <span>${guides[page]}</span>
+    <span style="display:flex;align-items:center;gap:8px;min-width:0"><i data-lucide="sparkles" style="width:15px;height:15px;flex-shrink:0"></i><span>${guides[page]}</span></span>
     <div class="guide-banner-close" onclick="dismissGuideBanner('${page}')">
       <i data-lucide="x" style="width:16px; height:16px;"></i>
     </div>
@@ -11967,7 +12056,7 @@ function dismissGuideBanner(page) {
 }
 
 function navigate(page) {
-  currentPage = page;
+  page = _normalizePageRoute(page);
   if (_isPageLocked(page)) {
     const targetPlan = page === 'sequence' ? 'Elite' : 'Pro';
     showToast(`This feature is available on ${targetPlan} plan.`);
@@ -11975,6 +12064,19 @@ function navigate(page) {
     return;
   }
 
+  let pageEl = el('page-' + page);
+  if (!pageEl) {
+    console.warn('Unknown page route, falling back to dashboard:', page);
+    page = 'home';
+    pageEl = el('page-home');
+  }
+  if (!pageEl) {
+    showAppLayout();
+    return;
+  }
+
+  currentPage = page;
+  showAppLayout();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const titles={
@@ -11991,8 +12093,8 @@ function navigate(page) {
     invoices:'Invoices',
     accounting:'Accounting & Analytics'
   };
-  const pageEl=el('page-'+page);
   if(pageEl){ pageEl.classList.add('active'); el('content-scroll')?.scrollTo(0,0); }
+  ensureActivePage(page);
   const navEl=document.querySelector(`[data-page="${page}"]`);
   if(navEl) navEl.classList.add('active');
   const parentFolder = navEl?.closest('.nav-folder');
@@ -12587,11 +12689,11 @@ function detectAuditPlatform(url) {
   const badge = el('audit-q-platform-badge');
   if (!url || url.length < 4) { badge.style.display='none'; return; }
   const platforms = [
-    ['instagram.com','📷 Instagram'],['facebook.com','👥 Facebook'],
-    ['linkedin.com','💼 LinkedIn'],['youtube.com','▶️ YouTube'],
-    ['youtu.be','▶️ YouTube'],['yelp.com','⭐ Yelp'],
-    ['tiktok.com','🎵 TikTok'],['twitter.com','🐦 Twitter'],
-    ['x.com','🐦 Twitter'],['google.com/maps','📍 Google Business']
+    ['instagram.com','Instagram'],['facebook.com','Facebook'],
+    ['linkedin.com','LinkedIn'],['youtube.com','YouTube'],
+    ['youtu.be','YouTube'],['yelp.com','Yelp'],
+    ['tiktok.com','TikTok'],['twitter.com','Twitter'],
+    ['x.com','Twitter'],['google.com/maps','Google Business']
   ];
   for (const [host, label] of platforms) {
     if (url.includes(host)) {
@@ -12600,7 +12702,7 @@ function detectAuditPlatform(url) {
       return;
     }
   }
-  badge.textContent = '🌐 Website';
+  badge.textContent = 'Website';
   badge.style.display = 'inline';
 }
 
@@ -13403,8 +13505,8 @@ async function generateRoadmap(){
                 <strong>${d.title||''}</strong>${d.title?': ':''}${d.task||''}
               </div>
               ${d.why ? `<div style="font-size:12px;color:var(--text3);margin-top:4px">${d.why}</div>` : ''}
-              ${d.lancifyTip ? `<div style="font-size:12px;color:#6366f1;margin-top:4px">💡 ${d.lancifyTip}</div>` : ''}
-              ${d.timeEstimate ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">⏱ ${d.timeEstimate}</div>` : ''}
+              ${d.lancifyTip ? `<div style="font-size:12px;color:#6366f1;margin-top:4px">Lancify: ${d.lancifyTip}</div>` : ''}
+              ${d.timeEstimate ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">Time: ${d.timeEstimate}</div>` : ''}
             </div>`).join('')}
         </div>
       </div>`).join('');
@@ -16762,9 +16864,9 @@ function renderEmailResultMarkup(result = {}) {
     <div style="${card};background:var(--bg3)">
       <span style="${label}">Email Body</span>
       <div style="${bodyText}">${escapeHtml(result.body || '')}</div>
-      <button style="${copyBtn}" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.body || '')}','Email copied.')">📋 Copy Email</button>
+      <button style="${copyBtn}" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.body || '')}','Email copied.')">Copy Email</button>
     </div>
-    ${result.tips?.length > 0 ? `<div style="${card};background:var(--bg3)"><span style="${label}">💡 Why This Works</span><div>${result.tips.map(t=>`<div style="${tipItem}"><span style="${dot}"></span><span>${escapeHtml(t)}</span></div>`).join('')}</div></div>` : ''}
+    ${result.tips?.length > 0 ? `<div style="${card};background:var(--bg3)"><span style="${label}">Why This Works</span><div>${result.tips.map(t=>`<div style="${tipItem}"><span style="${dot}"></span><span>${escapeHtml(t)}</span></div>`).join('')}</div></div>` : ''}
   </div>`;
 }
 function renderProposalResultMarkup(result = {}) {
@@ -16783,10 +16885,10 @@ function renderProposalResultMarkup(result = {}) {
     <div style="${card};background:var(--bg3)">
       <span style="${label}">Proposal</span>
       <div style="${bodyText}">${escapeHtml(result.proposal || '')}</div>
-      <button style="${copyBtn}" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.proposal || '')}','Proposal copied.')">📋 Copy Proposal</button>
+      <button style="${copyBtn}" onclick="copyDirectText('Subject: ${escapeJsAttr(result.subject || '')}\\n\\n${escapeJsAttr(result.proposal || '')}','Proposal copied.')">Copy Proposal</button>
     </div>
-    ${result.tips?.length > 0 ? `<div style="${card};background:var(--bg3)"><span style="${label}">💡 Why This Works</span><div>${result.tips.map(t=>`<div style="${tipItem}"><span style="${dot}"></span><span>${escapeHtml(t)}</span></div>`).join('')}</div></div>` : ''}
-    ${result.redFlag ? `<div style="${card};background:#1a0e00;border-color:#92400e"><span style="${label};color:#f59e0b">⚠️ Red Flag</span><div style="font-size:13px;line-height:1.65;color:#fbbf24">${escapeHtml(result.redFlag)}</div></div>` : ''}
+    ${result.tips?.length > 0 ? `<div style="${card};background:var(--bg3)"><span style="${label}">Why This Works</span><div>${result.tips.map(t=>`<div style="${tipItem}"><span style="${dot}"></span><span>${escapeHtml(t)}</span></div>`).join('')}</div></div>` : ''}
+    ${result.redFlag ? `<div style="${card};background:#1a0e00;border-color:#92400e"><span style="${label};color:#f59e0b">Red Flag</span><div style="font-size:13px;line-height:1.65;color:#fbbf24">${escapeHtml(result.redFlag)}</div></div>` : ''}
   </div>`;
 }
 function renderGigCardMarkup(niche){
@@ -17170,31 +17272,6 @@ function setGuideMode(mode) {
 function applyGuideMode(mode) {
   if (!mode) mode = localStorage.getItem('lancify_guide_mode') || 'on';
 
-  const guideElements = [];
-
-  document.querySelectorAll('.guide-banner').forEach(b => {
-    b.style.display = mode === 'off' ? 'none' : '';
-  });
-}
-
-function showGuidePrefScreen() {
-  const screen = el('guide-pref-screen');
-  if (screen) screen.style.display = 'flex';
-}
-
-function setGuideMode(mode) {
-  localStorage.setItem('lancify_guide_mode', mode);
-  const screen = el('guide-pref-screen');
-  if (screen) screen.style.display = 'none';
-  applyGuideMode(mode);
-  navigate('home');
-}
-
-function applyGuideMode(mode) {
-  if (!mode) mode = localStorage.getItem('lancify_guide_mode') || 'on';
-
-  const guideElements = [];
-
   document.querySelectorAll('.guide-banner').forEach(b => {
     b.style.display = mode === 'off' ? 'none' : '';
   });
@@ -17215,14 +17292,10 @@ function closeUpgrade(options = {}){
       _showOnboarding();
     } else if (_pendingPostPlanAction === 'dashboard_entrance') {
       _pendingPostPlanAction = null;
-      // Change 1: Intercept dashboard entrance for guide pref screen
-      if (!localStorage.getItem('lancify_guide_mode')) {
-        showGuidePrefScreen();
-      } else {
-        el('app-layout').classList.add('show');
-        applyGuideMode(localStorage.getItem('lancify_guide_mode'));
-        requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
-      }
+      showAppLayout();
+      navigate('home');
+      applyGuideMode(localStorage.getItem('lancify_guide_mode') || 'on');
+      requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
     }
   }
 }function closeModal(id){
@@ -17323,9 +17396,9 @@ function setupOnboardingFlow() {
   if (!step1.querySelector('.ob-welcome-pills')) {
     step1.querySelector('.ob-subtitle')?.insertAdjacentHTML('afterend', `
       <div class="ob-welcome-pills" aria-hidden="true">
-        <span class="ob-welcome-pill">🎯 Find Clients</span>
-        <span class="ob-welcome-pill">💰 Get Paid</span>
-        <span class="ob-welcome-pill">📈 Grow</span>
+        <span class="ob-welcome-pill"><i data-lucide="target"></i>Find Clients</span>
+        <span class="ob-welcome-pill"><i data-lucide="credit-card"></i>Get Paid</span>
+        <span class="ob-welcome-pill"><i data-lucide="line-chart"></i>Grow</span>
       </div>
     `);
   }
@@ -17463,8 +17536,6 @@ async function onLogin(user) {
   currentUser = user;
   el('login-screen').classList.remove('show');
   el('login-screen').style.display = 'none';
-  // Safety net: always hide loading screen when login completes
-  hide('loading-screen');
 
   // Update guide indicator
   const indicator = el('guide-mode-indicator');
@@ -17502,7 +17573,7 @@ async function onLogin(user) {
   
   lucide.createIcons();
 
-  _decideRoute(user.id);
+  await _decideRoute(user.id);
 }
 
 window.addEventListener('focus', () => {
@@ -17620,7 +17691,8 @@ async function _decideRoute(uid) {
       await loadBillingState(uid);
       verifyPaymentSetup();
     }
-    el('app-layout').classList.add('show');
+    showAppLayout();
+    ensureActivePage('home');
     requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
     setTimeout(initDashboardCharts, 50);
     setTimeout(maybeShowCurrencyOnboarding, 900);
@@ -17641,6 +17713,7 @@ function _showOnboarding() {
   el('signup-onboarding-modal')?.classList.remove('show');
   el('feature-picker-modal')?.classList.remove('show');
   el('onboarding-screen').classList.add('show');
+  lucide.createIcons();
 }
 
 function _obRenderStep() {
@@ -17768,7 +17841,7 @@ async function _obFinish() {
 function _runQuoteScreen(goal, firstName) {
   const qs = el('ob-quote-screen');
   if (!qs) {
-    el('app-layout').classList.add('show');
+    showAppLayout();
     requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
     setTimeout(initDashboardCharts, 50);
     renderBusinessDashboard();
@@ -17823,7 +17896,7 @@ function _runQuoteScreen(goal, firstName) {
           qs.style.opacity = '';
           qs.style.transition = '';
 
-          el('app-layout').classList.add('show');
+          showAppLayout();
           requestAnimationFrame(() => requestAnimationFrame(_syncNavFolderHeights));
           setTimeout(initDashboardCharts, 50);
           el('loading-screen').style.display = 'none';
@@ -18048,6 +18121,5 @@ async function checkCredits(cost, callback, triggerEl = null) {
 initApp();
 </script>
        <script src="gethelp.js"></script>
-       <div id="toast"></div>
 </body>
 </html>
