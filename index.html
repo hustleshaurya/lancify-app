@@ -17596,56 +17596,59 @@ function toggleGuideModeSetting() {
   showToast(`Step-by-step guide turned ${next.toUpperCase()}`);
 }
 
-/* ─── PLAN REALTIME ─── */
-// Holds the active Supabase realtime channel so we can clean it up on logout
+/* ─── PLAN REALTIME + POLLING ─── */
 let _planRealtimeChannel = null;
+let _planPollInterval    = null;
+let _planPollLastPlan    = null;
 
-/**
- * Subscribe to live profile changes for this user.
- * When Whop webhook updates is_pro / is_elite / credits_* the UI
- * refreshes instantly without a page reload.
- */
-function _subscribePlanUpdates(uid) {
-  // Tear down any previous subscription first
-  if (_planRealtimeChannel) {
-    sb.removeChannel(_planRealtimeChannel);
-    _planRealtimeChannel = null;
+async function _onPlanDataReceived(freshData, uid) {
+  const prevPlan = _currentPlanKey();
+  if (typeof freshData.is_pro   === 'boolean') userProfile.is_pro   = freshData.is_pro;
+  if (typeof freshData.is_elite === 'boolean') userProfile.is_elite = freshData.is_elite;
+  if (freshData.whop_plan_id !== undefined)    userProfile.whop_plan_id = freshData.whop_plan_id;
+  try { localStorage.removeItem(_billingLocalKey(uid)); } catch {}
+  await loadBillingState(uid);
+  _applyPlanLocks();
+  const newPlan = _currentPlanKey();
+  if (newPlan !== prevPlan && newPlan !== 'free') {
+    showToast('\uD83C\uDF89 ' + newPlan.charAt(0).toUpperCase() + newPlan.slice(1) + ' plan activated! Enjoy your new features.');
   }
+}
 
+function _subscribePlanUpdates(uid) {
+  if (_planRealtimeChannel) { sb.removeChannel(_planRealtimeChannel); _planRealtimeChannel = null; }
   _planRealtimeChannel = sb
     .channel('lancify-plan-' + uid)
-    .on(
-      'postgres_changes',
-      {
-        event:  'UPDATE',
-        schema: 'public',
-        table:  'profiles',
-        filter: `user_id=eq.${uid}`,
-      },
-      async (payload) => {
-        const fresh = payload.new;
-        if (!fresh) return;
-
-        // Always trust the DB for plan flags — never let localStorage override
-        if (typeof fresh.is_pro   === 'boolean') userProfile.is_pro   = fresh.is_pro;
-        if (typeof fresh.is_elite === 'boolean') userProfile.is_elite = fresh.is_elite;
-        if (fresh.whop_plan_id !== undefined)    userProfile.whop_plan_id = fresh.whop_plan_id;
-
-        // Wipe stale local billing cache so loadBillingState reads DB values
-        try { localStorage.removeItem(_billingLocalKey(uid)); } catch {}
-
-        // Reload billing from DB with the updated plan
-        await loadBillingState(uid);
-        _applyPlanLocks();
-
-        // Show a friendly toast so the user knows their plan is now active
-        const planKey = _currentPlanKey();
-        if (planKey !== 'free') {
-          showToast(`🎉 ${planKey.charAt(0).toUpperCase() + planKey.slice(1)} plan activated! Enjoy your new features.`);
-        }
-      }
+    .on('postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'profiles', filter: 'user_id=eq.' + uid },
+      async (payload) => { if (payload.new) await _onPlanDataReceived(payload.new, uid); }
     )
     .subscribe();
+}
+
+function _startPlanPolling(uid) {
+  _stopPlanPolling();
+  _planPollLastPlan = _currentPlanKey();
+  _planPollInterval = setInterval(async () => {
+    if (!currentUser || currentUser.id !== uid) { _stopPlanPolling(); return; }
+    try {
+      const { data, error } = await sb
+        .from('profiles')
+        .select('is_pro,is_elite,whop_plan_id,credits_total,credits_remaining')
+        .eq('user_id', uid)
+        .single();
+      if (error || !data) return;
+      const dbPlan = data.is_elite ? 'elite' : data.is_pro ? 'pro' : 'free';
+      if (dbPlan !== _planPollLastPlan) {
+        _planPollLastPlan = dbPlan;
+        await _onPlanDataReceived(data, uid);
+      }
+    } catch {}
+  }, 5000);
+}
+
+function _stopPlanPolling() {
+  if (_planPollInterval) { clearInterval(_planPollInterval); _planPollInterval = null; }
 }
 
 async function onLogin(user) {
@@ -17666,8 +17669,10 @@ async function onLogin(user) {
 
   if (el('ob-name')) el('ob-name').value = firstName !== 'User' ? fullName : '';
 
-  // Start listening for plan changes from Whop webhook BEFORE loading billing
+  // Start listening for plan changes — realtime fires instantly if enabled,
+  // polling catches it within 5s regardless (no Supabase config needed)
   _subscribePlanUpdates(user.id);
+  _startPlanPolling(user.id);
 
   await loadBillingState(user.id);
   await loadCurrencyPreference(user.id);
