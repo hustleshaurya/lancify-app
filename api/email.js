@@ -177,14 +177,26 @@ OUTPUT — strict JSON only, no markdown, no backticks:
             role: "user",
             content: `Write the ${emailType} email now. Context: """${context}""". Tone: ${tone}. Niche: ${niche}.
 
-BEFORE WRITING: identify the 3 most specific details from the context (name, number, specific observation). Every one of them must appear in the email.
+STEP 1 — Extract these from the context and write them down before writing the email:
+- Client name: (find it)
+- Channel/business name: (find it)
+- One specific number: (find it)
+- One specific detail only YOU would notice (video title, product, problem observed): (find it)
+- Service + price: (find it)
 
-SENTENCE LENGTH RULES — NON-NEGOTIABLE:
-- Sentence 1: ONE specific fact from the context. Max 12 words. Never combine two observations.
-- Sentence 2: What they are losing or missing. Tie to money or opportunity. Max 12 words.
-- Sentence 3: Your offer + one concrete result or proof point. Never say "has been shown to." Say what happened.
-- Sentence 4: The close. One yes/no question. Max 8 words.
-If any sentence exceeds 15 words, cut it in half. Short sentences hit harder than long ones.`
+STEP 2 — Write the email. Every item from Step 1 must appear somewhere in the 4 sentences.
+
+SENTENCE RULES:
+- Sentence 1: State one sharp observation using the channel name AND the specific number. 10-14 words max.
+- Sentence 2: Name the specific detail you noticed (e.g. the video title or the exact problem). Connect it to why they are losing. 10-14 words.
+- Sentence 3: Your offer + one believable result (no invented percentages — use relative language like "similar channels", "in the first month"). 12-16 words.
+- Sentence 4: Soft close. One specific yes/no question. 6-9 words. Must reference something concrete, not just "interested?"
+
+QUALITY CHECK before outputting:
+- Does sentence 1 use the channel name? If no — rewrite.
+- Does the email reference the specific video title or exact problem observed? If no — rewrite.
+- Does sentence 3 avoid fake statistics like "300%" or "proven to"? If no — rewrite.
+- Is the closing question answerable in 5 words or less? If no — rewrite.`
           }
         ],
         temperature: 0.72,
