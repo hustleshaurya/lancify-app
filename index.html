@@ -12976,6 +12976,417 @@ function updateScreenshotText(input) {
 
 async function downloadAuditPDF() {
   if (!savedAuditData) return showToast('Generate an audit first!');
+  showToast('Preparing clean PDF...');
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const d = savedAuditData || {};
+    const isQuick = auditCurrentMode === 'quick';
+    const rawPrice = isQuick ? (val('audit-q-price') || '300') : (val('audit-price') || '300');
+    const targetName = cleanAuditPdfText(d.client_name || val('audit-target') || val('audit-q-url') || 'Client');
+    const platformName = cleanAuditPdfText(d.platform || val('audit-platform') || 'Platform');
+    const timeline = cleanAuditPdfText(isQuick ? '5-7 Business Days' : (val('audit-timeline') || '1 week'));
+    const priceVal = String(rawPrice).trim().startsWith('$') ? String(rawPrice).trim() : '$' + (String(rawPrice).trim() || '300');
+    const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    const C = {
+      bg: [10, 10, 10],
+      panel: [17, 17, 17],
+      panel2: [22, 22, 22],
+      border: [36, 36, 36],
+      orange: [232, 80, 10],
+      text: [235, 235, 235],
+      muted: [150, 150, 150],
+      faint: [92, 92, 92],
+      success: [34, 197, 94],
+      danger: [239, 68, 68],
+      critical: [220, 38, 38],
+      quick: [22, 163, 74],
+      low: [107, 114, 128],
+      track: [42, 42, 42],
+      redPanel: [36, 18, 18],
+      greenPanel: [16, 34, 22],
+      orangePanel: [38, 24, 14]
+    };
+
+    const pageW = 210;
+    const pageH = 297;
+    const margin = 16;
+    const contentW = pageW - margin * 2;
+    const bottomY = 268;
+    let y = 24;
+
+    function cleanAuditPdfText(value, fallback = '') {
+      const text = value === undefined || value === null || value === '' ? fallback : value;
+      return String(text)
+        .replace(/(?:!'){2}!/g, 'High')
+        .replace(/\u2191\u2191\u2191/g, '')
+        .replace(/\u2191\u2191/g, '')
+        .replace(/\u2191/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+    function setFont(size, style = 'normal', color = C.text) {
+      doc.setFont('helvetica', style);
+      doc.setFontSize(size);
+      doc.setTextColor(...color);
+    }
+    function split(text, width, maxLines = 999) {
+      const lines = doc.splitTextToSize(cleanAuditPdfText(text), width);
+      if (lines.length <= maxLines) return lines;
+      const clipped = lines.slice(0, maxLines);
+      clipped[clipped.length - 1] = clipped[clipped.length - 1].replace(/\.*$/, '') + '...';
+      return clipped;
+    }
+    function lineH(size) {
+      return size * 0.5;
+    }
+    function paintPage() {
+      doc.setFillColor(...C.bg);
+      doc.rect(0, 0, pageW, pageH, 'F');
+      doc.setFillColor(...C.orange);
+      doc.rect(0, 0, pageW, 3, 'F');
+      setFont(7.4, 'bold', C.orange);
+      doc.text('LANCIFY AI', margin, 12);
+      setFont(7.4, 'normal', C.faint);
+      doc.text(cleanAuditPdfText(targetName) + ' / Confidential', pageW - margin, 12, { align: 'right' });
+      doc.setDrawColor(...C.border);
+      doc.line(margin, 16, pageW - margin, 16);
+    }
+    function addPage() {
+      doc.addPage();
+      paintPage();
+      y = 26;
+    }
+    function ensure(needed) {
+      if (y + needed > bottomY) addPage();
+    }
+    function panel(x, py, w, h, fill = C.panel, accent = false) {
+      doc.setFillColor(...fill);
+      doc.roundedRect(x, py, w, h, 2, 2, 'F');
+      doc.setDrawColor(...C.border);
+      doc.roundedRect(x, py, w, h, 2, 2, 'D');
+      if (accent) {
+        doc.setFillColor(...C.orange);
+        doc.rect(x, py, 3, h, 'F');
+      }
+    }
+    function badge(label, x, by, fill, w) {
+      const text = cleanAuditPdfText(label).toUpperCase();
+      const bw = w || Math.max(20, text.length * 2 + 8);
+      doc.setFillColor(...fill);
+      doc.roundedRect(x, by, bw, 7, 2, 2, 'F');
+      setFont(6.2, 'bold', [255, 255, 255]);
+      doc.text(text, x + bw / 2, by + 5, { align: 'center' });
+      return bw;
+    }
+    function section(num, title) {
+      ensure(23);
+      panel(margin, y, contentW, 16, C.panel, true);
+      doc.setFillColor(...C.orange);
+      doc.circle(margin + 13, y + 8, 5, 'F');
+      setFont(7, 'bold', [255, 255, 255]);
+      doc.text(String(num).padStart(2, '0'), margin + 13, y + 10, { align: 'center' });
+      setFont(8.5, 'bold', C.orange);
+      doc.text(String(num).padStart(2, '0') + ' ' + cleanAuditPdfText(title).toUpperCase(), margin + 26, y + 10);
+      y += 24;
+    }
+    function textCard(kicker, body, opts = {}) {
+      const fill = opts.fill || C.panel;
+      const bodySize = opts.bodySize || 9.1;
+      const maxLines = opts.maxLines || 7;
+      const lines = split(body, contentW - 18, maxLines);
+      const h = Math.max(opts.minH || 30, 21 + lines.length * lineH(bodySize) + 7);
+      ensure(h + 8);
+      panel(margin, y, contentW, h, fill, opts.accent !== false);
+      setFont(7.1, 'bold', opts.kickerColor || C.orange);
+      doc.text(cleanAuditPdfText(kicker).toUpperCase(), margin + 8, y + 10);
+      setFont(bodySize, 'normal', opts.bodyColor || C.text);
+      doc.text(lines, margin + 8, y + 18);
+      y += h + 8;
+    }
+    function scoreColor(score) {
+      if (score <= 4) return C.danger;
+      if (score <= 6) return C.orange;
+      return C.success;
+    }
+    function impactLabel(value) {
+      const s = cleanAuditPdfText(value).toLowerCase();
+      if (s.includes('high')) return 'High';
+      if (s.includes('medium')) return 'Medium';
+      return 'Low';
+    }
+    function impactColor(value) {
+      const label = impactLabel(value);
+      if (label === 'High') return C.success;
+      if (label === 'Medium') return C.orange;
+      return C.low;
+    }
+    function priorityColor(priority) {
+      const p = cleanAuditPdfText(priority).toUpperCase();
+      if (p === 'CRITICAL') return C.critical;
+      if (p === 'HIGH') return C.orange;
+      if (p === 'QUICK WIN') return C.quick;
+      return C.low;
+    }
+    function scoreFromRows(rows) {
+      const totals = rows.reduce((acc, row) => {
+        acc.score += Number(row.score) || 0;
+        acc.max += Number(row.max) || 10;
+        return acc;
+      }, { score: 0, max: 0 });
+      return totals.max ? Math.round((totals.score / totals.max) * 100) : 52;
+    }
+    function gauge(score) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 360;
+      canvas.height = 360;
+      const ctx = canvas.getContext('2d');
+      const color = score >= 80 ? C.success : score >= 50 ? C.orange : C.danger;
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 30;
+      ctx.strokeStyle = 'rgb(42,42,42)';
+      ctx.beginPath();
+      ctx.arc(180, 180, 124, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = 'rgb(' + color.join(',') + ')';
+      ctx.beginPath();
+      ctx.arc(180, 180, 124, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * score / 100);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.font = '700 78px Inter, Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(score), 180, 169);
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.font = '500 24px Inter, Arial, sans-serif';
+      ctx.fillText('/100', 180, 224);
+      return canvas.toDataURL('image/png');
+    }
+
+    const scoreRows = Array.isArray(d.sec4_scores) && d.sec4_scores.length ? d.sec4_scores : [
+      { label: 'Profile Completeness', score: 5, max: 10 },
+      { label: 'Trust Signals', score: 4, max: 10 },
+      { label: 'Clarity of Services', score: 4, max: 10 },
+      { label: 'Call-to-Action Strength', score: 4, max: 10 },
+      { label: 'Visual Quality', score: 6, max: 10 },
+      { label: 'Review/Social Proof', score: 4, max: 10 },
+      { label: 'Competitor Positioning', score: 5, max: 10 },
+      { label: 'Mobile Experience', score: 5, max: 10 }
+    ];
+    const issues = Array.isArray(d.sec5_issues) && d.sec5_issues.length ? d.sec5_issues : [
+      { priority: 'CRITICAL', title: 'Unclear Conversion Path', found: d.sec2_bottleneck || 'The main profile path does not make the next step obvious.', impact: 'Visitors hesitate before they can act.', fix: 'Rewrite the conversion path with one clear next action.', impact_score: 9, ease: 'Medium', roi: 'High' },
+      { priority: 'HIGH', title: 'Weak Trust Signal', found: 'Proof is not prominent enough for a first-time visitor.', impact: 'Prospects need extra confidence before replying.', fix: 'Move proof, reviews, or examples into the first visible section.', impact_score: 7, ease: 'Easy', roi: 'High' },
+      { priority: 'QUICK WIN', title: 'CTA Copy Upgrade', found: 'The call-to-action can be made more specific.', impact: 'Clearer copy can lift replies quickly.', fix: 'Replace the generic CTA with a benefit-led next step.', impact_score: 6, ease: 'Easy', roi: 'Medium' }
+    ];
+    const funnelRows = d.sec3_revenue_leak?.funnel_rows || [
+      { stage: 'Profile visitors per month', users: '~1,200', drop_rate: '-', lost: '-' },
+      { stage: 'Leave: unclear value proposition', users: '~1,200', drop_rate: '25%', lost: '~300' },
+      { stage: 'Leave: no trust signals', users: '~900', drop_rate: '15%', lost: '~135' },
+      { stage: 'Leave: no clear CTA', users: '~765', drop_rate: '10%', lost: '~77' },
+      { stage: 'Estimated conversions', users: '~40-60', drop_rate: '3-5%', lost: '~120 potential' }
+    ];
+    const rewrites = Array.isArray(d.sec8_rewrites) && d.sec8_rewrites.length ? d.sec8_rewrites : [
+      { before_title: 'Current Version', before: d.sec2_bottleneck || 'Current copy is not specific enough to move a visitor to action.', after_title: 'Suggested Rewrite', after: 'Clear offer, proof, and next step rewritten for faster replies.' }
+    ];
+    const actionPlan = Array.isArray(d.sec9_action_plan) && d.sec9_action_plan.length ? d.sec9_action_plan : [
+      { fix: 'Rewrite the profile description with services, proof, and CTA', difficulty: 'Medium', impact: 'High', priority: 'Do First' },
+      { fix: 'Add trust proof near the first conversion decision', difficulty: 'Easy', impact: 'High', priority: 'Do First' },
+      { fix: 'Create one offer-focused pinned post or hero block', difficulty: 'Easy', impact: 'Medium', priority: 'Week 1' },
+      { fix: 'Tighten visual hierarchy and repeated CTA language', difficulty: 'Easy', impact: 'Medium', priority: 'Week 2' }
+    ];
+    const healthScore = clamp(Math.round(Number(d.health_score) || scoreFromRows(scoreRows)), 0, 100);
+    const criticalCount = issues.filter(i => cleanAuditPdfText(i.priority).toUpperCase() === 'CRITICAL').length;
+    const highCount = issues.filter(i => cleanAuditPdfText(i.priority).toUpperCase() === 'HIGH').length;
+    const quickCount = issues.filter(i => cleanAuditPdfText(i.priority).toUpperCase() === 'QUICK WIN').length;
+
+    doc.setFillColor(...C.bg);
+    doc.rect(0, 0, pageW, pageH, 'F');
+    doc.setFillColor(...C.orange);
+    doc.rect(0, 0, pageW, 4, 'F');
+    if (auditLogoBase64) {
+      try { doc.addImage(auditLogoBase64, margin, 17, 34, 16, '', 'FAST'); } catch(e) {}
+    }
+    setFont(8, 'bold', C.orange);
+    doc.text('CONFIDENTIAL REPORT', margin, auditLogoBase64 ? 40 : 27);
+    setFont(8, 'normal', C.muted);
+    doc.text('Lancify AI \u00B7 lancifyai.com', margin, auditLogoBase64 ? 45 : 32);
+    setFont(29, 'bold', C.text);
+    doc.text('CONVERSION AUDIT', margin, 76);
+    setFont(29, 'bold', C.orange);
+    doc.text('DOSSIER', margin, 91);
+    setFont(10, 'normal', C.muted);
+    doc.text(platformName + ' Profile & Conversion Audit', margin, 102);
+    doc.setDrawColor(...C.orange);
+    doc.line(margin, 109, pageW - margin, 109);
+    setFont(8, 'bold', C.orange);
+    doc.text('PREPARED FOR', margin, 124);
+    setFont(18, 'bold', C.text);
+    doc.text(split(targetName, 94, 2), margin, 136);
+    setFont(9, 'normal', C.muted);
+    doc.text('Platform: ' + platformName, margin, 151);
+    doc.text('Audit date: ' + dateStr, margin, 158);
+    try {
+      doc.addImage(gauge(healthScore), 'PNG', 128, 91, 56, 56);
+    } catch(e) {
+      setFont(34, 'bold', healthScore >= 80 ? C.success : healthScore >= 50 ? C.orange : C.danger);
+      doc.text(String(healthScore), 156, 124, { align: 'center' });
+    }
+    setFont(8, 'bold', C.muted);
+    doc.text('HEALTH SCORE', 156, 154, { align: 'center' });
+    setFont(9, 'bold', C.orange);
+    doc.text('KEY FINDINGS AT A GLANCE', margin, 180);
+    [
+      { v: String(criticalCount), l: 'Critical Issues', c: C.critical },
+      { v: String(highCount), l: 'High Priority', c: C.orange },
+      { v: String(quickCount), l: 'Quick Wins', c: C.quick },
+      { v: timeline.replace('Business ', ''), l: 'Timeline', c: C.success }
+    ].forEach((stat, i) => {
+      const x = margin + i * 44.5;
+      panel(x, 187, 40, 34, C.panel2);
+      doc.setFillColor(...stat.c);
+      doc.circle(x + 8, 197, 3.6, 'F');
+      setFont(12, 'bold', C.text);
+      doc.text(split(stat.v, 27, 1), x + 20, 200, { align: 'center' });
+      setFont(6.7, 'normal', C.muted);
+      doc.text(split(stat.l, 30, 2), x + 20, 210, { align: 'center' });
+    });
+    setFont(8.2, 'normal', C.muted);
+    ['01 Executive Summary', '02 Performance Scores', '03 Revenue Funnel', '04 Issue Analysis', '05 Rewrites', '06 Action Plan', '07 Investment'].forEach((item, i) => {
+      doc.text(item, margin, 241 + i * 6);
+    });
+
+    addPage();
+    section(1, 'Executive Summary');
+    textCard('Assessment', d.sec1_assessment || 'The profile has visible activity and enough proof to convert better with a clearer offer path.', { maxLines: 7, bodySize: 9.5 });
+    textCard('Primary Bottleneck', d.sec2_bottleneck || 'The main conversion bottleneck is the lack of a specific next step for a qualified visitor.', { maxLines: 7, bodySize: 9.5 });
+    textCard('Recommended Next Move', d.sec5_pitch || ('Fix the highest-friction conversion points in ' + timeline + ' for ' + priceVal + '.'), { fill: C.orangePanel, maxLines: 5, bodySize: 9.2 });
+
+    addPage();
+    section(2, 'Performance Scores');
+    scoreRows.forEach(row => {
+      ensure(19);
+      const max = Number(row.max) || 10;
+      const score = clamp(Number(row.score) || 0, 0, max);
+      const pct = max ? score / max : 0;
+      const barColor = scoreColor(score);
+      setFont(8.4, 'normal', C.text);
+      doc.text(split(row.label || 'Score', 58, 1), margin, y + 5);
+      doc.setFillColor(...C.track);
+      doc.roundedRect(78, y, 76, 6, 2, 2, 'F');
+      doc.setFillColor(...barColor);
+      doc.roundedRect(78, y, 76 * pct, 6, 2, 2, 'F');
+      setFont(8, 'bold', barColor);
+      doc.text(score + ' / ' + max, pageW - margin, y + 5, { align: 'right' });
+      y += 18;
+    });
+    textCard('How To Read This', 'Anything below 7 / 10 should be treated as a conversion drag. Fix the lowest-scoring categories first, then polish the rest.', { fill: C.panel2, maxLines: 4, bodyColor: C.muted });
+
+    addPage();
+    section(3, 'Revenue Funnel');
+    textCard('Leak Summary', d.sec3_revenue_leak?.summary || 'The largest leak appears before a prospect has enough clarity and proof to take the next step.', { maxLines: 5, bodyColor: C.muted });
+    funnelRows.slice(0, 5).forEach((row, idx) => {
+      ensure(25);
+      panel(margin, y, contentW, 22, idx === 0 ? C.panel2 : C.panel, true);
+      setFont(8.6, 'bold', C.text);
+      doc.text(split(row.stage || 'Funnel stage', 96, 2), margin + 8, y + 8);
+      setFont(7.4, 'normal', C.muted);
+      doc.text('Users: ' + cleanAuditPdfText(row.users || '-'), margin + 8, y + 17);
+      const drop = cleanAuditPdfText(row.drop_rate || '-');
+      if (drop && drop !== '-' && drop !== '—' && drop !== 'â€”') badge(drop, pageW - margin - 54, y + 5, C.critical, 24);
+      doc.text('Lost: ' + cleanAuditPdfText(row.lost || '-'), pageW - margin - 8, y + 17, { align: 'right' });
+      y += 27;
+    });
+    textCard('Opportunity', d.sec3_revenue_leak?.opportunity || 'A modest lift in clarity, trust, and CTA strength can turn more current visitors into qualified replies.', { fill: C.orangePanel, maxLines: 4 });
+
+    issues.forEach((issue, idx) => {
+      addPage();
+      section(4, 'Issue ' + (idx + 1));
+      const p = cleanAuditPdfText(issue.priority || (idx === 0 ? 'CRITICAL' : 'HIGH')).toUpperCase();
+      panel(margin, y, contentW, 34, C.panel2, true);
+      badge(p, margin + 8, y + 8, priorityColor(p));
+      setFont(12, 'bold', C.text);
+      doc.text(split(issue.title || 'Priority Issue', 110, 2), margin + 50, y + 12);
+      setFont(7, 'normal', C.muted);
+      doc.text('Impact score: ' + cleanAuditPdfText(issue.impact_score || '7') + '/10', pageW - margin - 8, y + 13, { align: 'right' });
+      y += 44;
+      textCard('Found', issue.found || 'A visible friction point is slowing the conversion path.', { maxLines: 8, bodySize: 9, accent: false });
+      textCard('Business Impact', issue.impact || 'This creates hesitation before the prospect has enough confidence to reply.', { fill: C.redPanel, maxLines: 6, bodySize: 9, accent: false });
+      textCard('Fix', issue.fix || 'Replace the unclear section with a sharper offer, proof, and next step.', { fill: C.greenPanel, maxLines: 7, bodySize: 9, accent: false });
+    });
+
+    addPage();
+    section(5, 'Done-For-You Rewrites');
+    rewrites.slice(0, 2).forEach((rw, idx) => {
+      if (idx > 0) addPage();
+      textCard(rw.before_title || 'Current Version', rw.before || 'Current copy is not specific enough to move a visitor to action.', { fill: C.redPanel, maxLines: 9, bodySize: 8.8 });
+      doc.setFillColor(...C.orange);
+      doc.circle(pageW / 2, y - 4, 6, 'F');
+      setFont(6.4, 'bold', [255, 255, 255]);
+      doc.text('VS', pageW / 2, y - 1.5, { align: 'center' });
+      y += 3;
+      textCard(rw.after_title || 'Suggested Rewrite', rw.after || 'Clear offer, proof, and next step rewritten for faster replies.', { fill: C.greenPanel, maxLines: 10, bodySize: 8.8 });
+    });
+
+    addPage();
+    section(6, 'Action Plan');
+    actionPlan.forEach(row => {
+      const doFirst = cleanAuditPdfText(row.priority).toLowerCase().includes('do first');
+      const lines = split(row.fix || 'Conversion fix', 116, 4);
+      const h = Math.max(24, 16 + lines.length * lineH(8.8));
+      ensure(h + 7);
+      panel(margin, y, contentW, h, doFirst ? C.orangePanel : C.panel, doFirst);
+      badge(row.priority || 'Week 1', margin + 8, y + 7, doFirst ? C.orange : C.low, 28);
+      setFont(8.8, 'normal', C.text);
+      doc.text(lines, margin + 44, y + 12);
+      setFont(7.5, 'normal', C.muted);
+      doc.text(cleanAuditPdfText(row.difficulty || 'Easy'), pageW - margin - 44, y + 12);
+      badge(impactLabel(row.impact), pageW - margin - 30, y + 7, impactColor(row.impact), 22);
+      y += h + 7;
+    });
+
+    addPage();
+    section(7, 'Investment');
+    panel(margin, y, contentW, 58, C.panel2, true);
+    setFont(12, 'bold', C.text);
+    doc.text('IMPLEMENTATION INVESTMENT', margin + 8, y + 15);
+    setFont(8.8, 'normal', C.muted);
+    doc.text('Timeline: ' + timeline, margin + 8, y + 26);
+    doc.text('Revisions: 2 rounds included', margin + 8, y + 34);
+    setFont(8.8, 'bold', C.orange);
+    doc.text('One-time payment / No retainer / No hidden fees', margin + 8, y + 45);
+    setFont(24, 'bold', C.text);
+    doc.text(priceVal, pageW - margin - 8, y + 34, { align: 'right' });
+    y += 72;
+    textCard('Client-Ready Close', 'To move forward, reply with APPROVED and I will start with the Do First fixes. The goal is a cleaner conversion path that makes the next step obvious.', { fill: C.orangePanel, maxLines: 5, bodySize: 9.2 });
+
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFillColor(...C.bg);
+      doc.rect(0, 282, pageW, 15, 'F');
+      doc.setDrawColor(...C.border);
+      doc.line(margin, 282, pageW - margin, 282);
+      setFont(7.2, 'normal', C.muted);
+      doc.text('Lancify AI \u00B7 lancifyai.com', margin, 289);
+      doc.text('Confidential \u00B7 For Client Review Only', pageW / 2, 289, { align: 'center' });
+      doc.text('Page ' + i + ' of ' + totalPages, pageW - margin, 289, { align: 'right' });
+    }
+
+    const fileName = 'Lancify_Audit_' + targetName.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') + '_' + new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-') + '.pdf';
+    doc.save(fileName);
+    showToast('PDF downloaded!');
+  } catch(e) {
+    console.error(e);
+    showToast('PDF error. Try again.');
+  }
+}
+
+async function downloadAuditPDFDenseLegacy() {
+  if (!savedAuditData) return showToast('Generate an audit first!');
   showToast('Preparing Premium PDF...');
   try {
     const { jsPDF } = window.jspdf;
@@ -13012,6 +13423,7 @@ async function downloadAuditPDF() {
     const pageH = 297;
     const margin = 16;
     const contentW = pageW - margin * 2;
+    const bottomLimit = 268;
 
     function pdfText(value, fallback = '') {
       const text = value === undefined || value === null || value === '' ? fallback : value;
@@ -13047,7 +13459,7 @@ async function downloadAuditPDF() {
       setFont(size, style, color);
       const lines = splitLines(text, width, maxLines);
       doc.text(lines, x, y);
-      return y + lines.length * (size * 0.42) + 3;
+      return y + lines.length * (size * 0.48) + 4;
     }
     function pageBase() {
       doc.setFillColor(...C.bg);
@@ -13067,7 +13479,7 @@ async function downloadAuditPDF() {
       return 26;
     }
     function ensurePage(y, needed = 35) {
-      return y + needed > 274 ? newPage() : y;
+      return y + needed > bottomLimit ? newPage() : y;
     }
     function panel(x, y, w, h, fill = C.panel, accent = false) {
       doc.setFillColor(...fill);
@@ -13164,6 +13576,36 @@ async function downloadAuditPDF() {
         doc.setFillColor(...(i < value ? C.orange : C.track));
         doc.circle(x + i * 3.2, y, 1.1, 'F');
       }
+    }
+    function lineHeight(size) {
+      return size * 0.48;
+    }
+    function cardTextHeight(text, width, size, maxLines) {
+      return splitLines(text, width, maxLines).length * lineHeight(size);
+    }
+    function textCard(kicker, body, y, options = {}) {
+      const {
+        fill = C.panel,
+        accent = true,
+        bodyColor = C.text,
+        maxLines = 8,
+        bodySize = 9.2,
+        minH = 28
+      } = options;
+      const bodyW = contentW - 18;
+      const bodyLines = splitLines(body, bodyW, maxLines);
+      const h = Math.max(minH, 20 + bodyLines.length * lineHeight(bodySize) + 7);
+      y = ensurePage(y, h + 8);
+      panel(margin, y, contentW, h, fill, accent);
+      setFont(7.2, 'bold', C.orange);
+      doc.text(pdfText(kicker).toUpperCase(), margin + 8, y + 10);
+      setFont(bodySize, 'normal', bodyColor);
+      doc.text(bodyLines, margin + 8, y + 18);
+      return y + h + 8;
+    }
+    function startSection(num, title) {
+      let y = newPage();
+      return sectionHeader(num, title, y);
     }
 
     const scoreRows = Array.isArray(d.sec4_scores) && d.sec4_scores.length ? d.sec4_scores : [
