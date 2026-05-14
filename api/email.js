@@ -175,7 +175,16 @@ OUTPUT — strict JSON only, no markdown, no backticks:
           { role: "system", content: systemPrompt },
           {
             role: "user",
-            content: `Write the ${emailType} email now. Use every specific detail from the context. Context: """${context}""". Tone: ${tone}. Niche: ${niche}. Remember: if a name, number, or specific detail is in the context, it MUST be in the email. A generic email is a failed output.`
+            content: `Write the ${emailType} email now. Context: """${context}""". Tone: ${tone}. Niche: ${niche}.
+
+BEFORE WRITING: identify the 3 most specific details from the context (name, number, specific observation). Every one of them must appear in the email.
+
+SENTENCE LENGTH RULES — NON-NEGOTIABLE:
+- Sentence 1: ONE specific fact from the context. Max 12 words. Never combine two observations.
+- Sentence 2: What they are losing or missing. Tie to money or opportunity. Max 12 words.
+- Sentence 3: Your offer + one concrete result or proof point. Never say "has been shown to." Say what happened.
+- Sentence 4: The close. One yes/no question. Max 8 words.
+If any sentence exceeds 15 words, cut it in half. Short sentences hit harder than long ones.`
           }
         ],
         temperature: 0.72,
