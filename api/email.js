@@ -177,26 +177,43 @@ OUTPUT — strict JSON only, no markdown, no backticks:
             role: "user",
             content: `Write the ${emailType} email now. Context: """${context}""". Tone: ${tone}. Niche: ${niche}.
 
-STEP 1 — Extract these from the context and write them down before writing the email:
-- Client name: (find it)
+STEP 1 — Extract from the context:
 - Channel/business name: (find it)
-- One specific number: (find it)
-- One specific detail only YOU would notice (video title, product, problem observed): (find it)
+- Subscriber/follower count or key number: (find it)  
+- Specific video title or product or exact problem observed: (find it)
 - Service + price: (find it)
 
-STEP 2 — Write the email. Every item from Step 1 must appear somewhere in the 4 sentences.
+STEP 2 — Write EXACTLY 4 sentences using this formula:
 
-SENTENCE RULES:
-- Sentence 1: State one sharp observation using the channel name AND the specific number. 10-14 words max.
-- Sentence 2: Name the specific detail you noticed (e.g. the video title or the exact problem). Connect it to why they are losing. 10-14 words.
-- Sentence 3: Your offer + one believable result (no invented percentages — use relative language like "similar channels", "in the first month"). 12-16 words.
-- Sentence 4: Soft close. One specific yes/no question. 6-9 words. Must reference something concrete, not just "interested?"
+Sentence 1 — THE GAP (12-15 words):
+State the contrast between their size and their results using real numbers.
+Formula: "[Channel name] has [X] subscribers but [specific video/recent content] is pulling [Y] views."
+Example: "MarcusLifts has 8,400 subscribers but 'Why I stopped doing cardio' pulled 300 views."
+NEVER say "subs" — write "subscribers". NEVER skip the video title or specific detail.
 
-QUALITY CHECK before outputting:
-- Does sentence 1 use the channel name? If no — rewrite.
-- Does the email reference the specific video title or exact problem observed? If no — rewrite.
-- Does sentence 3 avoid fake statistics like "300%" or "proven to"? If no — rewrite.
-- Is the closing question answerable in 5 words or less? If no — rewrite.`
+Sentence 2 — THE ROOT CAUSE (10-13 words):
+Name the EXACT problem causing the gap. Be diagnostic, not preachy.
+Formula: "That gap is almost always [specific cause] — [one-line explanation of the mechanism]."
+Example: "That gap is almost always a CTR problem — plain text thumbnails with no face get scrolled past."
+NEVER say "lack engaging visuals" or "need better content" — be specific about the mechanism.
+
+Sentence 3 — THE PROOF (13-17 words):
+State a believable result from your work. Use relative language, not fake percentages.
+Formula: "I [did X] for [type of client] and [specific outcome] within [timeframe]."
+Example: "I redesigned thumbnails for two similar fitness channels and both saw views double within the first month."
+NEVER say "can boost" or "has been shown to" — say what actually happened with past clients.
+
+Sentence 4 — THE CLOSE (7-10 words):
+One soft yes/no question. Reference the specific thing you can do for them.
+Formula: "Want me to mock one up for [specific thing] for free?"
+Example: "Want me to mock one up for that video for free?"
+NEVER say "Is a free mockup useful?" or "Let me know if interested" — sound like a human.
+
+FINAL CHECK before outputting:
+- Does sentence 1 name the channel AND a specific video title or number? If no → rewrite sentence 1.
+- Does sentence 2 name the specific mechanism (not just "bad thumbnails")? If no → rewrite sentence 2.
+- Does sentence 3 use past tense ("I did X") not future tense ("I can do X")? If no → rewrite sentence 3.
+- Is the closing question under 10 words and answerable with yes/no? If no → rewrite sentence 4.`
           }
         ],
         temperature: 0.72,
