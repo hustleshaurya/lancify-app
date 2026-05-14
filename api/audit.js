@@ -197,6 +197,12 @@ ENGAGEMENT METRICS:
   function extractYouTubeIdentifier(url) {
     try {
       const u = url.startsWith('http') ? url : 'https://' + url;
+      // youtu.be/VIDEO_ID
+      const youtubeBeMatch = u.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+      if (youtubeBeMatch) return { type: 'video', value: youtubeBeMatch[1] };
+      // youtube.com/watch?v=VIDEO_ID
+      const watchMatch = u.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+      if (watchMatch) return { type: 'video', value: watchMatch[1] };
       const parsed = new URL(u);
       const path = parsed.pathname;
       // /channel/UCxxxxxx
@@ -214,25 +220,58 @@ ENGAGEMENT METRICS:
 
   // ── 5b. SCRAPE YOUTUBE CHANNEL VIA OFFICIAL DATA API v3 ───────────────────
   async function scrapeYouTubeChannel(identifier) {
-    if (!youtubeApiKey || !identifier) return null;
+    if (!youtubeApiKey) {
+      console.log('[Audit][YouTube] missing YouTube API key');
+      return null;
+    }
+    if (!identifier) {
+      console.log('[Audit][YouTube] missing identifier');
+      return null;
+    }
     try {
-      console.log('[YouTube] Fetching channel:', identifier.type, identifier.value);
+      console.log('[Audit][YouTube] identifier type:', identifier.type, 'value:', identifier.value);
 
       let channelId = null;
+      let specificVideo = null;
 
       if (identifier.type === 'id') {
         channelId = identifier.value;
+      } else if (identifier.type === 'video') {
+        const specificVideoRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics` +
+          `&id=${identifier.value}&key=${youtubeApiKey}`
+        );
+        console.log('[Audit][YouTube] specific video fetch status:', specificVideoRes.status);
+        if (!specificVideoRes.ok) {
+          console.log('[Audit][YouTube] video lookup failed for:', identifier.value);
+          return null;
+        }
+        const specificVideoData = await specificVideoRes.json();
+        specificVideo = specificVideoData?.items?.[0] || null;
+        channelId = specificVideo?.snippet?.channelId;
+        if (!channelId) {
+          console.log('[Audit][YouTube] video lookup returned no channelId for:', identifier.value);
+          return null;
+        }
       } else {
         // Resolve handle → channel ID via search
         const searchRes = await fetch(
           `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel` +
           `&q=${encodeURIComponent(identifier.value)}&maxResults=1&key=${youtubeApiKey}`
         );
-        if (!searchRes.ok) return null;
+        console.log('[Audit][YouTube] handle search status:', searchRes.status);
+        if (!searchRes.ok) {
+          console.log('[Audit][YouTube] handle search failed for:', identifier.value);
+          return null;
+        }
         const searchData = await searchRes.json();
         channelId = searchData?.items?.[0]?.id?.channelId;
-        if (!channelId) return null;
+        if (!channelId) {
+          console.log('[Audit][YouTube] handle search returned no channelId for:', identifier.value);
+          return null;
+        }
       }
+      console.log('[Audit][YouTube] resolved channelId:', channelId);
 
       // Fetch channel details
       const [channelRes, videosRes] = await Promise.all([
@@ -246,13 +285,22 @@ ENGAGEMENT METRICS:
         ),
       ]);
 
-      if (!channelRes.ok) return null;
+      console.log('[Audit][YouTube] channel fetch status:', channelRes.status);
+      console.log('[Audit][YouTube] recent videos fetch status:', videosRes.status);
+      if (!channelRes.ok) {
+        console.log('[Audit][YouTube] channel fetch failed for channelId:', channelId);
+        return null;
+      }
       const channelData = await channelRes.json();
       const channel = channelData?.items?.[0];
-      if (!channel) return null;
+      if (!channel) {
+        console.log('[Audit][YouTube] channel fetch returned no channel item for channelId:', channelId);
+        return null;
+      }
 
       const videosData = videosRes.ok ? await videosRes.json() : null;
       const recentVideoIds = (videosData?.items || []).map(v => v.id?.videoId).filter(Boolean);
+      console.log('[Audit][YouTube] recent video ID count:', recentVideoIds.length);
 
       // Fetch video stats
       let videoDetails = [];
@@ -261,15 +309,19 @@ ENGAGEMENT METRICS:
           `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics` +
           `&id=${recentVideoIds.join(',')}&key=${youtubeApiKey}`
         );
+        console.log('[Audit][YouTube] video stats fetch status:', statsRes.status);
         if (statsRes.ok) {
           const statsData = await statsRes.json();
           videoDetails = statsData?.items || [];
+        } else {
+          console.log('[Audit][YouTube] video stats fetch failed for channelId:', channelId);
         }
       }
+      console.log('[Audit][YouTube] videoDetails count:', videoDetails.length);
 
-      return { channel, videoDetails };
+      return { channel, videoDetails, specificVideo };
     } catch (e) {
-      console.log('[YouTube] API error:', e.message);
+      console.log('[Audit][YouTube] API error:', e.message);
       return null;
     }
   }
@@ -277,7 +329,8 @@ ENGAGEMENT METRICS:
   // ── 5c. FORMAT YOUTUBE DATA INTO AUDIT CONTEXT ────────────────────────────
   function formatYouTubeData(data) {
     if (!data?.channel) return null;
-    const { channel, videoDetails } = data;
+    const { channel, specificVideo } = data;
+    const videoDetails = data.videoDetails || [];
     const snippet = channel.snippet || {};
     const stats = channel.statistics || {};
     const branding = channel.brandingSettings?.channel || {};
@@ -303,16 +356,24 @@ ENGAGEMENT METRICS:
       : 0;
 
     const viewSubRatio = subs > 0 ? (recentAvgViews / subs).toFixed(3) : '0.000';
-    const hasBannerArt = !!(branding.bannerExternalUrl || snippet.thumbnails?.high);
+    const hasBannerArt = !!branding.bannerExternalUrl;
     const hasDescription = !!(snippet.description && snippet.description.length > 50);
     const descPreview = (snippet.description || 'No description').slice(0, 200);
     const keywords = (branding.keywords || 'None listed').slice(0, 150);
     const country = snippet.country || 'Not set';
     const customUrl = snippet.customUrl || 'No custom URL';
+    const specificVideoSection = specificVideo ? `
+SPECIFIC VIDEO SHARED BY USER:
+Title: ${specificVideo.snippet?.title || 'Unknown'}
+Views: ${parseInt(specificVideo.statistics?.viewCount || 0).toLocaleString()} | Likes: ${parseInt(specificVideo.statistics?.likeCount || 0).toLocaleString()} | Comments: ${parseInt(specificVideo.statistics?.commentCount || 0).toLocaleString()}
+Published: ${(specificVideo.snippet?.publishedAt || '').slice(0, 10) || 'Unknown'}
+Description preview: "${(specificVideo.snippet?.description || 'No description').slice(0, 200)}"
+` : '';
 
     return `
 REAL YOUTUBE CHANNEL DATA (fetched live via YouTube Data API v3):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${specificVideoSection}
 Channel Name: ${snippet.title || 'Unknown'}
 Handle / Custom URL: ${customUrl}
 Country: ${country}
@@ -323,7 +384,9 @@ Avg Views Per Video (all-time): ${avgViewsPerVideo.toLocaleString()}
 Avg Views Per Video (recent 6): ${recentAvgViews.toLocaleString()}
 View/Sub Ratio (recent): ${viewSubRatio} (benchmark: 0.1+ is strong, below 0.05 = low engagement)
 Has Banner Art: ${hasBannerArt ? 'Yes' : 'NO — missing channel art'}
+hasBannerArt = ${hasBannerArt}
 Has Description: ${hasDescription ? 'Yes' : 'NO — about section empty or very short'}
+Channel Description Length: ${(snippet.description || '').length} characters
 Channel Keywords: ${keywords}
 Channel Description Preview: "${descPreview}..."
 
@@ -341,6 +404,7 @@ ENGAGEMENT SIGNALS:
   let scrapedContent = '';
   const urlToScrape = mode === 'quick' ? clientUrl : websiteUrl;
   let instagramProfileData = null;
+  let scrapedClientName = null;
 
   if (detectedPlatform === 'Instagram' && mode === 'quick') {
     // Use Apify for Instagram — structured profile data
@@ -350,6 +414,7 @@ ENGAGEMENT SIGNALS:
       instagramProfileData = formatInstagramData(profile);
       if (instagramProfileData) {
         scrapedContent = instagramProfileData;
+        scrapedClientName = profile?.fullName || profile?.username || null;
       }
     }
   } else if (detectedPlatform === 'YouTube' && mode === 'quick') {
@@ -357,10 +422,16 @@ ENGAGEMENT SIGNALS:
     const ytIdentifier = extractYouTubeIdentifier(urlToScrape);
     if (ytIdentifier) {
       const ytData = await scrapeYouTubeChannel(ytIdentifier);
+      if (!ytData) {
+        console.log('[Audit][YouTube] Scrape failed - falling back to no-data mode for:', urlToScrape);
+      }
       const ytFormatted = formatYouTubeData(ytData);
       if (ytFormatted) {
         scrapedContent = ytFormatted;
+        scrapedClientName = ytData?.channel?.snippet?.title || null;
       }
+    } else {
+      console.log('[Audit][YouTube] Could not extract YouTube identifier from:', urlToScrape);
     }
   } else if (urlToScrape && urlToScrape.length > 5) {
     // Use Jina for all other platforms (websites, Yelp, LinkedIn, etc.)
@@ -371,7 +442,7 @@ ENGAGEMENT SIGNALS:
         scrapedContent = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim().substring(0, 6000);
       }
     } catch (e) {
-      console.log('Jina scrape failed, continuing with manual inputs.');
+      console.log('[Audit][Jina] scrape failed, continuing with manual inputs:', e.message);
     }
   }
 
@@ -443,7 +514,14 @@ ENGAGEMENT SIGNALS:
 - If view/sub ratio is below 0.05, flag thumbnail/title CTR as a critical issue.
 - If avg views are low vs subscribers, flag retention or algorithm issues.
 - If no banner art or empty description, flag it as a quick win.
-- Reference specific recent video titles and their performance in your findings.`
+- You MUST quote at least 2 specific video titles from the data above verbatim.
+- You MUST cite the exact subscriber count and recent avg view count in sec1_assessment.
+- You MUST reference the view/sub ratio with its exact value in sec2_bottleneck.
+- In sec8_rewrites, the "before" must be the ACTUAL channel description text from the data above, not a placeholder.
+- In the email_body, open with a specific observation about a real video title or their exact view/sub ratio.
+- If the channel has no banner art (hasBannerArt = false), this MUST appear as a CRITICAL issue in sec5_issues.
+- If the channel description is under 100 characters, flag it as a HIGH issue.
+- Health score must be calculated from sec4_scores average, not invented separately.`
       : `- Use actual engagement rate, follower count, bio text, and post patterns in your analysis.
 - If engagement rate is below 1%, flag it as critical. If no link in bio, that is a critical miss.
 - Reference specific caption text or post types from the real data.`;
@@ -507,7 +585,7 @@ TONE RULES — NON-NEGOTIABLE:
 
   // ── 9. BUILD SYSTEM PROMPT ────────────────────────────────────────────────
   const clientName = mode === 'quick'
-    ? (urlToScrape ? (() => {
+    ? (scrapedClientName || (urlToScrape ? (() => {
         try {
           const u = urlToScrape.startsWith('http') ? urlToScrape : 'https://' + urlToScrape;
           const host = new URL(u).hostname.replace('www.', '').split('.')[0];
@@ -516,7 +594,7 @@ TONE RULES — NON-NEGOTIABLE:
           }
           return host;
         } catch { return 'Client'; }
-      })() : 'Client')
+      })() : 'Client'))
     : (target || 'Client');
 
   const cleanPrice = String(price || 300).trim();
@@ -629,10 +707,10 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
     }
   ],
   "sec9_action_plan": [
-    { "fix": "<specific fix with exact deliverable>", "difficulty": "Easy|Medium|Hard", "impact": "↑↑↑ High|↑↑ Medium|↑ Low", "priority": "Do First|Week 1|Week 2" },
-    { "fix": "<fix 2>", "difficulty": "Easy", "impact": "↑↑↑ High", "priority": "Do First" },
-    { "fix": "<fix 3>", "difficulty": "Easy", "impact": "↑↑ Medium", "priority": "Week 1" },
-    { "fix": "<fix 4>", "difficulty": "Easy", "impact": "↑ Medium", "priority": "Week 2" }
+    { "fix": "<specific fix with exact deliverable>", "difficulty": "Easy|Medium|Hard", "impact": "High|Medium|Low", "priority": "Do First|Week 1|Week 2" },
+    { "fix": "<fix 2>", "difficulty": "Easy", "impact": "High", "priority": "Do First" },
+    { "fix": "<fix 3>", "difficulty": "Easy", "impact": "Medium", "priority": "Week 1" },
+    { "fix": "<fix 4>", "difficulty": "Easy", "impact": "Medium", "priority": "Week 2" }
   ],
   "sec5_pitch": "<2 sentences max. Write this as the close of a premium proposal: exact deliverables, expected outcome, ${pitchTimeline} timeline, and ${pitchPrice} price.>"
 }`;
@@ -660,6 +738,13 @@ Return ONLY a valid JSON object. No markdown, no backticks, no preamble. Use EXA
 
     const raw = data.choices[0].message.content;
     const parsed = JSON.parse(raw);
+    if (parsed.sec4_scores && parsed.sec4_scores.length > 0) {
+      const totalPoints = parsed.sec4_scores.reduce((sum, s) => sum + (Number(s.score) || 0), 0);
+      const maxPoints = parsed.sec4_scores.reduce((sum, s) => sum + (Number(s.max) || 10), 0);
+      if (maxPoints > 0) {
+        parsed.health_score = Math.round((totalPoints / maxPoints) * 100);
+      }
+    }
     res.status(200).json(parsed);
 
   } catch (error) {
