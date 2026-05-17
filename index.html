@@ -11716,6 +11716,8 @@ async function loadBillingState(uid){
   let usage = {};
   let dailyUsage = {};
   let dailyResetDate = _todayIso();
+  let hasDbBilling = false;
+  let dbRemaining = null;
 
   try {
     const localRaw = localStorage.getItem(_billingLocalKey(uid));
@@ -11743,6 +11745,7 @@ async function loadBillingState(uid){
       .eq('user_id', uid)
       .single();
     if (!error && data) {
+      hasDbBilling = true;
       if (typeof data.is_pro === 'boolean') userProfile.is_pro = data.is_pro;
       if (typeof data.is_elite === 'boolean') userProfile.is_elite = data.is_elite;
       // DB plan flags are the source of truth — if they changed, wipe the
@@ -11764,7 +11767,10 @@ async function loadBillingState(uid){
       } catch {}
       const planFromDb = _planRules();
       total = planFromDb.monthlyCredits;
-      if (Number.isFinite(Number(data.credits_remaining))) remaining = Number(data.credits_remaining);
+      if (Number.isFinite(Number(data.credits_remaining))) {
+        dbRemaining = Number(data.credits_remaining);
+        remaining = dbRemaining;
+      }
       if (data.credits_cycle_start) cycleStart = data.credits_cycle_start;
       if (data.billing_usage && typeof data.billing_usage === 'object') {
         if (data.billing_usage.monthlyUsage || data.billing_usage.dailyUsage) {
@@ -11789,6 +11795,13 @@ async function loadBillingState(uid){
   if (dailyResetDate !== today) {
     dailyUsage = {};
     dailyResetDate = today;
+  }
+  if (hasDbBilling) {
+    if (Number.isFinite(dbRemaining) && dbRemaining > 0) {
+      remaining = Math.min(total, dbRemaining);
+    } else {
+      remaining = total;
+    }
   }
   remaining = Math.max(0, Math.min(total, Number(remaining || 0)));
 
@@ -11942,6 +11955,8 @@ window.addEventListener('popstate', () => {
 });
 
 function showLogin() {
+  _routeDecided = false;
+  _onboardingActive = false;
   billingState = { total: 200, remaining: 200, cycleStart: null, usage: {}, dailyUsage: {}, dailyResetDate: _todayIso() };
   const ls = el('login-screen');
   authMode = 'signin';
@@ -12794,6 +12809,7 @@ function showAuditState(state) {
 
 let auditStepTimer = null;
 function startAuditLoadingSteps() {
+  stopAuditLoadingSteps();
   showAuditState('loading');
   const steps = ['lstep-0','lstep-1','lstep-2','lstep-3','lstep-4'];
   steps.forEach(id => {
@@ -12822,7 +12838,10 @@ function startAuditLoadingSteps() {
 }
 
 function stopAuditLoadingSteps() {
-  if (auditStepTimer) clearTimeout(auditStepTimer);
+  if (auditStepTimer) {
+    clearTimeout(auditStepTimer);
+    auditStepTimer = null;
+  }
   // Mark all done
   ['lstep-0','lstep-1','lstep-2','lstep-3','lstep-4'].forEach(id => {
     const e2 = el(id);
@@ -12831,8 +12850,8 @@ function stopAuditLoadingSteps() {
 }
 
 function renderAuditResult(data, targetName, platform, price) {
-  savedAuditData = data;
   stopAuditLoadingSteps();
+  savedAuditData = data;
 
   // Health score
   const score = data.health_score || 52;
@@ -12881,9 +12900,13 @@ async function generateAuditQuick() {
   setButtonLoading('audit-q-btn', true);
   startAuditLoadingSteps();
   let ok = false;
+  let completed = false;
+  let timeoutId = null;
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
+    timeoutId = setTimeout(() => {
+      if (!completed) controller.abort();
+    }, 90000); // 90s timeout
     const res = await fetch('/api/audit', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -12894,17 +12917,21 @@ async function generateAuditQuick() {
         target: new URL(url.startsWith('http')?url:'https://'+url).hostname.replace('www.','')
       })
     });
-    clearTimeout(timeoutId);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
+    completed = true;
     renderAuditResult(data, data.client_name || url, platform, price);
     ok = true;
   } catch(e) {
     const msg = e.name === 'AbortError' ? 'Audit is taking longer — please try again.' : 'Error generating audit. Try again.';
-    showToast(msg);
-    showAuditState('idle');
-    ok = false;
+    if (!completed) {
+      showToast(msg);
+      stopAuditLoadingSteps();
+      showAuditState('idle');
+      ok = false;
+    }
   }
+  if (timeoutId) clearTimeout(timeoutId);
   setButtonLoading('audit-q-btn', false);
   return ok;
 }
@@ -12918,9 +12945,13 @@ async function generateAuditAdvanced() {
   setButtonLoading('audit-btn', true);
   startAuditLoadingSteps();
   let ok = false;
+  let completed = false;
+  let timeoutId = null;
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
+    timeoutId = setTimeout(() => {
+      if (!completed) controller.abort();
+    }, 90000); // 90s timeout
     const res = await fetch('/api/audit', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -12939,17 +12970,21 @@ async function generateAuditAdvanced() {
         observation: val('audit-obs')
       })
     });
-    clearTimeout(timeoutId);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
+    completed = true;
     renderAuditResult(data, targetVal, val('audit-platform'), val('audit-price'));
     ok = true;
   } catch(e) {
     const msg = e.name === 'AbortError' ? 'Audit is taking longer — please try again.' : 'Error generating audit. Try again.';
-    showToast(msg);
-    showAuditState('idle');
-    ok = false;
+    if (!completed) {
+      showToast(msg);
+      stopAuditLoadingSteps();
+      showAuditState('idle');
+      ok = false;
+    }
   }
+  if (timeoutId) clearTimeout(timeoutId);
   setButtonLoading('audit-btn', false);
   return ok;
 }
@@ -18312,6 +18347,8 @@ document.addEventListener('click',e=>{
    ══════════════════════════════════════════════════════════ */
 
 let _obStep = 1;
+let _routeDecided = false;
+let _onboardingActive = false;
 const OB_TOTAL = 5;
 
 /* ── Quote bank — personalised per goal ── */
@@ -18539,6 +18576,7 @@ async function _onPlanDataReceived(freshData, uid) {
   try { localStorage.removeItem(_billingLocalKey(uid)); } catch {}
   await loadBillingState(uid);
   _applyPlanLocks();
+  _setPlanUi();
   const newPlan = _currentPlanKey();
   if (newPlan !== prevPlan && newPlan !== 'free') {
     showToast('\uD83C\uDF89 ' + newPlan.charAt(0).toUpperCase() + newPlan.slice(1) + ' plan activated! Enjoy your new features.');
@@ -18627,7 +18665,12 @@ async function onLogin(user) {
   
   lucide.createIcons();
 
-  await _decideRoute(user.id);
+  const alreadyOnDashboard = el('app-layout')?.classList.contains('show');
+  if (!alreadyOnDashboard) {
+    await _decideRoute(user.id);
+  } else {
+    await loadBillingState(user.id);
+  }
 }
 
 window.addEventListener('focus', async () => {
@@ -18725,6 +18768,8 @@ function _startAurora() {
    ROUTING — Instant load, no animations
    ────────────────────────────────────────────────────────── */
 async function _decideRoute(uid) {
+  if (_routeDecided) return;
+  _routeDecided = true;
   const localDone = localStorage.getItem('lancify-onboarded-' + uid) === 'yes';
   let isReturning  = false;
   let fullProfile  = null;
@@ -18768,6 +18813,8 @@ async function _decideRoute(uid) {
   }
 }
 function _showOnboarding() {
+  if (_onboardingActive) return;
+  _onboardingActive = true;
   setupOnboardingFlow();
   _obStep = 1;
   _obRenderStep();
@@ -18889,6 +18936,7 @@ async function _obFinish() {
     screen.classList.add('fade-out');
     setTimeout(() => {
       screen.classList.remove('show', 'fade-out');
+      _onboardingActive = false;
       _runQuoteScreen(pd.income_goal, firstName);
     }, 450);
 
