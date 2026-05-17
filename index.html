@@ -7742,7 +7742,7 @@ body,
     <div class="account-dropdown" id="account-dropdown">
       <div class="acct-credits">
         <div class="acct-credits-title">AI Credits</div>
-        <div class="acct-credits-row"><span>Total</span><strong id="acct-credits-total">1,000 credits</strong></div>
+        <div class="acct-credits-row"><span>Total</span><strong>1,000 credits</strong></div>
         <div class="acct-credits-row"><span>Remaining</span><strong id="acct-credits-remaining">850</strong></div>
       </div>
         <div class="acct-ws">
@@ -10912,10 +10912,10 @@ async function scanOpportunities() {
 const ONBOARDING_SEEN_KEY = 'onboarding_seen';
 const PLAN_PATH = '/plan';
 const WHOP_URLS = {
-  pro_monthly: 'https://sandbox.whop.com/checkout/plan_O1EMx1F4Lau1Y',
-  pro_annual: 'https://sandbox.whop.com/checkout/plan_TlSBBpbn0UIEB',
-  elite_monthly: 'https://sandbox.whop.com/checkout/plan_p3Vy1mBe3z1M5',
-  elite_annual: 'https://sandbox.whop.com/checkout/plan_095M7npYBXEkU',
+  pro_monthly: 'https://whop.com/checkout/plan_cj4vCCKo5geoT',
+  pro_annual: 'https://whop.com/checkout/plan_UdaqJ5DZN9319',
+  elite_monthly: 'https://whop.com/checkout/plan_HosvzQ0IHbBDU',
+  elite_annual: 'https://whop.com/checkout/plan_E25HEKJRO0V88',
 };
 let pricingBillingPeriod = 'monthly';
 let pricingModalRendered = false;
@@ -11569,7 +11569,6 @@ function _setPlanUi(){
   setText('credits-remaining', remaining.toLocaleString());
   setText('credits-total', total.toLocaleString());
   setText('acct-credits-remaining', remaining.toLocaleString());
-  setText('acct-credits-total', total.toLocaleString() + ' credits');
 
   const bar = el('credits-bar');
   if (bar) bar.style.width = `${pct}%`;
