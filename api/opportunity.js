@@ -1195,7 +1195,7 @@ async function searchYouTubeCreators({
   await Promise.all([
     ...chunk(videoIds, 50).map(async (ids) => {
       const url =
-        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics` +
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails` +
         `&id=${ids.join(',')}&maxResults=50&key=${YOUTUBE}`;
       try {
         const data = await fetchJson(url, {}, 10000);
@@ -1216,6 +1216,21 @@ async function searchYouTubeCreators({
       }
     }),
   ]);
+
+  // ── Shorts detection helpers ────────────────────────────────────────────────
+  function isShortVideo(video) {
+    // Shorts are <= 61 seconds. Duration in ISO 8601 e.g. PT58S, PT1M2S
+    const dur = String(video?.contentDetails?.duration || '');
+    const match = dur.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!match) return false;
+    const totalSecs = (Number(match[1]||0)*3600) + (Number(match[2]||0)*60) + Number(match[3]||0);
+    return totalSecs > 0 && totalSecs <= 61;
+  }
+
+  function titleLooksLikeShort(title) {
+    const t = String(title||'').toLowerCase();
+    return t.includes('#shorts') || t.includes('#short') || t.includes('#ytshorts');
+  }
 
   const videosByChannel = new Map();
   for (const item of rawSearchItems) {
@@ -1264,6 +1279,25 @@ async function searchYouTubeCreators({
       .slice(0, 6);
 
     const recentVideoTitles = recentVideos.map((v) => cleanText(v.snippet?.title || ''));
+
+    // ── Shorts-only channel filter ───────────────────────────────────────────
+    // Reject channels where 60%+ of recent videos are Shorts — they have no
+    // long-form content to improve, so thumbnail/editing/voiceover services
+    // don't apply to them.
+    if (recentVideos.length >= 3) {
+      const shortsCount = recentVideos.filter(
+        (v) => isShortVideo(v) || titleLooksLikeShort(v.snippet?.title || '')
+      ).length;
+      const shortsRatio = shortsCount / recentVideos.length;
+      if (shortsRatio >= 0.6) {
+        console.log('[YouTubeSearch shorts-only-skip]', JSON.stringify({
+          title, shortsCount, total: recentVideos.length, shortsRatio: shortsRatio.toFixed(2),
+        }));
+        continue;
+      }
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
     if (isEducationalChannel(title, desc, recentVideoTitles, ADVICE_CHANNEL_BLOCKLIST)) {
       console.log('[YouTubeSearch educational-skip]', JSON.stringify({
         title,
