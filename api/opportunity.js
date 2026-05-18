@@ -466,16 +466,22 @@ const EDUCATIONAL_RED_FLAG_PHRASES = [
 
 const EMERGENCY_FALLBACK_QUERIES = {
   'Thumbnail Design': [
-    'daily vlog', 'gaming channel', 'cooking videos',
-    'travel diary', 'fitness journey', 'podcast clips',
+    'daily vlog', 'gaming channel', 'cooking videos', 'travel diary',
+    'fitness journey', 'podcast clips', 'fashion channel', 'pet channel',
+    'outdoor adventure', 'makeup tutorial channel', 'home decor vlog',
+    'couple vlog', 'college life vlog', 'car review channel', 'art channel',
   ],
   'Video Editing': [
-    'personal vlog', 'travel videos', 'workout videos',
-    'recipe videos', 'story time', 'reaction videos',
+    'personal vlog', 'travel videos', 'workout videos', 'recipe videos',
+    'story time', 'reaction videos', 'hiking vlog', 'cycling channel',
+    'van life vlog', 'couple travel vlog', 'family channel', 'dance channel',
+    'skateboarding channel', 'small business vlog', 'startup journal',
   ],
   'Voice Over': [
-    'documentary', 'story narration', 'educational video',
-    'history channel', 'true crime', 'mystery videos',
+    'documentary channel', 'story narration', 'history channel', 'true crime',
+    'mystery videos', 'nature documentary', 'mythology channel', 'space science',
+    'biography channel', 'paranormal channel', 'cold case channel',
+    'bedtime stories', 'map animation channel', 'philosophy channel',
   ],
   'Social Media Management': ['local restaurant social media', 'salon instagram business', 'gym fitness studio social'],
   'Web Design': ['local dentist website', 'plumber contractor website', 'clinic small business website'],
@@ -721,6 +727,45 @@ function cleanText(v) {
   return String(v || '').replace(/\s+/g, ' ').trim();
 }
 
+// Large rotating query pools per skill — randomly sampled each scan so
+// results differ every run instead of returning the same channels.
+const CREATOR_QUERY_POOLS = {
+  'Thumbnail Design': [
+    'daily vlog', 'weekly vlog', 'travel vlog', 'fitness vlog', 'gaming channel',
+    'cooking channel', 'lifestyle channel', 'family vlog', 'college vlog',
+    'hair and beauty vlog', 'makeup channel', 'fashion channel', 'sports channel',
+    'tech review channel', 'car review channel', 'pet channel', 'outdoor adventure',
+    'study with me', 'home decor channel', 'plant channel', 'cycling vlog',
+    'hiking channel', 'skateboarding channel', 'surfing channel', 'anime review',
+    'book review channel', 'personal finance channel', 'real estate investing',
+    'photography channel', 'art channel', 'music cover channel',
+  ],
+  'Video Editing': [
+    'travel vlog', 'fitness journey', 'weekly vlog', 'daily vlog', 'gaming channel',
+    'cooking channel', 'cycling channel', 'hiking vlog', 'couple vlog', 'family vlog',
+    'hair and beauty channel', 'fashion vlog', 'sports highlights', 'car vlog',
+    'college student vlog', 'study with me channel', 'skateboarding channel',
+    'surfing vlog', 'climbing channel', 'dance channel', 'music vlog',
+    'photography vlog', 'art vlog', 'budget travel channel', 'van life vlog',
+    'expat vlog', 'language learning vlog', 'minimalism channel', 'pet vlog',
+    'home renovation vlog', 'startup founder vlog', 'small business owner vlog',
+  ],
+  'Voice Over': [
+    'true crime channel', 'history channel', 'documentary channel', 'mystery channel',
+    'nature documentary', 'animal documentary', 'space documentary', 'science channel',
+    'mythology channel', 'philosophy channel', 'biography channel', 'war history channel',
+    'cold case channel', 'paranormal channel', 'unsolved mysteries channel',
+    'horror stories channel', 'bedtime stories channel', 'meditation channel',
+    'audiobook channel', 'storytelling channel', 'narrative channel',
+    'explainer channel', 'map animation channel', 'country comparison channel',
+  ],
+};
+
+function pickRandom(arr, n) {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
+
 function extractCreatorQueries(prompt, skill) {
   const cleaned = (prompt || '')
     .replace(/on (instagram|youtube|tiktok|linkedin)/gi, '')
@@ -729,13 +774,23 @@ function extractCreatorQueries(prompt, skill) {
     .replace(/selling via .+/gi, '')
     .trim();
 
-  const base = cleaned.length > 10 ? cleaned : (skill || 'content creator');
-  return [
-    base,
-    `${base} tips`,
-    `${base} beginner`,
-    `${base} tutorial`,
-  ].filter(Boolean).slice(0, 4);
+  // If the user typed a specific niche prompt, use it as anchor + pull random
+  // pool queries around it so results vary each scan.
+  const pool = CREATOR_QUERY_POOLS[skill] || [];
+  if (cleaned.length > 10) {
+    // User gave a specific prompt — use it + 3 random pool queries
+    const extras = pickRandom(pool, 3);
+    return [cleaned, ...extras].filter(Boolean).slice(0, 4);
+  }
+
+  // No specific prompt — pick 4 different random queries from the pool each time
+  if (pool.length >= 4) {
+    return pickRandom(pool, 4);
+  }
+
+  // Fallback if skill not in pool
+  const base = skill || 'content creator';
+  return [base, `${base} vlog`, `${base} channel`, `${base} journey`].slice(0, 4);
 }
 
 function lower(v) {
@@ -1149,7 +1204,8 @@ async function searchYouTubeCreators({
       existingCount: rawSearchItems.length,
     }));
 
-    const emergencyQueries = EMERGENCY_FALLBACK_QUERIES[skill];
+    const allEmergency = EMERGENCY_FALLBACK_QUERIES[skill] || [];
+    const emergencyQueries = [...allEmergency].sort(() => Math.random() - 0.5).slice(0, 6);
     const emergencyResults = await Promise.allSettled(
       emergencyQueries.map(async (q) => {
         const fullQ = cleanText(location ? `${q} ${location}` : q);
@@ -1217,16 +1273,13 @@ async function searchYouTubeCreators({
     }),
   ]);
 
-  // ── Shorts detection helpers ────────────────────────────────────────────────
   function isShortVideo(video) {
-    // Shorts are <= 61 seconds. Duration in ISO 8601 e.g. PT58S, PT1M2S
     const dur = String(video?.contentDetails?.duration || '');
     const match = dur.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
     if (!match) return false;
-    const totalSecs = (Number(match[1]||0)*3600) + (Number(match[2]||0)*60) + Number(match[3]||0);
+    const totalSecs = (Number(match[1]||0)*3600)+(Number(match[2]||0)*60)+Number(match[3]||0);
     return totalSecs > 0 && totalSecs <= 61;
   }
-
   function titleLooksLikeShort(title) {
     const t = String(title||'').toLowerCase();
     return t.includes('#shorts') || t.includes('#short') || t.includes('#ytshorts');
@@ -1280,23 +1333,15 @@ async function searchYouTubeCreators({
 
     const recentVideoTitles = recentVideos.map((v) => cleanText(v.snippet?.title || ''));
 
-    // ── Shorts-only channel filter ───────────────────────────────────────────
-    // Reject channels where 60%+ of recent videos are Shorts — they have no
-    // long-form content to improve, so thumbnail/editing/voiceover services
-    // don't apply to them.
     if (recentVideos.length >= 3) {
       const shortsCount = recentVideos.filter(
         (v) => isShortVideo(v) || titleLooksLikeShort(v.snippet?.title || '')
       ).length;
-      const shortsRatio = shortsCount / recentVideos.length;
-      if (shortsRatio >= 0.6) {
-        console.log('[YouTubeSearch shorts-only-skip]', JSON.stringify({
-          title, shortsCount, total: recentVideos.length, shortsRatio: shortsRatio.toFixed(2),
-        }));
+      if (shortsCount / recentVideos.length >= 0.6) {
+        console.log('[YouTubeSearch shorts-only-skip]', title);
         continue;
       }
     }
-    // ────────────────────────────────────────────────────────────────────────
 
     if (isEducationalChannel(title, desc, recentVideoTitles, ADVICE_CHANNEL_BLOCKLIST)) {
       console.log('[YouTubeSearch educational-skip]', JSON.stringify({
